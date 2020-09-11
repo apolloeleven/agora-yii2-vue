@@ -12,8 +12,8 @@ REQUIREMENTS
 The minimum requirement by this project template that your Web server supports PHP 7.0.0.
 
 
-INSTALLATION
-------------
+INSTALLATION of API
+-------------------
 
 ### Install via Composer
 
@@ -38,6 +38,41 @@ Open in the browser [http://agora-api.localhost](http://agora-api.localhost)
 
 ##### To run console commands
 `docker-compose exec app php yii <controller>/<action>
+
+INSTALLATION of VUE.JS APP
+--------------------------
+
+You must have [Node.js](https://nodejs.org) installed.<br>
+Go to the `vue` folder.<br>
+
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Run your tests
+```
+npm run test
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
 TESTING
