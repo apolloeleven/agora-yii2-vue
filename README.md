@@ -30,7 +30,14 @@ at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
 
 ### Install with Docker
 
-This section is under development
+Make sure you have docker installed.
+1. Start the docker processing: `docker-compose up -d`
+1. Run migrations: `docker-compose exec app php yii migrate`
+
+Open in the browser [http://agora-api.localhost](http://agora-api.localhost)
+
+##### To run console commands
+`docker-compose exec app php yii <controller>/<action>
 
 
 TESTING
