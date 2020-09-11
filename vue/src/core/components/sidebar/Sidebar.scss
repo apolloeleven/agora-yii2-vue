@@ -1,0 +1,416 @@
+@import "../../../core/scss/variables";
+
+.menu {
+  //display: block;
+  //position: absolute;
+  left: 0;
+  //top: $menu-margin-top;
+  border-right: 1px solid $menu-border-color;
+  //min-height: calc(#{"100% - " + $menu-margin-top});
+  //z-index: $menu-z-index;
+  width: $menu-width;
+  background-color: $menu-bg;
+  @include transition(all $menu-toggle-transition-duration);
+
+  .menu-heading {
+    border-radius: 0;
+    border: none;
+    position: relative;
+    border-bottom: 1px solid $menu-border-color;
+    height: $menu-header-height;
+    padding-left: ($menu-width-collapsed - $menu-header-btn-size) / 2;
+    padding-right: ($menu-width-collapsed - $menu-header-btn-size) / 2;
+
+    .menu-header-buttons-wrapper {
+      position: relative;
+      padding-top: ($menu-header-height - $menu-header-btn-size) / 2;
+      padding-bottom: ($menu-header-height - $menu-header-btn-size) / 2;
+
+      .btn-menu-header-collapse {
+        display: none;
+      }
+
+      .menu-header-buttons {
+        overflow: hidden;
+        white-space: nowrap;
+        text-align: center;
+      }
+    }
+
+    .btn {
+      text-align: center;
+      padding: 0;
+      line-height: $menu-header-btn-size;
+      @include square($menu-header-btn-size);
+    }
+  }
+
+  nav {
+    ul {
+      display: none;
+      list-style: none;
+      padding-left: 0;
+      position: relative;
+      margin-bottom: 0;
+      @include transition(0.3s height);
+
+      > li {
+        position: relative;
+
+        > a {
+          display: block;
+          overflow: hidden;
+          white-space: nowrap;
+          text-decoration: none;
+          outline: 0;
+          color: $nav-menu-item-color;
+
+          .menu-item-icon {
+            margin-top: 2px;
+            font-size: $nav-menu-item-icon-font-size;
+            margin-right: $nav-menu-item-icon-margin-right;
+          }
+
+          .menu-item-toggle-icon {
+            position: absolute;
+            right: 15px;
+            margin-top: 2px;
+            font-size: $nav-menu-item-icon-font-size;
+            @include transition(0.3s transform);
+          }
+
+          > div {
+            display: inline-block;
+          }
+
+          .badge-wrapper {
+            position: absolute;
+            top: -4px;
+            left: 24px;
+          }
+
+          &:hover {
+            font-weight: 500;
+            color: $nav-menu-item-hover-color;
+            text-shadow: $nav-menu-item-hover-text-shadow;
+          }
+        }
+
+        &.opened {
+          > a {
+            text-shadow: $nav-menu-item-opened-text-shadow;
+            color: $nav-menu-item-hover-color;
+          }
+        }
+
+        &.active {
+          > a {
+            text-shadow: $nav-menu-item-active-text-shadow;
+            color: $nav-menu-item-active-color;
+            background-color: $nav-menu-item-active-bg;
+          }
+
+          &:after {
+            content: "";
+            position: absolute;
+            right: -1px;
+            top: 50%;
+            margin-top: -15px;
+            height: 30px;
+            width: 16px;
+            border-width: 15px 10px;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-right: 10px solid $nav-menu-item-active-arrow-color;
+          }
+        }
+      }
+    }
+
+    > ul {
+      display: block;
+
+      > li {
+        > a {
+          line-height: $nav-menu-item-line-height;
+          border-bottom: 1px solid $nav-menu-item-border-color;
+          padding: $nav-menu-item-padding-vertical $nav-menu-item-padding-horizontal;
+          font-size: $nav-menu-item-font-size;
+          background-color: $nav-menu-item-bg;
+        }
+
+        &.opened {
+          border-right: $nav-menu-item-opened-border-right-width solid $nav-menu-item-opened-border-right-color;
+
+          > a {
+            border-bottom: 1px solid $nav-menu-item-border-color;
+
+            .menu-item-toggle-icon {
+              @include rotate(90deg);
+            }
+          }
+
+          & + li {
+            > a {
+              border-top: 1px solid $nav-menu-item-border-color;
+            }
+          }
+        }
+
+        ul {
+          > li {
+            > a {
+              line-height: $nav-menu-submenu-item-line-height;
+              font-size: $nav-menu-submenu-item-font-size;
+              background-color: lighten($nav-menu-submenu-item-bg, 5%);
+              padding: $nav-menu-submenu-item-padding-vertical $nav-menu-submenu-item-padding-horizontal;
+
+              .menu-item-toggle-icon {
+                font-size: $nav-menu-submenu-item-icon-font-size;
+              }
+            }
+
+            &.active {
+              > a {
+                text-shadow: none;
+                color: $info;
+              }
+            }
+          }
+        }
+
+        > ul {
+          height: 0;
+          display: block;
+          overflow: hidden;
+
+          > li {
+            &:before {
+              content: "";
+              position: absolute;
+              display: block;
+              top: (2 * $nav-menu-submenu-item-padding-vertical + $nav-menu-submenu-item-line-height) / 2;
+              width: $nav-menu-submenu-item-left-line-width;
+              border-top: 1px $nav-menu-submenu-vertical-line-style $nav-menu-submenu-vertical-line-color;
+              left: $nav-menu-submenu-vertical-line-left-offset;
+              z-index: 2;
+            }
+          }
+
+          &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: $nav-menu-submenu-vertical-line-left-offset;
+            border-left: 1px $nav-menu-submenu-vertical-line-style $nav-menu-submenu-vertical-line-color;
+            z-index: 2;
+          }
+        }
+
+        @include nav-menu-submenu(2);
+      }
+    }
+  }
+
+  .menu-collapse-line {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: $menu-collapse-line-height;
+    background-color: $menu-collapse-line-bg;
+    border-top: $menu-collapse-line-border-width solid $menu-collapse-line-border-color;
+    border-bottom: $menu-collapse-line-border-width solid $menu-collapse-line-border-color;
+
+    .menu-toggle-btn {
+      width: 22px;
+      height: 22px;
+      display: inline-block;
+      cursor: pointer;
+      font-size: $menu-collapse-line-btn-font-size;
+      line-height: 22px;
+      color: white;
+      border-radius: 50%;
+      background-color: $menu-color;
+      @include transition(0.3s transform);
+
+      .svg-inline--fa {
+        position: relative;
+        left: -1px;
+        line-height: 23px;
+      }
+
+      &:hover {
+        //color: $menu-collapse-line-btn-hover-color;
+        text-shadow: $nav-menu-item-hover-text-shadow;
+      }
+    }
+  }
+}
+
+#app {
+  &.menu-collapsed {
+    .show-hide-menu {
+      visibility: hidden;
+    }
+
+    #main {
+      margin-left: $menu-width-collapsed;
+    }
+
+    .menu {
+      overflow: visible;
+      width: $menu-width-collapsed;
+
+      .menu-heading {
+        .menu-header-buttons-wrapper {
+          .btn-menu-header-collapse {
+            display: inline-block;
+          }
+
+          .menu-header-buttons {
+            display: inline-block;
+            position: absolute;
+            width: 0;
+            top: 0;
+            height: 100%;
+            left: 100%;
+            padding: inherit;
+            @include transition(all $transition-duration);
+            @include box-shadow(2px 2px 5px rgba(0, 0, 0, 0.1));
+          }
+
+          &:hover {
+            .btn-menu-header-collapse {
+              float: left;
+            }
+
+            .menu-header-buttons {
+              min-width: $menu-width;
+              background-color: $menu-bg;
+            }
+          }
+        }
+      }
+
+      nav {
+        > ul {
+          > li {
+            > a {
+              text-align: center;
+
+              .inner-text, .menu-item-toggle-icon {
+                display: none;
+              }
+
+              .badge-wrapper {
+                line-height: 1;
+                top: 2px;
+                right: 2px;
+              }
+            }
+
+            > ul {
+              display: none !important;
+            }
+
+            &.opened {
+              > a {
+                border-bottom: none;
+              }
+            }
+
+            &:hover {
+              > a {
+                .inner-text {
+                  display: block;
+                  position: absolute;
+                  top: 0;
+                  text-align: left;
+                  border: 1px solid $menu-border-color;
+                  left: $menu-width-collapsed - 5px;
+                  width: $menu-width;
+                  background-color: $nav-menu-item-active-bg;
+                  padding: $nav-menu-item-padding-vertical $nav-menu-item-padding-horizontal;
+                  z-index: 4;
+                }
+              }
+
+              > ul {
+                display: block !important;
+                position: absolute;
+                top: 100%;
+                border: 1px solid $menu-border-color;
+                border-top-color: transparent;
+                margin-top: -1px;
+                left: $menu-width-collapsed - 5px;
+                width: $menu-width;
+                z-index: 3;
+              }
+            }
+          }
+        }
+      }
+
+      .menu-collapse-line {
+        .menu-toggle-btn {
+          > * {
+            @include rotate(180deg);
+          }
+        }
+      }
+    }
+  }
+
+  &.menu-hidden,
+  &.menu-hidden-partial {
+    .menu {
+      .menu-collapse-line {
+        display: none;
+      }
+    }
+  }
+
+  &.menu-hidden {
+    #main {
+      margin-left: 0;
+    }
+
+    .menu {
+      left: -$menu-width;
+    }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  #app {
+    &.menu-hidden {
+      //#main {
+      //  margin-left: $menu-partial-hidden-width;
+      //}
+
+      .menu {
+        margin-left: -$menu-width + $menu-partial-hidden-width;
+
+        &:hover {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  #app {
+    .menu {
+      margin-left: -$menu-width;
+    }
+
+    &.menu-hidden {
+      .menu {
+        margin-left: 0;
+      }
+    }
+  }
+}
