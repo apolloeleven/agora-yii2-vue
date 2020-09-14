@@ -40,7 +40,7 @@ class UserController extends Controller
         $user = $model->getUserByUsername($request->post('username'));
 
         if (!$model->load($request->post(), '') || !$user || !$model->login()) {
-            return Controller::validationError($model->getFirstErrors());
+            return Controller::response($model->getFirstErrors(), 422);
         }
 
         return $user->getApiData();
@@ -51,7 +51,6 @@ class UserController extends Controller
      *
      * @return array|bool
      * @throws Exception
-     * @author Salome Kavtaradze <s_kavtaradze2@cu.edu.ge>
      */
     public function actionResetPassword()
     {
@@ -63,11 +62,11 @@ class UserController extends Controller
             ->one();
 
         if (!$user) {
-            return Controller::validationError(Yii::t('app', 'Unable to find user with this email'));
+            return Controller::response(Yii::t('app', 'Unable to find user with this email'), 422);
         }
 
         if ($user->status == User::STATUS_INACTIVE) {
-            return Controller::validationError(Yii::t('app', 'User is disabled'));
+            return Controller::response(Yii::t('app', 'User is disabled'), 422);
         }
 
         $newPassword = Yii::$app->security->generateRandomString(8);
@@ -75,7 +74,7 @@ class UserController extends Controller
         $user->password_hash = $hash;
 
         if (!$user->save()) {
-            return Controller::validationError(Yii::t('app', 'Unable to save user'));
+            return Controller::response(Yii::t('app', 'Unable to save user'), 422);
         }
 
         MailHelper::resetPassword($user, $newPassword);
