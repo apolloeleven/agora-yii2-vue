@@ -1,5 +1,3 @@
-import i18n from "../../../shared/i18n";
-
 export default class BaseModel {
   errors = {};
   rules = {};

@@ -1,5 +1,4 @@
 import axiosClient from './../../plugins/axios'
-import router from "../../shared/router";
 import authService from "./auth.service";
 
 const HTTP_UNAUTHORIZED = 401;
