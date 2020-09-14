@@ -28,7 +28,13 @@ function handleExceptionResponse(response, resolveObj) {
   } else if (response.status === HTTP_NOT_ALLOWED) {
     resolveObj.toastError = 'Requested method is not allowed.';
   } else if (response.status === HTTP_VALIDATION_ERROR) {
-    // TODO
+    if (typeof resolveObj.body === "object") {
+      Object.keys(resolveObj.body).forEach((element) => {
+        resolveObj.errors.push(resolveObj.body[element])
+      })
+    } else {
+      resolveObj.errors.push(resolveObj.body)
+    }
   } else if (response.status === HTTP_NOT_FOUND) {
     resolveObj.toastError = 'Requested data was not found.';
   } else if (response.status === HTTP_INTERNAL_SERVER_ERROR) {
