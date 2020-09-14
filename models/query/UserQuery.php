@@ -2,6 +2,8 @@
 
 namespace app\models\query;
 
+use app\models\User;
+
 /**
  * This is the ActiveQuery class for [[\app\models\User]].
  *
@@ -9,14 +11,9 @@ namespace app\models\query;
  */
 class UserQuery extends \yii\db\ActiveQuery
 {
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
-
     /**
      * {@inheritdoc}
-     * @return \app\models\User[]|array
+     * @return User[]|array
      */
     public function all($db = null)
     {
@@ -25,10 +22,20 @@ class UserQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\models\User|array|null
+     * @return User|array|null
      */
     public function one($db = null)
     {
         return parent::one($db);
+    }
+
+    /**
+     * Return active users
+     *
+     * @return mixed
+     */
+    public function active()
+    {
+        return $this->andWhere(['status' => User::STATUS_ACTIVE]);
     }
 }
