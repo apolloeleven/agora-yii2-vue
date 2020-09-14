@@ -6,7 +6,7 @@
 
 <script>
 export default {
-name: "CountryList"
+  name: "CountryList"
 }
 </script>
 
