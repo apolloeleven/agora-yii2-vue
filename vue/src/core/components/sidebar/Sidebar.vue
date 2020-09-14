@@ -15,7 +15,7 @@
     </nav>
     <div class="menu-collapse-line">
       <div class="menu-toggle-btn" @click="sidebarCollapseToggle" data-action="collapse-expand-sidebar">
-        <font-awesome-icon :icon="['fas', 'angle-left']"></font-awesome-icon>
+        <i class="fas fa-angle-left"></i>
       </div>
     </div>
   </div>

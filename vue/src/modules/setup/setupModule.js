@@ -3,8 +3,8 @@ import MenuItem from "../../core/components/sidebar/MenuItem";
 import i18n from './../../shared/i18n'
 
 MenuService.addItem(new MenuItem({
-  text: i18n.t('Dashboard'),
-  path: '/dashboard',
-  weight: 1,
-  icon: 'fas fa-tachometer-alt'
+  text: i18n.t('Setup'),
+  path: '/setup',
+  weight: 1000,
+  icon: 'fas fa-cog'
 }));

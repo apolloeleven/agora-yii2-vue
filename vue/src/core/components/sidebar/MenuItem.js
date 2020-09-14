@@ -1,14 +1,21 @@
 export default class MenuItem {
-  path = '';
-  text = '';
-  icon = '';
-  weight = 0;
 
-  constructor(path, text, weight = 0, icon = '', children = []) {
+  constructor({
+                text,
+                path = '',
+                weight = 0,
+                icon = '',
+                linkOptions = {},
+                children = [],
+                isGroup = false,
+              }) {
     this.path = path;
+    this.isGroup = isGroup;
     this.text = text;
     this.weight = weight;
     this.icon = icon;
+    this.linkOptions = linkOptions;
     this.children = children;
+    this.name = null;
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <button class="show-hide-menu" @click="toggleSidebar" :class="{active: menuHidden}">
-    <font-awesome-icon :icon="['fas', 'bars']"></font-awesome-icon>
+    <i class="fas fa-bars"></i>
   </button>
 </template>
 
