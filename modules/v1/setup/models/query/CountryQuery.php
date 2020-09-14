@@ -1,11 +1,11 @@
 <?php
 
-namespace app\models\query;
+namespace app\modules\v1\setup\models\query;
 
 /**
- * This is the ActiveQuery class for [[\app\models\Country]].
+ * This is the ActiveQuery class for [[\app\modules\v1\setup\models\Country]].
  *
- * @see \app\models\Country
+ * @see \app\modules\v1\setup\models\Country
  */
 class CountryQuery extends \yii\db\ActiveQuery
 {
@@ -16,7 +16,7 @@ class CountryQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\models\Country[]|array
+     * @return \app\modules\v1\setup\models\Country[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class CountryQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\models\Country|array|null
+     * @return \app\modules\v1\setup\models\Country|array|null
      */
     public function one($db = null)
     {

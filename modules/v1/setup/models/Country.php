@@ -1,8 +1,11 @@
 <?php
 
-namespace app\models;
+namespace app\modules\v1\setup\models;
 
+use app\models\User;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%countries}}".
@@ -27,6 +30,14 @@ class Country extends \yii\db\ActiveRecord
         return '{{%countries}}';
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+            BlameableBehavior::class
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -34,6 +45,7 @@ class Country extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
+            ['name', 'unique',],
             [['created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
@@ -78,10 +90,10 @@ class Country extends \yii\db\ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return \app\models\query\CountryQuery the active query used by this AR class.
+     * @return \app\modules\v1\setup\models\query\CountryQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \app\models\query\CountryQuery(get_called_class());
+        return new \app\modules\v1\setup\models\query\CountryQuery(get_called_class());
     }
 }
