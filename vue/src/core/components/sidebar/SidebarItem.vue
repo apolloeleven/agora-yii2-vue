@@ -7,7 +7,7 @@
     <a :class="linkOptions.class" @click="onMenuItemClick">
       <sidebar-item-content :image="image" :icon="icon" :name="name" :badge="badge"
                             :badge-classes="badgeClasses"></sidebar-item-content>
-      <span v-if="children && children.length" class="menu-item-toggle-icon " @click="toggleItem()">
+      <span v-if="children && children.length" class="menu-item-toggle-icon " @click="toggleItem($event)">
           <i v-if="level === 1" class="fa fa-chevron-circle-right"></i>
           <i v-else-if="!opened" class="fa fa-plus-square-o"></i>
           <i v-else class="fa fa-minus-square-o "></i>
@@ -81,7 +81,9 @@ export default {
   },
   methods: {
     ...mapActions(['toggleMenuHide']),
-    toggleItem() {
+    toggleItem($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
       if (this.children && this.children.length) {
         this.opened = !this.opened
       }
