@@ -42,4 +42,20 @@ class MailHelper
 
         return self::sendMail($message);
     }
+
+    /**
+     * Send generated password to user
+     *
+     * @param $user
+     * @param $password
+     * @return bool
+     */
+    public static function generatedPassword($user, $password)
+    {
+        $message = \Yii::$app->mailer->compose('generated_password', ['user' => $user, 'password' => $password])
+            ->setSubject(\Yii::t('app', 'Generate password for your account {name}', ['name' => \Yii::$app->name]))
+            ->setTo($user->email);
+
+        return self::sendMail($message);
+    }
 }

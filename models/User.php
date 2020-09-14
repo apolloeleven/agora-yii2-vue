@@ -6,6 +6,9 @@ use app\models\query\UserQuery;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidCallException;
+use yii\behaviors\AttributeBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -16,11 +19,19 @@ use yii\web\IdentityInterface;
  * @property string $username
  * @property string $email
  * @property string $password_hash
+ * @property string $auth_key
  * @property string|null $password_reset_token
  * @property string|null $access_token
  * @property int|null $status
  * @property int|null $created_at
+ * @property int|null $created_by
  * @property int|null $updated_at
+ * @property int|null $updated_by
+ * @property int|null $deleted_at
+ * @property int|null $deleted_by
+ *
+ * @property UserProfile $userProfile
+ * @property User $updatedBy
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -32,11 +43,31 @@ class User extends ActiveRecord implements IdentityInterface
         return '{{%users}}';
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+            BlameableBehavior::class,
+            'access_token' => [
+                'class' => AttributeBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'access_token'
+                ],
+                'value' => function () {
+                    return Yii::$app->getSecurity()->generateRandomString(40);
+                }
+            ],
+        ];
+    }
+
     public function rules()
     {
         return [
             [['username', 'email', 'password_hash'], 'required'],
-            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['status', 'created_at', 'updated_at', 'deleted_at'], 'integer'],
             [['username'], 'string', 'max' => 255],
             [['email', 'access_token'], 'string', 'max' => 512],
             [['password_hash', 'password_reset_token'], 'string', 'max' => 1024],
@@ -57,12 +88,51 @@ class User extends ActiveRecord implements IdentityInterface
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'deleted_at' => Yii::t('app', 'Deleted At'),
         ];
     }
 
     public static function find()
     {
         return new UserQuery(get_called_class());
+    }
+
+    /**
+     * Return user data with userprofile for frontend
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        return [
+            'id',
+            'username',
+            'avatar' => function () {
+                return $this->userProfile->getAvatar();
+            },
+            'created_at' => function () {
+                return Yii::$app->formatter->asDatetime($this->created_at);
+            },
+            'updated_at' => function () {
+                return Yii::$app->formatter->asDatetime($this->updated_at);
+            },
+            'displayName' => function () {
+                return $this->getDisplayName();
+            },
+            'email',
+            'status',
+            //TODO roles field
+        ];
+    }
+
+    /**
+     * Implement extra fields
+     *
+     * @return array|string[]
+     */
+    public function extraFields()
+    {
+        return ['userProfile', 'updatedBy', 'createdBy'];
     }
 
     /**
@@ -148,4 +218,42 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->toArray(['id', 'username', 'email', 'access_token', 'status', 'created_at', 'updated_at']);
     }
+
+    /**
+     * Get users full name
+     *
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return $this->userProfile->getFullName();
+    }
+
+    /**
+     * Mark the user deleted, by setting deleted_at and deleted_by columns
+     *
+     * @return $this
+     */
+    public function markDeleted()
+    {
+        $this->username = '[DELETED_' . $this->id . ']';
+        $this->email = 'DELETED_' . $this->id . '@deleted.com';
+        $this->access_token = '[DELETED]';
+        $this->status = User::STATUS_INACTIVE;
+        $this->deleted_at = time();
+        $this->deleted_by = Yii::$app->user->id;
+        return $this;
+    }
+
+    /**
+     * Generates password hash from password and sets it to the model
+     *
+     * @param $password
+     * @throws Exception
+     */
+    public function setPassword($password)
+    {
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+    }
+
 }
