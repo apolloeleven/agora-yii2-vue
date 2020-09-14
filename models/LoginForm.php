@@ -131,7 +131,6 @@ class LoginForm extends Model
             ->active()
             ->one();
         if (!$user) {
-            $this->addError('password', Yii::t('app', 'Incorrect username or password.'));
             return false;
         }
         return $user;

@@ -14,9 +14,6 @@
   import Navbar from './../../navbar/Navbar';
   import Sidebar from "./../../sidebar/Sidebar";
 
-  /**
-   * @author Saiat Kalbiev <kalbievich11@gmail.com>
-   */
   export default {
     name: "DefaultLayout",
     components: {
