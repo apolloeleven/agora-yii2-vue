@@ -4,6 +4,7 @@ import i18n from './../../shared/i18n'
 
 MenuService.addItem(new MenuItem('setup', {
   text: i18n.t('Setup'),
+  path: '/setup',
   weight: 1000,
   icon: 'fas fa-cog',
   children: [

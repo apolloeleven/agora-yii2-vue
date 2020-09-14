@@ -6,6 +6,8 @@ import NotFoundComponent from "./../core/components/pages/NotFoundComponent";
 import Dashboard from "@/modules/Dashboard/Dashboard";
 import Login from "@/modules/Auth/Login";
 import Register from "@/modules/Auth/Register";
+import Setup from "@/modules/setup/Setup";
+import CountryList from "@/modules/setup/countries/CountryList";
 
 Vue.use(Router);
 
@@ -23,10 +25,10 @@ const router = new Router({
           path: 'login',
           component: Login,
         },
-          {
-      path: 'register',
-      component: Register,
-    }
+        {
+          path: 'register',
+          component: Register,
+        }
       ]
     },
     {
@@ -38,13 +40,9 @@ const router = new Router({
       redirect: '/dashboard',
       component: DefaultLayout,
       children: [
-        {
-          path: 'dashboard',
-          component: Dashboard,
-          // meta: {
-          //   requiresAuth: true
-          // }
-        }
+        {path: 'dashboard', name: 'dashboard', component: Dashboard,},
+        {path: '/setup', name: 'setup', component: Setup,},
+        {path: '/setup/countries', name: 'countries', component: CountryList}
       ]
     },
     {

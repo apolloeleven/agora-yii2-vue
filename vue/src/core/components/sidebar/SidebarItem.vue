@@ -3,21 +3,15 @@
     <sidebar-item-content :icon="icon" :name="name" :badge="badge"
                           :badge-classes="badgeClasses"></sidebar-item-content>
   </li>
-  <router-link v-else-if="to" :to="to" tag="li" active-class="active" :exact="true">
+  <router-link v-else :to="to || '#'" tag="li" active-class="active" :exact="true">
     <a :class="linkOptions.class" @click="onMenuItemClick">
       <sidebar-item-content :image="image" :icon="icon" :name="name" :badge="badge"
                             :badge-classes="badgeClasses"></sidebar-item-content>
-    </a>
-  </router-link>
-  <li v-else :class="{opened: opened}">
-    <a href="#" @click="toggleItem()" :class="linkOptions.class">
-      <sidebar-item-content :icon="icon" :name="name" :badge="badge"
-                            :badge-classes="badgeClasses"></sidebar-item-content>
-      <template v-if="children && children.length">
-        <i v-if="level === 1" class="fa fa-chevron-circle-right menu-item-toggle-icon"></i>
-        <i v-else-if="!opened" class="fa fa-plus-square-o menu-item-toggle-icon"></i>
-        <i v-else class="menu-item-toggle-icon fa fa-minus-square-o"></i>
-      </template>
+      <span v-if="children && children.length" class="menu-item-toggle-icon " @click="toggleItem()">
+          <i v-if="level === 1" class="fa fa-chevron-circle-right"></i>
+          <i v-else-if="!opened" class="fa fa-plus-square-o"></i>
+          <i v-else class="fa fa-minus-square-o "></i>
+        </span>
     </a>
     <ul :style="subItemsStyle" v-if="children && children.length">
       <sidebar-item v-for="(childItem, i) in children"
@@ -34,7 +28,7 @@
                     :key="i"
       ></sidebar-item>
     </ul>
-  </li>
+  </router-link>
 </template>
 
 <script>
