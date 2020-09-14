@@ -70,4 +70,12 @@ export default {
 
     return res;
   },
+
+  /**
+   * @param email
+   * @returns {Promise<any>}
+   */
+  async resetPassword(email) {
+    return await httpService.post('/user/reset-password', email);
+  },
 }

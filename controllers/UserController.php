@@ -63,10 +63,7 @@ class UserController extends Controller
             ->one();
 
         if (!$user) {
-            $errorMessage = $email ?
-                Yii::t('app', 'Email can not be blank') :
-                Yii::t('app', 'Unable to find user with this email');
-            return Controller::validationError($errorMessage);
+            return Controller::validationError(Yii::t('app', 'Unable to find user with this email'));
         }
 
         if ($user->status == User::STATUS_INACTIVE) {
