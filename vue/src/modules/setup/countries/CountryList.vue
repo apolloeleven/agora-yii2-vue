@@ -1,6 +1,6 @@
 <template>
-  <div id="country-list">
-    Countries
+  <div id="country-list" class="p-3">
+    <h1>Countries</h1>
   </div>
 </template>
 

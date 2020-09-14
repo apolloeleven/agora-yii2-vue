@@ -1,6 +1,6 @@
 <template>
-  <div id="setup">
-    Setup
+  <div id="setup" class="p-3">
+    <h1>Setup</h1>
   </div>
 </template>
 

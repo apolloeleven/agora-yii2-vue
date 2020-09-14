@@ -3,7 +3,7 @@
     <sidebar-item-content :icon="icon" :name="name" :badge="badge"
                           :badge-classes="badgeClasses"></sidebar-item-content>
   </li>
-  <router-link v-else :to="to || '#'" tag="li" active-class="active" :exact="true">
+  <router-link v-else :to="to || '#'" tag="li" active-class="active" :exact="true" :class="{opened: opened}">
     <a :class="linkOptions.class" @click="onMenuItemClick">
       <sidebar-item-content :image="image" :icon="icon" :name="name" :badge="badge"
                             :badge-classes="badgeClasses"></sidebar-item-content>
