@@ -1,5 +1,6 @@
 import Vuex from "vuex";
 import Vue from 'vue';
+import setup from './setup';
 
 // Load vuex
 Vue.use(Vuex);
@@ -39,5 +40,8 @@ export default new Vuex.Store({
     removeMenuItem: (state, name) => {
       Vue.delete(state._menuItems, name);
     },
+  },
+  modules: {
+    setup
   }
 });
