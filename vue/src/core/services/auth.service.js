@@ -11,18 +11,18 @@ export default {
   },
 
   loggedIn() {
-    return !!sessionStorage.getItem('AUTH_TOKEN');
+    return !!localStorage.getItem('AUTH_TOKEN');
   },
 
   logout() {
-    sessionStorage.removeItem('AUTH_TOKEN');
+    localStorage.removeItem('AUTH_TOKEN');
   },
 
   /**
    * @returns {string}
    */
   getToken() {
-    return sessionStorage.getItem('AUTH_TOKEN');
+    return localStorage.getItem('AUTH_TOKEN');
   },
 
   /**
@@ -36,7 +36,7 @@ export default {
    * @returns {*}
    */
   getCurrentUser() {
-    const userData = sessionStorage.getItem('CURRENT_USER');
+    const userData = localStorage.getItem('CURRENT_USER');
 
     if (!userData) {
       return null;
