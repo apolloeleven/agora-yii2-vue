@@ -1,5 +1,7 @@
 <?php
 
+use app\models\User;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -14,14 +16,19 @@ $config = [
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => '9bGK03rEwhNZWQoho8KqIRjRQBc8lDpI',
+            'enableCookieValidation' => false,
+            'parsers' => [
+                'application/json' => \yii\web\JsonParser::class
+            ]
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'class' => yii\web\User::class,
+            'identityClass' => User::class,
+            'enableSession' => false,
+            'loginUrl' => null,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
