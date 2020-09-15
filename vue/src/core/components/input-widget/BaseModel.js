@@ -21,19 +21,14 @@ export default class BaseModel {
 
   getRules(attribute) {
     let rule = '';
+    let ruleAttributes = this.rules[attribute]
 
-    if (Array.isArray(this.rules[attribute])) {
-      for (let i = 0; i < this.rules[attribute].length; i++) {
-        let attr = this.rules[attribute][i];
-
-        let isLast = !this.rules[attribute][i + 1];
-
-        rule += this.parseRules(attr, isLast)
+    if (Array.isArray(ruleAttributes)) {
+      for (let i = 0; i < ruleAttributes.length; i++) {
+        rule += this.parseRules(ruleAttributes[i], !ruleAttributes[i + 1])
       }
     } else {
-      let attr = this.rules[attribute]
-
-      rule = this.parseRules(attr)
+      rule = this.parseRules(ruleAttributes)
     }
     return rule;
   }
