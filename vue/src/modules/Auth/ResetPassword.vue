@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import auth from '../../core/services/auth.service';
+import auth from '../../core/services/authService';
 import PasswordReset from "./PasswordReset";
 import InputWidget from "../../core/components/input-widget/InputWidget";
 

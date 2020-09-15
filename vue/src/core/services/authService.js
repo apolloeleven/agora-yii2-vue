@@ -1,5 +1,5 @@
 import httpService from "./httpService";
-import {AUTH_TOKEN, CURRENT_USER, REDIRECT_TO} from "../../const";
+import {AUTH_TOKEN, CURRENT_USER, REDIRECT_TO} from "../../constants";
 
 export default {
 
