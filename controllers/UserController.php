@@ -23,8 +23,6 @@ class UserController extends Controller
         if (!$model->load($request->post(), '') || !$model->validate() || !$model->login()) {
             return $this->validationError($model->getFirstErrors());
         }
-        /** @var User $user */
-        $user = $model->getUserByUsername($request->post('username'));
-        return $user->getApiData();
+        return $model->getUser()->getApiData();
     }
 }
