@@ -49,14 +49,25 @@ export default class BaseModel {
 
     rule += isLast ? '' : '|';
 
-    if (attr.message) {
-      this.newMessage(attr.rule, attr.message)
-    }
     return rule;
   }
 
-  newMessage(attribute, message) {
-    return this.defaultRules[attribute] = i18n.t(message);
+  getMessage(attribute) {
+    let message = {};
+    let ruleAttributes = this.rules[attribute]
+
+    if (Array.isArray(ruleAttributes)) {
+      for (let i = 0; i < ruleAttributes.length; i++) {
+        if (ruleAttributes[i].message) {
+          message[ruleAttributes[i].rule] = i18n.t(ruleAttributes[i].message);
+        } else {
+          message[ruleAttributes[i].rule] = this.defaultRules[ruleAttributes[i].rule];
+        }
+      }
+    } else {
+      message[ruleAttributes.rule] = i18n.t(ruleAttributes.message);
+    }
+    return message;
   }
 
   getAttributeLabel(attribute) {
