@@ -12,27 +12,57 @@
       <div class="login-right clearfix">
         <h3 class="login-heading">Login to your account</h3>
         <br>
-        <div class="login-form">
-          <div class="form-group">
-            <input type="text" class="form-control" placeholder="Username" value=""/>
-          </div>
-          <div class="form-group">
-            <input type="password" class="form-control" placeholder="Password" value=""/>
-          </div>
-          <button class="btn btn-primary btn-action" @click="onLoginClick()">Login</button>
-        </div>
+        <form v-on:submit.prevent="onLoginClick">
+          <ValidationObserver ref="loginForm">
+            <div class="login-form">
+              <input-widget ref="usernameInputWidget" :model="loginFormModel" attribute="username"/>
+              <input-widget :model="loginFormModel" attribute="password" type="password"/>
+              <div class="d-flex align-items-center justify-content-between">
+                <button class="btn btn-primary mr-2">{{ $t('Login') }}</button>
+                <router-link to="/auth/reset-password">{{ $t('Request new password') }}</router-link>
+              </div>
+            </div>
+          </ValidationObserver>
+        </form>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import auth from '../../core/services/auth.service';
+import LoginForm from "./LoginForm";
+import InputWidget from "../../core/components/input-widget/InputWidget";
+
 export default {
   name: "Login",
-  methods: {
-    onLoginClick() {
-      this.$router.push('/')
+  components: {InputWidget},
+  data() {
+    return {
+      loginFormModel: new LoginForm(),
     }
+  },
+  methods: {
+    async onLoginClick() {
+      this.loginFormModel.resetErrors();
+      let response = await auth.login(this.loginFormModel);
+
+      if (response.success) {
+        if (auth.getRedirectTo()) {
+          this.$router.push(auth.getRedirectTo());
+          auth.removeRedirectTo();
+        } else {
+          this.$router.push('/');
+        }
+      } else {
+        this.loginFormModel.setMultipleErrors(response.body);
+      }
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.$refs.usernameInputWidget.focus()
+    }, 500)
   }
 }
 </script>

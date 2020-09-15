@@ -6,7 +6,6 @@
 
 <script>
   import {mapState, mapActions} from 'vuex';
-  import {eventBus} from '../../../services/event-bus'
 
   export default {
     name: "SidebarToggle",

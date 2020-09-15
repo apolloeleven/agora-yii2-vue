@@ -1,54 +1,73 @@
-import Vue from 'vue';
-import {AppSettings} from "../../shared/AppSettings";
+import httpService from "./httpService";
 
 export default {
 
+  getRedirectTo() {
+    return localStorage.getItem('REDIRECT_TO');
+  },
+
+  removeRedirectTo() {
+    localStorage.removeItem('REDIRECT_TO');
+  },
+
   loggedIn() {
-    return !!sessionStorage.getItem('AUTH_TOKEN');
+    return !!localStorage.getItem('AUTH_TOKEN');
   },
 
   logout() {
-    sessionStorage.removeItem('AUTH_TOKEN');
+    localStorage.removeItem('AUTH_TOKEN');
   },
+
   /**
-   * @author Saiat Kalbiev <kalbievich11@gmail.com>
    * @returns {string}
    */
   getToken() {
-    return sessionStorage.getItem('AUTH_TOKEN');
+    return localStorage.getItem('AUTH_TOKEN');
   },
+
   /**
-   * @author Saiat Kalbiev <kalbievich11@gmail.com>
-   * @param username
-   * @param password
-   * @returns {Promise<any>}
+   * @param token
    */
-  login(username, password) {
-    return new Promise((resolve, reject) => {
-      Vue.http.post(AppSettings.getUrl('/api/v1/users/auth/'), {
-        username: username,
-        password: password
-      })
-        .then(response => {
-          sessionStorage.setItem('AUTH_TOKEN', response.data.token);
-          sessionStorage.setItem('CURRENT_USER', JSON.stringify(response.data.user));
-          resolve();
-        }, error => {
-          reject(error.data);
-        });
-    })
+  setToken(token) {
+    localStorage.setItem('AUTH_TOKEN', token);
   },
+
   /**
-   * @author Saiat Kalbiev <kalbievich11@gmail.com>
    * @returns {*}
    */
   getCurrentUser() {
-    const userData = sessionStorage.getItem('CURRENT_USER');
+    const userData = localStorage.getItem('CURRENT_USER');
 
     if (!userData) {
       return null;
     }
 
     return JSON.parse(userData);
-  }
+  },
+
+  /**
+   * @param userData
+   * @returns {null}
+   */
+  setCurrentUser(userData) {
+    if (!userData) {
+      return null;
+    }
+    localStorage.setItem('CURRENT_USER', JSON.stringify(userData));
+  },
+
+  /**
+   * @returns {Promise<any>}
+   * @param data
+   */
+  async login(data) {
+    let res = await httpService.post('/user/login', data);
+
+    if (res.success) {
+      this.setToken(res.body.access_token);
+      this.setCurrentUser(res.body);
+    }
+
+    return res;
+  },
 }
