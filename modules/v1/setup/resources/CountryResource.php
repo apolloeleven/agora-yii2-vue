@@ -18,5 +18,22 @@ use app\modules\v1\setup\models\Country;
  */
 class CountryResource extends Country
 {
+    public function fields()
+    {
+        return [
+            'id', 'name', 'created_at' => function () {
+                return \Yii::$app->formatter->asDatetime($this->created_at);
+            }
+        ];
+    }
 
+    public function extraFields()
+    {
+        return ['createdBy'];
+    }
+
+    public function getCreatedBy()
+    {
+        return $this->hasOne(UserResource::class, ['id' => 'created_by']);
+    }
 }

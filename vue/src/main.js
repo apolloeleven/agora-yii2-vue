@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
+
+import './core/index';
+
 import router from './shared/router';
 import i18n from './shared/i18n';
 import './modules';
