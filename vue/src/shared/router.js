@@ -27,6 +27,7 @@ const router = new Router({
         },
         {
           path: 'reset-password',
+          name: 'reset-password',
           component: ResetPassword,
         },
         {
