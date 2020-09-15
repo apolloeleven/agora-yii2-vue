@@ -38,7 +38,7 @@ class UserController extends Controller
         $user = $model->getUserByUsername($request->post('username'));
 
         if (!$model->load($request->post(), '') || !$user || !$model->login()) {
-            return Controller::response($model->getFirstErrors(), 422);
+            return Controller::response($model->getFirstErrors());
         }
 
         return $user->getApiData();

@@ -16,7 +16,7 @@ class Controller extends \yii\rest\Controller
      * @param $statusCode
      * @return array
      */
-    public static function response($message, $statusCode)
+    public static function response($message, $statusCode = 422)
     {
         Yii::$app->response->setStatusCode($statusCode);
         return $message;
