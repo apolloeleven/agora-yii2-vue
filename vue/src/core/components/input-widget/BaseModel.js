@@ -1,9 +1,74 @@
+import i18n from "../../../shared/i18n";
+
 export default class BaseModel {
   errors = {};
   rules = {};
   attributeLabels = {};
   attributePlaceholders = {};
   attributeHints = {};
+
+  defaultRules = {
+    required: i18n.t("This field is required"),
+    email: i18n.t("The email field must be a valid email"),
+    regex: function (name, rule) {
+      if (rule.regex.source === '^[a-zA-Z0-9]+([._@]?[a-zA-Z0-9]+)*$') {
+        return i18n.t("Invalid username");
+      } else if (rule.regex.source === '(?=.*[A-Z])') {
+        return i18n.t("The field must contain at least one uppercase character");
+      }
+    },
+  };
+
+  getRules(attribute) {
+    let rule = '';
+    let ruleAttributes = this.rules[attribute]
+
+    if (Array.isArray(ruleAttributes)) {
+      for (let i = 0; i < ruleAttributes.length; i++) {
+        rule += this.parseRules(ruleAttributes[i], !ruleAttributes[i + 1])
+      }
+    } else {
+      rule = this.parseRules(ruleAttributes)
+    }
+    return rule;
+  }
+
+  parseRules(attr, isLast = true) {
+    const required = 'required'
+    const regex = 'regex'
+    const email = 'email'
+
+    let rule = '';
+
+    if (attr.rule === required || attr.rule === email) {
+      rule += attr.rule;
+    }
+    if (attr.rule === regex) {
+      rule += attr.rule + ':' + attr.pattern;
+    }
+
+    rule += isLast ? '' : '|';
+
+    return rule;
+  }
+
+  getMessage(attribute) {
+    let message = {};
+    let ruleAttributes = this.rules[attribute]
+
+    if (Array.isArray(ruleAttributes)) {
+      for (let i = 0; i < ruleAttributes.length; i++) {
+        if (ruleAttributes[i].message) {
+          message[ruleAttributes[i].rule] = i18n.t(ruleAttributes[i].message);
+        } else {
+          message[ruleAttributes[i].rule] = this.defaultRules[ruleAttributes[i].rule];
+        }
+      }
+    } else {
+      message[ruleAttributes.rule] = i18n.t(ruleAttributes.message);
+    }
+    return message;
+  }
 
   getAttributeLabel(attribute) {
     return this.attributeLabels[attribute] || attribute;

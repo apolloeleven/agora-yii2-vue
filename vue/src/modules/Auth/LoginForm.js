@@ -6,8 +6,11 @@ export default class LoginForm extends BaseModel {
   password = null;
 
   rules = {
-    username: 'required|regex:^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$',
-    password: 'required'
+    username: [
+      {rule: 'required'},
+      {rule: 'regex', pattern: '^[a-zA-Z0-9]+([._@]?[a-zA-Z0-9]+)*$', message: 'This must be valid username'},
+    ],
+    password: 'required',
   };
 
   attributeLabels = {
