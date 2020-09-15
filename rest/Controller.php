@@ -3,12 +3,19 @@
 namespace app\rest;
 
 use Yii;
+use yii\filters\Cors;
 
 class Controller extends \yii\rest\Controller
 {
     public function behaviors()
     {
-        return parent::behaviors();
+        $behaviors = parent::behaviors();
+
+        $behaviors['corsFilter'] = [
+            'class' => Cors::class,
+        ];
+
+        return $behaviors;
     }
 
     /**
@@ -16,9 +23,20 @@ class Controller extends \yii\rest\Controller
      * @param $statusCode
      * @return array
      */
-    public static function response($message, $statusCode = 422)
+    public function validationError($message, $statusCode = 422)
     {
-        Yii::$app->response->setStatusCode($statusCode);
-        return $message;
+        return $this->response($message, $statusCode);
+    }
+
+    /**
+     * @param     $data
+     * @param int $statusCode
+     * @return mixed
+     * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
+     */
+    public function response($data, $statusCode = 200)
+    {
+        Yii::$app->response->statusCode = $statusCode;
+        return $data;
     }
 }

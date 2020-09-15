@@ -1,5 +1,5 @@
 <template>
-  <ValidationProvider :name="`${attribute}-${uuid}`" :rules="!rules ? customRules : rules"
+  <ValidationProvider :name="`${attribute}-${uuid}`" :rules="rules || model.getRules(attribute)"
                       :customMessages="customMessages" v-slot="v" tag="div" :vid="vid">
     <b-form-group v-if="isInput() || isTextarea()">
       <label v-if="computedLabel">
@@ -40,7 +40,6 @@
 
 import BaseModel from "./BaseModel";
 import {uuid} from 'vue-uuid';
-import i18n from './../../../shared/i18n';
 
 export default {
   name: 'InputWidget',
@@ -176,17 +175,9 @@ export default {
     },
   },
   computed: {
-    customRules() {
-      if (typeof this.model.rules[this.attribute] !== "string") {
-        return this.model.getRules(this.attribute);
-      }
-      return this.model.rules[this.attribute];
-    },
     customMessages() {
-      if (typeof this.model.rules[this.attribute] !== "string") {
-        return this.model.getMessage(this.attribute);
-      }
-      return this.model.defaultRules;
+      //TODO Must check this.rules and extract error messages from there
+      return this.model.getMessages(this.attribute)
     },
     computedPlaceholder() {
       if (this.placeholder === false) {

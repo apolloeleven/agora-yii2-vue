@@ -8,7 +8,6 @@ use app\models\User;
 use app\rest\Controller;
 use Yii;
 use yii\base\Exception;
-use yii\filters\Cors;
 
 /**
  * Class UserController
@@ -17,33 +16,16 @@ use yii\filters\Cors;
  */
 class UserController extends Controller
 {
-    /**
-     * @return array
-     */
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-
-        $behaviors['corsFilter'] = [
-            'class' => Cors::class,
-        ];
-
-        return $behaviors;
-    }
 
     public function actionLogin()
     {
         $request = Yii::$app->request;
         $model = new LoginForm();
 
-        /** @var User $user */
-        $user = $model->getUserByUsername($request->post('username'));
-
-        if (!$model->load($request->post(), '') || !$user || !$model->login()) {
-            return Controller::response($model->getFirstErrors());
+        if (!$model->load($request->post(), '') || !$model->validate() || !$model->login()) {
+            return $this->validationError($model->getFirstErrors());
         }
-
-        return $user->getApiData();
+        return $model->getUser()->getApiData();
     }
 
     /**

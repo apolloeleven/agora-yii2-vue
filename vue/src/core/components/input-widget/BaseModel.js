@@ -1,5 +1,9 @@
 import i18n from "../../../shared/i18n";
 
+export const RULE_REQUIRED = 'required'
+export const RULE_REGEX = 'regex'
+export const RULE_EMAIL = 'email'
+
 export default class BaseModel {
   errors = {};
   rules = {};
@@ -7,65 +11,48 @@ export default class BaseModel {
   attributePlaceholders = {};
   attributeHints = {};
 
-  defaultRules = {
+  defaultMessages = {
     required: i18n.t("This field is required"),
     email: i18n.t("The email field must be a valid email"),
-    regex: function (name, rule) {
-      if (rule.regex.source === '^[a-zA-Z0-9]+([._@]?[a-zA-Z0-9]+)*$') {
-        return i18n.t("Invalid username");
-      } else if (rule.regex.source === '(?=.*[A-Z])') {
-        return i18n.t("The field must contain at least one uppercase character");
-      }
-    },
+    regex: i18n.t('Value does not match the pattern')
   };
 
   getRules(attribute) {
-    let rule = '';
-    let ruleAttributes = this.rules[attribute]
+    let rules = this.rules[attribute]
 
-    if (Array.isArray(ruleAttributes)) {
-      for (let i = 0; i < ruleAttributes.length; i++) {
-        rule += this.parseRules(ruleAttributes[i], !ruleAttributes[i + 1])
-      }
+    if (Array.isArray(rules)) {
+      return rules.map(rule => this.parseRules(rule)).join('|');
     } else {
-      rule = this.parseRules(ruleAttributes)
+      return this.parseRules(rules)
     }
-    return rule;
   }
 
-  parseRules(attr, isLast = true) {
-    const required = 'required'
-    const regex = 'regex'
-    const email = 'email'
+  parseRules(rule) {
 
-    let rule = '';
-
-    if (attr.rule === required || attr.rule === email) {
-      rule += attr.rule;
-    }
-    if (attr.rule === regex) {
-      rule += attr.rule + ':' + attr.pattern;
+    if (typeof rule === 'string') {
+      return rule;
     }
 
-    rule += isLast ? '' : '|';
+    if ([RULE_REQUIRED, RULE_EMAIL].includes(rule.rule)) {
+      return rule.rule;
+    }
+    if (rule.rule === RULE_REGEX) {
+      return rule.rule + ':' + rule.pattern;
+    }
 
-    return rule;
+    throw new Error(`Incorrect validation rule "${rule.rule}"`);
   }
 
-  getMessage(attribute) {
+  getMessages(attribute) {
     let message = {};
     let ruleAttributes = this.rules[attribute]
 
     if (Array.isArray(ruleAttributes)) {
       for (let i = 0; i < ruleAttributes.length; i++) {
-        if (ruleAttributes[i].message) {
-          message[ruleAttributes[i].rule] = i18n.t(ruleAttributes[i].message);
-        } else {
-          message[ruleAttributes[i].rule] = this.defaultRules[ruleAttributes[i].rule];
-        }
+        message[ruleAttributes[i].rule] = ruleAttributes[i].message || this.defaultMessages[ruleAttributes[i].rule];
       }
     } else {
-      message[ruleAttributes.rule] = i18n.t(ruleAttributes.message);
+      message[ruleAttributes.rule] = ruleAttributes.message;
     }
     return message;
   }
@@ -127,6 +114,7 @@ export default class BaseModel {
     delete $this.attributeLabels;
     delete $this.attributePlaceholders;
     delete $this.attributeHints;
+    delete $this.defaultMessages;
     return $this;
   }
 }
