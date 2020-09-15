@@ -47,6 +47,10 @@ export default class BaseModel {
     let message = {};
     let ruleAttributes = this.rules[attribute]
 
+    if (typeof ruleAttributes === 'string') {
+      return this.defaultMessages;
+    }
+
     if (Array.isArray(ruleAttributes)) {
       for (let i = 0; i < ruleAttributes.length; i++) {
         message[ruleAttributes[i].rule] = ruleAttributes[i].message || this.defaultMessages[ruleAttributes[i].rule];
