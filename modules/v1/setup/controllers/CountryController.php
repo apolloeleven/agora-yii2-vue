@@ -9,7 +9,7 @@ namespace app\modules\v1\setup\controllers;
 
 
 use app\modules\v1\setup\resources\CountryResource;
-use yii\rest\ActiveController;
+use app\rest\ActiveController;
 
 /**
  * Class CountryController

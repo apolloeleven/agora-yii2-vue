@@ -1,14 +1,20 @@
 <?php
+/**
+ * User: zura
+ * Date: 15.09.20
+ * Time: 19:42
+ */
 
 namespace app\rest;
 
+
 /**
- * Class Controller
+ * Class ActiveController
  *
  * @author  Zura Sekhniashvili <zurasekhniashvili@gmail.com>
  * @package app\rest
  */
-class Controller extends \yii\rest\Controller
+class ActiveController extends \yii\rest\ActiveController
 {
     use ControllerTrait;
 }
