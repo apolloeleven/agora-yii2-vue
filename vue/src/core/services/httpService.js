@@ -1,6 +1,7 @@
 import axiosClient from './../../plugins/axios'
 import authService from "./auth.service";
 
+const HTTP_BAD_REQUEST = 400;
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_NOT_ALLOWED = 405;
 const HTTP_FORBIDDEN = 403;
@@ -33,6 +34,16 @@ function handleExceptionResponse(response, resolveObj) {
       })
     } else {
       resolveObj.errors.push(resolveObj.body)
+    }
+  } else if (response.status === HTTP_BAD_REQUEST) {
+    for (let key in response.body) {
+      let innerData = response.body[key];
+      // This means that inner data is an array
+      if (innerData.length !== undefined) {
+        innerData.forEach((error) => {
+          resolveObj.errors.push(error);
+        })
+      }
     }
   } else if (response.status === HTTP_NOT_FOUND) {
     resolveObj.toastError = 'Requested data was not found.';

@@ -1,6 +1,6 @@
 <template>
-  <ValidationProvider :name="`${attribute}-${uuid}`" :rules="!rules ? model.rules[attribute] : rules"
-                      :customMessages="ruleMessages" v-slot="v" tag="div" :vid="vid">
+  <ValidationProvider :name="`${attribute}-${uuid}`" :rules="!rules ? newRules : rules"
+                      :customMessages="model.defaultRules" v-slot="v" tag="div" :vid="vid">
     <b-form-group v-if="isInput() || isTextarea()">
       <label v-if="computedLabel">
         {{ computedLabel }}
@@ -117,21 +117,6 @@ export default {
   data() {
     return {
       uuid: uuid.v4(),
-      ruleMessages: {
-        confirmed: i18n.t("Passwords do not match"),
-        required: i18n.t("This field is required"),
-        email: i18n.t("The email field must be a valid email"),
-        regex: function (name, rule) {
-          if (rule.regex.source === '^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$') {
-            return i18n.t("Invalid username");
-          } else if (rule.regex.source === '(?=.*[A-Z])') {
-            return i18n.t("The field must contain at least one uppercase character");
-          }
-        },
-        min: function (name, rule) {
-          return i18n.t('The field must contain at least {val} characters', {val: rule.length})
-        }
-      },
     }
   },
   methods: {
@@ -191,6 +176,12 @@ export default {
     },
   },
   computed: {
+    newRules() {
+      if (typeof this.model.rules[this.attribute] !== "string") {
+        return this.model.getRules(this.attribute);
+      }
+      return this.model.rules[this.attribute];
+    },
     computedPlaceholder() {
       if (this.placeholder === false) {
         return '';
