@@ -17,17 +17,19 @@
             {{ data.item.createdBy.email }}
           </template>
           <template v-slot:cell(actions)="data">
-            <b-button variant="outline-primary" size="sm" class="mr-2" v-b-tooltip.hover :title="$t('Edit Country')">
+            <b-button variant="outline-primary" size="sm" class="mr-2" v-b-tooltip.hover :title="$t('Edit Country')"
+                      @click="editCountry(data.item)">
               <i class="fas fa-edit"></i>
             </b-button>
-            <b-button variant="outline-danger" size="sm" v-b-tooltip.hover :title="$t('Delete Country')">
+            <b-button variant="outline-danger" size="sm" v-b-tooltip.hover :title="$t('Delete Country')"
+                      @click="deleteCountry(data.item)">
               <i class="fas fa-trash-alt"></i>
             </b-button>
           </template>
         </b-table>
       </b-card>
     </div>
-    <country-modal />
+    <country-modal/>
   </div>
 </template>
 
@@ -55,7 +57,13 @@ export default {
     ...mapState(['countries'])
   },
   methods: {
-    ...mapActions(['getCountries', 'showCountryModal'])
+    ...mapActions(['getCountries', 'showCountryModal']),
+    editCountry(country) {
+      this.showCountryModal(country)
+    },
+    deleteCountry(country) {
+      console.log(country);
+    }
   },
   mounted() {
     this.getCountries();

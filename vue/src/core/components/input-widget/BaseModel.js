@@ -50,7 +50,7 @@ export default class BaseModel {
       for (let rule of rules) {
         message[rule.rule] = rule.message || this.defaultMessages[rule.rule];
       }
-    } else if (typeof rules === 'string'){
+    } else if (typeof rules === 'string') {
       message[rules] = this.defaultMessages[rules];
     } else {
       message[rules.rule] = rules.message || this.defaultMessages[rules.rule];

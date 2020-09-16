@@ -12,4 +12,15 @@ export default class CountryModel extends BaseModel {
   attributeLabels = {
     name: i18n.t('Country Name'),
   };
+
+  constructor(data = {}) {
+    super();
+    Object.assign(this, {...data});
+  }
+
+  toJSON() {
+    return {
+      name: this.name
+    }
+  }
 }

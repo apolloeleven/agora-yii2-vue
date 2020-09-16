@@ -13,8 +13,9 @@ export default {
     state.countries.loaded = true;
     state.countries.data = countries;
   },
-  [SHOW_COUNTRY_MODAL](state) {
+  [SHOW_COUNTRY_MODAL](state, country) {
     state.countryModal.show = true;
+    state.countryModal.data = country;
   },
   [HIDE_COUNTRY_MODAL](state) {
     state.countryModal.show = false;

@@ -29,7 +29,17 @@ export default {
     }
   },
   computed: {
-    ...mapState(['countryModal'])
+    ...mapState({
+      countryModal: state => state.countryModal,
+      country: state => state.countryModal.data
+    }),
+  },
+  watch: {
+    country() {
+      if (this.country && this.country.id) {
+        this.model = new CountryModel(this.country);
+      }
+    }
   },
   methods: {
     ...mapActions(['hideCountryModal', 'saveCountry']),

@@ -20,8 +20,8 @@ export async function getCountries({commit}) {
   commit(SET_COUNTRIES_LOADING, false)
 }
 
-export function showCountryModal({commit}) {
-  commit(SHOW_COUNTRY_MODAL)
+export function showCountryModal({commit}, country) {
+  commit(SHOW_COUNTRY_MODAL, country)
 }
 
 export function hideCountryModal({commit}) {
@@ -33,7 +33,7 @@ export async function saveCountry({dispatch}, country) {
   if (!country.id) {
     response = await httpService.post(`/v1/setup/countries`, country)
   } else {
-    response = await httpService.put(`/v1/setup/countries`, country)
+    response = await httpService.put(`/v1/setup/countries/${country.id}`, country)
   }
   if (response) {
     dispatch('getCountries')
