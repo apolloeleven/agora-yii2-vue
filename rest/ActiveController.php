@@ -16,5 +16,5 @@ namespace app\rest;
  */
 class ActiveController extends \yii\rest\ActiveController
 {
-    use ControllerTrait;
+    use ControllerAuthTrait;
 }

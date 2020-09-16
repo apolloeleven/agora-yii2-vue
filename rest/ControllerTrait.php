@@ -11,6 +11,12 @@ namespace app\rest;
 use Yii;
 use yii\filters\Cors;
 
+/**
+ * Trait ControllerTrait
+ * This must be used in \yii\rest\Controller class
+ *
+ * @package app\rest
+ */
 trait ControllerTrait
 {
     public function behaviors()
