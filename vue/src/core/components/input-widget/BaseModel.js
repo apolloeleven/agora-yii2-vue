@@ -19,8 +19,8 @@ export default class BaseModel {
     confirmed: i18n.t('Passwords do not match'),
   };
 
-  getRules(attribute) {
-    let rules = this.rules[attribute]
+  getRules(attribute, inlineRules = null) {
+    let rules = this.rules[attribute] || inlineRules
 
     if (Array.isArray(rules)) {
       return rules.map(rule => this.parseRules(rule)).join('|');
@@ -30,7 +30,6 @@ export default class BaseModel {
   }
 
   parseRules(rule) {
-
     if (typeof rule === 'string') {
       return rule;
     }

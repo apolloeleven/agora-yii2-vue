@@ -1,5 +1,5 @@
 <template>
-  <ValidationProvider :name="`${attribute}-${uuid}`" :rules="rules || model.getRules(attribute)"
+  <ValidationProvider :name="`${attribute}-${uuid}`" :rules="model.getRules(attribute, rules || null)"
                       :customMessages="customMessages" v-slot="v" tag="div" :vid="vid">
     <b-form-group v-if="isInput() || isTextarea()">
       <label v-if="computedLabel">
@@ -88,7 +88,7 @@ export default {
       default: false,
     },
     rules: {
-      type: String,
+      type: [String, Object, Array],
       default: null,
       required: false
     },
