@@ -45,14 +45,15 @@ export default class BaseModel {
 
   getMessages(attribute) {
     let message = {};
-    let ruleAttributes = this.rules[attribute]
-
-    if (Array.isArray(ruleAttributes)) {
-      for (let i = 0; i < ruleAttributes.length; i++) {
-        message[ruleAttributes[i].rule] = ruleAttributes[i].message || this.defaultMessages[ruleAttributes[i].rule];
+    const rules = this.rules[attribute]
+    if (Array.isArray(rules)) {
+      for (let rule of rules) {
+        message[rule.rule] = rule.message || this.defaultMessages[rule.rule];
       }
+    } else if (typeof rules === 'string'){
+      message[rules] = this.defaultMessages[rules];
     } else {
-      message[ruleAttributes.rule] = ruleAttributes.message;
+      message[rules.rule] = rules.message || this.defaultMessages[rules.rule];
     }
     return message;
   }
