@@ -3,9 +3,9 @@
 namespace app\models;
 
 use app\models\query\UserQuery;
+use DateTime;
 use Yii;
 use yii\base\Exception;
-use yii\base\InvalidCallException;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -17,6 +17,7 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property string $password_hash
  * @property string|null $password_reset_token
+ * @property datetime $expired_date
  * @property string|null $access_token
  * @property int|null $status
  * @property int|null $created_at
@@ -42,6 +43,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['password_hash', 'password_reset_token'], 'string', 'max' => 1024],
             [['username'], 'unique'],
             [['email'], 'unique'],
+            [['expired_date'], 'safe'],
         ];
     }
 
@@ -53,6 +55,7 @@ class User extends ActiveRecord implements IdentityInterface
             'email' => Yii::t('app', 'Email'),
             'password_hash' => Yii::t('app', 'Password Hash'),
             'password_reset_token' => Yii::t('app', 'Password Reset Token'),
+            'expired_date' => Yii::t('app', 'Expired Date'),
             'access_token' => Yii::t('app', 'Access Token'),
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
