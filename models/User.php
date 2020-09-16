@@ -3,7 +3,6 @@
 namespace app\models;
 
 use app\models\query\UserQuery;
-use DateTime;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
@@ -17,7 +16,7 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property string $password_hash
  * @property string|null $password_reset_token
- * @property datetime $expired_date
+ * @property int|null $expired_date
  * @property string|null $access_token
  * @property int|null $status
  * @property int|null $created_at
@@ -27,6 +26,11 @@ class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 2;
+
+    /**
+     * Password reset link is valid 48 hours
+     */
+    const EXPIRE_DATE = 3600 * 48;
 
     public static function tableName()
     {
@@ -150,5 +154,36 @@ class User extends ActiveRecord implements IdentityInterface
     public function getApiData()
     {
         return $this->toArray(['id', 'username', 'email', 'access_token', 'status', 'created_at', 'updated_at']);
+    }
+
+    /**
+     * Finds user by password reset token
+     *
+     * @param string $token password reset token
+     * @return static|null
+     */
+    public static function findByPasswordResetToken(string $token)
+    {
+        $user = static::findOne([
+            'password_reset_token' => $token,
+            'status' => self::STATUS_ACTIVE,
+        ]);
+
+        if (!$user || !static::isPasswordResetTokenValid($user->expired_date)) {
+            return null;
+        }
+
+        return $user;
+    }
+
+    /**
+     * Finds out if password reset token is valid
+     *
+     * @param int $expireDate
+     * @return bool
+     */
+    public static function isPasswordResetTokenValid(int $expireDate)
+    {
+        return self::EXPIRE_DATE + $expireDate >= time();
     }
 }

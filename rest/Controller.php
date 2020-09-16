@@ -15,6 +15,16 @@ class Controller extends \yii\rest\Controller
             'class' => Cors::class,
         ];
 
+        $behaviors['verbs'] = [
+            'class' => \yii\filters\VerbFilter::class,
+            'actions' => [
+                'login' => ['options', 'post'],
+                'send-password-reset-link' => ['options', 'post'],
+                'check-token-validate' => ['options', 'get'],
+                'password-reset' => ['options', 'post'],
+            ]
+        ];
+
         return $behaviors;
     }
 
