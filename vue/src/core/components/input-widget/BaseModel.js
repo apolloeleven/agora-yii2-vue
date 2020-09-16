@@ -47,9 +47,9 @@ export default class BaseModel {
     throw new Error(`Incorrect validation rule "${rule.rule}"`);
   }
 
-  getMessages(attribute) {
+  getMessages(attribute, inlineMessages = null) {
     let message = {};
-    let ruleAttributes = this.rules[attribute]
+    let ruleAttributes = this.rules[attribute] || inlineMessages
 
     if (typeof ruleAttributes === 'string') {
       return this.defaultMessages;

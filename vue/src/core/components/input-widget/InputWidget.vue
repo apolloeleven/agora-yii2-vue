@@ -1,6 +1,6 @@
 <template>
   <ValidationProvider :name="`${attribute}-${uuid}`" :rules="model.getRules(attribute, rules || null)"
-                      :customMessages="customMessages" v-slot="v" tag="div" :vid="vid">
+                      :customMessages="model.getMessages(attribute, rules || null)" v-slot="v" tag="div" :vid="vid">
     <b-form-group v-if="isInput() || isTextarea()">
       <label v-if="computedLabel">
         {{ computedLabel }}
@@ -175,10 +175,6 @@ export default {
     },
   },
   computed: {
-    customMessages() {
-      //TODO Must check this.rules and extract error messages from there
-      return this.model.getMessages(this.attribute)
-    },
     computedPlaceholder() {
       if (this.placeholder === false) {
         return '';
