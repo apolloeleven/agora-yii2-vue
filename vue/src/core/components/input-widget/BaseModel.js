@@ -3,6 +3,7 @@ import i18n from "../../../shared/i18n";
 export const RULE_REQUIRED = 'required'
 export const RULE_REGEX = 'regex'
 export const RULE_EMAIL = 'email'
+export const RULE_CONFIRMED = 'confirmed'
 
 export default class BaseModel {
   errors = {};
@@ -12,9 +13,10 @@ export default class BaseModel {
   attributeHints = {};
 
   defaultMessages = {
-    required: i18n.t("This field is required"),
-    email: i18n.t("The email field must be a valid email"),
-    regex: i18n.t('Value does not match the pattern')
+    required: i18n.t('This field is required'),
+    email: i18n.t('The email field must be a valid email'),
+    regex: i18n.t('Value does not match the pattern'),
+    confirmed: i18n.t('Passwords do not match'),
   };
 
   getRules(attribute) {
@@ -38,6 +40,9 @@ export default class BaseModel {
     }
     if (rule.rule === RULE_REGEX) {
       return rule.rule + ':' + rule.pattern;
+    }
+    if (rule.rule === RULE_CONFIRMED) {
+      return rule.rule + ':' + rule.target;
     }
 
     throw new Error(`Incorrect validation rule "${rule.rule}"`);
