@@ -7,9 +7,7 @@ export default class PasswordResetForm extends BaseModel {
   token = '';
 
   rules = {
-    password: [
-      {rule: 'required'},
-    ],
+    password: 'required',
     repeat_password: [
       {rule: 'required'},
       {rule: 'confirmed', target: 'password'},
