@@ -1,7 +1,7 @@
 <template>
   <ValidationObserver ref="countryModal">
     <b-modal id="country-modal"
-             :title="$t('Add new country')"
+             :title="this.model.id ? $t('Edit country') : $t('Add new country')"
              :visible="countryModal.show"
              @shown="onShown"
              @hidden="onHidden"
