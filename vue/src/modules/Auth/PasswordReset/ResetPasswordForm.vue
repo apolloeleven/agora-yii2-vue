@@ -39,7 +39,7 @@ import InputWidget from "../../../core/components/input-widget/InputWidget";
 import PasswordResetForm from "./PasswordResetForm";
 
 export default {
-  name: "ResetPassword",
+  name: "ResetPasswordForm",
   components: {InputWidget},
   data() {
     return {
