@@ -1,4 +1,4 @@
-import {SET_COUNTRIES, SET_COUNTRIES_LOADING} from './mutation-types';
+import {HIDE_COUNTRY_MODAL, SET_COUNTRIES, SET_COUNTRIES_LOADING, SHOW_COUNTRY_MODAL} from './mutation-types';
 
 export default {
   [SET_COUNTRIES_LOADING](state, loading) {
@@ -10,6 +10,13 @@ export default {
    * @param { array } countries
    */
   [SET_COUNTRIES](state, {countries}) {
+    state.countries.loaded = true;
     state.countries.data = countries;
   },
+  [SHOW_COUNTRY_MODAL](state) {
+    state.countryModal.show = true;
+  },
+  [HIDE_COUNTRY_MODAL](state) {
+    state.countryModal.show = false;
+  }
 };
