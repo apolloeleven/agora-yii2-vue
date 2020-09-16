@@ -19,7 +19,7 @@
               <input-widget :model="loginFormModel" attribute="password" type="password"/>
               <div class="d-flex align-items-center justify-content-between">
                 <button class="btn btn-primary mr-2">{{ $t('Login') }}</button>
-                <router-link :to="{name: 'reset-password'}">{{ $t('Request new password') }}</router-link>
+                <router-link :to="{name: 'password-reset'}">{{ $t('Request new password') }}</router-link>
               </div>
             </div>
           </ValidationObserver>

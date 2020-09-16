@@ -33,9 +33,9 @@
 </template>
 
 <script>
-import auth from '../../core/services/authService';
+import auth from '../../../core/services/authService';
 import PasswordReset from "./PasswordReset";
-import InputWidget from "../../core/components/input-widget/InputWidget";
+import InputWidget from "../../../core/components/input-widget/InputWidget";
 
 export default {
   name: "ResetPassword",
@@ -50,14 +50,14 @@ export default {
     async onSubmit() {
       this.resetPasswordModel.resetErrors();
       this.loading = true;
-      let response = await auth.resetPassword(this.resetPasswordModel);
+      let response = await auth.resetPasswordLink(this.resetPasswordModel);
       this.loading = false;
       if (response.success) {
         this.$notify({
           group: 'success',
           type: 'success',
           title: this.$t('Success'),
-          text: this.$t(`New password was successfully sent. Please check your email.`),
+          text: this.$t(`Password reset link was successfully sent. Please check your email.`),
           speed: 1000,
         });
         this.$router.push('/login');

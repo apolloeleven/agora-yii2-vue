@@ -76,7 +76,23 @@ export default {
    * @param email
    * @returns {Promise<any>}
    */
-  async resetPassword(email) {
-    return await httpService.post('/user/reset-password', email);
+  async resetPasswordLink(email) {
+    return await httpService.post('/user/send-password-reset-link', email);
   },
+
+  /**
+   * @returns {Promise<any>}
+   * @param data
+   */
+  async passwordReset(data) {
+    return await httpService.post('/user/password-reset', data);
+  },
+
+  /**
+   * @param token
+   * @returns {Promise<unknown>}
+   */
+  async checkToken(token) {
+    return await httpService.get('/user/check-token-validate?token=' + token);
+  }
 }
