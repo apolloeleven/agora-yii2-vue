@@ -72,8 +72,8 @@ class UserController extends Controller
      */
     public function actionCheckTokenValidate($token)
     {
-        if (empty(User::findByPasswordResetToken($token))) {
-            return $this->validationError(Yii::t('app', 'This link does not valid'));
+        if (!User::findByPasswordResetToken($token)) {
+            return $this->validationError(Yii::t('app', 'This link date expired'));
         }
     }
 
@@ -88,10 +88,7 @@ class UserController extends Controller
         $request = Yii::$app->request;
 
         $token = $request->post('token');
-        $user = User::findOne([
-            'password_reset_token' => $token,
-            'status' => User::STATUS_ACTIVE,
-        ]);
+        $user = User::findByPasswordResetToken($token);
 
         if (!$user) {
             return $this->validationError(Yii::t('app', 'Unable to find user'));

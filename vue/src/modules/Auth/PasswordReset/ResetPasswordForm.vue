@@ -63,7 +63,14 @@ export default {
         });
         this.$router.push('/login');
       } else {
-        this.model.setMultipleErrors(response.body);
+        this.$notify({
+          group: 'error',
+          type: 'error',
+          title: this.$t('Error'),
+          text: this.$t(response.body),
+          speed: 1000,
+        });
+        this.$router.push('/login');
       }
     },
   },
@@ -71,6 +78,13 @@ export default {
     this.model.token = this.$route.params.token;
     const response = await auth.checkToken(this.model.token);
     if (!response.success) {
+      this.$notify({
+        group: 'error',
+        type: 'error',
+        title: this.$t('Error'),
+        text: this.$t(response.body),
+        speed: 1000,
+      });
       this.$router.push('/login');
     }
   }
