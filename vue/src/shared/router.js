@@ -6,7 +6,7 @@ import NotFoundComponent from "./../core/components/pages/NotFoundComponent";
 import Dashboard from "@/modules/Dashboard/Dashboard";
 import Login from "../modules/Auth/Login";
 import Register from "@/modules/Auth/Register";
-import ResetPassword from "../modules/Auth/PasswordReset/ResetPassword";
+import RequestPasswordReset from "../modules/Auth/PasswordReset/RequestPasswordReset";
 import ResetPasswordForm from "../modules/Auth/PasswordReset/ResetPasswordForm";
 
 Vue.use(Router);
@@ -29,7 +29,7 @@ const router = new Router({
         {
           path: 'password-reset',
           name: 'password-reset',
-          component: ResetPassword,
+          component: RequestPasswordReset,
         },        {
           path: 'password-reset/:token',
           name: 'password-reset',

@@ -17,7 +17,7 @@
         <div class="login-form">
           <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid, reset}">
             <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
-              <input-widget ref="emailInputWidget" :model="resetPasswordModel" attribute="email"/>
+              <input-widget ref="emailInputWidget" :model="model" attribute="email"/>
               <div class="d-flex align-items-center justify-content-between">
                 <button :disabled="loading" class="btn btn-primary btn-action">{{ $t('Submit') }}</button>
                 <router-link class="float-right" :to="{name: 'auth.login'}">
@@ -38,19 +38,19 @@ import PasswordReset from "./PasswordReset";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 
 export default {
-  name: "ResetPassword",
+  name: "RequestPasswordReset",
   components: {InputWidget},
   data() {
     return {
       loading: false,
-      resetPasswordModel: new PasswordReset(),
+      model: new PasswordReset(),
     }
   },
   methods: {
     async onSubmit() {
-      this.resetPasswordModel.resetErrors();
+      this.model.resetErrors();
       this.loading = true;
-      let response = await auth.resetPasswordLink(this.resetPasswordModel);
+      let response = await auth.resetPasswordLink(this.model);
       this.loading = false;
       if (response.success) {
         this.$notify({
@@ -62,7 +62,7 @@ export default {
         });
         this.$router.push('/login');
       } else {
-        this.resetPasswordModel.setMultipleErrors({email: response.body});
+        this.model.setMultipleErrors({email: response.body});
       }
     },
   },
