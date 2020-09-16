@@ -1,6 +1,6 @@
 <template>
-  <ValidationProvider :name="`${attribute}-${uuid}`" :rules="!rules ? model.rules[attribute] : rules"
-                      :customMessages="ruleMessages" v-slot="v" tag="div" :vid="vid">
+  <ValidationProvider :name="`${attribute}-${uuid}`" :rules="rules || model.getRules(attribute)"
+                      :customMessages="customMessages" v-slot="v" tag="div" :vid="vid">
     <b-form-group v-if="isInput() || isTextarea()">
       <label v-if="computedLabel">
         {{ computedLabel }}
@@ -40,7 +40,6 @@
 
 import BaseModel from "./BaseModel";
 import {uuid} from 'vue-uuid';
-import i18n from './../../../shared/i18n';
 
 export default {
   name: 'InputWidget',
@@ -117,21 +116,6 @@ export default {
   data() {
     return {
       uuid: uuid.v4(),
-      ruleMessages: {
-        confirmed: i18n.t("Passwords do not match"),
-        required: i18n.t("This field is required"),
-        email: i18n.t("The email field must be a valid email"),
-        regex: function (name, rule) {
-          if (rule.regex.source === '^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$') {
-            return i18n.t("Invalid username");
-          } else if (rule.regex.source === '(?=.*[A-Z])') {
-            return i18n.t("The field must contain at least one uppercase character");
-          }
-        },
-        min: function (name, rule) {
-          return i18n.t('The field must contain at least {val} characters', {val: rule.length})
-        }
-      },
     }
   },
   methods: {
@@ -191,6 +175,10 @@ export default {
     },
   },
   computed: {
+    customMessages() {
+      //TODO Must check this.rules and extract error messages from there
+      return this.model.getMessages(this.attribute)
+    },
     computedPlaceholder() {
       if (this.placeholder === false) {
         return '';

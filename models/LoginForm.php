@@ -86,11 +86,7 @@ class LoginForm extends Model
         $user = Yii::$app->user->identity;
         $user->generateAccessToken();
 
-        if (!$user->save()) {
-            return false;
-        }
-
-        return true;
+        return $user->save();
     }
 
     /**
