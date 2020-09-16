@@ -2,6 +2,7 @@
 
 namespace app\base;
 
+use Yii;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\HttpHeaderAuth;
@@ -54,5 +55,27 @@ class BaseController extends ActiveController
         $behaviors['authenticator']['except'] = ['options'];
 
         return $behaviors;
+    }
+
+    /**
+     * @param $message
+     * @param $statusCode
+     * @return array
+     */
+    public function validationError($message, $statusCode = 422)
+    {
+        return $this->response($message, $statusCode);
+    }
+
+    /**
+     * @param     $data
+     * @param int $statusCode
+     * @return mixed
+     * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
+     */
+    public function response($data, $statusCode = 200)
+    {
+        Yii::$app->response->statusCode = $statusCode;
+        return $data;
     }
 }

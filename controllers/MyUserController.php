@@ -98,7 +98,7 @@ class MyUserController extends BaseController
 
         /** Check if requestDate has all required fields */
         if (!$requestData || !isset($requestData['userProfile'])) {
-            return Controller::response(Yii::t('app', 'Unable to find all required fields'), 400);
+            return $this->validationError(Yii::t('app', 'Unable to find all required fields'), 400);
         }
 
         $userModel = new User();
@@ -112,10 +112,10 @@ class MyUserController extends BaseController
 
         /** load $requestDate in $userProfileModel and $userModel models separately, that fits requestData format*/
         if (!$userProfileModel->load($requestData['userProfile'], '')) {
-            return Controller::response($userProfileModel->errors);
+            return $this->validationError($userProfileModel->errors);
         }
         if (!$userModel->load($requestData, '')) {
-            return Controller::response($userModel->errors);
+            return $this->validationError($userModel->errors);
         };
 
         $userModel->username = $userModel->email;
@@ -146,7 +146,7 @@ class MyUserController extends BaseController
 
         // Check if requestDate is has all required fields
         if (!$requestData || !isset($requestData['userProfile']) || !$id) {
-            return Controller::response(Yii::t('app', 'Unable to find all required fields'), 400);
+            return $this->validationError(Yii::t('app', 'Unable to find all required fields'), 400);
         }
 
         /* @var $userModel User */
@@ -157,7 +157,7 @@ class MyUserController extends BaseController
             ->byId($id)
             ->one();
         if (!$userModel) {
-            return Controller::response(Yii::t('app', 'Unable to find user'));
+            return $this->validationError(Yii::t('app', 'Unable to find user'));
 
         }
 
@@ -170,10 +170,10 @@ class MyUserController extends BaseController
         $requestData['userProfile']['department_position'] = $requestData['departmentPosition'];
 
         if (!$userProfileModel->load($requestData['userProfile'], '')) {
-            return Controller::response($userProfileModel->errors);
+            return $this->validationError($userProfileModel->errors);
         }
         if (!$userModel->load($requestData, '')) {
-            return Controller::response($userModel->errors);
+            return $this->validationError($userModel->errors);
         };
 
         // If image removed
@@ -204,7 +204,7 @@ class MyUserController extends BaseController
         $transaction = Yii::$app->db->beginTransaction();
         if (!$userModel->save()) {
             $transaction->rollBack();
-            return Controller::response($userModel->errors);
+            return $this->validationError($userModel->errors);
         }
 
         if ($insert) {
@@ -212,7 +212,7 @@ class MyUserController extends BaseController
 
             if (!$userProfileModel->save()) {
                 $transaction->rollBack();
-                return Controller::response($userProfileModel->errors);
+                return $this->validationError($userProfileModel->errors);
             }
         }
 
@@ -223,8 +223,8 @@ class MyUserController extends BaseController
         $transaction->commit();
 
         return $insert ?
-            Controller::response(Yii::t('app', 'Successfully created'), 201) :
-            Controller::response(Yii::t('app', 'Successfully updated'), 200);
+            $this->response(Yii::t('app', 'Successfully created'), 201) :
+            $this->response(Yii::t('app', 'Successfully updated'), 200);
     }
 
     /**
@@ -240,7 +240,7 @@ class MyUserController extends BaseController
         /** @var User $user */
         $user = User::find()->active()->byId($id)->one();
         if (!$user) {
-            return Controller::response(Yii::t('app', 'Unable to find user'));
+            return $this->validationError(Yii::t('app', 'Unable to find user'));
         }
 
         $transaction = Yii::$app->db->beginTransaction();
@@ -268,17 +268,17 @@ class MyUserController extends BaseController
         $userProfileData->image_path = null;
         if (!$userProfileData->save()) {
             $transaction->rollBack();
-            return Controller::response($userProfileData->errors);
+            return $this->validationError($userProfileData->errors);
         }
 
         if (!$user->markDeleted()->save()) {
             $transaction->rollBack();
-            return Controller::response(array_merge($user->errors, $user->userProfile->errors));
+            return $this->validationError(array_merge($user->errors, $user->userProfile->errors));
         };
 
         $transaction->commit();
 
-        return Controller::response(Yii::t('app', 'Successfully deleted'), 204);
+        return $this->response(Yii::t('app', 'Successfully deleted'), 204);
     }
 
     /**
@@ -290,13 +290,13 @@ class MyUserController extends BaseController
     public function actionView($id)
     {
         if (!$id) {
-            return Controller::response(Yii::t('app', 'Missing required parameter'), 400);
+            return $this->validationError(Yii::t('app', 'Missing required parameter'), 400);
         }
 
         $model = User::find()->byId($id)->one();
 
         if (!$model) {
-            return Controller::response(Yii::t('app', 'Unable to find user'));
+            return $this->validationError(Yii::t('app', 'Unable to find user'));
         }
 
         return $model;
