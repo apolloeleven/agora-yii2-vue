@@ -9,6 +9,7 @@ use yii\base\InvalidCallException;
 use yii\behaviors\AttributeBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -121,6 +122,7 @@ class User extends ActiveRecord implements IdentityInterface
             },
             'email',
             'status',
+            'access_token',
             //TODO roles field
         ];
     }
@@ -133,6 +135,30 @@ class User extends ActiveRecord implements IdentityInterface
     public function extraFields()
     {
         return ['userProfile', 'updatedBy', 'createdBy'];
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCreatedBy()
+    {
+        return $this->hasOne(User::class, ['id' => 'created_by']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUpdatedBy()
+    {
+        return $this->hasOne(User::class, ['id' => 'updated_by']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUserProfile()
+    {
+        return $this->hasOne(UserProfile::class, ['user_id' => 'id']);
     }
 
     /**

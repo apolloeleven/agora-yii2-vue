@@ -3,12 +3,19 @@
 namespace app\rest;
 
 use Yii;
+use yii\filters\Cors;
 
 class Controller extends \yii\rest\Controller
 {
     public function behaviors()
     {
-        return parent::behaviors();
+        $behaviors = parent::behaviors();
+
+        $behaviors['corsFilter'] = [
+            'class' => Cors::class,
+        ];
+
+        return $behaviors;
     }
 
     /**
