@@ -7,18 +7,8 @@
         <b-spinner class="align-middle"></b-spinner>
         <strong>{{ $t('Please wait...') }}</strong>
       </div>
-      <b-form @submit.prevent="handleSubmit(onSubmit)" @reset="onReset" novalidate>
-        <validation-provider name="Email" rules="required|email" v-slot="{ touched, validated, valid, errors, }">
-          <b-form-group :label="$t('Email Address')">
-            <b-form-input v-model="email"
-                          autocapitalize="off"
-                          :state="checkValidity(touched, validated, valid)"
-                          :placeholder="$t('Enter email address to invite the user')"/>
-            <b-form-invalid-feedback>
-              <span>{{ errors[0] }}</span>
-            </b-form-invalid-feedback>
-          </b-form-group>
-        </validation-provider>
+      <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
+        <input-widget :model="model" attribute="email"/>
       </b-form>
     </b-modal>
   </ValidationObserver>
@@ -27,15 +17,18 @@
 <script>
 
 import {createNamespacedHelpers} from "vuex";
+import InvitationForm from "./InvitationForm";
+import InputWidget from "../../../core/components/input-widget/InputWidget";
 
 const {mapState: mapStateInvitations, mapActions} = createNamespacedHelpers('invitations');
 
 export default {
   name: "UserInvitationForm",
+  components: {InputWidget},
   data() {
     return {
       loading: false,
-      email: null
+      model: new InvitationForm(),
     }
   },
   computed: {
@@ -47,34 +40,36 @@ export default {
       return (!touched && !validated) ? null : valid;
     },
     onHideModal() {
-      this.email = null;
+      this.model.email = null;
       this.hideModal();
     },
     async onSubmit() {
       this.loading = true;
-      const res = await this.inviteUser(this.email);
+      const res = await this.inviteUser(this.model.email);
       this.loading = false;
       if (res.success) {
         this.$notify({
           group: 'success',
           type: 'success',
           title: this.$t('Success'),
-          text: this.$t(`Email "{email}" was successfully invited`, {email: this.email})
+          text: this.$t(`Email "{email}" was successfully invited`, {email: this.model.email})
         });
         this.$nextTick(() => {
           this.hideModal();
         });
       } else {
-        console.log(res.errors)
+        this.$notify({
+          group: 'error',
+          type: 'error',
+          title: this.$t('Error'),
+          text: this.$t(`Email "{email}" was not invited`, {email: this.model.email})
+        });
+        this.$nextTick(() => {
+          this.hideModal();
+        });
       }
     },
-    onReset() {
-      console.log("reset");
-    }
   },
-  created() {
-
-  }
 }
 </script>
 
