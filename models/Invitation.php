@@ -189,9 +189,9 @@ class Invitation extends ActiveRecord
     public function getStatusLabels()
     {
         return [
-            self::STATUS_PENDING => Yii::t('api', 'Pending'),
-            self::STATUS_REGISTERED => Yii::t('api', 'Registered'),
-            self::STATUS_COMPLETED => Yii::t('api', 'Completed'),
+            self::STATUS_PENDING => Yii::t('app', 'Pending'),
+            self::STATUS_REGISTERED => Yii::t('app', 'Registered'),
+            self::STATUS_COMPLETED => Yii::t('app', 'Completed'),
         ];
     }
 

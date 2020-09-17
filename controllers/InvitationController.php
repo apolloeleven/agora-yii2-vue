@@ -6,7 +6,6 @@ namespace app\controllers;
 
 use app\base\BaseController;
 use app\models\Invitation;
-use app\rest\Controller;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 use yii\filters\AccessControl;
@@ -65,21 +64,5 @@ class InvitationController extends BaseController
         return new ActiveDataProvider([
             'query' => Invitation::find()->orderBy('status')
         ]);
-    }
-
-    /**
-     * Get user email with validate token
-     *
-     * @param $token
-     * @return array|ActiveRecord
-     */
-    public function actionGetEmail($token)
-    {
-        $invitation = Invitation::findByToken($token);
-        if (!$invitation) {
-            return $this->validationError(\Yii::t('app', 'Unable to find valid invitation token'));
-        }
-
-        return $invitation->email;
     }
 }
