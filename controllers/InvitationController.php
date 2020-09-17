@@ -28,7 +28,6 @@ class InvitationController extends BaseController
     {
         $behaviors = parent::behaviors();
 
-        $behaviors['authenticator']['except'][] = 'get-email';
         $behaviors['access'] = [
             'class' => AccessControl::class,
             'only' => ['index', 'create', 'delete'],
