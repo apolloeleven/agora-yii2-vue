@@ -1,0 +1,18 @@
+.nav-pills {
+  background-color: #FFF;
+  border-top: 1px solid #dbdbdb;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+
+  .nav-link {
+    border-bottom: 2px solid transparent;
+    border-top: 2px solid transparent;
+    transition: all 0.3s;
+
+    &.active {
+      color: #3989c6;
+      background-color: #ffffff;
+      border-bottom: 2px solid #3989c6;
+      border-radius: 0;
+    }
+  }
+}
