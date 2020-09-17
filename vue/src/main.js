@@ -8,6 +8,7 @@ import './plugins';
 import './icons';
 import store from './store';
 import './index.scss';
+import './core/filters/index';
 
 Vue.use(require('vue-moment'));
 Vue.component('font-awesome-icon', FontAwesomeIcon);

@@ -18,7 +18,7 @@
             {{ new Date(data.item.created_at) | toDateTime }}
           </template>
           <template v-slot:cell(created_by)="data">
-            {{ data.item.createdBy}}
+            {{ data.item.createdBy }}
           </template>
           <template v-slot:cell(statusLabel)="data">
             <span class="badge" :class="{
