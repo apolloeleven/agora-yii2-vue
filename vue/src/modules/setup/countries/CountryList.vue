@@ -8,7 +8,7 @@
     </page-header>
     <div class="content-wrapper p-3">
       <content-spinner :show="countries.loading" :text="$t('Please wait...')" class="h-100"/>
-      <b-card v-if="countries.loaded" no-body>
+      <b-card v-if="!countries.loading && countries.loaded" no-body>
         <b-table striped hover :items="countries.data" :fields="fields" class="mb-0">
           <template v-slot:cell(created_at)="data">
             {{ data.item.created_at | toDatetime }}
@@ -22,7 +22,7 @@
               <i class="fas fa-edit"></i>
             </b-button>
             <b-button variant="outline-danger" size="sm" v-b-tooltip.hover :title="$t('Delete Country')"
-                      @click="deleteCountry(data.item)">
+                      @click="onDeleteCountry(data.item)">
               <i class="fas fa-trash-alt"></i>
             </b-button>
           </template>
@@ -38,6 +38,7 @@ import {createNamespacedHelpers} from 'vuex';
 import ContentSpinner from "@/core/components/ContentSpinner";
 import PageHeader from "@/core/components/PageHeader";
 import CountryModal from "@/modules/setup/countries/CountryModal";
+import i18n from "@/shared/i18n";
 
 const {mapActions, mapState} = createNamespacedHelpers('setup');
 export default {
@@ -57,12 +58,15 @@ export default {
     ...mapState(['countries'])
   },
   methods: {
-    ...mapActions(['getCountries', 'showCountryModal']),
+    ...mapActions(['getCountries', 'showCountryModal', 'deleteCountry']),
     editCountry(country) {
       this.showCountryModal(country)
     },
-    deleteCountry(country) {
-      console.log(country);
+    async onDeleteCountry(country) {
+      const result = await this.$confirm(i18n.t(`Are you sure you want to delete that country?`))
+      if (result) {
+        this.deleteCountry(country.id)
+      }
     }
   },
   mounted() {

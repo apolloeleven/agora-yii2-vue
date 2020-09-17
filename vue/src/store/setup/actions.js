@@ -41,3 +41,12 @@ export async function saveCountry({dispatch}, country) {
 
   return response;
 }
+
+export async function deleteCountry({dispatch}, id) {
+  let response = await httpService.delete(`/v1/setup/countries/${id}`)
+  if (response) {
+    dispatch('getCountries')
+  }
+
+  return response;
+}
