@@ -2,6 +2,7 @@
 
 namespace app\helpers;
 
+use app\models\Invitation;
 use Yii;
 use yii\mail\MessageInterface;
 
@@ -38,6 +39,21 @@ class MailHelper
         $message = Yii::$app->mailer->compose('reset_password', ['user' => $user])
             ->setSubject(Yii::t('app', 'Your new password'))
             ->setTo($user->email);
+
+        return self::sendMail($message);
+    }
+
+    /**
+     * When admin wants to invite user this method will be called
+     *
+     * @param Invitation $invitation
+     * @return bool
+     */
+    public static function invitation(Invitation $invitation)
+    {
+        $message = \Yii::$app->mailer->compose('user_invitation', ['model' => $invitation,])
+            ->setSubject(\Yii::t('app', 'You are invited to {name}', ['name' => \Yii::$app->name]))
+            ->setTo($invitation->email);
 
         return self::sendMail($message);
     }

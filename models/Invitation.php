@@ -4,6 +4,7 @@
 namespace app\models;
 
 
+use app\helpers\MailHelper;
 use Yii;
 use yii\base\Exception;
 use yii\behaviors\BlameableBehavior;
@@ -165,7 +166,7 @@ class Invitation extends ActiveRecord
         parent::afterSave($insert, $changedAttributes);
 
         if ($insert) {
-            //TODO emailing MailHelper::invitation($this)
+            MailHelper::invitation($this);
         }
     }
 
