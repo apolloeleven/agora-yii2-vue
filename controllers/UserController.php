@@ -60,6 +60,6 @@ class UserController extends Controller
      */
     public function actionGetUser()
     {
-//        return current logged user
+        return Yii::$app->user;
     }
 }

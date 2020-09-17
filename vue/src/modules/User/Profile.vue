@@ -70,12 +70,15 @@
                      placeholder="Birthday"/>
           </div>
           <div class="col-md-12 mb-4">
-            <h4 class="text-left">About Me:</h4>
+            <label class="labels">About Me:</label>
             <b-textarea ref="about"
                         :name='`about`'
                         :key='`about`'
                         v-model="user.about" class="mr-sm-2"
                         placeholder="About"></b-textarea>
+          </div>
+          <div class="col-md-12 mb-4 d-flex justify-content-end">
+            <b-button class="btn btn-outline-success" @click="">Update</b-button>
           </div>
         </div>
       </div>
@@ -96,7 +99,7 @@
       ...mapState(['user']),
     },
     methods: {
-      ...mapActions(['setUser']),
+      ...mapActions(['setUser','updateUser']),
     }
   }
 
