@@ -150,7 +150,7 @@ class Invitation extends ActiveRecord
      * @return bool
      * @throws Exception
      */
-    public function beforeSave(bool $insert)
+    public function beforeSave($insert)
     {
         if ($insert) {
             $this->status = self::STATUS_PENDING;
@@ -167,7 +167,7 @@ class Invitation extends ActiveRecord
      * @param bool $insert
      * @param array $changedAttributes
      */
-    public function afterSave(bool $insert, array $changedAttributes)
+    public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
 
