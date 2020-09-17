@@ -7,18 +7,21 @@
         <router-view/>
       </div>
     </div>
+    <UserInvitationForm/>
   </div>
 </template>
 
 <script>
   import Navbar from './../../navbar/Navbar';
   import Sidebar from "./../../sidebar/Sidebar";
+  import UserInvitationForm from "../../../../modules/User/Invitation/UserInvitationForm";
 
   export default {
     name: "DefaultLayout",
     components: {
       Sidebar,
       Navbar,
+      UserInvitationForm,
     }
   }
 </script>
