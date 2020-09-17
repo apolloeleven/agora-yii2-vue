@@ -8,6 +8,7 @@ import Login from "@/modules/Auth/Login";
 import Register from "@/modules/Auth/Register";
 import Setup from "@/modules/setup/Setup";
 import CountryList from "@/modules/setup/countries/CountryList";
+import Profile from "@/modules/User/Profile";
 
 Vue.use(Router);
 
@@ -44,6 +45,22 @@ const router = new Router({
         {path: '/setup', name: 'setup', component: Setup,},
         {path: '/setup/countries', name: 'countries', component: CountryList}
       ]
+    },
+    {
+      path: '/User',
+      name: 'user',
+      redirect: '/profile',
+      component: DefaultLayout,
+      children: [
+        {
+          path: 'profile',
+          component: Profile,
+        },
+      ]
+    },
+    {
+      path: '/profile',
+      redirect: '/user/profile'
     },
     {
       path: '*',
