@@ -3,7 +3,6 @@
 namespace app\controllers;
 
 use app\models\LoginForm;
-use app\models\User;
 use app\rest\Controller;
 use Yii;
 

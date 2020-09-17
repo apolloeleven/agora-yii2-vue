@@ -11,7 +11,7 @@ $config = [
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
         'request' => [
@@ -55,8 +55,19 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
             ],
         ],
+    ],
+    'modules' => [
+        'v1' => [
+            'class' => \app\modules\v1\V1Module::class,
+            'modules' => [
+                'setup' => [
+                    'class' => \app\modules\v1\setup\SetupModule::class
+                ]
+            ]
+        ]
     ],
     'params' => $params,
 ];

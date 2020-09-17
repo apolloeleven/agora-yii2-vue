@@ -1,0 +1,4 @@
+export const SET_COUNTRIES_LOADING = 'setup/SET_COUNTRIES_LOADING';
+export const SET_COUNTRIES = 'setup/SET_COUNTRIES';
+export const SHOW_COUNTRY_MODAL = 'setup/SHOW_COUNTRY_MODAL';
+export const HIDE_COUNTRY_MODAL = 'setup/HIDE_COUNTRY_MODAL';

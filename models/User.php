@@ -5,7 +5,6 @@ namespace app\models;
 use app\models\query\UserQuery;
 use Yii;
 use yii\base\Exception;
-use yii\base\InvalidCallException;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
