@@ -35,7 +35,7 @@ $config = [
             'errorAction' => 'site/error',
         ],
         'mailer' => [
-            'class' => intermundia\mailer\SwiftMailer::class,
+            'class' => \intermundia\mailer\SwiftMailer::class,
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => env('SMTP_HOST'),
@@ -43,7 +43,7 @@ $config = [
                 'password' => env('SMTP_PASSWORD'),
                 'port' => env('SMTP_PORT'),
                 'encryption' => env('SMTP_ENCRYPTION'),
-            ],
+            ]
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

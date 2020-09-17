@@ -3,6 +3,8 @@
     <transition name="fade" mode="out-in">
       <router-view/>
     </transition>
+    <notifications position="top center" group="error" :type="'error'" width="400" :duration="5000"/>
+    <notifications group="success" type="success" :duration="5000" width="400" position="top right"></notifications>
   </div>
   <!--  <div id="app" :class="{'menu-hidden': !menuOpened, 'menu-collapsed': menuCollapsed}">-->
   <!--    <navbar></navbar>-->

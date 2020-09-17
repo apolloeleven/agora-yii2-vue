@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {AppSettings} from "../../shared/AppSettings";
-import auth from './../../core/services/auth.service';
+import auth from './../../core/services/authService';
 import router from "../../shared/router";
 import Vue from "vue";
 

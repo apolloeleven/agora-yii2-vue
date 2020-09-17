@@ -4,8 +4,10 @@ import DefaultLayout from "./../core/components/layout/DefaultLayout/DefaultLayo
 import AuthLayout from "./../core/components/layout/AuthLayout/AuthLayout";
 import NotFoundComponent from "./../core/components/pages/NotFoundComponent";
 import Dashboard from "@/modules/Dashboard/Dashboard";
-import Login from "@/modules/Auth/Login";
+import Login from "../modules/Auth/Login";
 import Register from "@/modules/Auth/Register";
+import RequestPasswordReset from "../modules/Auth/PasswordReset/RequestPasswordReset";
+import ResetPasswordForm from "../modules/Auth/PasswordReset/ResetPasswordForm";
 
 Vue.use(Router);
 
@@ -21,12 +23,22 @@ const router = new Router({
       children: [
         {
           path: 'login',
+          name: 'auth.login',
           component: Login,
         },
-          {
-      path: 'register',
-      component: Register,
-    }
+        {
+          path: 'password-reset',
+          name: 'password-reset',
+          component: RequestPasswordReset,
+        },        {
+          path: 'password-reset/:token',
+          name: 'password-reset',
+          component: ResetPasswordForm,
+        },
+        {
+          path: 'register',
+          component: Register,
+        }
       ]
     },
     {
