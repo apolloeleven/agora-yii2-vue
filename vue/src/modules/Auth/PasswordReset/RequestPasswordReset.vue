@@ -3,7 +3,7 @@
     <div class="col-md-4">
       <div class="login-left">
         <img src="/assets/img/apollo11-white.png" alt="" style="width: 80px"/>
-        <h3>Welcome</h3>
+        <h3>{{ $t('Welcome') }}</h3>
       </div>
     </div>
     <div class="login-right clearfix">
