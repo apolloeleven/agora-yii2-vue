@@ -49,13 +49,7 @@ export default {
       const response = await auth.register(this.model);
       this.loading = false;
       if (response.success) {
-        this.$notify({
-          group: 'success',
-          type: 'success',
-          title: this.$t('Success'),
-          text: this.$t(`Your account will be reviewed by admin and you will receive login instructions`),
-          speed: 1000,
-        });
+        this.$toast(this.$t(`Your account will be reviewed by admin and you will receive login instructions`));
         this.$router.push('/login');
       } else {
         this.model.setMultipleErrors(response.body);

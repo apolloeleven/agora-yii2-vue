@@ -48,22 +48,12 @@ export default {
       const res = await this.inviteUser(this.model.email);
       this.loading = false;
       if (res.success) {
-        this.$notify({
-          group: 'success',
-          type: 'success',
-          title: this.$t('Success'),
-          text: this.$t(`Email '{email}' was successfully invited`, {email: this.model.email})
-        });
+        this.$toast(this.$t(`Email '{email}' was successfully invited`, {email: this.model.email}));
         this.$nextTick(() => {
           this.hideModal();
         });
       } else {
-        this.$notify({
-          group: 'error',
-          type: 'error',
-          title: this.$t('Error'),
-          text: this.$t(`Email "{email}" was not invited`, {email: this.model.email})
-        });
+        this.$toast(this.$t(`Email '{email}' was not invited`, {email: this.model.email}));
         this.$nextTick(() => {
           this.hideModal();
         });
