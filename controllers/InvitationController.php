@@ -4,10 +4,9 @@
 namespace app\controllers;
 
 
-use app\base\BaseController;
 use app\models\Invitation;
+use app\rest\ActiveController;
 use yii\data\ActiveDataProvider;
-use yii\db\ActiveRecord;
 use yii\filters\AccessControl;
 
 /**
@@ -15,7 +14,7 @@ use yii\filters\AccessControl;
  *
  * @package app\controllers
  */
-class InvitationController extends BaseController
+class InvitationController extends ActiveController
 {
     public $modelClass = Invitation::class;
 

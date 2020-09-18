@@ -83,6 +83,7 @@ class User extends ActiveRecord implements IdentityInterface
             'displayName' => function () {
                 return $this->getDisplayName();
             },
+            'access_token',
             'email',
             'status',
         ];

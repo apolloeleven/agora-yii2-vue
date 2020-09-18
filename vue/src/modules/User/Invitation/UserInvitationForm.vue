@@ -52,7 +52,7 @@ export default {
           group: 'success',
           type: 'success',
           title: this.$t('Success'),
-          text: this.$t(`Email "{email}" was successfully invited`, {email: this.model.email})
+          text: this.$t(`Email '{email}' was successfully invited`, {email: this.model.email})
         });
         this.$nextTick(() => {
           this.hideModal();
