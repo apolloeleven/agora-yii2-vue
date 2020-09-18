@@ -3,7 +3,9 @@
 namespace app\controllers;
 
 use app\helpers\MailHelper;
+use app\models\Invitation;
 use app\models\LoginForm;
+use app\models\SignupForm;
 use app\models\User;
 use app\rest\Controller;
 use Yii;
@@ -99,6 +101,25 @@ class UserController extends Controller
 
         if (!$user->save()) {
             return $this->validationError(Yii::t('app', 'Unable to save password'));
+        }
+    }
+
+    /**
+     * @return array|bool[]
+     * @throws Exception
+     */
+    public function actionSignup()
+    {
+        $request = Yii::$app->request;
+
+        $invitation = Invitation::findByToken($request->post('token'));
+        if (!$invitation) {
+            return $this->validationError(Yii::t('app', 'Registration link is invalid or expired'));
+        }
+
+        $model = new SignupForm();
+        if (!$model->load($request->post(), '') || $model->signup($invitation) == null) {
+            return $this->validationError($model->getFirstErrors());
         }
     }
 }

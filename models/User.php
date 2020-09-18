@@ -41,13 +41,12 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['username', 'email', 'password_hash'], 'required'],
-            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['status', 'created_at', 'updated_at', 'expired_date'], 'integer'],
             [['username'], 'string', 'max' => 255],
             [['email', 'access_token'], 'string', 'max' => 512],
             [['password_hash', 'password_reset_token'], 'string', 'max' => 1024],
             [['username'], 'unique'],
             [['email'], 'unique'],
-            [['expired_date'], 'safe'],
         ];
     }
 
@@ -185,5 +184,16 @@ class User extends ActiveRecord implements IdentityInterface
     public static function isPasswordResetTokenValid(int $expireDate)
     {
         return self::EXPIRE_DATE + $expireDate >= time();
+    }
+
+    /**
+     * Generates password hash from password and sets it to the model
+     *
+     * @param string $password
+     * @throws Exception
+     */
+    public function setPassword(string $password)
+    {
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }
 }
