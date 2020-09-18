@@ -39,7 +39,7 @@ const router = new Router({
           component: ResetPasswordForm,
         },
         {
-          path: 'register',
+          path: 'register/:token',
           name: 'auth.register',
           component: Register,
         }

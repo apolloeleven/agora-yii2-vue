@@ -10,6 +10,9 @@ const invitationService = {
   },
   delete(id) {
     return httpService.delete(this.url + `/${id}?expand=createdBy`);
+  },
+  getEmailByToken(token) {
+    return httpService.get(this.url + '/get-email?token=' + token);
   }
 };
 

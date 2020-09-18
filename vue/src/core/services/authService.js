@@ -73,6 +73,14 @@ export default {
   },
 
   /**
+   * @param data
+   * @returns {Promise<any>}
+   */
+  async register(data) {
+    return await httpService.post('/user/signup', data);
+  },
+
+  /**
    * @param email
    * @returns {Promise<any>}
    */

@@ -232,4 +232,15 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->userProfile->getFullName();
     }
+
+    /**
+     * Generates password hash from password and sets it to the model
+     *
+     * @param string $password
+     * @throws Exception
+     */
+    public function setPassword(string $password)
+    {
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+    }
 }
