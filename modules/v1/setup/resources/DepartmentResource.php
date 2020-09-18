@@ -18,9 +18,18 @@ use app\modules\v1\setup\models\Department;
  */
 class DepartmentResource extends Department
 {
+    public function fields()
+    {
+        return [
+            'id', 'name', 'created_at' => function () {
+                return \Yii::$app->formatter->asDatetime($this->created_at);
+            }
+        ];
+    }
+
     public function extraFields()
     {
-        return ['country'];
+        return ['country', 'createdBy', 'parent'];
     }
 
     /**
@@ -29,7 +38,7 @@ class DepartmentResource extends Department
      */
     public function getCountry()
     {
-        return $this->hasMany(CountryResource::class, ['id', 'country_id']);
+        return $this->hasOne(CountryResource::class, ['id' => 'country_id']);
     }
 
     public function getCreatedBy()

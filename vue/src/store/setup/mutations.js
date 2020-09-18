@@ -27,11 +27,11 @@ export default {
     state.countryModal.show = false;
   },
   [SET_DEPARTMENTS_LOADING](state, loading) {
-    state.countries.loading = loading;
+    state.departments.loading = loading;
   },
-  [SET_DEPARTMENTS](state, {countries}) {
-    state.countries.loaded = true;
-    state.countries.data = countries;
+  [SET_DEPARTMENTS](state, {departments}) {
+    state.departments.loaded = true;
+    state.departments.data = departments;
   },
   [SHOW_DEPARTMENT_MODAL](state, department) {
     state.departmentModal.show = true;

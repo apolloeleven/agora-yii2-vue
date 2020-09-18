@@ -18,7 +18,10 @@ export default class BaseModel {
   };
 
   getRules(attribute) {
-    let rules = this.rules[attribute]
+    let rules = this.rules[attribute];
+    if (!rules) {
+      return {};
+    }
 
     if (Array.isArray(rules)) {
       return rules.map(rule => this.parseRules(rule)).join('|');
@@ -45,7 +48,10 @@ export default class BaseModel {
 
   getMessages(attribute) {
     let message = {};
-    const rules = this.rules[attribute]
+    const rules = this.rules[attribute];
+    if (!rules) {
+      return {};
+    }
     if (Array.isArray(rules)) {
       for (let rule of rules) {
         message[rule.rule] = rule.message || this.defaultMessages[rule.rule];
@@ -98,9 +104,13 @@ export default class BaseModel {
   }
 
   setMultipleErrors(attributeErrorMap) {
+    const errorObject = (attributeErrorMap.reduce((acc, err) => {
+      acc[err.field] = err.message;
+      return acc;
+    }, {}))
     this.errors = {
       ...this.errors,
-      ...attributeErrorMap
+      ...errorObject
     };
   }
 

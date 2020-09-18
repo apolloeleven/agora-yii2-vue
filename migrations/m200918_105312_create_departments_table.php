@@ -23,7 +23,7 @@ class m200918_105312_create_departments_table extends Migration
             'name' => $this->string(255)->notNull(),
             'country_id' => $this->integer()->notNull(),
             'parent_id' => $this->integer(),
-            'created_at_' => $this->integer(),
+            'created_at' => $this->integer(),
             'created_by' => $this->integer(),
             'updated_at' => $this->integer(),
             'updated_by' => $this->integer(),
@@ -43,7 +43,7 @@ class m200918_105312_create_departments_table extends Migration
             'country_id',
             '{{%countries}}',
             'id',
-            'CASCADE'
+            'RESTRICT'
         );
 
         // creates index for column `parent_id`
@@ -60,7 +60,7 @@ class m200918_105312_create_departments_table extends Migration
             'parent_id',
             '{{%departments}}',
             'id',
-            'CASCADE'
+            'RESTRICT'
         );
 
         // creates index for column `created_by`
@@ -77,7 +77,7 @@ class m200918_105312_create_departments_table extends Migration
             'created_by',
             '{{%users}}',
             'id',
-            'CASCADE'
+            'RESTRICT'
         );
 
         // creates index for column `updated_by`
@@ -94,7 +94,7 @@ class m200918_105312_create_departments_table extends Migration
             'updated_by',
             '{{%users}}',
             'id',
-            'CASCADE'
+            'RESTRICT'
         );
     }
 

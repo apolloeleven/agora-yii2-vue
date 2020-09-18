@@ -7,17 +7,17 @@
       </b-button>
     </page-header>
     <div class="content-wrapper p-3">
-      <content-spinner :show="countries.loading" :text="$t('Please wait...')" class="h-100"/>
-      <b-card v-if="!countries.loading && countries.loaded" no-body>
-        <b-table striped hover :items="countries.data" :fields="fields" class="mb-0">
-          <template v-slot:cell(parent_id)="data">
-            {{ data.item.parent || data.item.parent.name }}
-          </template>
-          <template v-slot:cell(country_id)="data">
-            {{ data.item.country.name }}
-          </template>
+      <content-spinner :show="departments.loading" :text="$t('Please wait...')" class="h-100"/>
+      <b-card v-if="!departments.loading && departments.loaded" no-body>
+        <b-table striped hover :items="departments.data" :fields="fields" class="mb-0">
           <template v-slot:cell(created_at)="data">
             {{ data.item.created_at | toDatetime }}
+          </template>
+          <template v-slot:cell(parent_id)="{item}">
+            {{ item.parent ? item.parent.name : '' }}
+          </template>
+          <template v-slot:cell(country_id)="{item}">
+            {{ item.country.name }}
           </template>
           <template v-slot:cell(createdBy)="data">
             {{ data.item.createdBy.email }}
@@ -55,12 +55,12 @@ export default {
       fields: [
         'name',
         {
-          key: 'parent_id',
-          label: i18n.t('Parent Department')
-        },
-        {
           key: 'country_id',
           label: i18n.t('Country')
+        },
+        {
+          key: 'parent_id',
+          label: i18n.t('Parent Department')
         },
         'created_at',
         'createdBy',
@@ -69,10 +69,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['countries'])
+    ...mapState(['departments'])
   },
   methods: {
-    ...mapActions(['getDepartments', 'showDepartmentModal', 'deleteDepartment']),
+    ...mapActions(['getDepartments', 'getCountries', 'showDepartmentModal', 'deleteDepartment']),
     editDepartment(department) {
       this.showDepartmentModal(department)
     },
@@ -85,6 +85,7 @@ export default {
   },
   mounted() {
     this.getDepartments();
+    this.getCountries();
   }
 }
 </script>

@@ -41,7 +41,7 @@ export async function saveCountry({dispatch}, country) {
   } else {
     response = await httpService.put(`/v1/setup/countries/${country.id}`, country)
   }
-  if (response) {
+  if (response.success) {
     dispatch('getCountries')
   }
 
@@ -67,7 +67,7 @@ export async function getDepartments({commit}) {
   // Make request to get departments
   const {success, body} = await httpService.get('/v1/setup/departments', {
     params: {
-      expand: 'createdBy',
+      expand: 'country,createdBy,parent',
       sort: 'name'
     }
   })
@@ -92,7 +92,7 @@ export async function saveDepartment({dispatch}, department) {
   } else {
     response = await httpService.put(`/v1/setup/departments/${department.id}`, department)
   }
-  if (response) {
+  if (response.success) {
     dispatch('getDepartments')
   }
 

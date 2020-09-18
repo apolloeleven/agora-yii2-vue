@@ -3,14 +3,18 @@ import i18n from "@/shared/i18n";
 
 export default class DepartmentModel extends BaseModel {
   name = null;
-  password = null;
+  country_id = null;
+  parent_id = null;
 
   rules = {
-    name: 'required'
+    name: 'required',
+    country_id: 'required',
   };
 
   attributeLabels = {
     name: i18n.t('Department Name'),
+    country_id: i18n.t('Country'),
+    parent_id: i18n.t('Parent Department'),
   };
 
   constructor(data = {}) {
@@ -20,7 +24,9 @@ export default class DepartmentModel extends BaseModel {
 
   toJSON() {
     return {
-      name: this.name
+      name: this.name,
+      country_id: this.country_id,
+      parent_id: this.parent_id,
     }
   }
 }

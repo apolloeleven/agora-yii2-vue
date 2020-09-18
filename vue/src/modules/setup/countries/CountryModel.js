@@ -3,7 +3,6 @@ import i18n from "@/shared/i18n";
 
 export default class CountryModel extends BaseModel {
   name = null;
-  password = null;
 
   rules = {
     name: 'required'

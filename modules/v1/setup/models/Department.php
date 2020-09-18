@@ -4,24 +4,26 @@ namespace app\modules\v1\setup\models;
 
 use app\models\User;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%departments}}".
  *
- * @property int $id
- * @property string $name
- * @property int $country_id
- * @property int|null $parent_id
- * @property int|null $created_at_
- * @property int|null $created_by
- * @property int|null $updated_at
- * @property int|null $updated_by
+ * @property int          $id
+ * @property string       $name
+ * @property int          $country_id
+ * @property int|null     $parent_id
+ * @property int|null     $created_at
+ * @property int|null     $created_by
+ * @property int|null     $updated_at
+ * @property int|null     $updated_by
  *
- * @property Country $country
- * @property User $createdBy
- * @property Department $parent
+ * @property Country      $country
+ * @property User         $createdBy
+ * @property Department   $parent
  * @property Department[] $departments
- * @property User $updatedBy
+ * @property User         $updatedBy
  */
 class Department extends \yii\db\ActiveRecord
 {
@@ -33,6 +35,14 @@ class Department extends \yii\db\ActiveRecord
         return '{{%departments}}';
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+            BlameableBehavior::class
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -40,7 +50,8 @@ class Department extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'country_id'], 'required'],
-            [['country_id', 'parent_id', 'created_at_', 'created_by', 'updated_at', 'updated_by'], 'integer'],
+            [['country_id', 'parent_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
+            [['name'], 'unique', 'targetAttribute' => ['name', 'country_id'], 'message' => Yii::t('app', 'Department {value} already exists in this country')],
             [['name'], 'string', 'max' => 255],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
@@ -57,9 +68,9 @@ class Department extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
-            'country_id' => Yii::t('app', 'Country ID'),
-            'parent_id' => Yii::t('app', 'Parent ID'),
-            'created_at_' => Yii::t('app', 'Created At'),
+            'country_id' => Yii::t('app', 'Country'),
+            'parent_id' => Yii::t('app', 'Parent Department'),
+            'created_at' => Yii::t('app', 'Created At'),
             'created_by' => Yii::t('app', 'Created By'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'updated_by' => Yii::t('app', 'Updated By'),
