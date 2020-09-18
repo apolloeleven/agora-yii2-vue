@@ -16,7 +16,6 @@ use yii\base\Exception;
  */
 class UserController extends Controller
 {
-
     public function actionLogin()
     {
         $request = Yii::$app->request;
@@ -40,20 +39,20 @@ class UserController extends Controller
         $email = $request->post('email');
 
         $user = User::find()
-            ->where(['email' => $email])
+            ->byEmail($email)
             ->one();
 
         if (!$user) {
             return $this->validationError(Yii::t('app', 'Unable to find user with this email'));
         }
 
-        if ($user->status == User::STATUS_INACTIVE) {
+        if ($user->isInactive()) {
             return $this->validationError(Yii::t('app', 'User is disabled'));
         }
 
         $passwordResetToken = Yii::$app->security->generateRandomString(16);
         $user->password_reset_token = $passwordResetToken;
-        $user->expired_date = time();
+        $user->expire_date = time();
 
         if (!$user->save()) {
             return $this->validationError(Yii::t('app', 'Unable to save user'));
@@ -70,7 +69,7 @@ class UserController extends Controller
      * @param $token
      * @return array
      */
-    public function actionCheckTokenValidate($token)
+    public function actionCheckTokenValidity($token)
     {
         if (!User::findByPasswordResetToken($token)) {
             return $this->validationError(Yii::t('app', 'This link date expired'));

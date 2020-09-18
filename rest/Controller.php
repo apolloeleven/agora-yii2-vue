@@ -20,7 +20,7 @@ class Controller extends \yii\rest\Controller
             'actions' => [
                 'login' => ['options', 'post'],
                 'send-password-reset-link' => ['options', 'post'],
-                'check-token-validate' => ['options', 'get'],
+                'check-token-validity' => ['options', 'get'],
                 'password-reset' => ['options', 'post'],
             ]
         ];
