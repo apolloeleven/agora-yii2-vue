@@ -30,13 +30,15 @@ const router = new Router({
           path: 'password-reset',
           name: 'password-reset',
           component: RequestPasswordReset,
-        },        {
+        },
+        {
           path: 'password-reset/:token',
           name: 'password-reset',
           component: ResetPasswordForm,
         },
         {
-          path: 'register',
+          path: 'register/:token',
+          name: 'auth.register',
           component: Register,
         }
       ]
