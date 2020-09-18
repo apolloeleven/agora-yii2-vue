@@ -91,7 +91,10 @@ class SignupForm extends Model
             throw new Exception("Invitation was not updated. Token: $invitation->token");
         }
 
-        MailHelper::acceptInvitation($invitation, $user);
+        if (!MailHelper::acceptInvitation($invitation, $user)) {
+            $dbTransaction->rollBack();
+            throw new Exception('Unable to send email for inviter');
+        }
 
         $dbTransaction->commit();
         return $user;
