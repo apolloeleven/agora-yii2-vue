@@ -27,16 +27,18 @@ const router = new Router({
           component: Login,
         },
         {
-          path: 'password-reset',
-          name: 'password-reset',
+          path: 'request-password-reset',
+          name: 'request-password-reset',
           component: RequestPasswordReset,
-        },        {
+        },
+        {
           path: 'password-reset/:token',
           name: 'password-reset',
           component: ResetPasswordForm,
         },
         {
           path: 'register',
+          name: 'auth.register',
           component: Register,
         }
       ]
