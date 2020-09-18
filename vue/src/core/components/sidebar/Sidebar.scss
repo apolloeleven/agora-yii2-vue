@@ -105,24 +105,26 @@
 
         &.active {
           > a {
+            position: relative;
             text-shadow: $nav-menu-item-active-text-shadow;
             color: $nav-menu-item-active-color;
             background-color: $nav-menu-item-active-bg;
+
+            &:after {
+              content: "";
+              position: absolute;
+              right: -1px;
+              top: 50%;
+              margin-top: -15px;
+              height: 30px;
+              width: 16px;
+              border-width: 15px 10px;
+              border-top: 15px solid transparent;
+              border-bottom: 15px solid transparent;
+              border-right: 10px solid $nav-menu-item-active-arrow-color;
+            }
           }
 
-          &:after {
-            content: "";
-            position: absolute;
-            right: -1px;
-            top: 50%;
-            margin-top: -15px;
-            height: 30px;
-            width: 16px;
-            border-width: 15px 10px;
-            border-top: 15px solid transparent;
-            border-bottom: 15px solid transparent;
-            border-right: 10px solid $nav-menu-item-active-arrow-color;
-          }
         }
       }
     }

@@ -4,7 +4,6 @@ namespace app\controllers;
 
 use app\helpers\MailHelper;
 use app\models\LoginForm;
-use app\models\User;
 use app\rest\Controller;
 use Yii;
 use yii\base\Exception;

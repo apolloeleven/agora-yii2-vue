@@ -8,6 +8,8 @@ import Login from "../modules/Auth/Login";
 import Register from "@/modules/Auth/Register";
 import RequestPasswordReset from "../modules/Auth/PasswordReset/RequestPasswordReset";
 import ResetPasswordForm from "../modules/Auth/PasswordReset/ResetPasswordForm";
+import Setup from "@/modules/setup/Setup";
+import CountryList from "@/modules/setup/countries/CountryList";
 
 Vue.use(Router);
 
@@ -52,13 +54,9 @@ const router = new Router({
       redirect: '/dashboard',
       component: DefaultLayout,
       children: [
-        {
-          path: 'dashboard',
-          component: Dashboard,
-          // meta: {
-          //   requiresAuth: true
-          // }
-        }
+        {path: 'dashboard', name: 'dashboard', component: Dashboard,},
+        {path: '/setup', name: 'setup', component: Setup,},
+        {path: '/setup/countries', name: 'countries', component: CountryList}
       ]
     },
     {
