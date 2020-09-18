@@ -31,7 +31,6 @@ class SignupForm extends Model
             [['password'], 'string', 'min' => 6],
             ['email', 'filter', 'filter' => 'trim'],
             [['email', 'firstname', 'lastname'], 'required'],
-            [['email'], 'unique'],
         ];
     }
 
@@ -55,12 +54,10 @@ class SignupForm extends Model
      * @param Invitation $invitation
      * @return User|null the saved model or null if saving fails
      * @throws Exception
+     * @throws \yii\db\Exception
      */
     public function signup(Invitation $invitation)
     {
-        if (!$this->validate()) {
-            return null;
-        }
         $dbTransaction = Yii::$app->db->beginTransaction();
         // Save user
         $user = new User();
@@ -80,7 +77,7 @@ class SignupForm extends Model
         $userProfile->last_name = $this->lastname;
         if (!$userProfile->save()) {
             $dbTransaction->rollBack();
-            throw new Exception("UserProfile was not saved for email \"$this->email\"");
+            throw new Exception("UserProfile was not saved for email $this->email");
         }
 
         // TODO Assign role to user

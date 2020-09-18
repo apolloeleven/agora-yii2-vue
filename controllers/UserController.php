@@ -117,7 +117,7 @@ class UserController extends Controller
         }
 
         $model = new SignupForm();
-        if (!$model->load($request->post(), '') || $model->signup($invitation) == null) {
+        if (!$model->load($request->post(), '') || !$model->validate() || !$model->signup($invitation)) {
             return $this->validationError($model->getFirstErrors());
         }
     }

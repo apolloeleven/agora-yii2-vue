@@ -89,6 +89,11 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public function extraFields()
+    {
+        return ['userProfile'];
+    }
+
     public static function find()
     {
         return new UserQuery(get_called_class());

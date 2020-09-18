@@ -24,7 +24,6 @@ use app\models\User;
         ])
     ?>
 </p>
-<br>
 <p>
     <?php echo Yii::t('app', 'Now you can activate the user to be able to login.') ?>
 </p>
