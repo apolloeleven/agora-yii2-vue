@@ -18,6 +18,20 @@ use app\modules\v1\setup\models\Department;
  */
 class DepartmentResource extends Department
 {
+    public function extraFields()
+    {
+        return ['country'];
+    }
+
+    /**
+     * @return \app\modules\v1\setup\models\query\CountryQuery|\yii\db\ActiveQuery
+     * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
+     */
+    public function getCountry()
+    {
+        return $this->hasMany(CountryResource::class, ['id', 'country_id']);
+    }
+
     public function getCreatedBy()
     {
         return $this->hasOne(UserResource::class, ['id' => 'created_by']);

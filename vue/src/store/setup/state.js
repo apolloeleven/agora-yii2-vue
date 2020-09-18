@@ -8,6 +8,11 @@ const STATE = {
     loading: false,
     show: false,
     data: {}
+  },
+  departmentModal: {
+    loading: false,
+    show: false,
+    data: {}
   }
 };
 
