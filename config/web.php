@@ -56,6 +56,7 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/department'],
             ],
         ],
     ],
