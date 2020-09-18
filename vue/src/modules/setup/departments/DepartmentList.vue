@@ -79,7 +79,10 @@ export default {
     async onDeleteDepartment(department) {
       const result = await this.$confirm(i18n.t(`Are you sure you want to delete that department?`))
       if (result) {
-        this.deleteDepartment(department.id)
+        const {success, body} = await this.deleteDepartment(department.id)
+        if (!success) {
+          this.$alert(i18n.t(body.message || i18n.t('There was some problem. Please try again in several minutes...')))
+        }
       }
     }
   },

@@ -50,7 +50,7 @@ export async function saveCountry({dispatch}, country) {
 
 export async function deleteCountry({dispatch}, id) {
   let response = await httpService.delete(`/v1/setup/countries/${id}`)
-  if (response) {
+  if (response.success) {
     dispatch('getCountries')
   }
 
@@ -101,7 +101,7 @@ export async function saveDepartment({dispatch}, department) {
 
 export async function deleteDepartment({dispatch}, id) {
   let response = await httpService.delete(`/v1/setup/departments/${id}`)
-  if (response) {
+  if (response.success) {
     dispatch('getDepartments')
   }
 

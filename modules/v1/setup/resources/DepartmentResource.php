@@ -9,6 +9,7 @@ namespace app\modules\v1\setup\resources;
 
 
 use app\modules\v1\setup\models\Department;
+use yii\base\InvalidCallException;
 
 /**
  * Class DepartmentResource
@@ -44,5 +45,13 @@ class DepartmentResource extends Department
     public function getCreatedBy()
     {
         return $this->hasOne(UserResource::class, ['id' => 'created_by']);
+    }
+
+    public function beforeDelete()
+    {
+        if ($this->getDepartments()->count() > 0) {
+            throw new InvalidCallException(\Yii::t('app', "You can't delete the department unless you delete child departments"));
+        }
+        return parent::beforeDelete();
     }
 }
