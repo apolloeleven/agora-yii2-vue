@@ -58,14 +58,7 @@ export default {
         });
         this.$router.push('/login');
       } else {
-        this.$notify({
-          group: 'error',
-          type: 'error',
-          title: this.$t('Error'),
-          text: this.$t(response.body),
-          speed: 1000,
-        });
-        this.$router.push('/login');
+        this.model.setMultipleErrors(response.body);
       }
     },
   },

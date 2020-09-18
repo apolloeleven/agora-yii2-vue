@@ -13,7 +13,10 @@ export default class RegisterForm extends BaseModel {
     firstname: 'required',
     lastname: 'required',
     email: 'email',
-    password: 'required',
+    password: [
+      {rule: 'required'},
+      {rule: 'min', length: 6},
+    ],
     password_repeat: [
       {rule: 'required'},
       {rule: 'confirmed', target: 'password'},
