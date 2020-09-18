@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\helpers\MailHelper;
 use app\models\LoginForm;
+use app\models\User;
 use app\rest\Controller;
 use Yii;
 use yii\base\Exception;
@@ -71,7 +72,7 @@ class UserController extends Controller
     public function actionCheckTokenValidity($token)
     {
         if (!User::findByPasswordResetToken($token)) {
-            return $this->validationError(Yii::t('app', 'This link date expired'));
+            return $this->validationError(Yii::t('app', 'Password reset link is invalid or expired'));
         }
     }
 

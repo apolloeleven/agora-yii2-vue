@@ -53,13 +53,7 @@ export default {
       let response = await auth.resetPasswordLink(this.model);
       this.loading = false;
       if (response.success) {
-        this.$notify({
-          group: 'success',
-          type: 'success',
-          title: this.$t('Success'),
-          text: this.$t(`Password reset link was successfully sent. Please check your email.`),
-          speed: 1000,
-        });
+        this.$toast(this.$t(`Password reset link was successfully sent. Please check your email.`));
         this.$router.push('/login');
       } else {
         this.model.setMultipleErrors({email: response.body});
