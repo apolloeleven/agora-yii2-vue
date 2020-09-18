@@ -29,8 +29,8 @@ const router = new Router({
           component: Login,
         },
         {
-          path: 'password-reset',
-          name: 'password-reset',
+          path: 'request-password-reset',
+          name: 'request-password-reset',
           component: RequestPasswordReset,
         },
         {
@@ -40,6 +40,7 @@ const router = new Router({
         },
         {
           path: 'register',
+          name: 'auth.register',
           component: Register,
         }
       ]

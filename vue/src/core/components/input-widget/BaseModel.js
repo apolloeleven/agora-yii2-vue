@@ -20,7 +20,7 @@ export default class BaseModel {
   };
 
   getRules(attribute, inlineRules = null) {
-    let rules = this.rules[attribute] || inlineRules
+    let rules = inlineRules || this.rules[attribute]
 
     if (Array.isArray(rules)) {
       return rules.map(rule => this.parseRules(rule)).join('|');

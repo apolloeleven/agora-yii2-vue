@@ -5,7 +5,10 @@ export default class PasswordReset extends BaseModel {
   email = null;
 
   rules = {
-    email: 'required|email'
+    email: [
+      {rule: 'required'},
+      {rule: 'email'},
+    ]
   };
 
   attributeLabels = {

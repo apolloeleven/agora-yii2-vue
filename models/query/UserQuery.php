@@ -38,4 +38,15 @@ class UserQuery extends \yii\db\ActiveQuery
     {
         return $this->andWhere(['status' => User::STATUS_ACTIVE]);
     }
+
+    /**
+     * Find users by email
+     *
+     * @param $email
+     * @return mixed
+     */
+    public function byEmail($email)
+    {
+        return $this->andWhere(['email' => $email]);
+    }
 }

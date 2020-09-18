@@ -17,7 +17,7 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property string $password_hash
  * @property string|null $password_reset_token
- * @property int|null $expired_date
+ * @property int|null $expire_date
  * @property string|null $access_token
  * @property int|null $status
  * @property int|null $created_at
@@ -44,13 +44,12 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['username', 'email', 'password_hash'], 'required'],
-            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['status', 'created_at', 'updated_at', 'expire_date'], 'integer'],
             [['username'], 'string', 'max' => 255],
             [['email', 'access_token'], 'string', 'max' => 512],
             [['password_hash', 'password_reset_token'], 'string', 'max' => 1024],
             [['username'], 'unique'],
             [['email'], 'unique'],
-            [['expired_date'], 'safe'],
         ];
     }
 
@@ -62,7 +61,7 @@ class User extends ActiveRecord implements IdentityInterface
             'email' => Yii::t('app', 'Email'),
             'password_hash' => Yii::t('app', 'Password Hash'),
             'password_reset_token' => Yii::t('app', 'Password Reset Token'),
-            'expired_date' => Yii::t('app', 'Expired Date'),
+            'expire_date' => Yii::t('app', 'Expire Date'),
             'access_token' => Yii::t('app', 'Access Token'),
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -180,7 +179,7 @@ class User extends ActiveRecord implements IdentityInterface
             'status' => self::STATUS_ACTIVE,
         ]);
 
-        if (!$user || !static::isPasswordResetTokenValid($user->expired_date)) {
+        if (!$user || !$user->isPasswordResetTokenValid($user->expire_date)) {
             return null;
         }
 
@@ -193,9 +192,17 @@ class User extends ActiveRecord implements IdentityInterface
      * @param int $expireDate
      * @return bool
      */
-    public static function isPasswordResetTokenValid(int $expireDate)
+    public function isPasswordResetTokenValid(int $expireDate)
     {
         return self::EXPIRE_DATE + $expireDate >= time();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInactive()
+    {
+        return $this->status == self::STATUS_INACTIVE;
     }
 
     /**

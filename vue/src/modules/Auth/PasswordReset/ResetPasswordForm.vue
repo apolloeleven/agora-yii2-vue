@@ -3,7 +3,7 @@
     <div class="col-md-4">
       <div class="login-left">
         <img src="/assets/img/apollo11-white.png" alt="" style="width: 80px"/>
-        <h3>Welcome</h3>
+        <h3>{{ $t('Welcome') }}</h3>
       </div>
     </div>
     <div class="login-right clearfix">
@@ -54,22 +54,10 @@ export default {
       let response = await auth.passwordReset(this.model);
       this.loading = false;
       if (response.success) {
-        this.$notify({
-          group: 'success',
-          type: 'success',
-          title: this.$t('Success'),
-          text: this.$t(`Password was successfully changed`),
-          speed: 1000,
-        });
+        this.$toast(this.$t(`Password was successfully changed`));
         this.$router.push('/login');
       } else {
-        this.$notify({
-          group: 'error',
-          type: 'error',
-          title: this.$t('Error'),
-          text: this.$t(response.body),
-          speed: 1000,
-        });
+        this.$toast(this.$t(response.body), 'danger');
         this.$router.push('/login');
       }
     },
@@ -78,13 +66,7 @@ export default {
     this.model.token = this.$route.params.token;
     const response = await auth.checkToken(this.model.token);
     if (!response.success) {
-      this.$notify({
-        group: 'error',
-        type: 'error',
-        title: this.$t('Error'),
-        text: this.$t(response.body),
-        speed: 1000,
-      });
+      this.$toast(this.$t(response.body), 'danger');
       this.$router.push('/login');
     }
   }

@@ -3,7 +3,7 @@
     <div class="col-md-4">
       <div class="login-left">
         <img src="/assets/img/apollo11-white.png" alt="" style="width: 80px"/>
-        <h3>Welcome</h3>
+        <h3>{{ $t('Welcome') }}</h3>
       </div>
     </div>
     <div class="login-right clearfix">
@@ -53,13 +53,7 @@ export default {
       let response = await auth.resetPasswordLink(this.model);
       this.loading = false;
       if (response.success) {
-        this.$notify({
-          group: 'success',
-          type: 'success',
-          title: this.$t('Success'),
-          text: this.$t(`Password reset link was successfully sent. Please check your email.`),
-          speed: 1000,
-        });
+        this.$toast(this.$t(`Password reset link was successfully sent. Please check your email.`));
         this.$router.push('/login');
       } else {
         this.model.setMultipleErrors({email: response.body});

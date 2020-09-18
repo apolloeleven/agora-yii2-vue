@@ -93,6 +93,6 @@ export default {
    * @returns {Promise<unknown>}
    */
   async checkToken(token) {
-    return await httpService.get('/user/check-token-validate?token=' + token);
+    return await httpService.get('/user/check-token-validity?token=' + token);
   }
 }
