@@ -27,9 +27,11 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            //TODO add firstname, lastname
+            [['firstname', 'lastname'], 'string', 'max' => 255],
             [['password'], 'string', 'min' => 6],
-            [['email'], 'required'],
+            ['email', 'filter', 'filter' => 'trim'],
+            [['email', 'firstname', 'lastname'], 'required'],
+            [['email'], 'unique'],
         ];
     }
 
@@ -70,7 +72,16 @@ class SignupForm extends Model
             $dbTransaction->rollBack();
             throw new Exception("User was not saved for email $this->email");
         };
-        // TODO Save user profile
+
+        // Save user profile
+        $userProfile = new UserProfile();
+        $userProfile->user_id = $user->id;
+        $userProfile->first_name = $this->firstname;
+        $userProfile->last_name = $this->lastname;
+        if (!$userProfile->save()) {
+            $dbTransaction->rollBack();
+            throw new Exception("UserProfile was not saved for email \"$this->email\"");
+        }
 
         // TODO Assign role to user
 

@@ -1,21 +1,30 @@
 <?php
-/** @var Invitation $model */
-
-/** @var User $user */
 
 use app\models\Invitation;
 use app\models\User;
-use yii\helpers\Html;
+
+/**
+ * @var Invitation $model
+ * @var User $user
+ */
 
 ?>
 
-<p><?php echo Yii::t('app', 'Hello {name}', ['name' => $model->createdBy->email]) ?></p>
 <p>
-    <?php echo Yii::t('app', 'The email: {email} has accepted your invitation and joined to intranet.', [
-        'email' => $model->email,
-    ]) ?>
+    <?php echo Yii::t('app', 'Hello {name}',
+        [
+            'name' => $model->createdBy->email
+        ])
+    ?>
 </p>
-<p><?php echo Yii::t('app', 'Please {link} and activate the user to be able to login.', [
-        'link' => Html::a(Yii::t('common', 'login into the intranet'), env('PORTAL_HOST'))
-    ]) ?>
+<p>
+    <?php echo Yii::t('app', 'The email: {email} has accepted your invitation and joined to intranet.',
+        [
+            'email' => $model->email,
+        ])
+    ?>
+</p>
+<br>
+<p>
+    <?php echo Yii::t('app', 'Now you can activate the user to be able to login.') ?>
 </p>

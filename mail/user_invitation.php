@@ -1,8 +1,11 @@
 <?php
-/** @var Invitation $model */
 
 use app\models\Invitation;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
+/** @var Invitation $model */
+/* @var $link */
 ?>
 
 <p><?php echo Yii::t('app', 'Hello {name}', ['name' => $model->email]) ?></p>
@@ -12,9 +15,11 @@ use app\models\Invitation;
         'inviterName' => $model->createdBy->getDisplayName()
     ]) ?>
 </p>
-<p><?php echo Yii::t('app', 'Click the link bellow to register') ?>
+<p>
+    <?php echo Yii::t('app', 'Click the link bellow to register') ?>
 	<br>
-	<a href="<?php echo env('PORTAL_HOST') . '/auth/register/' . $model->token ?>">
-      <?php echo Yii::t('app', 'Registration Link') ?>
-	</a>
+    <?php echo Html::a(Html::encode(Yii::t('app', 'Registration Link')), Url::to($link)) ?>
 </p>
+
+
+

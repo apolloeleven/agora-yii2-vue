@@ -56,8 +56,12 @@ class MailHelper
      */
     public static function invitation(Invitation $invitation)
     {
-        $message = Yii::$app->mailer->compose('user_invitation', ['model' => $invitation,])
-            ->setSubject(Yii::t('app', 'You are invited to {name}', ['name' => Yii::$app->name]))
+        $message = Yii::$app->mailer->compose('user_invitation',
+            [
+                'model' => $invitation,
+                'link' => env('PORTAL_HOST') . "/auth/register/$invitation->token"
+            ])
+            ->setSubject(Yii::t('app', 'You are invited to {name}', ['name' => Yii::$app->name,]))
             ->setTo($invitation->email);
 
         return self::sendMail($message);
