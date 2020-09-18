@@ -7,7 +7,7 @@
         </b-nav-item>
       </b-nav>
       <b-button @click="showDialog" variant="info">
-        <font-awesome-icon :icon="'plus-circle'"/>
+        <i class="fas fa-plus-circle"></i>
         {{ buttonText }}
       </b-button>
     </div>

@@ -9,7 +9,6 @@ import './modules';
 import './plugins';
 import store from './store';
 import './index.scss';
-import './core/filters/index';
 
 Vue.use(require('vue-moment'));
 

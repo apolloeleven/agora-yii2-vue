@@ -55,12 +55,12 @@ class Invitation extends ActiveRecord
         return [
             [
                 'class' => TimestampBehavior::class,
-                'updatedAtAttribute' => false
+                'updatedAtAttribute' => false,
             ],
             [
                 'class' => BlameableBehavior::class,
-                'updatedByAttribute' => false
-            ]
+                'updatedByAttribute' => false,
+            ],
         ];
     }
 

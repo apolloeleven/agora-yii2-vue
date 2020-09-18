@@ -15,10 +15,10 @@
             </div>
           </template>
           <template v-slot:cell(created_at)="data">
-            {{ new Date(data.item.created_at) | toDateTime }}
+            {{ new Date(data.item.created_at) | toDatetime }}
           </template>
           <template v-slot:cell(created_by)="data">
-            {{ data.item.createdBy }}
+            {{ data.item.createdBy.displayName }}
           </template>
           <template v-slot:cell(statusLabel)="data">
             <span class="badge" :class="{

@@ -7,8 +7,9 @@ use app\models\Invitation;
 
 <p><?php echo Yii::t('app', 'Hello {name}', ['name' => $model->email]) ?></p>
 <p>
-    <?php echo Yii::t('app', 'You were invited into {name}', [
-        'name' => Yii::$app->name
+    <?php echo Yii::t('app', 'You were invited into {name} by {inviterName}', [
+        'name' => Yii::$app->name,
+        'inviterName' => $model->createdBy->getDisplayName()
     ]) ?>
 </p>
 <p><?php echo Yii::t('app', 'Click the link bellow to register') ?>
