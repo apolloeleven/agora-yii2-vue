@@ -22,7 +22,7 @@ class DepartmentResource extends Department
     public function fields()
     {
         return [
-            'id', 'name', 'created_at' => function () {
+            'id', 'name', 'country_id', 'parent_id', 'created_at' => function () {
                 return \Yii::$app->formatter->asDatetime($this->created_at);
             }
         ];
@@ -50,7 +50,7 @@ class DepartmentResource extends Department
     public function beforeDelete()
     {
         if ($this->getDepartments()->count() > 0) {
-            throw new InvalidCallException(\Yii::t('app', "You can't delete the department unless you delete child departments"));
+            throw new InvalidCallException(\Yii::t('app', "You can't delete the department because it has child departments"));
         }
         return parent::beforeDelete();
     }
