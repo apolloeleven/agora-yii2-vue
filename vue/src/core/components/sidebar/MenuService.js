@@ -1,27 +1,28 @@
 import MenuItem from './MenuItem';
+import store from '../../../store';
 
 class MenuService {
-  /**
-   * @type MenuItem[]
-   */
-  menuItems = [];
 
   addItem(menuItem) {
     if (!(menuItem instanceof MenuItem)) {
       throw new Error("addMenuItem accepts MenuItem class instance only")
     }
-    this.menuItems.push(menuItem);
+    store.dispatch('addMenuItem', {
+      name: menuItem.name,
+      menuItem
+    });
   }
 
-  getItem(path) {
-    return this.menuItems.find(item => item.path === path);
+
+  removeItem(name) {
+    store.dispatch('removeMenuItem', name);
   }
 
   getItems() {
-    return this.menuItems.sort((a, b) => a.weight - b.weight);
+    return store.getters['menuItems']
   }
-
 }
 
+const menuService = new MenuService();
 
-export default new MenuService();
+export default menuService;

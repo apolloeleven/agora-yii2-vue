@@ -64,11 +64,22 @@ $config = [
                     'class' => UrlRule::class,
                     'pluralize' => false,
                     'controller' => [
-                        'my-user'
+                        'my-user',
+                        'v1/setup/country'
                     ]
                 ]
             ],
         ],
+    ],
+    'modules' => [
+        'v1' => [
+            'class' => \app\modules\v1\V1Module::class,
+            'modules' => [
+                'setup' => [
+                    'class' => \app\modules\v1\setup\SetupModule::class
+                ]
+            ]
+        ]
     ],
     'params' => $params,
 ];
