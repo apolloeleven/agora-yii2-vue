@@ -9,6 +9,8 @@ namespace app\modules\v1\setup\resources;
 
 
 use app\models\User;
+use Yii;
+use yii\db\ActiveQuery;
 
 /**
  * Class UserResource
@@ -20,6 +22,34 @@ class UserResource extends User
 {
     public function fields()
     {
-        return ['id', 'email', 'username'];
+        return [
+            'id',
+            'username',
+            'created_at' => function () {
+                return Yii::$app->formatter->asDatetime($this->created_at);
+            },
+            'updated_at' => function () {
+                return Yii::$app->formatter->asDatetime($this->updated_at);
+            },
+            'displayName' => function () {
+                return $this->getDisplayName();
+            },
+            'access_token',
+            'email',
+            'status',
+        ];
+    }
+
+    public function extraFields()
+    {
+        return ['userProfile'];
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUserProfile()
+    {
+        return $this->hasOne(UserProfileResource::class, ['user_id' => 'id']);
     }
 }

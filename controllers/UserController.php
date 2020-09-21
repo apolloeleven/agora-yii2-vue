@@ -7,6 +7,7 @@ use app\models\Invitation;
 use app\models\LoginForm;
 use app\models\SignupForm;
 use app\models\User;
+use app\modules\v1\setup\resources\InvitationResource;
 use app\rest\Controller;
 use Yii;
 use yii\base\Exception;
@@ -111,7 +112,7 @@ class UserController extends Controller
     {
         $request = Yii::$app->request;
 
-        $invitation = Invitation::findByToken($request->post('token'));
+        $invitation = InvitationResource::findByToken($request->post('token'));
         if (!$invitation) {
             return $this->validationError(Yii::t('app', 'Registration link is invalid or expired'));
         }

@@ -97,36 +97,6 @@ class Invitation extends ActiveRecord
     }
 
     /**
-     * Return fields for frontend
-     *
-     * @return array
-     */
-    public function fields()
-    {
-        return array_merge(parent::fields(), [
-            'created_at' => function () {
-                return $this->created_at * 1000;
-            },
-            'use_date' => function () {
-                return $this->use_date ? Yii::$app->formatter->asDatetime($this->use_date) : null;
-            },
-            'statusLabel' => function () {
-                return $this->getStatusLabel();
-            }
-        ]);
-    }
-
-    /**
-     * Extra fields with relation
-     *
-     * @return array|string[]
-     */
-    public function extraFields()
-    {
-        return ['createdBy', 'user'];
-    }
-
-    /**
      * @return InvitationQuery|ActiveQuery
      */
     public static function find()

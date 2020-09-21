@@ -69,31 +69,6 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public function fields()
-    {
-        return [
-            'id',
-            'username',
-            'created_at' => function () {
-                return Yii::$app->formatter->asDatetime($this->created_at);
-            },
-            'updated_at' => function () {
-                return Yii::$app->formatter->asDatetime($this->updated_at);
-            },
-            'displayName' => function () {
-                return $this->getDisplayName();
-            },
-            'access_token',
-            'email',
-            'status',
-        ];
-    }
-
-    public function extraFields()
-    {
-        return ['userProfile'];
-    }
-
     public static function find()
     {
         return new UserQuery(get_called_class());

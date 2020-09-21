@@ -4,7 +4,7 @@
 namespace app\controllers;
 
 
-use app\models\Invitation;
+use app\modules\v1\setup\resources\InvitationResource;
 use Yii;
 use app\rest\ActiveController;
 use yii\data\ActiveDataProvider;
@@ -17,7 +17,7 @@ use yii\filters\AccessControl;
  */
 class InvitationController extends ActiveController
 {
-    public $modelClass = Invitation::class;
+    public $modelClass = InvitationResource::class;
 
     /**
      * {@inheritDoc}
@@ -61,7 +61,7 @@ class InvitationController extends ActiveController
     public function prepareDataProvider()
     {
         return new ActiveDataProvider([
-            'query' => Invitation::find()->orderBy('status')
+            'query' => $this->modelClass::find()->orderBy('status')
         ]);
     }
 
@@ -73,7 +73,7 @@ class InvitationController extends ActiveController
      */
     public function actionGetEmail($token)
     {
-        $invitation = Invitation::findByToken($token);
+        $invitation = InvitationResource::findByToken($token);
         if (!$invitation) {
             return $this->validationError(Yii::t('app', 'Invitation token is invalid or expired'));
         }
