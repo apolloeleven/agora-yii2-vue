@@ -49,14 +49,10 @@ export default {
       this.loading = false;
       if (res.success) {
         this.$toast(this.$t(`Email '{email}' was successfully invited`, {email: this.model.email}));
-        this.$nextTick(() => {
-          this.hideModal();
-        });
+        this.hideModal();
       } else {
         this.$toast(this.$t(`Email '{email}' was not invited`, {email: this.model.email}));
-        this.$nextTick(() => {
-          this.hideModal();
-        });
+        this.hideModal();
       }
     },
   },
