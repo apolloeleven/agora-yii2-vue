@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="login-right clearfix">
-      <div style="position: relative">
+      <div class="position-relative">
         <div v-if="loading" class="content-spinner text-center text-info">
           <b-spinner class="align-middle"></b-spinner>
           <strong>{{ $t('Please wait...') }}</strong>
@@ -55,10 +55,10 @@ export default {
       this.loading = false;
       if (response.success) {
         this.$toast(this.$t(`Password was successfully changed`));
-        this.$router.push('/login');
+        this.$router.push({name: 'auth.login'});
       } else {
         this.$toast(this.$t(response.body), 'danger');
-        this.$router.push('/login');
+        this.$router.push({name: 'auth.login'});
       }
     },
   },
@@ -67,7 +67,7 @@ export default {
     const response = await auth.checkToken(this.model.token);
     if (!response.success) {
       this.$toast(this.$t(response.body), 'danger');
-      this.$router.push('/login');
+      this.$router.push({name: 'auth.login'});
     }
   }
 }

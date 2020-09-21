@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="login-right clearfix">
-      <div style="position: relative">
+      <div class="position-relative">
         <div v-if="loading" class="content-spinner text-center text-info">
           <b-spinner class="align-middle"></b-spinner>
           <strong>{{ $t('Please wait...') }}</strong>
@@ -54,7 +54,7 @@ export default {
       this.loading = false;
       if (response.success) {
         this.$toast(this.$t(`Password reset link was successfully sent. Please check your email.`));
-        this.$router.push('/login');
+        this.$router.push({name: 'auth.login'});
       } else {
         this.model.setMultipleErrors({email: response.body});
       }
