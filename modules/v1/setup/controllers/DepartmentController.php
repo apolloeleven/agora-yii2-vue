@@ -20,4 +20,24 @@ use app\rest\ActiveController;
 class DepartmentController extends ActiveController
 {
     public $modelClass = DepartmentResource::class;
+
+    /**
+     * @return array
+     * @author Saiat Kalbiev <kalbievich11@gmail.com>
+     */
+    public function actions()
+    {
+        $actions = parent::actions();
+        unset($actions['index']);
+        return $actions;
+    }
+
+    /**
+     * @return array
+     * @author Saiat Kalbiev <kalbievich11@gmail.com>
+     */
+    public function actionIndex()
+    {
+        return DepartmentResource::getDepartmentsTree();
+    }
 }
