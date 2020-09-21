@@ -172,7 +172,7 @@ class Invitation extends ActiveRecord
         parent::afterSave($insert, $changedAttributes);
 
         if ($insert) {
-            MailHelper::invitation($this);
+            MailHelper::sendInvitation($this);
         }
     }
 

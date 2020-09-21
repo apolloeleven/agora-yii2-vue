@@ -54,7 +54,7 @@ class MailHelper
      * @param Invitation $invitation
      * @return bool
      */
-    public static function invitation(Invitation $invitation)
+    public static function sendInvitation(Invitation $invitation)
     {
         $message = Yii::$app->mailer->compose('user_invitation',
             [
