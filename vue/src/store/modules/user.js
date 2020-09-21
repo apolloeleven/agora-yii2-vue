@@ -59,18 +59,6 @@ export default {
   },
   actions: {
     /**
-     * @param commit
-     * @returns {Promise<void>}
-     */
-    async getDropdownOptions({commit}) {
-      const response = await httpService.get('/user/get-dropdown-options');
-
-      if (response.success) {
-        commit('setAutoCompleteData', response.body);
-      }
-    },
-
-    /**
      * Get user own profile data
      *
      * @param commit
@@ -101,14 +89,6 @@ export default {
      * @returns {Promise<void>}
      */
     async getAll({commit, state}, params = {}) {
-      params.dropDown = {
-        jobTitles: state.userList.dropDown.jobTitles.map(j => j.value),
-        roles: state.userList.dropDown.roles.map(r => r.value),
-        countries: state.userList.dropDown.countries.map(c => c.value),
-        specialTasks: state.userList.dropDown.specialTasks.map(s => s.value),
-        expertise: state.userList.dropDown.expertise.map(e => e.value),
-        language: state.userList.dropDown.language.map(l => l.value),
-      };
       if (state.userList.keyword) {
         params.keyword = state.userList.keyword;
       }

@@ -40,11 +40,6 @@
           <div class="col">
             <input-widget :model="userProfileModel" attribute="mobile"/>
           </div>
-          <div class="col">
-            <input-widget :model="userModel" attribute="password"
-                          :append="'<b-button variant=info></b-button>'"/>
-
-          </div>
         </div>
         <div class="row">
         </div>
@@ -52,7 +47,7 @@
           <template v-slot:header>
             <b-form-group>
               <b-button size="sm" type="button" v-on:click="addNewWorkspace" variant="success">
-                <font-awesome-icon :icon="'plus-circle'"/>
+                <i class="fa fa-plus-circle "></i>
                 {{ $t('Add workspace') }}
               </b-button>
             </b-form-group>
@@ -64,7 +59,7 @@
                   <label class="d-block">&nbsp;</label>
                   <b-button v-b-tooltip :title="$t('Remove workspace')" pill v-on:click="removeWorkspace(index)"
                             variant="outline-danger">
-                    <font-awesome-icon :icon="'times'"/>
+                    <i class="fa fa-times"></i>
                   </b-button>
                 </b-form-group>
               </div>
@@ -87,7 +82,7 @@
           <template v-slot:header>
             <b-form-group>
               <b-button size="sm" type="button" v-on:click="addNewPosition" variant="success">
-                <font-awesome-icon :icon="'plus-circle'"/>
+                <i class="fa fa-plus-circle "></i>
                 {{ $t('Add Position') }}
               </b-button>
             </b-form-group>
@@ -101,7 +96,7 @@
                       <label class="d-block">&nbsp;</label>
                       <b-button v-b-tooltip :title="$t('Remove position')" pill v-on:click="removePosition(index)"
                                 variant="outline-danger">
-                        <font-awesome-icon :icon="'times'"/>
+                        <i class="fa fa-times"></i>
                       </b-button>
                     </b-form-group>
                   </div>
@@ -176,7 +171,7 @@ import {required, email} from 'vee-validate/dist/rules'
 
 import UserProfileForm from './UserProfileForm';
 import InputWidget from "../../../core/components/input-widget/InputWidget";
-import UserForm from "./UserForm";
+import UserForm from "./UserForm.js";
 
 const {mapState, mapActions} = createNamespacedHelpers('user');
 
@@ -191,11 +186,11 @@ export default {
         id: '',
         role: '',
       },
-      // workspaceRoles: [
-      //   {'value': 'portalUser', 'text': 'Portal User'},
-      //   {'value': 'workspaceEditor', 'text': 'Workspace Editor'},
-      //   {'value': 'workspaceAdmin', 'text': 'Workspace Admin'}
-      // ],
+      workspaceRoles: [
+        {'value': 'user', 'text': 'User'},
+        {'value': 'admin', 'text': 'Admin'},
+        {'value': 'workspaceAdmin', 'text': 'Workspace Admin'}
+      ],
       loading: false,
     }
   },
@@ -266,7 +261,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions(['create', 'update', 'hideModal', 'getDropdownOptions', 'addDepartmentOptions']),
+    ...mapActions(['create', 'update', 'hideModal', 'addDepartmentOptions']),
     checkValidity: (touched, validated, valid) => {
       return (!touched && !validated) ? null : valid;
     },
@@ -332,9 +327,6 @@ export default {
       this.loading = false;
 
       if (res.success) {
-        // When user updated || created. call getDropdownOptions action to update autoComplete data
-        await this.getDropdownOptions()
-
         this.$notify({
           group: 'success',
           type: 'success',

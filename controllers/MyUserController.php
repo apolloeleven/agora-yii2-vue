@@ -2,12 +2,11 @@
 
 namespace app\controllers;
 
-use app\base\BaseController;
 use app\helpers\MailHelper;
 use app\models\search\UserSearch;
 use app\models\User;
 use app\models\UserProfile;
-use app\rest\Controller;
+use app\rest\ActiveController;
 use Yii;
 use yii\base\ErrorException;
 use yii\base\Exception;
@@ -22,7 +21,7 @@ use yii\helpers\FileHelper;
  *
  * @package app\controllers
  */
-class MyUserController extends BaseController
+class MyUserController extends ActiveController
 {
     public $modelClass = User::class;
 

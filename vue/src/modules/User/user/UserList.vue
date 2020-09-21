@@ -47,7 +47,7 @@
                 :aria-expanded="visible ? 'true' : 'false'"
                 @click="visible = !visible"
             >
-              <font-awesome-icon :icon="'filter'"/>
+              <i class="fa fa-filter"></i>
               {{ $t('Advanced Filter') }}
             </b-button>
           </b-form>
@@ -166,11 +166,11 @@
             </div>
             <div class="d-flex flex-column justify-content-between" style="height: 84px">
               <b-button @click="onSearchUser" class="button-wrap" type="submit" variant="primary">
-                <font-awesome-icon :icon="'search'"/>
+                <i class="fa fa-search"></i>
                 {{ $t('Search') }}
               </b-button>
               <b-button @click="resetSearch" class="button-wrap" variant="secondary">
-                <font-awesome-icon :icon="'undo'"/>
+                <i class="fa fa-undo"></i>
                 {{ $t('Reset') }}
               </b-button>
             </div>
@@ -232,14 +232,14 @@
           <template v-slot:cell(actions)="data">
             <b-dropdown size="lg" variant="link" toggle-class="text-decoration-none" no-caret right>
               <template v-slot:button-content>
-                <font-awesome-icon :icon="'ellipsis-v'"/>
+                <i class="fa fa-ellipsis-v"></i>
               </template>
               <b-dropdown-item @click="onEditClick(data.item)">
-                <font-awesome-icon :icon="'pencil-alt'"/>
+                <i class="fa fa-pencil-alt"></i>
                 {{ $t('Edit') }}
               </b-dropdown-item>
               <b-dropdown-item @click="onDeleteClick(data.item)">
-                <font-awesome-icon :icon="['far', 'trash-alt']"/>
+                <i class="fa far-trash-alt"></i>
                 {{ $t('Delete') }}
               </b-dropdown-item>
             </b-dropdown>
@@ -344,7 +344,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getAll', 'delete', 'showModal', 'getDropdownOptions', 'showUserDeleteForm']),
+    ...mapActions(['getAll', 'delete', 'showModal', 'showUserDeleteForm']),
     onUsersSort(e) {
       this.sort = (e.sortDesc ? '-' : '') + e.sortBy;
       this.getUsers();
@@ -399,7 +399,6 @@ export default {
     }
   },
   mounted() {
-    this.getDropdownOptions();
     this.getUsers();
   }
 }

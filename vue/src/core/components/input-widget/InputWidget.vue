@@ -10,7 +10,7 @@
         <template v-slot:append v-if="appendQuestion">
           <b-tooltip :target="`question-mark-tooltip-${attribute}-${uuid}`" :title="appendQuestion"/>
           <b-input-group-text :id="`question-mark-tooltip-${attribute}-${uuid}`" class="hover-cursor">
-            <font-awesome-icon icon="question-circle" class="icon"/>
+            <i class="fa fa-plus-question-circle "></i>
           </b-input-group-text>
         </template>
         <b-form-input v-if="type === 'number'" ref="currentInput" :size="size" :type="type" :disabled="disabled"

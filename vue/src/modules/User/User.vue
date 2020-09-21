@@ -5,7 +5,7 @@
         <b-nav-item :to="{name: 'user.list'}" active-class="active">{{ $t('Employees') }}</b-nav-item>
       </b-nav>
       <b-button @click="showDialog" variant="info">
-        <font-awesome-icon :icon="'plus-circle'"/>
+        <i class="fa fa-plus-circle "></i>
         {{ buttonText }}
       </b-button>
     </div>

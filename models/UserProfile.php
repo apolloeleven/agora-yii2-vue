@@ -17,18 +17,8 @@ use yii\helpers\Json;
  * @property string|null $phone
  * @property string|null $mobile
  * @property int|null $birthday
- * @property string|null $hometown
- * @property string|null $special_tasks
  * @property string|null $about_me
- * @property string|null $job_title
- * @property string|null $languages
- * @property string|null $expertise
- * @property string|null $department
- * @property string|null $area_director
- * @property string|null $position
- * @property string|null $country
  * @property string|null $image_path
- * @property string|array $department_position
  *
  * @property User $user
  */
@@ -57,10 +47,9 @@ class UserProfile extends ActiveRecord
             [['user_id', 'first_name', 'last_name'], 'required'],
             [['birthday'], 'integer'],
             [['about_me'], 'string'],
-            [['first_name', 'last_name', 'phone', 'mobile', 'special_tasks', 'hometown', 'position', 'country'], 'string', 'max' => 255],
+            [['first_name', 'last_name', 'phone', 'mobile'], 'string', 'max' => 255],
             [['special_tasks'], 'string', 'max' => 512],
-            [['job_title', 'languages', 'expertise', 'department', 'area_director', 'image_path'], 'string', 'max' => 1024],
-            [['department_position'], 'string', 'max' => 2048],
+            [['image_path'], 'string', 'max' => 1024],
             [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, jpg'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -78,17 +67,8 @@ class UserProfile extends ActiveRecord
             'phone' => Yii::t('app', 'Phone'),
             'mobile' => Yii::t('app', 'Mobile'),
             'birthday' => Yii::t('app', 'Birthday'),
-            'special_tasks' => Yii::t('app', 'Special Tasks'),
-            'hometown' => Yii::t('app', 'Hometown'),
             'about_me' => Yii::t('app', 'About Me'),
-            'job_title' => Yii::t('app', 'Job Title'),
-            'languages' => Yii::t('app', 'Languages'),
-            'expertise' => Yii::t('app', 'Expertise'),
-            'department' => Yii::t('app', 'Department'),
-            'area_director' => Yii::t('app', 'Area Director'),
-            'position' => Yii::t('app', 'Position'),
             'image_path' => Yii::t('app', 'Image Path'),
-            'department_position' => Yii::t('app', 'Department Position'),
         ];
     }
 
@@ -124,35 +104,21 @@ class UserProfile extends ActiveRecord
      * {@inheritdoc}
      * @return bool
      */
-    public function beforeValidate()
-    {
-        // Check if array attributes
-        $this->department = !empty($this->department) ? json_encode($this->department) : null;
-        $this->languages = !empty($this->languages) ? json_encode($this->languages) : null;
-        $this->expertise = !empty($this->expertise) ? json_encode($this->expertise) : null;
-        $this->position = !empty($this->position) ? json_encode($this->position) : null;
-        $this->country = !empty($this->country) ? json_encode($this->country) : null;
-        $this->special_tasks = !empty($this->special_tasks) ? json_encode($this->special_tasks) : null;
-        $this->department_position = !empty($this->department_position) ? Json::encode($this->department_position) : null;
-        $this->birthday = $this->birthday ? strtotime($this->birthday) : null;
-
-        return parent::beforeValidate();
-    }
+//    public function beforeValidate()
+//    {
+//        // Check if array attributes
+//        $this->birthday = $this->birthday ? strtotime($this->birthday) : null;
+//
+//        return parent::beforeValidate();
+//    }
 
     /**
      * After find UserProfile data we need to decode
      */
-    public function afterFind()
-    {
-        $this->department = json_decode($this->department);
-        $this->languages = json_decode($this->languages);
-        $this->expertise = json_decode($this->expertise);
-        $this->position = json_decode($this->position);
-        $this->country = json_decode($this->country);
-        $this->special_tasks = json_decode($this->special_tasks);
-        $this->department_position = Json::decode($this->department_position);
-        $this->birthday = $this->birthday ? date("d-m-Y", $this->birthday) : null;
-    }
+//    public function afterFind()
+//    {
+//        $this->birthday = $this->birthday ? date("d-m-Y", $this->birthday) : null;
+//    }
 
     /**
      * Get user avatar
@@ -162,6 +128,6 @@ class UserProfile extends ActiveRecord
     public function getAvatar()
     {
         //TODO add avatar path if not exist
-        return $this->image_path ? Yii::getAlias('@storageUrl' . $this->image_path) : '';
+//        return $this->image_path ? Yii::getAlias('@storageUrl' . $this->image_path) : '';
     }
 }

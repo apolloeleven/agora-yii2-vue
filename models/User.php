@@ -108,18 +108,18 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             'id',
             'username',
-            'avatar' => function () {
-                return $this->userProfile->getAvatar();
-            },
+//            'avatar' => function () {
+//                return $this->userProfile->getAvatar();
+//            },
             'created_at' => function () {
                 return Yii::$app->formatter->asDatetime($this->created_at);
             },
             'updated_at' => function () {
                 return Yii::$app->formatter->asDatetime($this->updated_at);
             },
-            'displayName' => function () {
-                return $this->getDisplayName();
-            },
+//            'displayName' => function () {
+//                return $this->getDisplayName();
+//            },
             'email',
             'status',
             'access_token',

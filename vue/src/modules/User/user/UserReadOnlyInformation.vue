@@ -116,7 +116,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["closeForm", 'getDropdownOptions']),
+    ...mapActions(["closeForm"]),
     showModal() {
 
     },
@@ -131,9 +131,6 @@ export default {
       }
     }
   },
-  mounted() {
-    this.getDropdownOptions();
-  }
 }
 </script>
 

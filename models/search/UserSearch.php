@@ -16,11 +16,6 @@ use yii\helpers\ArrayHelper;
  * @property int $name
  * @property int $email
  * @property int $phone
- * @property int $jobTitles
- * @property int $countries
- * @property int $specialTasks
- * @property int $expertise
- * @property int $language
  */
 class UserSearch extends User
 {
@@ -30,8 +25,7 @@ class UserSearch extends User
     public function attributes()
     {
         return ArrayHelper::merge(parent::attributes(), [
-            'keyword', 'name', 'email', 'phone', 'jobTitles', 'countries', 'specialTasks',
-            'expertise', 'language'
+            'keyword', 'name', 'email', 'phone'
         ]);
     }
 
@@ -41,8 +35,7 @@ class UserSearch extends User
     public function rules()
     {
         return [
-            [['keyword', 'name', 'email', 'phone', 'jobTitles', 'countries', 'specialTasks',
-                'expertise', 'language'], 'safe']
+            [['keyword', 'name', 'email', 'phone'], 'safe']
         ];
     }
 
@@ -51,11 +44,6 @@ class UserSearch extends User
         $query = User::find();
 
         $query
-            ->select([
-                User::tableName() . '.*',
-                'job_title_extracted' => 'JSON_EXTRACT(' . UserProfile::tableName() . ".department_position, '$[*].job_title')",
-                'country_extracted' => 'JSON_EXTRACT(' . UserProfile::tableName() . ".department_position, '$[*].country')"
-            ])
             ->joinWith('userProfile')
             ->distinct()
             ->notDeleted();
@@ -68,14 +56,6 @@ class UserSearch extends User
                 'attributes' => [
                     'email',
                     'created_at',
-                    'country' => [
-                        'asc' => ['country_extracted' => SORT_ASC],
-                        'desc' => ['country_extracted' => SORT_DESC],
-                    ],
-                    'job_title' => [
-                        'asc' => ['job_title_extracted' => SORT_ASC],
-                        'desc' => ['job_title_extracted' => SORT_DESC],
-                    ],
                     'status',
                     'name' => [
                         'asc' => ['first_name' => SORT_ASC, 'last_name' => SORT_ASC],
@@ -99,14 +79,6 @@ class UserSearch extends User
                     ['like', 'email', $this->keyword],
                     ['like', 'phone', $this->keyword],
                     ['like', 'username', $this->keyword],
-                    ['like', 'hometown', $this->keyword],
-                    ['like', 'special_tasks', $this->keyword],
-                    ['like', 'job_title', $this->keyword],
-                    ['like', 'department_position', $this->keyword],
-                    ['like', 'country', $this->keyword],
-                    ['like', 'area_director', $this->keyword],
-                    ['like', 'expertise', $this->keyword],
-                    ['like', 'languages', $this->keyword]
                 ]);
         }
         if ($this->name) {
@@ -125,29 +97,6 @@ class UserSearch extends User
                 "TRIM(REPLACE(phone, '-', ''))",
                 trim(str_replace('-', '', $this->phone))
             ]);
-        }
-        if ($this->jobTitles) {
-            $query->andfilterWhere([
-                'OR',
-                ['OR like', 'job_title', $this->jobTitles],
-                ['OR like', 'department_position', $this->jobTitles],
-            ]);
-        }
-        if ($this->countries) {
-            $query->andfilterWhere([
-                'OR',
-                ['OR like', 'country', $this->countries],
-                ['OR like', 'department_position', $this->countries],
-            ]);
-        }
-        if ($this->specialTasks) {
-            $query->andfilterWhere(['OR like', 'special_tasks', $this->specialTasks]);
-        }
-        if ($this->expertise) {
-            $query->andfilterWhere(['OR like', 'expertise', $this->expertise]);
-        }
-        if ($this->language) {
-            $query->andfilterWhere(['OR like', 'languages', $this->language]);
         }
 
         return $dataProvider;
