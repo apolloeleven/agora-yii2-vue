@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-md-4">
-      <div class="login-left">
+      <div class="auth-left">
         <img src="/assets/img/apollo11-white.png" alt="" style="width: 80px"/>
         <h3>{{ $t('Welcome') }}</h3>
         <p>You are 30 seconds away from entering in <b>Agora!</b></p>
@@ -9,14 +9,14 @@
       </div>
     </div>
     <div class="col-md-8 col-right">
-      <div class="login-right clearfix">
+      <div class="auth-right clearfix">
         <div v-if="loading" class="content-spinner text-center text-info">
           <b-spinner class="align-middle"></b-spinner>
           <strong>{{ $t('Please wait...') }}</strong>
         </div>
-        <h3 class="login-heading">{{ $t('Create an account') }}</h3>
+        <h3 class="auth-heading">{{ $t('Create an account') }}</h3>
         <br>
-        <div class="login-form">
+        <div class="auth-form">
           <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
             <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
               <input-widget :model="model" attribute="email" disabled/>

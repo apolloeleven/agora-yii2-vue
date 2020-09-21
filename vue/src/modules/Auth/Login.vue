@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-md-4">
-      <div class="login-left">
+      <div class="auth-left">
         <img src="/assets/img/apollo11-white.png" alt="" style="width: 80px"/>
         <h3>{{ $t('Welcome') }}</h3>
         <p>You are 30 seconds away from entering in <b>Agora!</b></p>
@@ -9,12 +9,12 @@
       </div>
     </div>
     <div class="col-md-8 col-right">
-      <div class="login-right clearfix">
-        <h3 class="login-heading">{{ $t('Login to your account') }}</h3>
+      <div class="auth-right clearfix">
+        <h3 class="auth-heading">{{ $t('Login to your account') }}</h3>
         <br>
         <form v-on:submit.prevent="onLoginClick">
           <ValidationObserver ref="loginForm">
-            <div class="login-form">
+            <div class="auth-form">
               <input-widget ref="usernameInputWidget" :model="loginFormModel" attribute="username"/>
               <input-widget :model="loginFormModel" attribute="password" type="password"/>
               <div class="d-flex align-items-center justify-content-between">
