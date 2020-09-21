@@ -6,8 +6,6 @@ Vue.use(VueI18n);
 
 Vue.config.productionTip = false;
 
-console.log(en);
-
 export default new VueI18n({
   locale: 'en',
   fallbackLocale: 'es',
