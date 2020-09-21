@@ -5,6 +5,7 @@ namespace app\models;
 
 
 use app\helpers\MailHelper;
+use app\models\query\InvitationQuery;
 use Yii;
 use yii\base\Exception;
 use yii\behaviors\BlameableBehavior;
@@ -126,6 +127,14 @@ class Invitation extends ActiveRecord
     }
 
     /**
+     * @return InvitationQuery|ActiveQuery
+     */
+    public static function find()
+    {
+        return new InvitationQuery(get_called_class());
+    }
+
+    /**
      * Gets query for [[CreatedBy]].
      *
      * @return ActiveQuery
@@ -185,7 +194,8 @@ class Invitation extends ActiveRecord
     public static function findByToken($token)
     {
         return static::find()
-            ->andWhere(['token' => $token, 'use_date' => null])
+            ->byToken($token)
+            ->notUsed()
             ->andWhere(['>', 'expire_date', time()])
             ->one();
     }
