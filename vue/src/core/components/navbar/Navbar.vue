@@ -13,7 +13,7 @@
           <template v-slot:button-content>
             {{ $t('Users') }}
           </template>
-          <b-dropdown-item :to="{name: 'user.invitations'}">
+          <b-dropdown-item :to="{name: 'invitations'}">
             {{ $t('Invitations') }}
           </b-dropdown-item>
         </b-nav-item-dropdown>

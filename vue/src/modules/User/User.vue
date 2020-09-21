@@ -30,7 +30,7 @@ export default {
   computed: {
     ...mapState(['loading']),
     buttonText() {
-      if (this.$route.name === 'user.invitations') {
+      if (this.$route.name === 'invitations') {
         return this.$t('New Invitation');
       }
       return this.$t('Add new');
