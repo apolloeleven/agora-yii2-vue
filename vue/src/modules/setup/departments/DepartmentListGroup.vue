@@ -24,7 +24,12 @@
 </script>
 
 <style scoped lang="scss">
-  /deep/ .list-group-item {
+  .list-group {
     padding-right: 1em;
+
+    /deep/ .list-group-item {
+      padding-right: 0;
+      border: none;
+    }
   }
 </style>

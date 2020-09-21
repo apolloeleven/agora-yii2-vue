@@ -1,6 +1,6 @@
 <template>
-  <div href="#" class="list-group-item list-group-item-action">
-    <div class="d-flex justify-content-between align-items-center" :class="{'mb-2': visible}">
+  <div href="#" class="list-group-item">
+    <div class="d-flex justify-content-between align-items-center" >
       <div>
         <h5 class="mb-0 d-inline-block mr-2" @click="onItemClick">{{department.name}}</h5>
         <b-badge pill variant="success">{{department.children.length}}</b-badge>
