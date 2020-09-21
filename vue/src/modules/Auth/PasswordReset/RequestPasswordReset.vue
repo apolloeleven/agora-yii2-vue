@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="login-right clearfix">
-      <div style="position: relative">
+      <div class="position-relative">
         <div v-if="loading" class="content-spinner text-center text-info">
           <b-spinner class="align-middle"></b-spinner>
           <strong>{{ $t('Please wait...') }}</strong>
