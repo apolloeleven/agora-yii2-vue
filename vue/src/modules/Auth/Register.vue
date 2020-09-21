@@ -55,7 +55,7 @@ export default {
       this.loading = false;
       if (response.success) {
         this.$toast(this.$t(`Your account will be reviewed by admin and you will receive login instructions`));
-        this.$router.push('/login');
+        this.$router.push({name: 'auth.login'});
       } else {
         this.model.setMultipleErrors(response.body);
       }
