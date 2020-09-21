@@ -8,6 +8,7 @@ import Login from "@/modules/Auth/Login";
 import Register from "@/modules/Auth/Register";
 import Setup from "@/modules/setup/Setup";
 import CountryList from "@/modules/setup/countries/CountryList";
+import Orgchart from "../modules/OrgChart/Orgchart";
 
 Vue.use(Router);
 
@@ -15,6 +16,12 @@ const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+    {
+      path: '/orgchart',
+      name: 'orgchart',
+      component: Orgchart,
+      children: []
+    },
     {
       path: '/auth',
       name: 'auth',
