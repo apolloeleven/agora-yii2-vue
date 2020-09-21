@@ -56,28 +56,4 @@ class DepartmentResource extends Department
         }
         return parent::beforeDelete();
     }
-
-    /**
-     * @author Saiat Kalbiev <kalbievich11@gmail.com>
-     */
-    public static function getDepartmentsTree()
-    {
-        $departments = self::find()->all();
-        $nodes = [];
-        $tree = [];
-
-        foreach ($departments as &$department) {
-            $id = $department->id;
-            $parentId = $department->parent_id;
-            $nodes[$id] = &$department;
-
-            if (array_key_exists($parentId, $nodes)) {
-                $nodes[$parentId]->children[] = &$department;
-            } else {
-                $tree[] = &$department;
-            }
-        }
-
-        return $tree;
-    }
 }
