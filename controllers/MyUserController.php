@@ -158,7 +158,6 @@ class MyUserController extends BaseController
             ->one();
         if (!$userModel) {
             return $this->validationError(Yii::t('app', 'Unable to find user'));
-
         }
 
         $userProfileModel = $userModel->userProfile;
