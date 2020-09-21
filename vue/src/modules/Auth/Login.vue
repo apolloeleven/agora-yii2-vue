@@ -15,8 +15,8 @@
         <form v-on:submit.prevent="onLoginClick">
           <ValidationObserver ref="loginForm">
             <div class="auth-form">
-              <input-widget ref="usernameInputWidget" :model="loginFormModel" attribute="username"/>
-              <input-widget :model="loginFormModel" attribute="password" type="password"/>
+              <input-widget ref="usernameInputWidget" :model="model" attribute="username"/>
+              <input-widget :model="model" attribute="password" type="password"/>
               <div class="d-flex align-items-center justify-content-between">
                 <button class="btn btn-primary mr-2">{{ $t('Login') }}</button>
                 <router-link :to="{name: 'request-password-reset'}">{{ $t('Request new password') }}</router-link>
@@ -31,7 +31,7 @@
 
 <script>
 import auth from '../../core/services/authService';
-import LoginForm from "./LoginForm";
+import LoginModel from "./LoginModel";
 import InputWidget from "../../core/components/input-widget/InputWidget";
 
 export default {
@@ -39,13 +39,13 @@ export default {
   components: {InputWidget},
   data() {
     return {
-      loginFormModel: new LoginForm(),
+      model: new LoginModel(),
     }
   },
   methods: {
     async onLoginClick() {
-      this.loginFormModel.resetErrors();
-      let response = await auth.login(this.loginFormModel);
+      this.model.resetErrors();
+      let response = await auth.login(this.model);
 
       if (response.success) {
         if (auth.getRedirectTo()) {
@@ -55,7 +55,7 @@ export default {
           this.$router.push('/');
         }
       } else {
-        this.loginFormModel.setMultipleErrors(response.body);
+        this.model.setMultipleErrors(response.body);
       }
     }
   },

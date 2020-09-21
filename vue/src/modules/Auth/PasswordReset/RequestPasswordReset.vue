@@ -31,9 +31,9 @@
 
 <script>
 import auth from '../../../core/services/authService';
-import PasswordReset from "./PasswordReset";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import ContentSpinner from "../../../core/components/ContentSpinner";
+import RequestPasswordResetModel from "./RequestPasswordResetModel";
 
 export default {
   name: "RequestPasswordReset",
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       loading: false,
-      model: new PasswordReset(),
+      model: new RequestPasswordResetModel(),
     }
   },
   methods: {

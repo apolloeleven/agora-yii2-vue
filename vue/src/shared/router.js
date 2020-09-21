@@ -7,7 +7,7 @@ import Dashboard from "@/modules/Dashboard/Dashboard";
 import Login from "@/modules/Auth/Login";
 import Register from "@/modules/Auth/Register";
 import RequestPasswordReset from "@/modules/Auth/PasswordReset/RequestPasswordReset";
-import ResetPasswordForm from "@/modules/Auth/PasswordReset/ResetPasswordForm";
+import ResetPassword from "@/modules/Auth/PasswordReset/ResetPassword";
 import Setup from "@/modules/setup/Setup";
 import CountryList from "@/modules/setup/countries/CountryList";
 import UserInvitations from "@/modules/User/Invitation/UserInvitations";
@@ -38,7 +38,7 @@ const router = new Router({
         {
           path: 'password-reset/:token',
           name: 'password-reset',
-          component: ResetPasswordForm,
+          component: ResetPassword,
         },
         {
           path: 'register/:token',

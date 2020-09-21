@@ -49,20 +49,9 @@ class InvitationController extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-        $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
         unset($actions['update'], $actions['view']);
 
         return $actions;
-    }
-
-    /**
-     * @return ActiveDataProvider
-     */
-    public function prepareDataProvider()
-    {
-        return new ActiveDataProvider([
-            'query' => $this->modelClass::find()->orderBy('status')
-        ]);
     }
 
     /**

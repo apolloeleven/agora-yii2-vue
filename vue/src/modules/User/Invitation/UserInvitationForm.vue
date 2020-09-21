@@ -14,7 +14,7 @@
 <script>
 
 import {createNamespacedHelpers} from "vuex";
-import InvitationForm from "./InvitationForm";
+import UserInvitationFormModel from "./UserInvitationFormModel";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import ContentSpinner from "../../../core/components/ContentSpinner";
 
@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       loading: false,
-      model: new InvitationForm(),
+      model: new UserInvitationFormModel(),
     }
   },
   computed: {

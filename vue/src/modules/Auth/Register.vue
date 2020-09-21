@@ -32,10 +32,10 @@
 
 <script>
 import InputWidget from "../../core/components/input-widget/InputWidget";
-import RegisterForm from "./RegisterForm";
 import auth from '../../core/services/authService';
 import invitationService from "../User/Invitation/invitationService";
 import ContentSpinner from "../../core/components/ContentSpinner";
+import RegisterModel from "./RegisterModel";
 
 export default {
   name: "Register",
@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       loading: false,
-      model: new RegisterForm(),
+      model: new RegisterModel(),
     }
   },
   methods: {

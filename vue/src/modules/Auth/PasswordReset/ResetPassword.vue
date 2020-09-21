@@ -33,16 +33,16 @@
 <script>
 import auth from '../../../core/services/authService';
 import InputWidget from "../../../core/components/input-widget/InputWidget";
-import PasswordResetForm from "./PasswordResetForm";
 import ContentSpinner from "../../../core/components/ContentSpinner";
+import ResetPasswordModel from "./ResetPasswordModel";
 
 export default {
-  name: "ResetPasswordForm",
+  name: "ResetPassword",
   components: {ContentSpinner, InputWidget},
   data() {
     return {
       loading: false,
-      model: new PasswordResetForm(),
+      model: new ResetPasswordModel(),
     }
   },
   methods: {

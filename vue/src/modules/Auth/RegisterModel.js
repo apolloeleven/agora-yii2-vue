@@ -1,7 +1,7 @@
 import BaseModel from "../../core/components/input-widget/BaseModel";
 import i18n from '../../shared/i18n';
 
-export default class RegisterForm extends BaseModel {
+export default class RegisterModel extends BaseModel {
   firstname = '';
   lastname = '';
   password = '';
