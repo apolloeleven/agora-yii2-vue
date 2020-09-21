@@ -10,10 +10,7 @@
     </div>
     <div class="col-md-8 col-right">
       <div class="auth-right clearfix">
-        <div v-if="loading" class="content-spinner text-center text-info">
-          <b-spinner class="align-middle"></b-spinner>
-          <strong>{{ $t('Please wait...') }}</strong>
-        </div>
+        <content-spinner :show="loading" :text="$t('Please wait...')" class="h-100"/>
         <h3 class="auth-heading">{{ $t('Create an account') }}</h3>
         <br>
         <div class="auth-form">
@@ -24,7 +21,7 @@
               <input-widget :model="model" attribute="lastname"/>
               <input-widget type="password" :model="model" attribute="password" vid="password"/>
               <input-widget type="password" :model="model" attribute="password_repeat" vid="password_repeat"/>
-              <button class="btn btn-primary btn-action">Register</button>
+              <button :disabled="loading" class="btn btn-primary btn-action">Register</button>
             </b-form>
           </ValidationObserver>
         </div>
@@ -38,10 +35,11 @@ import InputWidget from "../../core/components/input-widget/InputWidget";
 import RegisterForm from "./RegisterForm";
 import auth from '../../core/services/authService';
 import invitationService from "../User/Invitation/invitationService";
+import ContentSpinner from "../../core/components/ContentSpinner";
 
 export default {
   name: "Register",
-  components: {InputWidget},
+  components: {ContentSpinner, InputWidget},
   data() {
     return {
       loading: false,

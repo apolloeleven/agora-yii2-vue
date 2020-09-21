@@ -1,9 +1,6 @@
 <template>
   <div id="user" class="d-flex flex-column">
-    <div v-if="loading" class="text-center text-info my-2 d-flex flex-column align-items-center">
-      <b-spinner class="align-middle"/>
-      <strong>{{ $t('Loading...') }}</strong>
-    </div>
+    <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
     <div v-if="!loading" id="invitations" class="p-3">
       <b-card>
         <b-table responsive small striped hover id="users-table" :items="data.rows" :fields="fields"
@@ -35,12 +32,13 @@
 
 <script>
 import {createNamespacedHelpers} from 'vuex';
+import ContentSpinner from "../../../core/components/ContentSpinner";
 
 const {mapState, mapActions} = createNamespacedHelpers('invitations');
 
 export default {
   name: "UserInvitations",
-  components: {},
+  components: {ContentSpinner},
   data() {
     return {
       perPage: 50,

@@ -3,10 +3,7 @@
     <b-modal
         :visible="showModal" id="user-form" ref="modal" :title='$t(`New Invitation`)' @hidden="onHideModal"
         @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')" scrollable>
-      <div v-if="loading" class="content-spinner text-center text-info my-2">
-        <b-spinner class="align-middle"></b-spinner>
-        <strong>{{ $t('Please wait...') }}</strong>
-      </div>
+      <content-spinner :show="loading" :text="$t('Please wait...')" :fullscreen="true" class="h-100"/>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
         <input-widget :model="model" attribute="email"/>
       </b-form>
@@ -19,12 +16,13 @@
 import {createNamespacedHelpers} from "vuex";
 import InvitationForm from "./InvitationForm";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
+import ContentSpinner from "../../../core/components/ContentSpinner";
 
 const {mapState: mapStateInvitations, mapActions} = createNamespacedHelpers('invitations');
 
 export default {
   name: "UserInvitationForm",
-  components: {InputWidget},
+  components: {ContentSpinner, InputWidget},
   data() {
     return {
       loading: false,

@@ -8,10 +8,7 @@
     </div>
     <div class="auth-right clearfix">
       <div class="position-relative">
-        <div v-if="loading" class="content-spinner text-center text-info">
-          <b-spinner class="align-middle"></b-spinner>
-          <strong>{{ $t('Please wait...') }}</strong>
-        </div>
+        <content-spinner :show="loading" :text="$t('Please wait...')" class="h-100"/>
         <h3 class="auth-heading">{{ $t('Password Reset') }}</h3>
         <br>
         <div class="auth-form">
@@ -36,10 +33,11 @@
 import auth from '../../../core/services/authService';
 import PasswordReset from "./PasswordReset";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
+import ContentSpinner from "../../../core/components/ContentSpinner";
 
 export default {
   name: "RequestPasswordReset",
-  components: {InputWidget},
+  components: {ContentSpinner, InputWidget},
   data() {
     return {
       loading: false,

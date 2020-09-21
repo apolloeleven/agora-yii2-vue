@@ -12,11 +12,7 @@
       </b-button>
     </div>
     <div class="page-content">
-      <div v-if="loading" class="content-spinner text-center text-info my-2">
-        <b-spinner class="align-middle"/>
-        <strong>{{ $t('Loading...') }}</strong>
-      </div>
-
+      <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
       <router-view/>
     </div>
   </div>
@@ -24,11 +20,13 @@
 
 <script>
 import {createNamespacedHelpers} from 'vuex';
+import ContentSpinner from "../../core/components/ContentSpinner";
 
 const {mapState, mapActions} = createNamespacedHelpers('invitations');
 
 export default {
   name: "User",
+  components: {ContentSpinner},
   computed: {
     ...mapState(['loading']),
     buttonText() {
