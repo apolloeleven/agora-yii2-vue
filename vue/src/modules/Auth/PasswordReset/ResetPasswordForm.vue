@@ -55,10 +55,10 @@ export default {
       this.loading = false;
       if (response.success) {
         this.$toast(this.$t(`Password was successfully changed`));
-        this.$router.push('/login');
+        this.$router.push({name: 'auth.login'});
       } else {
         this.$toast(this.$t(response.body), 'danger');
-        this.$router.push('/login');
+        this.$router.push({name: 'auth.login'});
       }
     },
   },
@@ -67,7 +67,7 @@ export default {
     const response = await auth.checkToken(this.model.token);
     if (!response.success) {
       this.$toast(this.$t(response.body), 'danger');
-      this.$router.push('/login');
+      this.$router.push({name: 'auth.login'});
     }
   }
 }
