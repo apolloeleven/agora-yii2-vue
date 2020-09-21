@@ -19,10 +19,12 @@ use yii\base\InvalidCallException;
  */
 class DepartmentResource extends Department
 {
+    public $children = [];
+
     public function fields()
     {
         return [
-            'id', 'name', 'country_id', 'parent_id', 'created_at' => function () {
+            'id', 'name', 'country_id', 'parent_id', 'children', 'created_at' => function () {
                 return \Yii::$app->formatter->asDatetime($this->created_at);
             }
         ];
@@ -53,5 +55,29 @@ class DepartmentResource extends Department
             throw new InvalidCallException(\Yii::t('app', "You can't delete the department because it has child departments"));
         }
         return parent::beforeDelete();
+    }
+
+    /**
+     * @author Saiat Kalbiev <kalbievich11@gmail.com>
+     */
+    public static function getDepartmentsTree()
+    {
+        $departments = self::find()->all();
+        $nodes = [];
+        $tree = [];
+
+        foreach ($departments as &$department) {
+            $id = $department->id;
+            $parentId = $department->parent_id;
+            $nodes[$id] = &$department;
+
+            if (array_key_exists($parentId, $nodes)) {
+                $nodes[$parentId]->children[] = &$department;
+            } else {
+                $tree[] = &$department;
+            }
+        }
+
+        return $tree;
     }
 }
