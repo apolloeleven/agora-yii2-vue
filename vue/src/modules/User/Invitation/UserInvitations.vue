@@ -3,8 +3,7 @@
     <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
     <div v-if="!loading" id="invitations" class="p-3">
       <b-card>
-        <b-table responsive small striped hover id="users-table" :items="data.rows" :fields="fields"
-                 :per-page="perPage" :current-page="currentPage">
+        <b-table responsive small striped hover id="users-table" :items="data.rows" :fields="fields">
           <template v-slot:table-busy>
             <div class="text-center text-danger my-2">
               <b-spinner class="align-middle"></b-spinner>
@@ -40,26 +39,10 @@ export default {
   name: "UserInvitations",
   components: {ContentSpinner},
   data() {
-    return {
-      perPage: 50,
-      currentPage: 1,
-      perPageOptions: [
-        {item: 5, name: "5"},
-        {item: 10, name: "10"},
-        {item: 20, name: "20"},
-        {item: 50, name: "50"},
-        {item: 100, name: "100"}
-      ],
-    }
+    return {}
   },
   computed: {
     ...mapState(['loading', 'data']),
-    pagingStart() {
-      return this.data.total > 0 ? this.perPage * (this.currentPage - 1) + 1 : 0;
-    },
-    pagingEnd() {
-      return Math.min(this.perPage * this.currentPage, this.data.total)
-    },
     fields() {
       return [
         {key: 'id', label: this.$t('ID')},

@@ -7,9 +7,6 @@ export default {
     modalInvitation: {},
     loading: false,
     data: {
-      total: 0,
-      perPage: 20,
-      page: 1,
       rows: []
     },
 
@@ -19,12 +16,7 @@ export default {
       commit('changeLoading');
       const res = await invitationService.get(keyword);
       commit('changeLoading');
-      commit('getAll', {
-        rows: res.body,
-        total: res.response.headers['x-pagination-total-count'],
-        perPage: res.response.headers['x-pagination-per-page'],
-        page: res.response.headers['x-pagination-current-page']
-      });
+      commit('getAll', {rows: res.body});
     },
     showInvitationModal({commit}) {
       commit('showInvitationModal');
@@ -48,11 +40,8 @@ export default {
     }
   },
   mutations: {
-    getAll: (state, {rows, total, perPage, page}) => {
+    getAll: (state, {rows}) => {
       state.data.rows = rows;
-      state.data.total = total;
-      state.data.perPage = perPage;
-      state.data.page = page;
     },
     showInvitationModal: (state) => {
       state.showModal = true;
