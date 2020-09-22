@@ -17,7 +17,10 @@ export default {
    */
   [SET_COUNTRIES](state, {countries}) {
     state.countries.loaded = true;
-    state.countries.data = countries;
+    state.countries.data = countries.map(country => {
+      country.departments = getTree(country.departments, null);
+      return country;
+    });
   },
   [SHOW_COUNTRY_MODAL](state, country) {
     state.countryModal.show = true;
@@ -41,3 +44,15 @@ export default {
     state.departmentModal.show = false;
   }
 };
+
+const getTree = (departments, parentId = null) => {
+  const nodes = [];
+  for (const item of departments) {
+    if (item.parent_id === parentId) {
+      item.children = getTree(departments, item.id);
+      nodes.push(item);
+    }
+  }
+
+  return nodes
+}

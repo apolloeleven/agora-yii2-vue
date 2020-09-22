@@ -1,4 +1,3 @@
-import _ from "lodash";
 
 const getTree = (departments, parentId = null) => {
   const nodes = [];

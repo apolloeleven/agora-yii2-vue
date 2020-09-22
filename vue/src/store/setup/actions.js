@@ -16,7 +16,7 @@ export async function getCountries({commit}) {
   // Make request to get countries
   const {success, body} = await httpService.get('/v1/setup/countries', {
     params: {
-      expand: 'createdBy',
+      expand: 'createdBy,departments',
       sort: 'name'
     }
   })
