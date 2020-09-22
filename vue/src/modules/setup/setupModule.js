@@ -11,6 +11,10 @@ MenuService.addItem(new MenuItem('setup', {
     {
       text: i18n.t('Countries'),
       path: '/setup/countries'
+    },
+    {
+      text: i18n.t('Departments'),
+      path: '/setup/departments'
     }
   ]
 }));
