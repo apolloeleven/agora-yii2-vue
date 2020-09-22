@@ -60,13 +60,13 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/department'],
                 [
                     'class' => UrlRule::class,
                     'pluralize' => false,
                     'controller' => [
                         'my-user',
-                        'v1/setup/country',
-                        'v1/setup/department',
                     ]
                 ]
             ],
