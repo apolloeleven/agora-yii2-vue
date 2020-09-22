@@ -104,8 +104,11 @@ class UserController extends Controller
     }
 
     /**
-     * @return array|bool[]
+     *
+     *
+     * @return array
      * @throws Exception
+     * @throws \yii\db\Exception
      */
     public function actionSignup()
     {
@@ -117,8 +120,11 @@ class UserController extends Controller
         }
 
         $model = new SignupForm();
-        if (!$model->load($request->post(), '') || !$model->validate() || !$model->signup($invitation)) {
+        if (!$model->load($request->post(), '') || !$model->validate()) {
             return $this->validationError($model->getFirstErrors());
         }
+
+        // This method does not require check for success because it throws exception on error
+        $model->signup($invitation);
     }
 }

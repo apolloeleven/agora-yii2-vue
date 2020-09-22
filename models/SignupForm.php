@@ -5,6 +5,7 @@ namespace app\models;
 
 use app\helpers\MailHelper;
 use app\modules\v1\users\models\Invitation;
+use app\rest\ValidationException;
 use Yii;
 use yii\base\Exception;
 use yii\base\Model;
@@ -68,7 +69,7 @@ class SignupForm extends Model
         $user->setPassword($this->password);
         if (!$user->save()) {
             $dbTransaction->rollBack();
-            throw new Exception("User was not saved for email $this->email");
+            throw new ValidationException(Yii::t('app', "User was not saved for email $this->email"));
         };
 
         // Save user profile
@@ -78,7 +79,7 @@ class SignupForm extends Model
         $userProfile->last_name = $this->lastname;
         if (!$userProfile->save()) {
             $dbTransaction->rollBack();
-            throw new Exception("UserProfile was not saved for email $this->email");
+            throw new ValidationException(Yii::t('app', "UserProfile was not saved for email $this->email"));
         }
 
         // TODO Assign role to user
@@ -89,12 +90,12 @@ class SignupForm extends Model
         $invitation->status = Invitation::STATUS_REGISTERED;
         if (!$invitation->save()) {
             $dbTransaction->rollBack();
-            throw new Exception("Invitation was not updated. Token: $invitation->token");
+            throw new ValidationException(Yii::t('app', "Invitation was not updated. Token: $invitation->token"));
         }
 
         if (!MailHelper::acceptInvitation($invitation, $user)) {
             $dbTransaction->rollBack();
-            throw new Exception('Unable to send email for inviter');
+            throw new ValidationException(Yii::t('app', 'Unable to send email for inviter'));
         }
 
         $dbTransaction->commit();
