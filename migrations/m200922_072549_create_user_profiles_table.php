@@ -3,16 +3,16 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%user_profile}}`.
+ * Handles the creation of table `{{%user_profiles}}`.
  */
-class m200922_072549_create_user_profile_table extends Migration
+class m200922_072549_create_user_profiles_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('{{%user_profile}}', [
+        $this->createTable('{{%user_profiles}}', [
             'user_id' => $this->primaryKey(),
             'first_name' => $this->string(255),
             'last_name' => $this->string(255),
@@ -29,7 +29,7 @@ class m200922_072549_create_user_profile_table extends Migration
 
         $this->addForeignKey(
             '{{%fk-user_profile-user_id}}',
-            '{{%user_profile}}',
+            '{{%user_profiles}}',
             'user_id',
             '{{%users}}',
             'id',
@@ -44,9 +44,9 @@ class m200922_072549_create_user_profile_table extends Migration
     {
         $this->dropForeignKey(
             '{{%fk-user_profile-user_id}}',
-            '{{%user_profile}}'
+            '{{%user_profiles}}'
         );
 
-        $this->dropTable('{{%user_profile}}');
+        $this->dropTable('{{%user_profiles}}');
     }
 }
