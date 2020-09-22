@@ -18,7 +18,7 @@ use yii\helpers\Url;
 <p>
     <?php echo Yii::t('app', 'Click the link bellow to register') ?>
 	<br>
-    <?php echo Html::a(Html::encode(Yii::t('app', 'Registration Link')), Url::to($link)) ?>
+    <?php echo Html::a(Html::encode(Yii::t('app', 'Registration Link')), $link) ?>
 </p>
 
 
