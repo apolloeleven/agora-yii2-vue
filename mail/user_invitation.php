@@ -18,7 +18,7 @@ use yii\helpers\Url;
     <?php echo Yii::t('app', 'Click the link bellow to register') ?>
 	<br>
     <?php echo Html::a(Html::encode(Yii::t('app', 'Registration Link')),
-        Url::to('@frontend/auth/register/' . $model->token)) ?>
+        Url::to('@portalUrl/auth/register/' . $model->token)) ?>
 </p>
 
 
