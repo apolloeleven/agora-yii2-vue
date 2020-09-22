@@ -1,42 +1,43 @@
 import httpService from "./httpService";
+import {AUTH_TOKEN, CURRENT_USER, REDIRECT_TO} from "../../constants";
 
 export default {
 
   getRedirectTo() {
-    return localStorage.getItem('REDIRECT_TO');
+    return localStorage.getItem(REDIRECT_TO);
   },
 
   removeRedirectTo() {
-    localStorage.removeItem('REDIRECT_TO');
+    localStorage.removeItem(REDIRECT_TO);
   },
 
   loggedIn() {
-    return !!localStorage.getItem('AUTH_TOKEN');
+    return !!localStorage.getItem(AUTH_TOKEN);
   },
 
   logout() {
-    localStorage.removeItem('AUTH_TOKEN');
+    localStorage.removeItem(AUTH_TOKEN);
   },
 
   /**
    * @returns {string}
    */
   getToken() {
-    return localStorage.getItem('AUTH_TOKEN');
+    return localStorage.getItem(AUTH_TOKEN);
   },
 
   /**
    * @param token
    */
   setToken(token) {
-    localStorage.setItem('AUTH_TOKEN', token);
+    localStorage.setItem(AUTH_TOKEN, token);
   },
 
   /**
    * @returns {*}
    */
   getCurrentUser() {
-    const userData = localStorage.getItem('CURRENT_USER');
+    const userData = localStorage.getItem(CURRENT_USER);
 
     if (!userData) {
       return null;
@@ -53,7 +54,7 @@ export default {
     if (!userData) {
       return null;
     }
-    localStorage.setItem('CURRENT_USER', JSON.stringify(userData));
+    localStorage.setItem(CURRENT_USER, JSON.stringify(userData));
   },
 
   /**
@@ -69,6 +70,30 @@ export default {
     }
 
     return res;
+  },
+
+  /**
+   * @param email
+   * @returns {Promise<any>}
+   */
+  async resetPasswordLink(email) {
+    return await httpService.post('/user/send-password-reset-link', email);
+  },
+
+  /**
+   * @returns {Promise<any>}
+   * @param data
+   */
+  async passwordReset(data) {
+    return await httpService.post('/user/password-reset', data);
+  },
+
+  /**
+   * @param token
+   * @returns {Promise<unknown>}
+   */
+  async checkToken(token) {
+    return await httpService.get('/user/check-token-validity?token=' + token);
   },
 
   async getProfile(id) {

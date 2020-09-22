@@ -2,11 +2,13 @@
 
 namespace app\controllers;
 
+use app\helpers\MailHelper;
 use app\models\LoginForm;
 use app\models\User;
 use app\models\UserProfile;
 use app\rest\Controller;
 use Yii;
+use yii\base\Exception;
 
 /**
  * Class UserController
@@ -15,13 +17,6 @@ use Yii;
  */
 class UserController extends Controller
 {
-
-    /**
-     *
-     *
-     * @return array
-     * @author Levani Khvedelidze <levani19972@gmail.com>
-     */
     public function actionLogin()
     {
         $request = Yii::$app->request;
@@ -33,35 +28,78 @@ class UserController extends Controller
         return $model->getUser()->getApiData();
     }
 
-
     /**
+     * Send email password reset link
      *
-     *
-     * @return User|array
-     * @author Levani Khvedelidze <levani19972@gmail.com>
+     * @return array|bool
+     * @throws Exception
      */
-    public function actionUpdate()
+    public function actionSendPasswordResetLink()
     {
         $request = Yii::$app->request;
-        $model = new User();
+        $email = $request->post('email');
 
-        if (!$model->load($request->post(), '') || !$model->validate()) {
-            return $this->validationError($model->getFirstErrors());
+        $user = User::find()
+            ->byEmail($email)
+            ->one();
+
+        if (!$user) {
+            return $this->validationError(Yii::t('app', 'Unable to find user with this email'));
         }
-        if (!$model->save()) {
-            return $this->validationError($model->getFirstErrors());
+
+        if ($user->isInactive()) {
+            return $this->validationError(Yii::t('app', 'User is disabled'));
         }
-        return $model;
+
+        $passwordResetToken = Yii::$app->security->generateRandomString(16);
+        $user->password_reset_token = $passwordResetToken;
+        $user->expire_date = time();
+
+        if (!$user->save()) {
+            return $this->validationError(Yii::t('app', 'Unable to save user'));
+        }
+
+        if (!MailHelper::resetPassword($user)) {
+            return $this->validationError(Yii::t('app', 'Unable to send email'));
+        };
     }
 
     /**
+     * Get password reset token and check validate
      *
-     *
-     * @author Levani Khvedelidze <levani19972@gmail.com>
+     * @param $token
+     * @return array
      */
-    public function actionGetUser()
+    public function actionCheckTokenValidity($token)
     {
-        return Yii::$app->user;
+        if (!User::findByPasswordResetToken($token)) {
+            return $this->validationError(Yii::t('app', 'Password reset link is invalid or expired'));
+        }
+    }
+
+    /**
+     * Reset password
+     *
+     * @return array|bool
+     * @throws Exception
+     */
+    public function actionPasswordReset()
+    {
+        $request = Yii::$app->request;
+
+        $token = $request->post('token');
+        $user = User::findByPasswordResetToken($token);
+
+        if (!$user) {
+            return $this->validationError(Yii::t('app', 'Unable to find user'));
+        }
+
+        $hash = Yii::$app->getSecurity()->generatePasswordHash($request->post('password'));
+        $user->password_hash = $hash;
+
+        if (!$user->save()) {
+            return $this->validationError(Yii::t('app', 'Unable to save password'));
+        }
     }
 
     /**

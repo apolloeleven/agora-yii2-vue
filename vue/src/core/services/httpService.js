@@ -1,5 +1,5 @@
 import axiosClient from './../../plugins/axios'
-import authService from "./auth.service";
+import authService from "./authService";
 
 const HTTP_BAD_REQUEST = 400;
 const HTTP_UNAUTHORIZED = 401;
