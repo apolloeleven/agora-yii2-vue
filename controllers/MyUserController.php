@@ -5,7 +5,9 @@ namespace app\controllers;
 use app\helpers\MailHelper;
 use app\models\search\UserSearch;
 use app\models\User;
+use app\models\UserDepartment;
 use app\models\UserProfile;
+use app\modules\v1\setup\resources\UserResource;
 use app\rest\ActiveController;
 use Yii;
 use yii\base\ErrorException;
@@ -23,7 +25,7 @@ use yii\helpers\FileHelper;
  */
 class MyUserController extends ActiveController
 {
-    public $modelClass = User::class;
+    public $modelClass = UserResource::class;
 
     /**
      * @return array[]
@@ -38,11 +40,6 @@ class MyUserController extends ActiveController
                     [
                         'allow' => true,
                         'actions' => ['index'],
-                        //TODO rules
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['create'],
                         //TODO rules
                     ],
                     [
@@ -69,7 +66,7 @@ class MyUserController extends ActiveController
 
         $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
 
-        unset($actions['create'], $actions['update'], $actions['delete'], $actions['view']);
+        unset($actions['update'], $actions['delete'], $actions['view']);
 
         return $actions;
     }
@@ -82,51 +79,6 @@ class MyUserController extends ActiveController
         $userSearchModel = new UserSearch();
 
         return $userSearchModel->search(Yii::$app->getRequest()->getQueryParams());
-    }
-
-    /**
-     * User create action
-     *
-     * @return mixed
-     * @throws InvalidConfigException
-     * @throws \Exception
-     */
-    public function actionCreate()
-    {
-        $requestData = Yii::$app->getRequest()->getBodyParams();
-
-        /** Check if requestDate has all required fields */
-        if (!$requestData || !isset($requestData['userProfile'])) {
-            return $this->validationError(Yii::t('app', 'Unable to find all required fields'), 400);
-        }
-
-        $userModel = new User();
-        $userProfileModel = new UserProfile();
-
-        if (!array_key_exists('departmentPosition', $requestData)) {
-            $requestData['departmentPosition'] = null;
-        }
-
-        $requestData['userProfile']['department_position'] = $requestData['departmentPosition'];
-
-        /** load $requestDate in $userProfileModel and $userModel models separately, that fits requestData format*/
-        if (!$userProfileModel->load($requestData['userProfile'], '')) {
-            return $this->validationError($userProfileModel->errors);
-        }
-        if (!$userModel->load($requestData, '')) {
-            return $this->validationError($userModel->errors);
-        };
-
-        $userModel->username = $userModel->email;
-        //Change 'Generate random password' to already generate password
-        $password = ArrayHelper::getValue($requestData, 'password');
-
-        /** create password_hash to save it in database*/
-        $userModel->setPassword($password);
-
-        $userModel->status = User::STATUS_ACTIVE;
-
-        return $this->saveData($userModel, $userProfileModel, true, $password);
     }
 
     /**
@@ -243,36 +195,36 @@ class MyUserController extends ActiveController
 
         $transaction = Yii::$app->db->beginTransaction();
 
-        $imagePath = $user->userProfile->image_path;
-        if ($imagePath !== null && $imagePath !== "") {
-            $dir = dirname($imagePath);
-            FileHelper::removeDirectory(Yii::getAlias("@storage" . $dir));
-        }
+//        $imagePath = $user->userProfile->image_path;
+//        if ($imagePath !== null && $imagePath !== "") {
+//            $dir = dirname($imagePath);
+//            FileHelper::removeDirectory(Yii::getAlias("@storage" . $dir));
+//        }
+//
+//        $userProfileData = $user->userProfile;
+//        $userProfileData->first_name = '[DELETED]';
+//        $userProfileData->last_name = '[DELETED]';
+//        $userProfileData->phone = '[DELETED]';
+//        $userProfileData->mobile = '[DELETED]';
+//        $userProfileData->birthday = null;
+//        $userProfileData->hometown = '[DELETED]';
+//        $userProfileData->special_tasks = null;
+//        $userProfileData->about_me = '[DELETED]';
+//        $userProfileData->languages = null;
+//        $userProfileData->expertise = null;
+//        $userProfileData->department = null;
+//        $userProfileData->area_director = null;
+//        $userProfileData->position = null;
+//        $userProfileData->image_path = null;
+//        if (!$userProfileData->save()) {
+//            $transaction->rollBack();
+//            return $this->validationError($userProfileData->errors);
+//        }
 
-        $userProfileData = $user->userProfile;
-        $userProfileData->first_name = '[DELETED]';
-        $userProfileData->last_name = '[DELETED]';
-        $userProfileData->phone = '[DELETED]';
-        $userProfileData->mobile = '[DELETED]';
-        $userProfileData->birthday = null;
-        $userProfileData->hometown = '[DELETED]';
-        $userProfileData->special_tasks = null;
-        $userProfileData->about_me = '[DELETED]';
-        $userProfileData->languages = null;
-        $userProfileData->expertise = null;
-        $userProfileData->department = null;
-        $userProfileData->area_director = null;
-        $userProfileData->position = null;
-        $userProfileData->image_path = null;
-        if (!$userProfileData->save()) {
-            $transaction->rollBack();
-            return $this->validationError($userProfileData->errors);
-        }
-
-        if (!$user->markDeleted()->save()) {
-            $transaction->rollBack();
-            return $this->validationError(array_merge($user->errors, $user->userProfile->errors));
-        };
+//        if (!$user->markDeleted()->save()) {
+//            $transaction->rollBack();
+//            return $this->validationError(array_merge($user->errors, $user->userProfile->errors));
+//        };
 
         $transaction->commit();
 
@@ -298,6 +250,12 @@ class MyUserController extends ActiveController
         }
 
         return $model;
+    }
+
+    public function actionGetDropDownOptions()
+    {
+        $userDepartments = UserDepartment::find()->distinct()->all();
+
     }
 
 }

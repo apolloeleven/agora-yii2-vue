@@ -1,6 +1,5 @@
 import userService from "../../modules/User/userService";
-import httpService from "../../core/services/httpService";
-import auth from "../../core/services/auth.service";
+import auth from "../../core/services/authService";
 import {eventBus, USER_CREATED, USER_UPDATED} from "../../core/services/event-bus";
 import store from "../index";
 
@@ -131,17 +130,6 @@ export default {
       return response;
     },
 
-    async create({dispatch}, payload) {
-      const response = await userService.create(payload);
-
-      if (response.success) {
-        eventBus.$emit(USER_CREATED, response.body);
-        dispatch('getAll');
-      }
-
-      return response;
-    },
-
     async update({dispatch}, payload) {
       const response = await userService.update(payload);
 
@@ -234,8 +222,6 @@ export default {
     },
 
     changeLoading: (state) => state.userList.loading = !state.userList.loading,
-
-    create: (state, user) => state.userList.users.unshift(user),
 
     userDeleted: (state, user) => {
       const {userId} = user;

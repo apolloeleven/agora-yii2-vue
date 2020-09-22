@@ -39,17 +39,6 @@ const userService = {
   },
 
   /**
-   * Create new user
-   *
-   * @param data
-   * @returns {Promise | Promise<unknown>}
-   */
-  create(data) {
-    data = this.prepareData(data);
-    return httpService.post(`${this.url}?expand=userProfile,updatedBy`, data);
-  },
-
-  /**
    * Update user
    *
    * @param data

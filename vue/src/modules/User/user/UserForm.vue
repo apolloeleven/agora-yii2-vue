@@ -22,26 +22,25 @@
             </b-form-checkbox>
           </div>
         </div>
-        <div class="row">
+        <!--<div class="row">
           <div class="col">
             <input-widget :model="userProfileModel" attribute="first_name"/>
           </div>
           <div class="col">
             <input-widget :model="userProfileModel" attribute="last_name"/>
           </div>
-        </div>
+        </div>-->
         <div class="row">
           <div class="col">
             <input-widget :model="userModel" attribute="email"/>
           </div>
-          <div class="col">
+          <!--<div class="col">
             <input-widget :model="userProfileModel" attribute="phone"/>
           </div>
           <div class="col">
             <input-widget :model="userProfileModel" attribute="mobile"/>
           </div>
-        </div>
-        <div class="row">
+        </div>-->
         </div>
         <b-card header-tag="header" footer-tag="footer" class="form-cards">
           <template v-slot:header>
@@ -52,7 +51,7 @@
               </b-button>
             </b-form-group>
           </template>
-          <div v-for="(uw, index) in userModel.userWorkspace" :key="index">
+          <div v-for="(uw, index) in userWorkspace" :key="index">
             <div class="row">
               <div class="col col-1">
                 <b-form-group>
@@ -63,15 +62,16 @@
                   </b-button>
                 </b-form-group>
               </div>
-              <div class="col col-5">
+              <!--TODO after workspace-->
+              <!--<div class="col col-5">
                 <input type="hidden" name="workspace-id" v-model="uw.id">
                 <b-form-group :label="$t('Workspace')">
                   <b-form-select v-model="uw.workspace_id"/>
                 </b-form-group>
-              </div>
+              </div>-->
               <div class="col col-5">
                 <b-form-group :label="$t('Role')">
-                  <b-form-select v-model="uw.role"/>
+                  <b-form-select v-model="uw.role" :options="workspaceRoles"/>
                 </b-form-group>
               </div>
             </div>
@@ -89,7 +89,7 @@
           </template>
           <div class="row">
             <div class="col col-12">
-              <div class="mb-3 " v-for="(dp, index) in userModel.departmentPosition" :key="index">
+              <div class="mb-3 " v-for="(dp, index) in userDepartment" :key="index">
                 <div class="row">
                   <div class="col-sm-1 col-1">
                     <b-form-group>
@@ -103,12 +103,12 @@
                   <div class="col-11">
                     <div class="row">
                       <div class="col-sm-12 col-md-4">
-                        <b-form-group :label="$t('Job Title')">
-                          <b-form-input v-model="dp.job_title" list="job-title-list"/>
+                        <b-form-group :label="$t('Position')">
+                          <b-form-input v-model="dp.position" list="job-title-list"/>
                           <datalist id="job-title-list">
-                            <option v-for="jobTitle in jobTitleOptions"
-                                    v-bind:value="jobTitle.value"
-                                    v-bind:label="jobTitle.text">
+                            <option v-for="position in positionOptions"
+                                    v-bind:value="position.value"
+                                    v-bind:label="position.text">
                             </option>
                           </datalist>
                         </b-form-group>
@@ -166,12 +166,10 @@ import Vue from 'vue';
 import {createNamespacedHelpers, mapState as mapStateGlobal} from 'vuex';
 import Multiselect from 'vue-multiselect';
 
-import {ValidationProvider, ValidationObserver, extend, configure} from 'vee-validate';
-import {required, email} from 'vee-validate/dist/rules'
+import {ValidationProvider, ValidationObserver, configure} from 'vee-validate';
 
-import UserProfileForm from './UserProfileForm';
 import InputWidget from "../../../core/components/input-widget/InputWidget";
-import UserForm from "./UserForm.js";
+import UserFormModel from "./UserFormModel";
 
 const {mapState, mapActions} = createNamespacedHelpers('user');
 
@@ -180,12 +178,13 @@ export default {
   components: {Multiselect, ValidationProvider, ValidationObserver, InputWidget},
   data() {
     return {
-      userProfileModel: new UserProfileForm(),
-      userModel: new UserForm(),
+      userModel: new UserFormModel(),
       userWorkspaceEmpty: {
         id: '',
         role: '',
       },
+      userDepartment: [],
+      userWorkspace: [],
       workspaceRoles: [
         {'value': 'user', 'text': 'User'},
         {'value': 'admin', 'text': 'Admin'},
@@ -200,58 +199,26 @@ export default {
       showModal: state => state.userList.showModal,
       autoCompleteData: state => state.autoCompleteData,
     }),
-    ...mapStateGlobal(['systemParameters']),
-    action() {
-      return this.userModel.id ? 'updated' : 'created'
-    },
-    departmentOptions() {
-      return this.autoCompleteData.departmentOptions.map(op => ({value: op, text: this.$t(op)}));
-    },
-    jobTitleOptions() {
-      return this.autoCompleteData.jobTitleOptions.map(op => ({value: op, text: this.$t(op)}));
-    }
   },
   watch: {
     modalUser() {
       const u = this.modalUser;
-
-      // this.workspaceRoles = [
-      //   {'value': 'portalUser', 'text': 'User'},
-      //   {'value': 'workspaceEditor', 'text': 'Workspace Admin'},
-      //   {'value': 'workspaceAdmin', 'text': 'Admin'}
-      // ];
+      this.workspaceRoles = [
+        {'value': 'portalUser', 'text': 'User'},
+        {'value': 'workspaceEditor', 'text': 'Workspace Admin'},
+        {'value': 'workspaceAdmin', 'text': 'Admin'}
+      ];
       if (u.id) {
         this.userModel.id = u.id;
         this.userModel.email = u.email;
         this.userModel.status = u.status === 1;
-        this.userProfileModel.first_name = u.userProfile.first_name;
+        /*this.userProfileModel.first_name = u.userProfile.first_name;
         this.userProfileModel.last_name = u.userProfile.last_name;
         this.userProfileModel.phone = u.userProfile.phone;
         this.userProfileModel.mobile = u.userProfile.mobile;
-        this.userProfileModel.department = u.userProfile.department;
-        this.userProfileModel.job_title = u.userProfile.job_title;
-        this.userProfileModel.country = u.userProfile.country || [];
-        this.form = {
-          departmentPosition: u.userProfile.department_position ? [...u.userProfile.department_position] : [],
-          userWorkspace: u.userWorkspace ? [...u.userWorkspace] : []
-        };
-        this.form.departmentPosition.forEach(d => {
-          // If each individual department does not have department
-          if (!d.department) {
-            d.department = [];
-          }
-        });
-        let departmentPosition = this.form.departmentPosition;
-        for (let i = 0; i < departmentPosition.length; i++) {
-          for (let j = 0; j < departmentPosition[i].department.length; j++) {
-            if (!departmentPosition[i].department[j].value) {
-              this.form.departmentPosition[i].department = this.form.departmentPosition[i].department.map(op => ({
-                value: op,
-                text: this.$t(op)
-              }));
-            }
-          }
-        }
+        this.userProfileModel.birthday = u.userProfile.birthday;
+        this.userProfileModel.hobby = u.userProfile.hobby;
+        this.userProfileModel.about_me = u.userProfile.about_me;*/
       }
     }
   },
@@ -261,7 +228,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions(['create', 'update', 'hideModal', 'addDepartmentOptions']),
+    ...mapActions(['update', 'hideModal', 'addDepartmentOptions']),
     checkValidity: (touched, validated, valid) => {
       return (!touched && !validated) ? null : valid;
     },
@@ -273,18 +240,18 @@ export default {
       this.userModel.password = '';
     },
     addNewWorkspace: function () {
-      this.userModel.userWorkspace.push(Vue.util.extend({}, this.userWorkspaceEmpty))
+      this.userWorkspace.push(Vue.util.extend({}, this.userWorkspaceEmpty))
     },
     removeWorkspace: function (index) {
-      Vue.delete(this.userModel.userWorkspace, index);
+      Vue.delete(this.userWorkspace, index);
     },
     addNewPosition: function () {
-      this.userModel.departmentPosition.push({
+      this.userDepartment.push({
         department: []
       })
     },
     removePosition: function (index) {
-      Vue.delete(this.userModel.departmentPosition, index);
+      Vue.delete(this.userDepartment, index);
     },
     addDepartment(dp, newDepartment) {
       const tag = {
@@ -305,25 +272,15 @@ export default {
         this.userModel.email = Math.floor(Math.random() * 1000000000) + '@agora.intranet.com';
       }
       let res;
-      let departmentPosition = this.userModel.departmentPosition;
-      for (let i = 0; i < departmentPosition.length; i++) {
-        this.userModel.departmentPosition[i].department = departmentPosition[i].department.map(d => d.value);
-      }
+
       const data = {
         ...this.userModel
-      };
-      data.userProfile = {
-        ...this.userProfileModel
       };
       data.status = data.status ? 1 : 2;
       data.password = this.password;
 
       this.loading = true;
-      if (this.userModel.id) {
-        res = await this.update(data);
-      } else {
-        res = await this.create(data);
-      }
+      res = await this.update(data);
       this.loading = false;
 
       if (res.success) {
@@ -331,30 +288,27 @@ export default {
           group: 'success',
           type: 'success',
           title: this.$t('Success'),
-          text: this.$t(`The user "{user}" was successfully ${this.action}`, {user: this.userModel.email})
+          text: this.$t(`The user "{user}" was successfully updated`, {user: this.userModel.email})
         });
         this.$nextTick(() => {
-          this.userProfileModel = new UserProfileForm();
-          this.userModel = new UserForm();
+          this.userModel = new UserFormModel();
         });
       } else {
         this.$notify({
           group: 'error',
           type: 'error',
           title: this.$t('Error'),
-          text: this.$t(`The user "{user}" was not ${this.action}`, {user: this.userModel.email})
+          text: this.$t(`The user "{user}" was not updated`, {user: this.userModel.email})
         });
       }
       this.$nextTick(() => {
         this.hideModal();
-        this.userProfileModel = new UserProfileForm();
-        this.userModel = new UserForm();
+        this.userModel = new UserFormModel();
       });
     },
     onReset(evt) {
       evt.preventDefault();
-      this.userProfileModel = new UserProfileForm();
-      this.userModel = new UserForm();
+      this.userModel = new UserFormModel();
     },
   }
 }

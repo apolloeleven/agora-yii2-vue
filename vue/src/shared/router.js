@@ -10,7 +10,6 @@ import RequestPasswordReset from "../modules/Auth/PasswordReset/RequestPasswordR
 import ResetPasswordForm from "../modules/Auth/PasswordReset/ResetPasswordForm";
 import Setup from "@/modules/setup/Setup";
 import CountryList from "@/modules/setup/countries/CountryList";
-import ResetPassword from "../modules/Auth/ResetPassword";
 import DepartmentList from "@/modules/setup/departments/DepartmentList";
 
 Vue.use(Router);

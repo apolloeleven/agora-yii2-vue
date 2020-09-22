@@ -26,13 +26,6 @@
                 <dd class="col-sm-8">{{ readOnlyForm.user.userProfile.mobile }}</dd>
                 <dt class="col-sm-4">{{ $t('Birthday') }}</dt>
                 <dd class="col-sm-8">{{ readOnlyForm.user.userProfile.birthday }}</dd>
-                <dt class="col-sm-4">{{ $t('Special Tasks') }}</dt>
-                <dd class="col-sm-8">
-                  <b-badge class="mr-1"
-                           v-for="(task, index) of readOnlyForm.user.userProfile.special_tasks" :key="index">
-                    {{ $t(task) }}
-                  </b-badge>
-                </dd>
                 <dt class="col-sm-4">{{ $t('Country') }}</dt>
                 <dd class="col-sm-8">{{ readOnlyForm.user.userProfile.country }}</dd>
                 <dt class="col-sm-4">{{ $t('Languages') }}</dt>
@@ -70,22 +63,10 @@
                 <dd class="col-sm-6">{{ readOnlyForm.user.userProfile.area_director }}</dd>
                 <dt class="col-sm-3">{{ $t('Job Title') }}</dt>
                 <dd class="col-sm-9">
-                  <template v-for="(job_title, index) in distinctJobTitles">
-                    <b-badge class="mr-2" :key="index">{{ $t(job_title) }}</b-badge>
+                  <template v-for="(position, index) in distinctJobTitles">
+                    <b-badge class="mr-2" :key="index">{{ $t(position) }}</b-badge>
                   </template>
                 </dd>
-                <template v-for="(dp, index) in readOnlyForm.user.userProfile.department_position">
-                  <dt class="col-sm-3">{{ $t('Position') }}</dt>
-                  <dd class="col-sm-9">
-                    <small>{{ $t(getPosition(dp.position)) }}</small>
-                    <span v-if="dp.department"> -
-                      <b-badge class="mr-1"
-                               v-for="(department, index) of dp.department" :key="index">
-                          {{ $t(department) }}
-                      </b-badge>
-                    </span>
-                  </dd>
-                </template>
               </dl>
             </div>
           </div>

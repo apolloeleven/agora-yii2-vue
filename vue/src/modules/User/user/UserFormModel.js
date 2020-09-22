@@ -1,13 +1,11 @@
 import BaseModel from "../../../core/components/input-widget/BaseModel";
 import i18n from '../../../shared/i18n';
 
-export default class UserForm extends BaseModel {
+export default class UserFormModel extends BaseModel {
   id = null;
   email = null;
   password = '';
   status = false;
-  userWorkspace = [];
-  departmentPosition = [];
 
   rules = {
     email: 'email',

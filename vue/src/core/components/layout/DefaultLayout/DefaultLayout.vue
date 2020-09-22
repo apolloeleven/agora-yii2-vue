@@ -17,7 +17,7 @@
 <script>
 import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
-import UserForm from "../../../../modules/User/user/UserForm.vue";
+import UserForm from "../../../../modules/User/user/UserForm";
 import UserDeleteForm from "../../../../modules/User/user/UserDeleteForm";
 import UserReadOnlyInformation from "../../../../modules/User/user/UserReadOnlyInformation";
 import {mapState} from 'vuex';
