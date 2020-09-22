@@ -1,3 +1,3 @@
 import './Dashboard/Dashboard.module';
 import './setup/setupModule'
-import './User/Profile.module';
+import './User/ProfileModule';
