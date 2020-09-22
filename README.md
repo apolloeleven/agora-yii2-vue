@@ -178,3 +178,17 @@ vendor/bin/codecept run functional,unit -- --coverage-html --coverage-xml
 ```
 
 You can see code coverage output under the `tests/_output` directory.
+
+MAILER
+
+### Run mailer migration
+`php yii migrate --migrationPath="vendor/intermundia/yii2-mailer/migrations"`
+
+### SMTP configuration
+```
+   SMTP_HOST =
+   SMTP_USERNAME =
+   SMTP_PASSWORD =
+   SMTP_PORT =
+   SMTP_ENCRYPTION =
+```

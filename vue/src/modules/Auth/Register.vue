@@ -5,7 +5,7 @@
         <img src="/assets/img/apollo11-white.png" alt="" style="width: 80px"/>
         <h3>Welcome</h3>
         <p>You are 30 seconds away from entering in <b>Agora!</b></p>
-        <router-link class="btn btn-light btn-secondary btn-block" to="/auth/login">Login</router-link>
+        <router-link class="btn btn-light btn-secondary btn-block" :to="{name: 'auth.login'}">Login</router-link>
       </div>
     </div>
     <div class="col-md-8 col-right">

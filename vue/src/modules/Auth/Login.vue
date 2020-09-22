@@ -5,7 +5,7 @@
         <img src="/assets/img/apollo11-white.png" alt="" style="width: 80px"/>
         <h3>Welcome</h3>
         <p>You are 30 seconds away from entering in <b>Agora!</b></p>
-        <router-link class="btn btn-light btn-secondary btn-block" to="/auth/register">Register</router-link>
+        <router-link class="btn btn-light btn-secondary btn-block" :to="{name: 'auth.register'}">Register</router-link>
       </div>
     </div>
     <div class="col-md-8 col-right">
@@ -19,7 +19,7 @@
               <input-widget :model="loginFormModel" attribute="password" type="password"/>
               <div class="d-flex align-items-center justify-content-between">
                 <button class="btn btn-primary mr-2">{{ $t('Login') }}</button>
-                <router-link to="/auth/reset-password">{{ $t('Request new password') }}</router-link>
+                <router-link :to="{name: 'request-password-reset'}">{{ $t('Request new password') }}</router-link>
               </div>
             </div>
           </ValidationObserver>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import auth from '../../core/services/auth.service';
+import auth from '../../core/services/authService';
 import LoginForm from "./LoginForm";
 import InputWidget from "../../core/components/input-widget/InputWidget";
 
