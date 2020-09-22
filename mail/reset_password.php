@@ -11,7 +11,6 @@ use yii\helpers\Url;
 <p>
     <?php echo Yii::t('app', 'Follow the link below to reset your password') ?>
 	<br>
-    <?php echo Html::a(Html::encode(Yii::t('app', 'Password Reset')),
-        Url::to('@portalUrl/auth/password-reset/' . $user->password_reset_token)) ?>
+    <?php echo Html::a(Html::encode(Yii::t('app', 'Password Reset')), "@portalUrl/auth/password-reset/$user->password_reset_token") ?>
 </p>
 
