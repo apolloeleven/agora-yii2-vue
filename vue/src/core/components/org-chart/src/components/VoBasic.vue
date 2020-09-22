@@ -143,7 +143,7 @@ export default {
 
 .orgchart .verticalNodes>td::before {
   content: '';
-  border: 1px solid rgba(217, 83, 79, 0.8);
+  border: 1px solid rgb(97, 97, 97);
 }
 
 .orgchart .verticalNodes>td>ul>li:first-child::before {
@@ -162,7 +162,7 @@ export default {
   content: '';
   position: absolute;
   left: -6px;
-  border-color: rgba(217, 83, 79, 0.8);
+  border-color: rgb(97 97 97);
   border-style: solid;
   border-width: 0 0 2px 2px;
   -webkit-box-sizing: border-box;
@@ -282,7 +282,7 @@ export default {
 /*}*/
 
 .orgchart .node.focused {
-  background-color: rgba(238, 217, 54, 0.5);
+  /*background-color: rgba(238, 217, 54, 0.5);*/
 }
 
 .orgchart .ghost-node {
@@ -348,12 +348,11 @@ export default {
   text-align: center;
   overflow-wrap: break-word;
   height: auto;
-  width: 250px;
-  background-color: #026cc3;
+  width: 200px;
+  background-color: #256C9A;
   color: #FFFFFF
 }
 
-.orgchart .node .content .
 
 .orgchart.b2t .node .content {
   -webkit-transform: rotate(180deg);
@@ -443,11 +442,11 @@ export default {
   position: absolute;
   left: 5px;
   bottom: -2px;
-  color: rgba(68, 157, 68, 0.6);
+  color: #FF0000;
 }
 
 .orgchart .node .toggleBtn:hover {
-  color: rgba(68, 157, 68, 0.8);
+  color: #FF0000;
 }
 
 .oc-export-btn {

@@ -1453,7 +1453,7 @@ export default class OrgChart {
           ` <div class="content m-2 p-2">
                 <div class="media">
                  <img class="mr-3" src="${nodeData.employees[employee].imgSource}"
-                 alt="image" width="50px" height="50px">
+                 alt="image" width="20%" height="100%">
                 <div class="media-body" style="text-align: left;overflow: hidden;">
                     <h5 class="mt-0">${nodeData.employees[employee].name}</h5>
                     ${nodeData.employees[employee].surname}
@@ -1619,7 +1619,7 @@ export default class OrgChart {
         nodeWrapper.appendChild(nodeLayer);
       }
       // recurse through children nodes
-      childNodes.forEach((child) => {
+      childNodes.forEach((child, idx) => {
         let nodeCell;
 
         if (isVerticalLayer) {
@@ -1627,7 +1627,9 @@ export default class OrgChart {
         } else {
           nodeCell = document.createElement('td');
           nodeCell.setAttribute('colspan', 2);
-          nodeCell.setAttribute('style', 'padding-right: 15px')
+          if (idx !== childNodes.length - 1) {
+            nodeCell.setAttribute('class', 'pr-3')
+          }
         }
         nodeLayer.appendChild(nodeCell);
         that.buildHierarchy(nodeCell, child, level + 1, callback);
