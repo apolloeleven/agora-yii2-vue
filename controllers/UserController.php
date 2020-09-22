@@ -3,11 +3,10 @@
 namespace app\controllers;
 
 use app\helpers\MailHelper;
-use app\models\Invitation;
 use app\models\LoginForm;
 use app\models\SignupForm;
 use app\models\User;
-use app\modules\v1\setup\resources\InvitationResource;
+use app\modules\v1\users\resources\InvitationResource;
 use app\rest\Controller;
 use Yii;
 use yii\base\Exception;

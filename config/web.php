@@ -65,7 +65,7 @@ $config = [
                     'class' => UrlRule::class,
                     'pluralize' => false,
                     'controller' => [
-                        'invitation',
+                        'v1/users/invitation',
                         'v1/setup/country'
                     ]
                 ]
@@ -78,6 +78,9 @@ $config = [
             'modules' => [
                 'setup' => [
                     'class' => \app\modules\v1\setup\SetupModule::class
+                ],
+                'users' => [
+                    'class' => \app\modules\v1\users\UserModule::class
                 ]
             ]
         ]

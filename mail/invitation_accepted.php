@@ -1,7 +1,7 @@
 <?php
 
-use app\models\Invitation;
 use app\models\User;
+use app\modules\v1\users\models\Invitation;
 
 /**
  * @var Invitation $model

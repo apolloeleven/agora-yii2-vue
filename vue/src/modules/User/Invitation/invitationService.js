@@ -1,7 +1,7 @@
 import httpService from "../../../core/services/httpService";
 
 const invitationService = {
-  url: '/invitation',
+  url: 'v1/users/invitation',
   get() {
     return httpService.get(this.url + `?expand=createdBy,user&sort=-created_at`);
   },

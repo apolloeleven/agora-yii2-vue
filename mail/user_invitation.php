@@ -1,6 +1,6 @@
 <?php
 
-use app\models\Invitation;
+use app\modules\v1\users\models\Invitation;
 use yii\helpers\Html;
 use yii\helpers\Url;
 

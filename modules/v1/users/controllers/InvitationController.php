@@ -1,13 +1,12 @@
 <?php
 
 
-namespace app\controllers;
+namespace app\modules\v1\users\controllers;
 
 
-use app\modules\v1\setup\resources\InvitationResource;
+use app\modules\v1\users\resources\InvitationResource;
 use Yii;
 use app\rest\ActiveController;
-use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 
 /**

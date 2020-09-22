@@ -5,7 +5,7 @@
  * Time: 20:05
  */
 
-namespace app\modules\v1\setup\resources;
+namespace app\modules\v1\users\resources;
 
 
 use app\models\User;
@@ -16,7 +16,7 @@ use yii\db\ActiveQuery;
  * Class UserResource
  *
  * @author  Zura Sekhniashvili <zurasekhniashvili@gmail.com>
- * @package app\modules\v1\setup\resources
+ * @package app\modules\v1\users\resources
  */
 class UserResource extends User
 {

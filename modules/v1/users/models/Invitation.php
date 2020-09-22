@@ -1,13 +1,12 @@
 <?php
 
 
-namespace app\models;
+namespace app\modules\v1\users\models;
 
 
-use app\helpers\MailHelper;
-use app\models\query\InvitationQuery;
+use app\modules\v1\users\models\query\InvitationQuery;
+use app\models\User;
 use Yii;
-use yii\base\Exception;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
@@ -122,71 +121,5 @@ class Invitation extends ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
-    }
-
-    /**
-     * @param bool $insert
-     * @return bool
-     * @throws Exception
-     */
-    public function beforeSave($insert)
-    {
-        if ($insert) {
-            $this->status = self::STATUS_PENDING;
-            $this->token = Yii::$app->security->generateRandomString(256);
-            $this->expire_date = time() + self::TOKEN_LIFETIME;
-        }
-
-        return parent::beforeSave($insert);
-    }
-
-    /**
-     * After save send invitation email to user
-     *
-     * @param bool $insert
-     * @param array $changedAttributes
-     */
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-
-        if ($insert) {
-            MailHelper::sendInvitation($this);
-        }
-    }
-
-    /**
-     * Find invitation by valid token
-     *
-     * @param $token
-     * @return array|ActiveRecord|null
-     */
-    public static function findByToken($token)
-    {
-        return static::find()
-            ->byToken($token)
-            ->notUsed()
-            ->andWhere(['>', 'expire_date', time()])
-            ->one();
-    }
-
-    /**
-     * @return array
-     */
-    public function getStatusLabels()
-    {
-        return [
-            self::STATUS_PENDING => Yii::t('app', 'Pending'),
-            self::STATUS_REGISTERED => Yii::t('app', 'Registered'),
-            self::STATUS_COMPLETED => Yii::t('app', 'Completed'),
-        ];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatusLabel()
-    {
-        return self::getStatusLabels()[$this->status];
     }
 }

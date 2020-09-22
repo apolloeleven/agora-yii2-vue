@@ -2,8 +2,8 @@
 
 namespace app\helpers;
 
-use app\models\Invitation;
 use app\models\User;
+use app\modules\v1\users\models\Invitation;
 use Yii;
 use yii\mail\MessageInterface;
 
