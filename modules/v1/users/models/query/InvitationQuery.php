@@ -37,7 +37,7 @@ class InvitationQuery extends ActiveQuery
      */
     public function notUsed()
     {
-        return $this->andWhere(['use_date' => null]);
+        return $this->andWhere([Invitation::tableName() . 'use_date' => null]);
     }
 
     /**
@@ -48,6 +48,6 @@ class InvitationQuery extends ActiveQuery
      */
     public function byToken($token)
     {
-        return $this->andWhere(['token' => $token]);
+        return $this->andWhere([Invitation::tableName() . 'token' => $token]);
     }
 }
