@@ -1,50 +1,50 @@
 <template>
   <div class="customer-list page page-with-table">
     <page-header :title="$t('Countries')">
-      <b-button variant="primary" @click="showCountryModal">
+      <b-button variant="primary" class="mr-2" @click="showCountryModal">
         <i class="fas fa-plus-circle"></i>
         {{ $t('Add new country') }}
+      </b-button>
+      <b-button variant="outline-primary" class="mr-2" :disabled="!selectedCountry"
+                @click="editCountry(selectedCountry)">
+        <i class="fas fa-edit"></i> {{ $t('Edit Country') }}
+      </b-button>
+      <b-button variant="outline-danger" class="mr-2" :disabled="!selectedCountry"
+                @click="onDeleteCountry(selectedCountry)">
+        <i class="fas fa-trash-alt"></i> {{ $t('Delete Country') }}
       </b-button>
     </page-header>
     <div class="content-wrapper p-3">
       <content-spinner :show="countries.loading" :text="$t('Please wait...')" class="h-100"/>
-      <div class="row page-wrapper">
+      <div class="row page-wrapper" v-if="!countries.loading && countries.loaded">
         <div class="col-sm-3 page-sidebar">
           <b-list-group>
-            <b-list-group-item href="javascript:void"
-                               v-for="country of countries.data"
+            <b-list-group-item v-for="country of countries.data"
                                :key="country.id"
                                @click="selectCountry(country)"
                                class="d-flex justify-content-between"
                                :class="{active: country === selectedCountry}">
               <span>{{ country.name }}</span>
-              <div class="buttons">
-                <b-button variant="outline-primary" size="sm" class="mr-2" v-b-tooltip.hover :title="$t('Edit Country')"
-                          @click="editCountry(data.item)">
-                  <i class="fas fa-edit"></i>
-                </b-button>
-                <b-button variant="outline-danger" size="sm" v-b-tooltip.hover :title="$t('Delete Country')"
-                          @click="onDeleteCountry(data.item)">
-                  <i class="fas fa-trash-alt"></i>
-                </b-button>
-              </div>
             </b-list-group-item>
           </b-list-group>
 
         </div>
         <div class="col-sm-9 ">
-          <b-tabs class="page-content border" >
+          <b-tabs class="page-content">
             <b-tab :title="$t('Departments')" active>
-              <p class="p-2 border-bottom text-right">
-                <b-button variant="primary" @click="showDepartmentModal">
-                  <i class="fas fa-plus-circle"></i>
-                  {{ $t('Add new department') }}
-                </b-button>
-              </p>
-              <department-list-group v-if="selectedCountry && selectedCountry.departments.length"
-                                     :edit-handler="editDepartment" :delete-handler="onDeleteDepartment"
-                                     :departments="selectedCountry.departments"/>
-              <no-data-available v-if="selectedCountry && !selectedCountry.departments.length"
+              <div>
+                <p class="p-2 text-right">
+                  <b-button :disabled="!selectedCountry" size="sm" variant="primary" @click="showDepartmentModal">
+                    <i class="fas fa-plus-circle"></i>
+                    {{ $t('Add new department') }}
+                  </b-button>
+                </p>
+                <department-list-group v-if="selectedCountry && selectedCountry.departmentsTree.length"
+                                       :edit-handler="editDepartment"
+                                       :delete-handler="onDeleteDepartment"
+                                       :departments="selectedCountry.departmentsTree"/>
+              </div>
+              <no-data-available v-if="selectedCountry && !selectedCountry.departmentsTree.length"
                                  :text="$t('Country does not have departments')" :height="100"/>
             </b-tab>
           </b-tabs>
@@ -52,6 +52,8 @@
       </div>
     </div>
     <country-modal/>
+
+    <department-modal v-if="selectedCountry" :country="selectedCountry"/>
   </div>
 </template>
 
@@ -61,13 +63,14 @@ import ContentSpinner from "@/core/components/ContentSpinner";
 import PageHeader from "@/core/components/PageHeader";
 import CountryModal from "@/modules/setup/countries/CountryModal";
 import i18n from "@/shared/i18n";
-import DepartmentListGroup from "@/modules/setup/departments/DepartmentListGroup";
+import DepartmentListGroup from "@/modules/setup/countries/departments/DepartmentListGroup";
 import NoDataAvailable from "@/core/components/NoDataAvailable";
+import DepartmentModal from "@/modules/setup/countries/departments/DepartmentModal";
 
 const {mapActions, mapState} = createNamespacedHelpers('setup');
 export default {
   name: "CountryList",
-  components: {NoDataAvailable, DepartmentListGroup, CountryModal, PageHeader, ContentSpinner},
+  components: {DepartmentModal, NoDataAvailable, DepartmentListGroup, CountryModal, PageHeader, ContentSpinner},
   data() {
     return {
       selectedCountry: null,

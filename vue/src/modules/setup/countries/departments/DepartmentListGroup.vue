@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import DepartmentListGroupItem from "@/modules/setup/departments/DepartmentListGroupItem";
+  import DepartmentListGroupItem from "./DepartmentListGroupItem";
 
   export default {
     name: "DepartmentListGroup",

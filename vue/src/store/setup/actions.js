@@ -3,7 +3,6 @@ import httpService from "@/core/services/httpService";
 import {
   HIDE_DEPARTMENT_MODAL,
   SET_DEPARTMENTS,
-  SET_DEPARTMENTS_LOADING,
   SHOW_DEPARTMENT_MODAL
 } from "@/store/setup/mutation-types";
 
@@ -57,24 +56,15 @@ export async function deleteCountry({dispatch}, id) {
   return response;
 }
 
-
-/**
- *
- * @param { function } commit
- */
-export async function getDepartments({commit}) {
-  commit(SET_DEPARTMENTS_LOADING, true);
-  // Make request to get departments
-  const {success, body} = await httpService.get('/v1/setup/departments', {
+export async function getCountryDepartments({commit}, countryId) {
+  const {success, body} = await httpService.get(`/v1/setup/departments?country_id=${countryId}`, {
     params: {
-      expand: 'country,createdBy,parent',
       sort: 'name'
     }
   })
   if (success) {
-    commit(SET_DEPARTMENTS, {departments: body});
+    commit(SET_DEPARTMENTS, {departments: body, countryId});
   }
-  commit(SET_DEPARTMENTS_LOADING, false)
 }
 
 export function showDepartmentModal({commit}, department) {
@@ -85,15 +75,12 @@ export function hideDepartmentModal({commit}) {
   commit(HIDE_DEPARTMENT_MODAL)
 }
 
-export async function saveDepartment({dispatch}, department) {
+export async function saveDepartment({}, department) {
   let response;
   if (!department.id) {
     response = await httpService.post(`/v1/setup/departments`, department)
   } else {
     response = await httpService.put(`/v1/setup/departments/${department.id}`, department)
-  }
-  if (response.success) {
-    dispatch('getDepartments')
   }
 
   return response;
@@ -101,9 +88,6 @@ export async function saveDepartment({dispatch}, department) {
 
 export async function deleteDepartment({dispatch}, id) {
   let response = await httpService.delete(`/v1/setup/departments/${id}`)
-  if (response.success) {
-    dispatch('getDepartments')
-  }
 
   return response;
 }

@@ -2,7 +2,6 @@ import {HIDE_COUNTRY_MODAL, SET_COUNTRIES, SET_COUNTRIES_LOADING, SHOW_COUNTRY_M
 import {
   HIDE_DEPARTMENT_MODAL,
   SET_DEPARTMENTS,
-  SET_DEPARTMENTS_LOADING,
   SHOW_DEPARTMENT_MODAL
 } from "@/store/setup/mutation-types";
 
@@ -18,7 +17,7 @@ export default {
   [SET_COUNTRIES](state, {countries}) {
     state.countries.loaded = true;
     state.countries.data = countries.map(country => {
-      country.departments = getTree(country.departments, null);
+      country.departmentsTree = getTree(country.departments, null);
       return country;
     });
   },
@@ -29,12 +28,10 @@ export default {
   [HIDE_COUNTRY_MODAL](state) {
     state.countryModal.show = false;
   },
-  [SET_DEPARTMENTS_LOADING](state, loading) {
-    state.departments.loading = loading;
-  },
-  [SET_DEPARTMENTS](state, {departments}) {
-    state.departments.loaded = true;
-    state.departments.data = departments;
+  [SET_DEPARTMENTS](state, {departments, countryId}) {
+    const country = state.countries.data.find(country => country.id === countryId);
+    country.departments = departments;
+    country.departmentsTree = getTree(country.departments, null);
   },
   [SHOW_DEPARTMENT_MODAL](state, department) {
     state.departmentModal.show = true;
