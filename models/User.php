@@ -20,6 +20,8 @@ use yii\web\IdentityInterface;
  * @property int|null $status
  * @property int|null $created_at
  * @property int|null $updated_at
+ *
+ * @property UserProfile $userProfile
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -146,5 +148,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function getApiData()
     {
         return $this->toArray(['id', 'username', 'email', 'access_token', 'status', 'created_at', 'updated_at']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserProfile()
+    {
+        return $this->hasOne(UserProfile::class, ['user_id' => 'id']);
     }
 }
