@@ -18,7 +18,7 @@ import UserInvitationFormModel from "./UserInvitationFormModel";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import ContentSpinner from "../../../core/components/ContentSpinner";
 
-const {mapState: mapStateInvitations, mapActions} = createNamespacedHelpers('invitations');
+const {mapState: mapStateInvitations, mapActions} = createNamespacedHelpers('user/invitations');
 
 export default {
   name: "UserInvitationForm",

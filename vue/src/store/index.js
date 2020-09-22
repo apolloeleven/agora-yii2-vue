@@ -1,6 +1,6 @@
 import Vuex from "vuex";
 import Vue from 'vue';
-import invitations from "./modules/invitations";
+import user from "./users/user";
 import setup from './setup';
 
 // Load vuex
@@ -44,6 +44,6 @@ export default new Vuex.Store({
   },
   modules: {
     setup,
-    invitations,
+    user,
   }
 });

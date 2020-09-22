@@ -1,6 +1,7 @@
 <?php
 
 use app\models\User;
+use yii\rest\UrlRule;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
@@ -60,9 +61,15 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/department'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/users/invitation'],
+                [
+                    'class' => UrlRule::class,
+                    'pluralize' => false,
+                    'controller' => [
+                        'v1/setup/country',
+                        'v1/setup/department',
+                        'v1/users/invitation',
+                    ]
+                ]
             ],
         ],
     ],

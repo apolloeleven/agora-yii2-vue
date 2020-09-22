@@ -22,7 +22,7 @@
 import {createNamespacedHelpers} from 'vuex';
 import ContentSpinner from "../../core/components/ContentSpinner";
 
-const {mapState, mapActions} = createNamespacedHelpers('invitations');
+const {mapState, mapActions} = createNamespacedHelpers('user/invitations');
 
 export default {
   name: "User",
