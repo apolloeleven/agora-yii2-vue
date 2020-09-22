@@ -13,6 +13,7 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
+        '@frontend' => env('PORTAL_HOST'),
     ],
     'components' => [
         'request' => [

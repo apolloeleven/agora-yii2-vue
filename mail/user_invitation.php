@@ -5,7 +5,6 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 /** @var Invitation $model */
-/* @var $link */
 ?>
 
 <p><?php echo Yii::t('app', 'Hello {name}', ['name' => $model->email]) ?></p>
@@ -18,7 +17,8 @@ use yii\helpers\Url;
 <p>
     <?php echo Yii::t('app', 'Click the link bellow to register') ?>
 	<br>
-    <?php echo Html::a(Html::encode(Yii::t('app', 'Registration Link')), $link) ?>
+    <?php echo Html::a(Html::encode(Yii::t('app', 'Registration Link')),
+        Url::to('@frontend/auth/register/' . $model->token)) ?>
 </p>
 
 

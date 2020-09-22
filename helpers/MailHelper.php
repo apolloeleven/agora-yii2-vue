@@ -37,11 +37,7 @@ class MailHelper
      */
     public static function resetPassword($user)
     {
-        $message = Yii::$app->mailer->compose('reset_password',
-            [
-                'user' => $user,
-                'link' => env('PORTAL_HOST') . "/auth/password-reset/$user->password_reset_token"
-            ])
+        $message = Yii::$app->mailer->compose('reset_password', ['user' => $user])
             ->setSubject(Yii::t('app', 'Your new password'))
             ->setTo($user->email);
 
@@ -56,11 +52,7 @@ class MailHelper
      */
     public static function sendInvitation(Invitation $invitation)
     {
-        $message = Yii::$app->mailer->compose('user_invitation',
-            [
-                'model' => $invitation,
-                'link' => env('PORTAL_HOST') . "/auth/register/$invitation->token"
-            ])
+        $message = Yii::$app->mailer->compose('user_invitation', ['model' => $invitation])
             ->setSubject(Yii::t('app', 'You are invited to {name}', ['name' => Yii::$app->name,]))
             ->setTo($invitation->email);
 
