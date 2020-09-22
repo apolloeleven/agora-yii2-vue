@@ -3,13 +3,13 @@ import i18n from "@/shared/i18n";
 
 const ConfirmModal = {
   install(Vue) {
-    Vue.prototype.$confirm = function (message, title = i18n.t('Please Confirm')) {
+    Vue.prototype.$alert = function (message, title = i18n.t('Operation was not successful')) {
       return new Promise((resolve, reject) => {
-        this.$bvModal.msgBoxConfirm(message, {
+        this.$bvModal.msgBoxOk(message, {
           title: title,
           okVariant: 'danger',
-          okTitle: i18n.t('OK'),
-          cancelTitle: i18n.t('Cancel'),
+          headerBgVariant: 'danger',
+          headerTextVariant: 'light',
           footerClass: 'p-2',
           hideHeaderClose: false,
           centered: true

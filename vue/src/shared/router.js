@@ -10,6 +10,7 @@ import RequestPasswordReset from "../modules/Auth/PasswordReset/RequestPasswordR
 import ResetPasswordForm from "../modules/Auth/PasswordReset/ResetPasswordForm";
 import Setup from "@/modules/setup/Setup";
 import CountryList from "@/modules/setup/countries/CountryList";
+import DepartmentList from "@/modules/setup/departments/DepartmentList";
 
 Vue.use(Router);
 
@@ -56,7 +57,8 @@ const router = new Router({
       children: [
         {path: 'dashboard', name: 'dashboard', component: Dashboard,},
         {path: '/setup', name: 'setup', component: Setup,},
-        {path: '/setup/countries', name: 'countries', component: CountryList}
+        {path: '/setup/countries', name: 'countries', component: CountryList},
+        {path: '/setup/departments', name: 'departments', component: DepartmentList}
       ]
     },
     {
