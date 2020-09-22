@@ -5,7 +5,6 @@ namespace app\controllers;
 use app\helpers\MailHelper;
 use app\models\search\UserSearch;
 use app\models\User;
-use app\models\UserDepartment;
 use app\models\UserProfile;
 use app\modules\v1\setup\resources\UserResource;
 use app\rest\ActiveController;
@@ -16,7 +15,6 @@ use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
-use yii\helpers\FileHelper;
 
 /**
  * Class MyUserController
@@ -252,10 +250,8 @@ class MyUserController extends ActiveController
         return $model;
     }
 
-    public function actionGetDropDownOptions()
+    public function actionGetDropdownOptions()
     {
-        $userDepartments = UserDepartment::find()->distinct()->all();
 
     }
-
 }

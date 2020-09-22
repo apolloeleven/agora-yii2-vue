@@ -344,7 +344,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getAll', 'delete', 'showModal', 'showUserDeleteForm']),
+    ...mapActions(['getAll', 'delete', 'showModal', 'showUserDeleteForm', 'getDropdownOptions']),
     onUsersSort(e) {
       this.sort = (e.sortDesc ? '-' : '') + e.sortBy;
       this.getUsers();
@@ -399,6 +399,7 @@ export default {
     }
   },
   mounted() {
+    this.getDropdownOptions();
     this.getUsers();
   }
 }

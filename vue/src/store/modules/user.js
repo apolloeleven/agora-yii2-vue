@@ -2,6 +2,7 @@ import userService from "../../modules/User/userService";
 import auth from "../../core/services/authService";
 import {eventBus, USER_CREATED, USER_UPDATED} from "../../core/services/event-bus";
 import store from "../index";
+import httpService from "../../core/services/httpService";
 
 export default {
   namespaced: true,
@@ -57,6 +58,13 @@ export default {
     //TODO permissions
   },
   actions: {
+    async getDropdownOptions({commit}) {
+      const res = await httpService.get('/my-user/get-dropdown-options');
+      if (res.success) {
+        commit('setAutoCompleteData', res.body);
+      }
+    },
+
     /**
      * Get user own profile data
      *
@@ -250,12 +258,6 @@ export default {
     },
 
     setAutoCompleteData: (state, payload) => {
-      state.autoCompleteData.languageOptions = payload.languages;
-      state.autoCompleteData.jobTitleOptions = payload.jobTitles;
-      state.autoCompleteData.specialTaskOptions = payload.specialTasks;
-      state.autoCompleteData.departmentOptions = payload.departments;
-      state.autoCompleteData.expertiseOptions = payload.expertises;
-      state.autoCompleteData.countryOptions = payload.countries;
       state.autoCompleteData.roleOptions = payload.roles;
     },
 
