@@ -3,11 +3,11 @@
     <div class="col-md-4">
       <div class="login-left">
         <img src="/assets/img/apollo11-white.png" alt="" style="width: 80px"/>
-        <h3>Welcome</h3>
+        <h3>{{ $t('Welcome') }}</h3>
       </div>
     </div>
     <div class="login-right clearfix">
-      <div style="position: relative">
+      <div class="position-relative">
         <div v-if="loading" class="content-spinner text-center text-info">
           <b-spinner class="align-middle"></b-spinner>
           <strong>{{ $t('Please wait...') }}</strong>
@@ -17,7 +17,8 @@
         <div class="login-form">
           <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid, reset}">
             <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
-              <input-widget ref="emailInputWidget" :model="resetPasswordModel" attribute="email"/>
+              <input-widget type="password" :model="model" attribute="password" vid="password"/>
+              <input-widget type="password" :model="model" attribute="repeat_password" vid="repeat_password"/>
               <div class="d-flex align-items-center justify-content-between">
                 <button :disabled="loading" class="btn btn-primary btn-action">{{ $t('Submit') }}</button>
                 <router-link class="float-right" :to="{name: 'auth.login'}">
@@ -33,43 +34,41 @@
 </template>
 
 <script>
-import auth from '../../core/services/auth.service';
-import PasswordReset from "./PasswordReset";
-import InputWidget from "../../core/components/input-widget/InputWidget";
+import auth from '../../../core/services/authService';
+import InputWidget from "../../../core/components/input-widget/InputWidget";
+import PasswordResetForm from "./PasswordResetForm";
 
 export default {
-  name: "ResetPassword",
+  name: "ResetPasswordForm",
   components: {InputWidget},
   data() {
     return {
       loading: false,
-      resetPasswordModel: new PasswordReset(),
+      model: new PasswordResetForm(),
     }
   },
   methods: {
     async onSubmit() {
-      this.resetPasswordModel.resetErrors();
+      this.model.resetErrors();
       this.loading = true;
-      let response = await auth.resetPassword(this.resetPasswordModel);
+      let response = await auth.passwordReset(this.model);
       this.loading = false;
       if (response.success) {
-        this.$notify({
-          group: 'success',
-          type: 'success',
-          title: this.$t('Success'),
-          text: this.$t(`New password was successfully sent. Please check your email.`),
-          speed: 1000,
-        });
-        this.$router.push('/login');
+        this.$toast(this.$t(`Password was successfully changed`));
+        this.$router.push({name: 'auth.login'});
       } else {
-        this.resetPasswordModel.setMultipleErrors({email: response.body});
+        this.$toast(this.$t(response.body), 'danger');
+        this.$router.push({name: 'auth.login'});
       }
     },
   },
-  mounted() {
-    setTimeout(() => {
-      this.$refs.emailInputWidget.focus()
-    }, 500)
+  async mounted() {
+    this.model.token = this.$route.params.token;
+    const response = await auth.checkToken(this.model.token);
+    if (!response.success) {
+      this.$toast(this.$t(response.body), 'danger');
+      this.$router.push({name: 'auth.login'});
+    }
   }
 }
 </script>

@@ -65,7 +65,8 @@ $config = [
                     'pluralize' => false,
                     'controller' => [
                         'my-user',
-                        'v1/setup/country'
+                        'v1/setup/country',
+                        'v1/setup/department',
                     ]
                 ]
             ],

@@ -45,9 +45,11 @@ export default {
     ...mapActions(['hideCountryModal', 'saveCountry']),
     async onSubmit(ev) {
       ev.preventDefault()
-      const {success} = await this.saveCountry(this.model);
+      const {success, body} = await this.saveCountry(this.model);
       if (success) {
         this.hideCountryModal();
+      } else {
+        this.model.setMultipleErrors(body)
       }
     },
     onShown() {

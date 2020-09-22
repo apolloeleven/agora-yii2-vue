@@ -6,9 +6,12 @@ import NotFoundComponent from "./../core/components/pages/NotFoundComponent";
 import Dashboard from "@/modules/Dashboard/Dashboard";
 import Login from "../modules/Auth/Login";
 import Register from "@/modules/Auth/Register";
+import RequestPasswordReset from "../modules/Auth/PasswordReset/RequestPasswordReset";
+import ResetPasswordForm from "../modules/Auth/PasswordReset/ResetPasswordForm";
 import Setup from "@/modules/setup/Setup";
 import CountryList from "@/modules/setup/countries/CountryList";
 import ResetPassword from "../modules/Auth/ResetPassword";
+import DepartmentList from "@/modules/setup/departments/DepartmentList";
 
 Vue.use(Router);
 
@@ -28,11 +31,18 @@ const router = new Router({
           component: Login,
         },
         {
-          path: 'reset-password',
-          component: ResetPassword,
+          path: 'request-password-reset',
+          name: 'request-password-reset',
+          component: RequestPasswordReset,
+        },
+        {
+          path: 'password-reset/:token',
+          name: 'password-reset',
+          component: ResetPasswordForm,
         },
         {
           path: 'register',
+          name: 'auth.register',
           component: Register,
         }
       ]
@@ -48,7 +58,8 @@ const router = new Router({
       children: [
         {path: 'dashboard', name: 'dashboard', component: Dashboard,},
         {path: '/setup', name: 'setup', component: Setup,},
-        {path: '/setup/countries', name: 'countries', component: CountryList}
+        {path: '/setup/countries', name: 'countries', component: CountryList},
+        {path: '/setup/departments', name: 'departments', component: DepartmentList}
       ]
     },
     {

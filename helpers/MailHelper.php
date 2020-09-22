@@ -31,12 +31,15 @@ class MailHelper
      * Send mail user about reset password
      *
      * @param $user
-     * @param $password
      * @return bool
      */
-    public static function resetPassword($user, $password)
+    public static function resetPassword($user)
     {
-        $message = Yii::$app->mailer->compose('reset_password', ['user' => $user, 'newPassword' => $password])
+        $message = Yii::$app->mailer->compose('reset_password',
+            [
+                'user' => $user,
+                'link' => env('PORTAL_HOST') . "/auth/password-reset/$user->password_reset_token"
+            ])
             ->setSubject(Yii::t('app', 'Your new password'))
             ->setTo($user->email);
 

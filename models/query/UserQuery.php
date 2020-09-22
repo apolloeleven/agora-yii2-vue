@@ -59,4 +59,15 @@ class UserQuery extends \yii\db\ActiveQuery
     {
         return $this->andWhere([User::tableName() . '.deleted_at' => null]);
     }
+
+    /**
+     * Find users by email
+     *
+     * @param $email
+     * @return mixed
+     */
+    public function byEmail($email)
+    {
+        return $this->andWhere(['email' => $email]);
+    }
 }

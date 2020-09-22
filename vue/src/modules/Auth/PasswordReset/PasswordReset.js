@@ -1,11 +1,14 @@
-import BaseModel from "../../core/components/input-widget/BaseModel";
-import i18n from '../../shared/i18n';
+import BaseModel from "../../../core/components/input-widget/BaseModel";
+import i18n from '../../../shared/i18n';
 
 export default class PasswordReset extends BaseModel {
   email = null;
 
   rules = {
-    email: 'required|email'
+    email: [
+      {rule: 'required'},
+      {rule: 'email'},
+    ]
   };
 
   attributeLabels = {

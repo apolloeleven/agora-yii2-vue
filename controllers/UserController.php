@@ -28,37 +28,76 @@ class UserController extends Controller
     }
 
     /**
-     * Password reset action.
+     * Send email password reset link
      *
      * @return array|bool
      * @throws Exception
-     * @author Salome Kavtaradze <s_kavtaradze2@cu.edu.ge>
      */
-    public function actionResetPassword()
+    public function actionSendPasswordResetLink()
     {
         $request = Yii::$app->request;
         $email = $request->post('email');
 
         $user = User::find()
-            ->where(['email' => $email])
+            ->byEmail($email)
             ->one();
 
         if (!$user) {
             return $this->validationError(Yii::t('app', 'Unable to find user with this email'));
         }
 
-        if ($user->status == User::STATUS_INACTIVE) {
+        if ($user->isInactive()) {
             return $this->validationError(Yii::t('app', 'User is disabled'));
         }
 
-        $newPassword = Yii::$app->security->generateRandomString(8);
-        $hash = Yii::$app->getSecurity()->generatePasswordHash($newPassword);
-        $user->password_hash = $hash;
+        $passwordResetToken = Yii::$app->security->generateRandomString(16);
+        $user->password_reset_token = $passwordResetToken;
+        $user->expire_date = time();
 
         if (!$user->save()) {
             return $this->validationError(Yii::t('app', 'Unable to save user'));
         }
 
-        MailHelper::resetPassword($user, $newPassword);
+        if (!MailHelper::resetPassword($user)) {
+            return $this->validationError(Yii::t('app', 'Unable to send email'));
+        };
+    }
+
+    /**
+     * Get password reset token and check validate
+     *
+     * @param $token
+     * @return array
+     */
+    public function actionCheckTokenValidity($token)
+    {
+        if (!User::findByPasswordResetToken($token)) {
+            return $this->validationError(Yii::t('app', 'Password reset link is invalid or expired'));
+        }
+    }
+
+    /**
+     * Reset password
+     *
+     * @return array|bool
+     * @throws Exception
+     */
+    public function actionPasswordReset()
+    {
+        $request = Yii::$app->request;
+
+        $token = $request->post('token');
+        $user = User::findByPasswordResetToken($token);
+
+        if (!$user) {
+            return $this->validationError(Yii::t('app', 'Unable to find user'));
+        }
+
+        $hash = Yii::$app->getSecurity()->generatePasswordHash($request->post('password'));
+        $user->password_hash = $hash;
+
+        if (!$user->save()) {
+            return $this->validationError(Yii::t('app', 'Unable to save password'));
+        }
     }
 }

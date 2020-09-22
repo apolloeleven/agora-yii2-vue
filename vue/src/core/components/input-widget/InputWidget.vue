@@ -1,6 +1,6 @@
 <template>
-  <ValidationProvider :name="`${attribute}-${uuid}`" :rules="rules || model.getRules(attribute)"
-                      :customMessages="customMessages" v-slot="v" tag="div" :vid="vid">
+  <ValidationProvider :name="`${attribute}-${uuid}`" :rules="model.getRules(attribute, rules || null)"
+                      :customMessages="model.getMessages(attribute, rules || null)" v-slot="v" tag="div" :vid="vid">
     <b-form-group v-if="isInput() || isTextarea()">
       <label v-if="computedLabel">
         {{ computedLabel }}
@@ -10,7 +10,7 @@
         <template v-slot:append v-if="appendQuestion">
           <b-tooltip :target="`question-mark-tooltip-${attribute}-${uuid}`" :title="appendQuestion"/>
           <b-input-group-text :id="`question-mark-tooltip-${attribute}-${uuid}`" class="hover-cursor">
-            <i class="fa fa-plus-question-circle "></i>
+            <i class="fas fa-question-circle"></i>
           </b-input-group-text>
         </template>
         <b-form-input v-if="type === 'number'" ref="currentInput" :size="size" :type="type" :disabled="disabled"
@@ -32,6 +32,28 @@
       <b-form-text v-if="computedHint">
         {{ computedHint }}
       </b-form-text>
+    </b-form-group>
+    <b-form-group v-if="isSelect()">
+      <label v-if="computedLabel">
+        {{ computedLabel }}
+        <span v-if="v.required" class="text-danger">*</span>
+      </label>
+      <b-input-group :prepend="prepend" :append="append" :size="size">
+        <template v-slot:append v-if="appendQuestion">
+          <b-tooltip :target="`question-mark-tooltip-${attribute}-${uuid}`" :title="appendQuestion"/>
+          <b-input-group-text :id="`question-mark-tooltip-${attribute}-${uuid}`" class="hover-cursor">
+            <i class="fas fa-question-circle"></i>
+          </b-input-group-text>
+        </template>
+        <b-form-select ref="currentInput" :size="size" :disabled="disabled" :options="selectOptions"
+                       :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
+                       :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
+                       @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
+        />
+        <b-form-invalid-feedback :state="getState(v)">
+          {{ getError(v.errors) }}
+        </b-form-invalid-feedback>
+      </b-input-group>
     </b-form-group>
   </ValidationProvider>
 </template>
@@ -88,7 +110,7 @@ export default {
       default: false,
     },
     rules: {
-      type: String,
+      type: [String, Object, Array],
       default: null,
       required: false
     },
@@ -111,6 +133,10 @@ export default {
     min: {
       type: [String, Number],
       default: 0
+    },
+    selectOptions: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -152,6 +178,9 @@ export default {
     isTextarea() {
       return this.type === 'textarea';
     },
+    isSelect() {
+      return this.type === 'select';
+    },
     onChange(val) {
       if (this.type === 'number' && val === '') {
         this.model[this.attribute] = null;
@@ -175,10 +204,6 @@ export default {
     },
   },
   computed: {
-    customMessages() {
-      //TODO Must check this.rules and extract error messages from there
-      return this.model.getMessages(this.attribute)
-    },
     computedPlaceholder() {
       if (this.placeholder === false) {
         return '';
