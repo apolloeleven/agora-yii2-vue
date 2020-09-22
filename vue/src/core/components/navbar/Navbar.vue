@@ -121,7 +121,7 @@
     },
     methods: {
       onLogoutClick(){
-        this.$router.push('/auth/login');
+        this.$router.push({name: 'auth.login'});
       }
     }
   }

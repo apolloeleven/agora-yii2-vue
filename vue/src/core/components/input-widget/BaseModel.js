@@ -3,6 +3,7 @@ import i18n from "../../../shared/i18n";
 export const RULE_REQUIRED = 'required'
 export const RULE_REGEX = 'regex'
 export const RULE_EMAIL = 'email'
+export const RULE_CONFIRMED = 'confirmed'
 
 export default class BaseModel {
   errors = {};
@@ -12,13 +13,14 @@ export default class BaseModel {
   attributeHints = {};
 
   defaultMessages = {
-    required: i18n.t("This field is required"),
-    email: i18n.t("The email field must be a valid email"),
-    regex: i18n.t('Value does not match the pattern')
+    required: i18n.t('This field is required'),
+    email: i18n.t('The email field must be a valid email'),
+    regex: i18n.t('Value does not match the pattern'),
+    confirmed: i18n.t('Passwords do not match'),
   };
 
-  getRules(attribute) {
-    let rules = this.rules[attribute];
+  getRules(attribute, inlineRules = null) {
+    let rules = inlineRules || this.rules[attribute];
     if (!rules) {
       return {};
     }
@@ -31,7 +33,6 @@ export default class BaseModel {
   }
 
   parseRules(rule) {
-
     if (typeof rule === 'string') {
       return rule;
     }
@@ -42,11 +43,14 @@ export default class BaseModel {
     if (rule.rule === RULE_REGEX) {
       return rule.rule + ':' + rule.pattern;
     }
+    if (rule.rule === RULE_CONFIRMED) {
+      return rule.rule + ':' + rule.target;
+    }
 
     throw new Error(`Incorrect validation rule "${rule.rule}"`);
   }
 
-  getMessages(attribute) {
+  getMessages(attribute, inlineMessages = null) {
     let message = {};
     const rules = this.rules[attribute];
     if (!rules) {
