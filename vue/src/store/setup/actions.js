@@ -13,16 +13,17 @@ import {
 export async function getCountries({commit}) {
   commit(SET_COUNTRIES_LOADING, true);
   // Make request to get countries
-  const {success, body} = await httpService.get('/v1/setup/countries', {
+  const response = await httpService.get('/v1/setup/countries', {
     params: {
       expand: 'createdBy,departments',
       sort: 'name'
     }
   })
-  if (success) {
-    commit(SET_COUNTRIES, {countries: body});
+  if (response.success) {
+    commit(SET_COUNTRIES, {countries: response.body});
   }
-  commit(SET_COUNTRIES_LOADING, false)
+  commit(SET_COUNTRIES_LOADING, false);
+  return response;
 }
 
 export function showCountryModal({commit}, country) {
@@ -47,10 +48,11 @@ export async function saveCountry({dispatch}, country) {
   return response;
 }
 
-export async function deleteCountry({dispatch}, id) {
-  let response = await httpService.delete(`/v1/setup/countries/${id}`)
+export async function deleteCountry({commit, state}, id) {
+  let response = await httpService.delete(`/v1/setup/countries/${id}`);
+
   if (response.success) {
-    dispatch('getCountries')
+    commit(SET_COUNTRIES, {countries: state.countries.data.filter(country => country.id !== id)});
   }
 
   return response;
