@@ -68,6 +68,7 @@ $config = [
                     'pluralize' => false,
                     'controller' => [
                         'v1/users/invitation',
+                        'v1/users/employee',
                     ]
                 ]
             ],

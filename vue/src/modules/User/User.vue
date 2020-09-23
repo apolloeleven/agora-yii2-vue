@@ -5,6 +5,9 @@
         <b-nav-item :to="{name: 'user.invitations'}" active-class="active">
           {{ $t('Invitations') }}
         </b-nav-item>
+        <b-nav-item :to="{name: 'user.employees'}">
+          {{ $t('Employee List') }}
+        </b-nav-item>
       </b-nav>
       <b-button @click="showDialog" variant="info">
         <i class="fas fa-plus-circle"></i>

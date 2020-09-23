@@ -42,7 +42,7 @@ class UserResource extends User
 
     public function extraFields()
     {
-        return ['userProfile'];
+        return ['userProfile', 'userDepartments'];
     }
 
     /**
@@ -51,5 +51,9 @@ class UserResource extends User
     public function getUserProfile()
     {
         return $this->hasOne(UserProfileResource::class, ['user_id' => 'id']);
+    }
+
+    public function getUserDepartments() {
+        return $this->hasMany(UserDepartmentResource::class, ['user_id' => 'id']);
     }
 }
