@@ -1,2 +1,8 @@
 @import "./variables";
 @import "./mixins.scss";
+
+.hover-pointer {
+  &:hover {
+    cursor: pointer;
+  }
+}
