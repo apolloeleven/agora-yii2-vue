@@ -1,4 +1,10 @@
-import {HIDE_COUNTRY_MODAL, SET_COUNTRIES, SET_COUNTRIES_LOADING, SHOW_COUNTRY_MODAL} from './mutation-types';
+import {
+  CREATE_COUNTRY,
+  HIDE_COUNTRY_MODAL,
+  SET_COUNTRIES,
+  SET_COUNTRIES_LOADING,
+  SHOW_COUNTRY_MODAL, UPDATE_COUNTRY
+} from './mutation-types';
 import httpService from "@/core/services/httpService";
 import {
   HIDE_DEPARTMENT_MODAL,
@@ -34,17 +40,25 @@ export function hideCountryModal({commit}) {
   commit(HIDE_COUNTRY_MODAL)
 }
 
-export async function saveCountry({dispatch}, country) {
-  let response;
-  if (!country.id) {
-    response = await httpService.post(`/v1/setup/countries`, country)
-  } else {
-    response = await httpService.put(`/v1/setup/countries/${country.id}`, country)
-  }
-  if (response.success) {
-    dispatch('getCountries')
-  }
+export async function updateCountry({commit}, country) {
+  let response = await httpService.put(`/v1/setup/countries/${country.id}`, country, {
+    params: {expand: 'createdBy,departments',}
+  })
 
+  if (response.success) {
+    commit(UPDATE_COUNTRY, response.body)
+  }
+  return response;
+}
+
+export async function createCountry({commit}, country) {
+  let response = await httpService.post(`/v1/setup/countries`, country, {
+    params: {expand: 'createdBy,departments'}
+  })
+
+  if (response.success) {
+    commit(CREATE_COUNTRY, response.body)
+  }
   return response;
 }
 

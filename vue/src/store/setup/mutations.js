@@ -1,4 +1,10 @@
-import {HIDE_COUNTRY_MODAL, SET_COUNTRIES, SET_COUNTRIES_LOADING, SHOW_COUNTRY_MODAL} from './mutation-types';
+import {
+  CREATE_COUNTRY,
+  HIDE_COUNTRY_MODAL,
+  SET_COUNTRIES,
+  SET_COUNTRIES_LOADING,
+  SHOW_COUNTRY_MODAL, UPDATE_COUNTRY
+} from './mutation-types';
 import {
   HIDE_DEPARTMENT_MODAL,
   SET_DEPARTMENTS,
@@ -9,11 +15,6 @@ export default {
   [SET_COUNTRIES_LOADING](state, loading) {
     state.countries.loading = loading;
   },
-  /**
-   *
-   * @param { object } state
-   * @param { array } countries
-   */
   [SET_COUNTRIES](state, {countries}) {
     state.countries.loaded = true;
     state.countries.data = countries.map(country => {
@@ -27,6 +28,15 @@ export default {
   },
   [HIDE_COUNTRY_MODAL](state) {
     state.countryModal.show = false;
+  },
+  [UPDATE_COUNTRY](state, payload) {
+    const index =  state.countries.data.findIndex(c => c.id === payload.id);
+    state.countries.data[index] = {...state.countries.data[index], ...payload};
+    state.countries.data = [...state.countries.data];
+  },
+  [CREATE_COUNTRY](state, country) {
+    country.departmentsTree = getTree(country.departments, null);
+    state.countries.data.push(country);
   },
   [SET_DEPARTMENTS](state, {departments, countryId}) {
     const country = state.countries.data.find(country => country.id === countryId);
