@@ -19,7 +19,7 @@ export default class BaseModel {
     regex: i18n.t('Value does not match the pattern'),
     confirmed: i18n.t('Passwords do not match'),
     min: function (name, rule) {
-      return i18n.t('The field must be {val} or more', {val: rule.length})
+      return i18n.t(`The field must be {val} or more`, {val: rule.length})
     }
   };
 

@@ -55,7 +55,7 @@ export default {
           this.$router.push('/');
         }
       } else {
-        this.model.setMultipleErrors(response.body);
+        this.model.setMultipleErrors([{field: 'password', message: response.body.password}]);
       }
     }
   },

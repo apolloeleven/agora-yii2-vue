@@ -55,7 +55,8 @@ export default {
         this.$toast(this.$t(`Your account will be reviewed by admin and you will receive login instructions`));
         this.$router.push({name: 'auth.login'});
       } else {
-        this.model.setMultipleErrors(response.body);
+        this.$toast(this.$t(`Unable to register user`));
+        this.$router.push({name: 'auth.login'});
       }
     },
   },

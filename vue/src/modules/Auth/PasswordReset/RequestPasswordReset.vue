@@ -54,7 +54,7 @@ export default {
         this.$toast(this.$t(`Password reset link was successfully sent. Please check your email.`));
         this.$router.push({name: 'auth.login'});
       } else {
-        this.model.setMultipleErrors({email: response.body});
+        this.model.setMultipleErrors([{field: 'email', message: response.body}]);
       }
     },
   },
