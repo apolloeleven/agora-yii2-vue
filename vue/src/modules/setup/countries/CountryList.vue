@@ -18,7 +18,7 @@
       <content-spinner :show="countries.loading" :text="$t('Please wait...')" class="h-100"/>
       <div class="row page-wrapper" v-if="!countries.loading && countries.loaded">
         <div class="col-sm-3 page-sidebar">
-          <b-list-group>
+          <b-list-group style="min-height: 15em" class="bg-white">
             <b-list-group-item v-for="country of countries.data"
                                :key="country.id"
                                @click="selectCountry(country)"
@@ -27,7 +27,6 @@
               <span>{{ country.name }}</span>
             </b-list-group-item>
           </b-list-group>
-
         </div>
         <div class="col-sm-9">
           <div class="page-content p-2">
