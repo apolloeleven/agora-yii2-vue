@@ -34,7 +34,7 @@
             <b-tabs>
               <b-tab :title="$t('Departments')" active>
                 <div>
-                  <p class="p-2 text-right">
+                  <p class="p-2 text-right mb-0">
                     <b-button :disabled="!selectedCountry" size="sm" variant="primary" @click="showDepartmentModal">
                       <i class="fas fa-plus-circle"></i>
                       {{ $t('Add new department') }}
@@ -98,7 +98,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getCountries', 'showCountryModal', 'deleteCountry', 'showDepartmentModal', 'deleteDepartment']),
+    ...mapActions([
+      'getCountries',
+      'showCountryModal',
+      'deleteCountry',
+      'showDepartmentModal',
+      'deleteDepartment',
+      'getCountryDepartments'
+    ]),
     selectCountry(country) {
       this.selectedCountry = country;
     },
@@ -130,6 +137,8 @@ export default {
         const {success, body} = await this.deleteDepartment(department.id)
         if (!success) {
           this.$alert(i18n.t(body.message || i18n.t('There was some problem. Please try again in several minutes...')))
+        } else {
+          this.getCountryDepartments(department.country_id)
         }
       }
     }
