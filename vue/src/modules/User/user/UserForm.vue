@@ -124,16 +124,16 @@
                           <multiselect id="department" v-model="dp.department"
                                        :tag-placeholder="$t('Add department')"
                                        :placeholder="$t('Search or add a department')"
-                                       :options="departmentOptions" :multiple="true"
+                                       :options="filterOptions(dp.country)" :multiple="true"
                                        :taggable="true" aria-labelledby="feedback-department"
                                        :selectLabel="$t('Press enter to select')"
                                        :deselectLabel="$t('Press enter to remove')"
-                                       :selectedLabel="$t('Selected')" track-by="value" label="text"
+                                       :selectedLabel="$t('Selected')" track-by="id" label="department_name"
                                        @tag="addDepartment(dp, $event)">
                             <span slot="noOptions">{{ $t('List is empty.') }}</span>
                             <template slot="tag" slot-scope="{ option, remove }">
                                 <span class="multiselect__tag">
-                                  <span>{{ $t(option.value) }}</span>
+                                  <span>{{ $t(option.department_name) }}</span>
                                   <span class="multiselect__tag-icon" @click="remove(option)"></span>
                                 </span>
                             </template>
@@ -234,6 +234,11 @@ export default {
     },
     generate: function () {
       this.userModel.password = Math.random().toString(36).slice(-8);
+    },
+    filterOptions: function (country) {
+      let opt = this.autoCompleteData.departmentOptions;
+      opt = opt.filter(i => i.country === country);
+      return opt;
     },
     closeModal: function () {
       this.hideModal();

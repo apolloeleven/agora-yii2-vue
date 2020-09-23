@@ -259,6 +259,8 @@ export default {
 
     setAutoCompleteData: (state, payload) => {
       state.autoCompleteData.roleOptions = payload.roles;
+      state.autoCompleteData.departmentOptions = payload.departments
+      state.autoCompleteData.countryOptions = payload.countries
     },
 
     logout: state => {

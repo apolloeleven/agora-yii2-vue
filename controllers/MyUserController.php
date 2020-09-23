@@ -6,6 +6,8 @@ use app\helpers\MailHelper;
 use app\models\search\UserSearch;
 use app\models\User;
 use app\models\UserProfile;
+use app\modules\v1\setup\models\Country;
+use app\modules\v1\setup\models\Department;
 use app\modules\v1\setup\resources\UserResource;
 use app\rest\ActiveController;
 use Yii;
@@ -252,6 +254,23 @@ class MyUserController extends ActiveController
 
     public function actionGetDropdownOptions()
     {
+        $countries = Country::find()->all();
+        $departments = Department::find()->all();
+        $data = [
+            'departments' => [],
+            'countries' => []
+        ];
+        foreach ($departments as $department) {
+            $data['departments'][] = [
+                'id' => $department->id,
+                'country' => $department->country->name,
+                'department_name' => $department->name
+            ];
+        }
+        foreach ($countries as $country) {
+            $data['countries'][] = $country->name;
+        }
 
+        return $data;
     }
 }
