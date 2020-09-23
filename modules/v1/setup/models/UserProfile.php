@@ -1,7 +1,8 @@
 <?php
 
-namespace app\models;
+namespace app\modules\v1\setup\models;
 
+use app\models\User;
 use Yii;
 
 /**
@@ -15,6 +16,7 @@ use Yii;
  * @property int|null $birthday
  * @property string|null $about_me
  * @property string|null $hobbies
+ * @property string|null $image_path
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $created_by
@@ -29,7 +31,7 @@ class UserProfile extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'user_profile';
+        return 'user_profiles';
     }
 
     /**
@@ -41,7 +43,7 @@ class UserProfile extends \yii\db\ActiveRecord
             [['birthday', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['about_me'], 'string'],
             [['first_name', 'last_name', 'mobile', 'phone'], 'string', 'max' => 255],
-            [['hobbies'], 'string', 'max' => 1024],
+            [['hobbies', 'image_path'], 'string', 'max' => 1024],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -60,13 +62,13 @@ class UserProfile extends \yii\db\ActiveRecord
             'birthday' => 'Birthday',
             'about_me' => 'About Me',
             'hobbies' => 'Hobbies',
+            'image_path' => 'Image Path',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
         ];
     }
-
     /**
      * Find user profile with id
      *

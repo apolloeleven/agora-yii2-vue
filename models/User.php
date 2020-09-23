@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\models\query\UserQuery;
+use app\modules\v1\setup\models\UserProfile;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
