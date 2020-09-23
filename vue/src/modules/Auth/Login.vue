@@ -1,22 +1,22 @@
 <template>
   <div class="row">
     <div class="col-md-4">
-      <div class="login-left">
+      <div class="auth-left">
         <img src="/assets/img/apollo11-white.png" alt="" style="width: 80px"/>
-        <h3>Welcome</h3>
+        <h3>{{ $t('Welcome') }}</h3>
         <p>You are 30 seconds away from entering in <b>Agora!</b></p>
         <router-link class="btn btn-light btn-secondary btn-block" :to="{name: 'auth.register'}">Register</router-link>
       </div>
     </div>
     <div class="col-md-8 col-right">
-      <div class="login-right clearfix">
-        <h3 class="login-heading">Login to your account</h3>
+      <div class="auth-right clearfix">
+        <h3 class="auth-heading">{{ $t('Login to your account') }}</h3>
         <br>
         <form v-on:submit.prevent="onLoginClick">
           <ValidationObserver ref="loginForm">
-            <div class="login-form">
-              <input-widget ref="usernameInputWidget" :model="loginFormModel" attribute="username"/>
-              <input-widget :model="loginFormModel" attribute="password" type="password"/>
+            <div class="auth-form">
+              <input-widget ref="usernameInputWidget" :model="model" attribute="username"/>
+              <input-widget :model="model" attribute="password" type="password"/>
               <div class="d-flex align-items-center justify-content-between">
                 <button class="btn btn-primary mr-2">{{ $t('Login') }}</button>
                 <router-link :to="{name: 'request-password-reset'}">{{ $t('Request new password') }}</router-link>
@@ -31,7 +31,7 @@
 
 <script>
 import auth from '../../core/services/authService';
-import LoginForm from "./LoginForm";
+import LoginModel from "./LoginModel";
 import InputWidget from "../../core/components/input-widget/InputWidget";
 
 export default {
@@ -39,13 +39,13 @@ export default {
   components: {InputWidget},
   data() {
     return {
-      loginFormModel: new LoginForm(),
+      model: new LoginModel(),
     }
   },
   methods: {
     async onLoginClick() {
-      this.loginFormModel.resetErrors();
-      let response = await auth.login(this.loginFormModel);
+      this.model.resetErrors();
+      let response = await auth.login(this.model);
 
       if (response.success) {
         if (auth.getRedirectTo()) {
@@ -55,7 +55,7 @@ export default {
           this.$router.push('/');
         }
       } else {
-        this.loginFormModel.setMultipleErrors(response.body);
+        this.model.setMultipleErrors([{field: 'password', message: response.body.password}]);
       }
     }
   },

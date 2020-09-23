@@ -4,6 +4,7 @@ export const RULE_REQUIRED = 'required'
 export const RULE_REGEX = 'regex'
 export const RULE_EMAIL = 'email'
 export const RULE_CONFIRMED = 'confirmed'
+export const RULE_MIN = 'min'
 
 export default class BaseModel {
   errors = {};
@@ -17,6 +18,9 @@ export default class BaseModel {
     email: i18n.t('The email field must be a valid email'),
     regex: i18n.t('Value does not match the pattern'),
     confirmed: i18n.t('Passwords do not match'),
+    min: function (name, rule) {
+      return i18n.t(`The field must be {val} or more`, {val: rule.length})
+    }
   };
 
   getRules(attribute, inlineRules = null) {
@@ -45,6 +49,9 @@ export default class BaseModel {
     }
     if (rule.rule === RULE_CONFIRMED) {
       return rule.rule + ':' + rule.target;
+    }
+    if (rule.rule === RULE_MIN) {
+      return rule.rule + ':' + rule.length;
     }
 
     throw new Error(`Incorrect validation rule "${rule.rule}"`);

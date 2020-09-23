@@ -8,6 +8,7 @@
         <router-view :key="$route.fullPath"/>
       </div>
     </div>
+    <UserInvitationForm/>
   </div>
 </template>
 
@@ -15,12 +16,14 @@
 import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
 import {mapState} from 'vuex';
+import UserInvitationForm from "../../../../modules/User/Invitation/UserInvitationForm";
 
 export default {
   name: "DefaultLayout",
   components: {
     Sidebar,
     Navbar,
+    UserInvitationForm,
   },
   computed: {
     ...mapState([

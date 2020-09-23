@@ -5,6 +5,7 @@ namespace app\models;
 use app\models\query\UserQuery;
 use Yii;
 use yii\base\Exception;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -21,6 +22,8 @@ use yii\web\IdentityInterface;
  * @property int|null $status
  * @property int|null $created_at
  * @property int|null $updated_at
+ *
+ * @property UserProfile $userProfile
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -69,6 +72,14 @@ class User extends ActiveRecord implements IdentityInterface
     public static function find()
     {
         return new UserQuery(get_called_class());
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUserProfile()
+    {
+        return $this->hasOne(UserProfile::class, ['user_id' => 'id']);
     }
 
     /**
@@ -192,5 +203,24 @@ class User extends ActiveRecord implements IdentityInterface
     public function isInactive()
     {
         return $this->status == self::STATUS_INACTIVE;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisplayName()
+    {
+        return $this->userProfile->getFullName();
+    }
+
+    /**
+     * Generates password hash from password and sets it to the model
+     *
+     * @param string $password
+     * @throws Exception
+     */
+    public function setPassword(string $password)
+    {
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }
 }

@@ -1,48 +1,72 @@
 <template>
   <div class="row">
     <div class="col-md-4">
-      <div class="login-left">
+      <div class="auth-left">
         <img src="/assets/img/apollo11-white.png" alt="" style="width: 80px"/>
-        <h3>Welcome</h3>
+        <h3>{{ $t('Welcome') }}</h3>
         <p>You are 30 seconds away from entering in <b>Agora!</b></p>
         <router-link class="btn btn-light btn-secondary btn-block" :to="{name: 'auth.login'}">Login</router-link>
       </div>
     </div>
     <div class="col-md-8 col-right">
-      <div class="login-right clearfix">
-        <h3 class="login-heading">Create an account</h3>
+      <div class="auth-right clearfix">
+        <content-spinner :show="loading" :text="$t('Please wait...')" class="h-100"/>
+        <h3 class="auth-heading">{{ $t('Create an account') }}</h3>
         <br>
-        <div class="login-form">
-          <div class="row">
-            <div class="col">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Firstname"/>
-              </div>
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Lastname"/>
-              </div>
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Email"/>
-              </div>
-              <div class="form-group">
-                <input type="password" class="form-control" placeholder="Password"/>
-              </div>
-              <div class="form-group">
-                <input type="password" class="form-control" placeholder="Confirm Password"/>
-              </div>
-              <button class="btn btn-primary btn-action">Register</button>
-            </div>
-          </div>
+        <div class="auth-form">
+          <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
+            <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
+              <input-widget :model="model" attribute="email" disabled/>
+              <input-widget :model="model" attribute="firstname"/>
+              <input-widget :model="model" attribute="lastname"/>
+              <input-widget type="password" :model="model" attribute="password" vid="password"/>
+              <input-widget type="password" :model="model" attribute="password_repeat" vid="password_repeat"/>
+              <button :disabled="loading" class="btn btn-primary btn-action">Register</button>
+            </b-form>
+          </ValidationObserver>
         </div>
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
+import InputWidget from "../../core/components/input-widget/InputWidget";
+import auth from '../../core/services/authService';
+import invitationService from "../User/Invitation/invitationService";
+import ContentSpinner from "../../core/components/ContentSpinner";
+import RegisterModel from "./RegisterModel";
+
 export default {
-  name: "Login"
+  name: "Register",
+  components: {ContentSpinner, InputWidget},
+  data() {
+    return {
+      loading: false,
+      model: new RegisterModel(),
+    }
+  },
+  methods: {
+    async onSubmit() {
+      this.loading = true;
+      const response = await auth.register(this.model);
+      this.loading = false;
+      if (response.success) {
+        this.$toast(this.$t(`Your account will be reviewed by admin and you will receive login instructions`));
+        this.$router.push({name: 'auth.login'});
+      } else {
+        this.$toast(this.$t(`Unable to register user`));
+        this.$router.push({name: 'auth.login'});
+      }
+    },
+  },
+  async mounted() {
+    this.model.token = this.$route.params.token;
+    const res = await invitationService.getEmailByToken(this.model.token);
+    if (res.success) {
+      this.model.email = res.body;
+    }
+  },
 }
 </script>
 
