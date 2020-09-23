@@ -6,6 +6,7 @@ namespace app\modules\v1\users\resources;
 
 use app\helpers\MailHelper;
 use app\modules\v1\users\models\Invitation;
+use app\rest\ValidationException;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
@@ -75,6 +76,13 @@ class InvitationResource extends Invitation
             $this->status = self::STATUS_PENDING;
             $this->token = Yii::$app->security->generateRandomString(256);
             $this->expire_date = time() + self::TOKEN_LIFETIME;
+
+            if (InvitationResource::find()->byEmail($this->email)->count()) {
+                throw new ValidationException((Yii::t('app', 'Invitation already sent')));
+            }
+            if (UserResource::find()->byEmail($this->email)->active()->count()) {
+                throw new ValidationException((Yii::t('app', 'User already exists')));
+            }
         }
 
         return parent::beforeSave($insert);

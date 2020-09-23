@@ -42,6 +42,7 @@ export default {
       this.hideModal();
     },
     async onSubmit() {
+      this.model.resetErrors();
       this.loading = true;
       const res = await this.inviteUser(this.model.email);
       this.loading = false;
@@ -49,8 +50,7 @@ export default {
         this.$toast(this.$t(`Email '{email}' was successfully invited`, {email: this.model.email}));
         this.hideModal();
       } else {
-        this.$toast(this.$t(`Email '{email}' was not invited`, {email: this.model.email}));
-        this.hideModal();
+        this.model.setMultipleErrors([{field: 'email', message: res.body.message}]);
       }
     },
   },
