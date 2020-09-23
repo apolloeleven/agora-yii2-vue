@@ -42,14 +42,21 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['hideCountryModal', 'saveCountry']),
+    ...mapActions(['hideCountryModal', 'updateCountry', 'createCountry']),
     async onSubmit(ev) {
-      ev.preventDefault()
-      const {success, body} = await this.saveCountry(this.model);
-      if (success) {
+      ev.preventDefault();
+
+      let response;
+      if (this.model.id) {
+        response = await this.updateCountry(this.model);
+      } else {
+        response = await this.createCountry(this.model);
+      }
+
+      if (response.success) {
         this.hideCountryModal();
       } else {
-        this.model.setMultipleErrors(body)
+        this.model.setMultipleErrors(response.body)
       }
     },
     onShown() {
