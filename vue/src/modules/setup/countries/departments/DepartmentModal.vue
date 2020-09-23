@@ -7,7 +7,6 @@
              @hidden="onHidden"
              @ok="onSubmit">
       <form v-on:submit.prevent="onSubmit">
-        <pre>{{ model }}</pre>
         <input-widget ref="nameInputWidget" :model="model" attribute="name"/>
         <input-widget type="select" :model="model" attribute="parent_id" :select-options="computedDepartments"/>
       </form>
@@ -67,7 +66,7 @@ export default {
       ev.preventDefault()
       const {success, body} = await this.saveDepartment(this.model);
       if (success) {
-        this.getCountryDepartments(this.countryId);
+        this.getCountryDepartments(this.model.country_id);
         this.hideDepartmentModal();
       } else {
         this.model.setMultipleErrors(body)
