@@ -32,6 +32,7 @@ export default {
   [UPDATE_COUNTRY](state, payload) {
     const index =  state.countries.data.findIndex(c => c.id === payload.id);
     state.countries.data[index] = {...state.countries.data[index], ...payload};
+    state.countries.data[index] = getTree(state.countries.data[index].departments, null)
     state.countries.data = [...state.countries.data];
   },
   [CREATE_COUNTRY](state, country) {
