@@ -1,112 +1,108 @@
 <template>
-  <form v-on:submit.prevent="onUpdateClick">
-    <ValidationObserver ref="loginForm">
-      <div class="profile-content p-3">
-        <div class="col-md-6 border-right">
-          <div class="p-3">
-            <h4 class="text-left">Account Settings</h4>
-            <div class="rounded-circle mt-5">
-              <img alt="profile image" :src="user.image"/>
-              <font-awesome-icon :icon="['fas', 'pencil-alt']"></font-awesome-icon>
+  <div class="user-profile-wrapper">
+    <content-spinner :show="userProfile.loading" :text="$t('Please wait...')" class="h-100"/>
+    <form v-if="!userProfile.loading && userProfile.loaded" v-on:submit.prevent="onUpdateClick">
+      <ValidationObserver ref="loginForm">
+        <div class="profile-content p-3">
+          <div class="col-md-6 border-right">
+            <div class="p-3">
+              <h4 class="text-left">Account Settings</h4>
+              <div class="rounded-circle mt-5">
+                <img alt="profile image" :src="userProfile.image"/>
+              </div>
+              <div class="row mt-4">
+                <div class="col-md-12 mb-4">
+                  <input-widget :model="userModel" attribute="email" type="email"/>
+                </div>
+                <div class="col-md-6">
+                  <input-widget :model="userModel" attribute="password" type="password" vid="password"/>
+                </div>
+                <div class="col-md-6">
+                  <input-widget :model="userModel" attribute="confirmPassword" type="password" vid="confirmPassword"/>
+                </div>
+              </div>
             </div>
-            <div class="row mt-4">
-              <div class="col-md-12 mb-4">
-                <input-widget :model="userModel" attribute="email" type="email"/>
-              </div>
-              <div class="col-md-6">
-                <input-widget :model="userModel" attribute="password" type="password"/>
-                <!--            <b-input ref="password"-->
-                <!--                     :name='`password`'-->
-                <!--                     :key='`password`'-->
-                <!--                     v-model="user.password" class="mr-sm-2"-->
-                <!--                     placeholder="Password"/>-->
-              </div>
-              <div class="col-md-6">
-                <input-widget :model="userModel" attribute="confirmPassword" type="password"/>
-                <!--            <b-input ref="confirmPassword"-->
-                <!--                     :name='`confirmPassword`'-->
-                <!--                     :key='`confirmPassword`'-->
-                <!--                     v-model="user.confirmPassword" class="mr-sm-2"-->
-                <!--                     placeholder="Confirm Password"/>-->
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 ">
+              <h4 class="text-left">Profile Settings</h4>
+              <div class="row mt-4">
+                <div class="col-md-6 mb-4">
+                  <input-widget :model="userModel" attribute="firstName" type="text"/>
+                </div>
+                <div class="col-md-6">
+                  <input-widget :model="userModel" attribute="lastName" type="text"/>
+                </div>
+                <div class="col-md-6 mb-4">
+                  <input-widget :model="userModel" attribute="mobile" type="text"/>
+                </div>
+                <div class="col-md-6">
+                  <input-widget :model="userModel" attribute="phone" type="text"/>
+                </div>
+                <div class="col-md-12 mb-4">
+                  <input-widget :model="userModel" attribute="birthday" type="date"/>
+                </div>
+                <div class="col-md-12 mb-4">
+                  <input-widget :model="userModel" attribute="aboutMe" type="textarea"/>
+                </div>
+                <div class="col-md-12 mb-4">
+                  <input-widget :model="userModel" attribute="hobbies" type="text"/>
+                </div>
+                <div class="col-md-12 mb-4 d-flex justify-content-end">
+                  <button class="btn btn-primary mr-2">{{ $t('Update') }}</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="p-3 ">
-            <h4 class="text-left">Profile Settings</h4>
-            <div class="row mt-4">
-              <div class="col-md-6 mb-4">
-                <input-widget :model="userModel" attribute="firstName" type="text"/>
-              </div>
-              <div class="col-md-6">
-                <input-widget :model="userModel" attribute="lastName" type="text"/>
-              </div>
-              <div class="col-md-6 mb-4">
-                <input-widget :model="userModel" attribute="mobile" type="text"/>
-              </div>
-              <div class="col-md-6">
-                <input-widget :model="userModel" attribute="phone" type="text"/>
-              </div>
-              <div class="col-md-12 mb-4">
-                <input-widget :model="userModel" attribute="birthday" type="date"/>
-              </div>
-              <div class="col-md-12 mb-4">
-                <input-widget :model="userModel" attribute="aboutMe" type="textarea"/>
-              </div>
-              <div class="col-md-12 mb-4 d-flex justify-content-end">
-                <button class="btn btn-primary mr-2">{{ $t('Update') }}</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ValidationObserver>
-  </form>
+      </ValidationObserver>
+    </form>
+  </div>
 </template>
 
 <script>
 import {createNamespacedHelpers} from 'vuex';
 import UserModel from "@/modules/User/UserModel";
 import InputWidget from "@/core/components/input-widget/InputWidget";
-import auth from "@/core/services/auth.service";
+import ContentSpinner from "@/core/components/ContentSpinner";
 
 const {mapState, mapActions} = createNamespacedHelpers('user');
 export default {
   name: "Profile",
-  components: {InputWidget},
+  components: {InputWidget, ContentSpinner},
   data() {
     return {
       userModel: new UserModel(),
     }
   },
   computed: {
-    ...mapState(['user']),
+    ...mapState(['userProfile']),
   },
   methods: {
-    ...mapActions(['setUser', 'updateUser']),
-    async onUpdateClick() {
+    ...mapActions(['getProfile', 'updateProfile']),
+    onUpdateClick() {
       this.userModel.resetErrors();
-      let response = await auth.updateProfile(this.userModel);
-
-
+      this.updateProfile(this.userModel);
+      this.setProfile();
     },
-    async getUserProfile() {
-      const user = JSON.parse(localStorage.getItem('CURRENT_USER'));
-      this.profile = await auth.getProfile(user.id);
+   async setProfile() {
+        await this.getProfile();
+        const user = JSON.parse(localStorage.getItem('CURRENT_USER'));
 
-      this.userModel.id = user.id;
-      this.userModel.email = user.email;
-      this.userModel.firstName = this.profile.first_name;
-      this.userModel.lastName = this.profile.last_name;
-      this.userModel.birthday = this.profile.birthday;
-      this.userModel.phone = this.profile.phone;
-      this.userModel.mobile = this.profile.mobile;
-      this.userModel.aboutMe = this.profile.aboutMe;
+        this.userModel.email = user.email;
+        this.userModel.firstName = this.userProfile.data.first_name || '';
+        this.userModel.lastName = this.userProfile.data.last_name || '';
+        this.userModel.birthday = this.userProfile.data.birthday || '';
+        this.userModel.phone = this.userProfile.data.phone || '';
+        this.userModel.mobile = this.userProfile.data.mobile || '';
+        this.userModel.aboutMe = this.userProfile.data.about_me || '';
+        this.userModel.hobbies = this.userProfile.data.hobbies || '';
+        this.userModel.password = '';
+        this.userModel.confirmPassword = '';
     }
   },
   mounted() {
-    this.getUserProfile();
+    this.setProfile();
   }
 }
 

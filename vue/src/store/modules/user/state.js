@@ -1,7 +1,10 @@
 /** @var { UserState } */
 const STATE = {
-    user: {
-        image:'https://www.xovi.com/wp-content/plugins/all-in-one-seo-pack/images/default-user-image.png'
+    userProfile: {
+        loading: false,
+        loaded: false,
+        image:'https://www.xovi.com/wp-content/plugins/all-in-one-seo-pack/images/default-user-image.png',
+        data: []
     },
 };
 

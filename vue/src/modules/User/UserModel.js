@@ -1,30 +1,34 @@
 import BaseModel from "../../core/components/input-widget/BaseModel";
 import i18n from '../../shared/i18n';
 
-export default class LoginForm extends BaseModel {
-  id = null;
-  email = null;
-  password = null;
-  confirmPassword = null;
-  firstName = null;
-  lastName = null;
-  phone = null;
-  mobile = null;
-  birthday = null;
-  aboutMe = null;
+export default class UserModel extends BaseModel {
+  email = '';
+  password = '';
+  confirmPassword = '';
+  firstName = '';
+  lastName = '';
+  phone = '';
+  mobile = '';
+  birthday = '';
+  aboutMe = '';
+  hobbies = '';
 
   rules = {
     email: [
       {rule: 'email'},
+      {rule: 'required'},
     ],
     password: '',
-    confirmPassword: '',
+    confirmPassword: [
+      {rule: 'confirmed', target: 'password'},
+    ],
     firstName: '',
     lastName: '',
     phone: '',
     mobile: '',
     birthday: '',
-    aboutMe: ''
+    aboutMe: '',
+    hobbies: ''
   };
 
   attributeLabels = {
@@ -37,31 +41,27 @@ export default class LoginForm extends BaseModel {
     phone: i18n.t('Phone'),
     mobile: i18n.t('Mobile'),
     aboutMe: i18n.t('About Me'),
-
-
+    hobbies: i18n.t('Hobbies'),
   };
 
   constructor(email = '',
               password = '',
-              confirmPassword = '',
               firstName = '',
               lastName = '',
               birthday = null,
               phone = '',
               mobile = '',
               aboutMe = '',
-              id = '') {
+              hobbies = '') {
     super();
     this.email = email;
     this.password = password;
-    this.confirmPassword = confirmPassword;
     this.firstName = firstName;
     this.lastName = lastName;
     this.birthday = birthday;
     this.phone = phone;
     this.mobile = mobile;
     this.aboutMe = aboutMe;
-    this.id = id;
-
+    this.hobbies = hobbies;
   }
 }

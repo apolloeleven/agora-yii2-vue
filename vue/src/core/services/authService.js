@@ -95,18 +95,4 @@ export default {
   async checkToken(token) {
     return await httpService.get('/user/check-token-validity?token=' + token);
   },
-
-  async getProfile(id) {
-    let res = await httpService.get('/user/get-profile?id=' + id)
-    if(res.success) {
-      return res.body;
-    }
-  },
-
-  async updateProfile(data) {
-    let res = await httpService.post('/user/update-profile', data)
-    if(res.success) {
-      return res.body;
-    }
-  }
 }
