@@ -22,32 +22,34 @@
             <b-list-group-item v-for="country of countries.data"
                                :key="country.id"
                                @click="selectCountry(country)"
-                               class="d-flex justify-content-between"
+                               class="d-flex justify-content-between hover-pointer"
                                :class="{active: country === selectedCountry}">
               <span>{{ country.name }}</span>
             </b-list-group-item>
           </b-list-group>
 
         </div>
-        <div class="col-sm-9 ">
-          <b-tabs class="page-content">
-            <b-tab :title="$t('Departments')" active>
-              <div>
-                <p class="p-2 text-right">
-                  <b-button :disabled="!selectedCountry" size="sm" variant="primary" @click="showDepartmentModal">
-                    <i class="fas fa-plus-circle"></i>
-                    {{ $t('Add new department') }}
-                  </b-button>
-                </p>
-                <department-list-group v-if="selectedCountry && selectedCountry.departmentsTree.length"
-                                       :edit-handler="editDepartment"
-                                       :delete-handler="onDeleteDepartment"
-                                       :departments="selectedCountry.departmentsTree"/>
-              </div>
-              <no-data-available v-if="selectedCountry && !selectedCountry.departmentsTree.length"
-                                 :text="$t('Country does not have departments')" :height="100"/>
-            </b-tab>
-          </b-tabs>
+        <div class="col-sm-9">
+          <div class="page-content p-2">
+            <b-tabs>
+              <b-tab :title="$t('Departments')" active>
+                <div>
+                  <p class="p-2 text-right">
+                    <b-button :disabled="!selectedCountry" size="sm" variant="primary" @click="showDepartmentModal">
+                      <i class="fas fa-plus-circle"></i>
+                      {{ $t('Add new department') }}
+                    </b-button>
+                  </p>
+                  <department-list-group v-if="selectedCountry && selectedCountry.departmentsTree.length"
+                                         :edit-handler="editDepartment"
+                                         :delete-handler="onDeleteDepartment"
+                                         :departments="selectedCountry.departmentsTree"/>
+                </div>
+                <no-data-available v-if="selectedCountry && !selectedCountry.departmentsTree.length"
+                                   :text="$t('Country does not have departments')" :height="100"/>
+              </b-tab>
+            </b-tabs>
+          </div>
         </div>
       </div>
     </div>
@@ -90,6 +92,11 @@ export default {
     selectCountry(country) {
       this.selectedCountry = country;
     },
+    selectFirstCountry() {
+      if (this.countries.data.length > 0) {
+        this.selectCountry(this.countries.data[0]);
+      }
+    },
     editCountry(country) {
       this.showCountryModal(country)
     },
@@ -99,6 +106,8 @@ export default {
         const {success, body} = await this.deleteCountry(country.id)
         if (!success) {
           this.$alert(i18n.t(body.message || i18n.t('There was some problem. Please try again in several minutes...')))
+        } else {
+          this.selectFirstCountry();
         }
       }
     },
@@ -115,8 +124,12 @@ export default {
       }
     }
   },
-  mounted() {
-    this.getCountries();
+  async mounted() {
+    let response = await this.getCountries();
+
+    if (response.success) {
+      this.selectFirstCountry();
+    }
   }
 }
 </script>
