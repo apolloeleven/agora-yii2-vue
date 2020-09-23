@@ -21,6 +21,7 @@ class m200922_072549_create_user_profiles_table extends Migration
             'birthday' => $this->integer(11),
             'about_me' => $this->text(),
             'hobbies' => $this->string(1024),
+            'image_path' => $this->string(1024),
             'created_at' => $this->integer(11),
             'updated_at' => $this->integer(11),
             'created_by' => $this->integer(11),
