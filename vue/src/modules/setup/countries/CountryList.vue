@@ -92,6 +92,8 @@ export default {
       handler() {
         if (this.selectedCountry) {
           this.selectedCountry = this.countries.data.find(c => c.id === this.selectedCountry.id);
+        } else {
+          this.selectFirstCountry();
         }
       }
     }
