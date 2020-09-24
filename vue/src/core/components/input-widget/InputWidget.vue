@@ -33,7 +33,7 @@
         {{ computedHint }}
       </b-form-text>
     </b-form-group>
-    <b-form-group v-if="isSelect()">
+    <b-form-group v-if="isSelect() || isDate() || isMultiselect() || isRichtext()">
       <label v-if="computedLabel">
         {{ computedLabel }}
         <span v-if="v.required" class="text-danger">*</span>
@@ -45,53 +45,20 @@
             <i class="fas fa-question-circle"></i>
           </b-input-group-text>
         </template>
-        <b-form-select ref="currentInput" :size="size" :disabled="disabled" :options="selectOptions"
+
+        <b-form-select v-if="isSelect()" ref="currentInput" :size="size" :disabled="disabled" :options="selectOptions"
                        :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
                        :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
                        @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
         />
-        <b-form-invalid-feedback :state="getState(v)">
-          {{ getError(v.errors) }}
-        </b-form-invalid-feedback>
-      </b-input-group>
-    </b-form-group>
 
-    <b-form-group v-if="isDate()">
-      <label v-if="computedLabel">
-        {{ computedLabel }}
-        <span v-if="v.required" class="text-danger">*</span>
-      </label>
-      <b-input-group :prepend="prepend" :append="append" :size="size">
-        <template v-slot:append v-if="appendQuestion">
-          <b-tooltip :target="`question-mark-tooltip-${attribute}-${uuid}`" :title="appendQuestion"/>
-          <b-input-group-text :id="`question-mark-tooltip-${attribute}-${uuid}`" class="hover-cursor">
-            <i class="fas fa-question-circle"></i>
-          </b-input-group-text>
-        </template>
-        <datePicker ref="currentInput" :size="size" :disabled="disabled" :config="datePickerOptions"
+        <datePicker v-if="isDate()" ref="currentInput" :size="size" :disabled="disabled" :config="datePickerOptions"
                     :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
                     :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
                     @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
         />
-        <b-form-invalid-feedback :state="getState(v)">
-          {{ getError(v.errors) }}
-        </b-form-invalid-feedback>
-      </b-input-group>
-    </b-form-group>
 
-    <b-form-group v-if="isMultiselect()">
-      <label v-if="computedLabel">
-        {{ computedLabel }}
-        <span v-if="v.required" class="text-danger">*</span>
-      </label>
-      <b-input-group :prepend="prepend" :append="append" :size="size">
-        <template v-slot:append v-if="appendQuestion">
-          <b-tooltip :target="`question-mark-tooltip-${attribute}-${uuid}`" :title="appendQuestion"/>
-          <b-input-group-text :id="`question-mark-tooltip-${attribute}-${uuid}`" class="hover-cursor">
-            <i class="fas fa-question-circle"></i>
-          </b-input-group-text>
-        </template>
-        <Multiselect ref="currentInput" :size="size" :disabled="disabled"
+        <Multiselect v-if="isMultiselect()" ref="currentInput" :size="size" :disabled="disabled"
                      :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`"
                      :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" :state="getState(v)"
                      :tag-placeholder="$t(multiselectPlaceholder)"
@@ -113,6 +80,12 @@
                             </span>
           </template>
         </Multiselect>
+
+        <ckeditor v-if="isRichtext()" :editor="editor" :config="editorConfig" ref="currentInput" :size="size"
+                  :disabled="disabled" :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`"
+                  :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]"
+        />
+
         <b-form-invalid-feedback :state="getState(v)">
           {{ getError(v.errors) }}
         </b-form-invalid-feedback>
@@ -128,6 +101,7 @@ import {uuid} from 'vue-uuid';
 import datePicker from 'vue-bootstrap-datetimepicker';
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 import Multiselect from 'vue-multiselect'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 export default {
   name: 'InputWidget',
@@ -219,7 +193,9 @@ export default {
       uuid: uuid.v4(),
       datePickerOptions: {
         format: 'DD-MM-YYYY'
-      }
+      },
+      editor: ClassicEditor,
+      editorConfig: {},
     }
   },
   methods: {
@@ -259,6 +235,9 @@ export default {
     },
     isInput() {
       return ['text', 'number', 'password', 'email', 'search', 'url', 'tel', 'time', 'range', 'color'].includes(this.type)
+    },
+    isRichtext() {
+      return this.type === 'richtext';
     },
     isMultiselect() {
       return this.type === 'multiselect';

@@ -43,7 +43,7 @@
                   <input-widget :model="userModel" attribute="birthday" type="date"/>
                 </div>
                 <div class="col-md-12 mb-4">
-                  <input-widget :model="userModel" attribute="aboutMe" type="textarea"/>
+                  <input-widget :model="userModel" attribute="aboutMe" type="richtext"/>
                 </div>
                 <div class="col-md-12 mb-4">
                   <input-widget :model="userModel" attribute="hobbies" :multiselect-options='userModel.hobbies'
