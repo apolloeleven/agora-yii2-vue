@@ -10,23 +10,42 @@
               <strong>{{ $t('Loading...') }}</strong>
             </div>
           </template>
-          <template v-slot:cell(departments)="data">
+          <template v-slot:cell(fullName)="data">
             <div style="width: 100%">
+              {{ data.item.displayName }}
             </div>
           </template>
-<!--          <template v-slot:cell(created_at)="data">-->
-<!--            {{ new Date(data.item.created_at) | toDatetime }}-->
-<!--          </template>-->
-<!--          <template v-slot:cell(created_by)="data">-->
-<!--            {{ data.item.createdBy.displayName }}-->
-<!--          </template>-->
-<!--          <template v-slot:cell(statusLabel)="data">-->
-<!--            <span class="badge" :class="{-->
-<!--              'badge-warning': data.item.status === 2,-->
-<!--              'badge-info': data.item.status === 1,-->
-<!--              'badge-success': data.item.status === 3,-->
-<!--            }">{{ data.value }}</span>-->
-<!--          </template>-->
+          <template v-slot:cell(departments)="data">
+            <ul v-if="data.item.userDepartments.length > 0" style="width: 100%">
+              <li v-for="dep in data.item.userDepartments">
+                {{ dep.department_id }}
+              </li>
+            </ul>
+          </template>
+          <template v-slot:cell(country)="data">
+            <ul v-if="data.item.userDepartments.length > 0" style="width: 100%">
+              <li v-for="dep in data.item.userDepartments" :key="dep.id">
+                {{ dep.country.name }}
+              </li>
+            </ul>
+          </template>
+          <template v-slot:cell(position)="data">
+            <ul v-if="data.item.userDepartments.length > 0" style="width: 100%">
+              <li v-for="dep in data.item.userDepartments" :key="dep.id">
+                {{ dep.position }}
+              </li>
+            </ul>
+          </template>
+          <template v-slot:cell(actions)="data">
+            <b-dropdown variant="transparent text-dark p-0" right no-caret>
+              <template slot="button-content">
+                <i class="fas fa-ellipsis-v"></i>
+              </template>
+              <b-dropdown-item @click="editUser(data.item)" variant="text-dark"><i class="icon-eye"></i>
+                Edit
+              </b-dropdown-item>
+            </b-dropdown>
+          </template>
         </b-table>
       </b-card>
     </div>
@@ -60,10 +79,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getData'])
+    ...mapActions(['getData', 'showEmployeeModal']),
+    editUser(employee) {
+      this.showEmployeeModal(employee);
+    }
   },
   mounted() {
-    this.getData()
+    this.getData();
   }
 }
 </script>

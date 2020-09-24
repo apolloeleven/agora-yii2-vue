@@ -9,6 +9,7 @@
       </div>
     </div>
     <UserInvitationForm/>
+    <employee-list-form/>
   </div>
 </template>
 
@@ -17,10 +18,12 @@ import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
 import {mapState} from 'vuex';
 import UserInvitationForm from "../../../../modules/User/Invitation/UserInvitationForm";
+import EmployeeListForm from "../../../../modules/User/Employees/EmployeeListForm";
 
 export default {
   name: "DefaultLayout",
   components: {
+    EmployeeListForm,
     Sidebar,
     Navbar,
     UserInvitationForm,

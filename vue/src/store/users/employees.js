@@ -10,12 +10,11 @@ export default {
     }
   },
   actions: {
-    showEmployeeModal({commit}) {
-      commit('showEmployeeModal')
+    showEmployeeModal({commit}, payload) {
+      commit('showEmployeeModal', payload);
     },
     async getData({commit}, payload) {
       commit('changeLoading');
-      console.log(111);
       const res = await employeesService.get(payload);
       commit('changeLoading');
       commit('getData', {rows: res.body});
@@ -25,9 +24,13 @@ export default {
     getData: (state, {rows}) => {
       state.data.rows = rows;
     },
-    showEmployeeModal: (state) => {
+    showEmployeeModal: (state, payload) => {
       state.showModal = true;
-      state.modalEmployee = {};
+      state.modalEmployee = {
+        firstName: payload.userProfile.first_name,
+        lastName: payload.userProfile.last_name,
+        email: payload.email
+      };
     },
     changeLoading: state => state.loading = !state.loading
   }

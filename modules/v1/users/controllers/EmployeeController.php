@@ -9,8 +9,8 @@ namespace app\modules\v1\users\controllers;
 
 
 use app\modules\v1\users\resources\UserDepartmentResource;
-use app\modules\v1\users\resources\UserResource;
 use app\rest\ActiveController;
+use app\modules\v1\users\models\search\UserDepartmentSearch;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 
@@ -50,10 +50,7 @@ class EmployeeController extends ActiveController
      */
     public function actionIndex()
     {
-        return new ActiveDataProvider([
-            'query' => UserResource::find()
-                ->with(['userDepartments'])
-                ->active()
-        ]);
+        $userDepartmentSearch = new UserDepartmentSearch();
+        return $userDepartmentSearch->search(\Yii::$app->request->get());
     }
 }
