@@ -33,7 +33,7 @@ class m200923_134202_create_user_departments_table extends Migration
             'fk-user_departments-user_id',
             '{{%user_departments}}',
             'user_id',
-            'users',
+            '{{%users}}',
             'id'
         );
 
@@ -46,7 +46,7 @@ class m200923_134202_create_user_departments_table extends Migration
             'fk-user_departments-country_id',
             '{{%user_departments}}',
             'country_id',
-            'countries',
+            '{{%countries}}',
             'id'
         );
 
@@ -59,7 +59,7 @@ class m200923_134202_create_user_departments_table extends Migration
             'fk-user_departments-department_id',
             '{{%user_departments}}',
             'department_id',
-            'departments',
+            '{{%departments}}',
             'id'
         );
 
@@ -72,7 +72,7 @@ class m200923_134202_create_user_departments_table extends Migration
             'fk-user_departments-created_by',
             '{{%user_departments}}',
             'created_by',
-            'users',
+            '{{%users}}',
             'id'
         );
 
@@ -85,7 +85,7 @@ class m200923_134202_create_user_departments_table extends Migration
             'fk-user_departments-updated_by',
             '{{%user_departments}}',
             'updated_by',
-            'users',
+            '{{%users}}',
             'id'
         );
     }

@@ -4,6 +4,7 @@ export default {
   state: {
     showModal: false,
     modalEmployee: {},
+    modalDropdownData: {},
     loading: false,
     data: {
       rows: []
@@ -18,11 +19,21 @@ export default {
       const res = await employeesService.get(payload);
       commit('changeLoading');
       commit('getData', {rows: res.body});
+    },
+    async getModalDropdownData({commit}) {
+      const res = await employeesService.getModalDropdownData()
+      commit('getModalDropdownData',{rows: res.body})
     }
   },
   mutations: {
     getData: (state, {rows}) => {
       state.data.rows = rows;
+    },
+    getModalDropdownData(state, {rows}) {
+      state.modalDropdownData.userRoles = rows.userRoles;
+      state.modalDropdownData.userPositions = rows.userPositions;
+      state.modalDropdownData.countries = rows.countries;
+      state.modalDropdownData.departments = rows.departments;
     },
     showEmployeeModal: (state, payload) => {
       state.showModal = true;

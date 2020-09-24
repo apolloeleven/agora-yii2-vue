@@ -8,7 +8,10 @@
 namespace app\modules\v1\users\controllers;
 
 
+use app\modules\v1\setup\resources\CountryResource;
+use app\modules\v1\setup\resources\DepartmentResource;
 use app\modules\v1\users\resources\UserDepartmentResource;
+use app\modules\v1\users\resources\UserRoleResource;
 use app\rest\ActiveController;
 use app\modules\v1\users\models\search\UserDepartmentSearch;
 use yii\data\ActiveDataProvider;
@@ -52,5 +55,38 @@ class EmployeeController extends ActiveController
     {
         $userDepartmentSearch = new UserDepartmentSearch();
         return $userDepartmentSearch->search(\Yii::$app->request->get());
+    }
+
+    public function actionUpdate()
+    {
+
+    }
+
+    public function actionView()
+    {
+        $departmentOptions = DepartmentResource::find()
+            ->select(['id', 'name'])
+            ->asArray()
+            ->all();
+
+        $roleOptions = UserRoleResource::getUserRoles();
+
+        $countryOptions = CountryResource::find()
+            ->select(['id', 'name'])
+            ->asArray()
+            ->all();
+
+        $positionOptions = UserDepartmentResource::find()
+            ->select(['id', 'position', 'country_id'])
+            ->distinct()
+            ->asArray()
+            ->all();
+
+        return [
+            'userRoles' => $roleOptions,
+            'userPositions' => $positionOptions,
+            'countries' => $countryOptions,
+            'departments' => $departmentOptions
+        ];
     }
 }

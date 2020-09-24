@@ -19,9 +19,6 @@ class UserDepartmentResource extends UserDepartment
     {
         return [
             'id',
-            'user_id',
-            'country_id',
-            'department_id',
             'position',
             'created_at' => function () {
                 return Yii::$app->formatter->asDatetime($this->created_at);

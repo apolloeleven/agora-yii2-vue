@@ -85,6 +85,7 @@ export default {
     }
   },
   mounted() {
+    this.getModalDropdownData();
     this.getData();
   }
 }

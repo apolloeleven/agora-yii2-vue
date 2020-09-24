@@ -8,6 +8,9 @@ const employeeService = {
     expand: 'userDepartments, userProfile, userDepartments.department, userDepartments.country'
   }) {
     return httpService.get(this.url, {params});
+  },
+  getModalDropdownData() {
+    return httpService.get(this.url)
   }
 }
 
