@@ -10,7 +10,7 @@ const employeeService = {
     return httpService.get(this.url, {params});
   },
   getModalDropdownData() {
-    return httpService.get(this.url)
+    return httpService.get(this.url + '/get-dropdown')
   }
 }
 

@@ -64,12 +64,7 @@
                       <div class="col-sm-12 col-md-4">
                         <b-form-group :label="$t('Position')">
                           <b-form-input v-model="dp.position" list="job-title-list"/>
-                          <datalist id="job-title-list">
-                            <option v-for="position in dropdownData.userPositions"
-                                    v-bind:value="position.value"
-                                    v-bind:label="position.text">
-                            </option>
-                          </datalist>
+                          <b-form-datalist id="job-title-list" :options="dropdownData.userPositions"/>
                         </b-form-group>
                       </div>
                       <div class="col-sm-12 col-md-4">
@@ -87,7 +82,7 @@
                                        :taggable="true" aria-labelledby="feedback-department"
                                        :selectLabel="$t('Press enter to select')"
                                        :deselectLabel="$t('Press enter to remove')"
-                                       :selectedLabel="$t('Selected')" track-by="id" label="department_name"
+                                       :selectedLabel="$t('Selected')" track-by="id" label="name"
                                        @tag="addDepartment(dp, $event)">
                             <span slot="noOptions">{{ $t('List is empty.') }}</span>
                             <template slot="tag" slot-scope="{ option, remove }">
@@ -118,6 +113,7 @@ import ContentSpinner from "../../../core/components/ContentSpinner";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import EmployeeListFormModel from "./EmployeeListFormModel";
 import Multiselect from "vue-multiselect";
+import Vue from "vue"
 
 const {mapState, mapActions} = createNamespacedHelpers('user/employees');
 
@@ -145,6 +141,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['hideModal']),
     onHideModal() {
       this.model.email = null;
       this.model.email = null;
@@ -156,7 +153,6 @@ export default {
         text: newDepartment
       };
       dp.department.push(tag);
-      this.addDepartmentOptions(tag);
     },
     addNewPosition: function () {
       this.userDepartment.push({

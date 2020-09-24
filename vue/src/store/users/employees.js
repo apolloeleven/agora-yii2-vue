@@ -1,4 +1,5 @@
 import employeesService from "../../modules/User/Employees/employeesService"
+
 export default {
   namespaced: true,
   state: {
@@ -22,7 +23,10 @@ export default {
     },
     async getModalDropdownData({commit}) {
       const res = await employeesService.getModalDropdownData()
-      commit('getModalDropdownData',{rows: res.body})
+      commit('getModalDropdownData', {rows: res.body})
+    },
+    hideModal({commit}) {
+      commit('hideModal');
     }
   },
   mutations: {
@@ -43,6 +47,10 @@ export default {
         email: payload.email
       };
     },
-    changeLoading: state => state.loading = !state.loading
+    changeLoading: state => state.loading = !state.loading,
+    hideModal: (state) => {
+      state.showModal = false;
+      state.modalEmployee = {};
+    }
   }
 }
