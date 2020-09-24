@@ -46,7 +46,8 @@
                   <input-widget :model="userModel" attribute="aboutMe" type="textarea"/>
                 </div>
                 <div class="col-md-12 mb-4">
-                  <input-widget :model="userModel" attribute="hobbies" type="text"/>
+                  <input-widget :model="userModel" attribute="hobbies" :multiselect-options='userModel.hobbies'
+                                type="multiselect"/>
                 </div>
                 <div class="col-md-12 mb-4 d-flex justify-content-end">
                   <button class="btn btn-primary mr-2">{{ $t('Update') }}</button>
@@ -73,6 +74,7 @@ export default {
   data() {
     return {
       userModel: new UserModel(),
+      multiselectOptions: []
     }
   },
   computed: {
@@ -82,11 +84,16 @@ export default {
     ...mapActions(['getProfile', 'updateProfile']),
     onUpdateClick() {
       this.userModel.resetErrors();
+      this.beforeSubmit();
       this.updateProfile(this.userModel);
       this.setProfile();
     },
-   async setProfile() {
-        await this.getProfile();
+    beforeSubmit() {
+      this.userModel.hobbies = this.userModel.hobbies.map(ob => ob.value);
+    },
+    async setProfile() {
+      let response = await this.getProfile();
+      if (response.success) {
         const user = JSON.parse(localStorage.getItem('CURRENT_USER'));
 
         this.userModel.email = user.email;
@@ -96,9 +103,15 @@ export default {
         this.userModel.phone = this.userProfile.data.phone || '';
         this.userModel.mobile = this.userProfile.data.mobile || '';
         this.userModel.aboutMe = this.userProfile.data.about_me || '';
-        this.userModel.hobbies = this.userProfile.data.hobbies || '';
+
+        this.userModel.hobbies = this.userProfile.data.hobbies ? this.userProfile.data.hobbies.map(op => ({
+          value: op,
+          text: this.$t(op)
+        })) : [];
+
         this.userModel.password = '';
         this.userModel.confirmPassword = '';
+      }
     }
   },
   mounted() {

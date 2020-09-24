@@ -3,6 +3,7 @@
 namespace app\modules\v1\setup\models;
 
 use app\models\User;
+use yii\helpers\Json;
 use Yii;
 
 /**
@@ -32,6 +33,22 @@ class UserProfile extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'user_profiles';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function beforeValidate()
+    {
+        $this->hobbies = !empty($this->hobbies) ? Json::encode($this->hobbies) : null;
+        $this->birthday = $this->birthday ? strtotime($this->birthday) : null;
+        return parent::beforeValidate();
+    }
+
+    public function afterFind()
+    {
+        $this->hobbies = Json::decode($this->hobbies);
+        $this->birthday = $this->birthday ? date("d-m-Y", $this->birthday) : null;
     }
 
     /**

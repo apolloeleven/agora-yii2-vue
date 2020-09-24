@@ -5,7 +5,7 @@ import './core/index';
 
 import router from './shared/router';
 import i18n from './shared/i18n';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
 
 import './modules';
 import './plugins';
@@ -13,7 +13,7 @@ import store from './store';
 import './index.scss';
 
 Vue.use(require('vue-moment'));
-Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.component('font-awesome-icon');
 Vue.config.productionTip = false;
 
 new Vue({

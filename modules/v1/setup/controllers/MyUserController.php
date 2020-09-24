@@ -17,8 +17,6 @@ class MyUserController extends ActiveController
      */
     public function actionUpdateProfile() {
 
-
-
         $request = Yii::$app->request->post();
         $user = Yii::$app->user->identity;
         $userProfile = $user->userProfile;

@@ -11,7 +11,7 @@ export default class UserModel extends BaseModel {
   mobile = '';
   birthday = '';
   aboutMe = '';
-  hobbies = '';
+  hobbies = [];
 
   rules = {
     email: [
@@ -44,24 +44,8 @@ export default class UserModel extends BaseModel {
     hobbies: i18n.t('Hobbies'),
   };
 
-  constructor(email = '',
-              password = '',
-              firstName = '',
-              lastName = '',
-              birthday = null,
-              phone = '',
-              mobile = '',
-              aboutMe = '',
-              hobbies = '') {
+  constructor(data = {}) {
     super();
-    this.email = email;
-    this.password = password;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.birthday = birthday;
-    this.phone = phone;
-    this.mobile = mobile;
-    this.aboutMe = aboutMe;
-    this.hobbies = hobbies;
+    Object.assign(this, {...data});
   }
 }
