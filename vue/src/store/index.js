@@ -1,5 +1,6 @@
 import Vuex from "vuex";
 import Vue from 'vue';
+import user from "./users/user";
 import setup from './setup';
 
 // Load vuex
@@ -42,6 +43,7 @@ export default new Vuex.Store({
     },
   },
   modules: {
-    setup
+    setup,
+    user,
   }
 });

@@ -1,6 +1,7 @@
 <?php
 
 use app\models\User;
+use yii\rest\UrlRule;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
@@ -12,6 +13,7 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
+        '@portalUrl' => env('PORTAL_HOST'),
     ],
     'components' => [
         'request' => [
@@ -61,6 +63,13 @@ $config = [
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/department'],
+                [
+                    'class' => UrlRule::class,
+                    'pluralize' => false,
+                    'controller' => [
+                        'v1/users/invitation',
+                    ]
+                ]
             ],
         ],
     ],
@@ -70,6 +79,9 @@ $config = [
             'modules' => [
                 'setup' => [
                     'class' => \app\modules\v1\setup\SetupModule::class
+                ],
+                'users' => [
+                    'class' => \app\modules\v1\users\UserModule::class
                 ]
             ]
         ]

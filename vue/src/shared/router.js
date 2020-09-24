@@ -4,12 +4,14 @@ import DefaultLayout from "./../core/components/layout/DefaultLayout/DefaultLayo
 import AuthLayout from "./../core/components/layout/AuthLayout/AuthLayout";
 import NotFoundComponent from "./../core/components/pages/NotFoundComponent";
 import Dashboard from "@/modules/Dashboard/Dashboard";
-import Login from "../modules/Auth/Login";
+import Login from "@/modules/Auth/Login";
 import Register from "@/modules/Auth/Register";
-import RequestPasswordReset from "../modules/Auth/PasswordReset/RequestPasswordReset";
-import ResetPasswordForm from "../modules/Auth/PasswordReset/ResetPasswordForm";
+import RequestPasswordReset from "@/modules/Auth/PasswordReset/RequestPasswordReset";
+import ResetPassword from "@/modules/Auth/PasswordReset/ResetPassword";
 import Setup from "@/modules/setup/Setup";
 import CountryList from "@/modules/setup/countries/CountryList";
+import UserInvitations from "@/modules/User/Invitation/UserInvitations";
+import User from "@/modules/User/User";
 
 Vue.use(Router);
 
@@ -36,10 +38,10 @@ const router = new Router({
         {
           path: 'password-reset/:token',
           name: 'password-reset',
-          component: ResetPasswordForm,
+          component: ResetPassword,
         },
         {
-          path: 'register',
+          path: 'register/:token',
           name: 'auth.register',
           component: Register,
         }
@@ -57,6 +59,15 @@ const router = new Router({
         {path: 'dashboard', name: 'dashboard', component: Dashboard,},
         {path: '/setup', name: 'setup', component: Setup,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
+        {path: '/setup/countries', name: 'countries', component: CountryList},
+        {
+          path: '/users',
+          name: 'user',
+          component: User,
+          children: [
+            {path: '/users/invitations', name: 'invitations', component: UserInvitations},
+          ]
+        },
       ]
     },
     {

@@ -9,6 +9,7 @@ namespace app\modules\v1\setup\resources;
 
 
 use app\modules\v1\setup\models\Department;
+use app\modules\v1\users\resources\UserResource;
 use yii\base\InvalidCallException;
 
 /**

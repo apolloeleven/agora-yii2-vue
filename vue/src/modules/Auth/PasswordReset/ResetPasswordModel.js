@@ -1,7 +1,7 @@
 import BaseModel from "../../../core/components/input-widget/BaseModel";
 import i18n from '../../../shared/i18n';
 
-export default class PasswordResetForm extends BaseModel {
+export default class ResetPasswordModel extends BaseModel {
   password = '';
   repeat_password = '';
   token = '';
