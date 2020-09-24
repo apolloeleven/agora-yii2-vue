@@ -28,6 +28,7 @@ export default {
   },
   [HIDE_COUNTRY_MODAL](state) {
     state.countryModal.show = false;
+    state.countryModal.data = {};
   },
   [UPDATE_COUNTRY](state, payload) {
     const index =  state.countries.data.findIndex(c => c.id === payload.id);
@@ -50,6 +51,7 @@ export default {
   },
   [HIDE_DEPARTMENT_MODAL](state) {
     state.departmentModal.show = false;
+    state.departmentModal.data = {};
   }
 };
 
