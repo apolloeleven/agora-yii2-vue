@@ -9,6 +9,7 @@
       </div>
     </div>
     <UserInvitationForm/>
+    <WorkspaceForm/>
   </div>
 </template>
 
@@ -17,6 +18,7 @@ import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
 import {mapState} from 'vuex';
 import UserInvitationForm from "../../../../modules/User/Invitation/UserInvitationForm";
+import WorkspaceForm from "../../../../modules/Workspace/workspace/WorkspaceForm";
 
 export default {
   name: "DefaultLayout",
@@ -24,6 +26,7 @@ export default {
     Sidebar,
     Navbar,
     UserInvitationForm,
+    WorkspaceForm,
   },
   computed: {
     ...mapState([
