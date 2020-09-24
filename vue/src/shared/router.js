@@ -13,6 +13,7 @@ import CountryList from "@/modules/setup/countries/CountryList";
 import UserInvitations from "@/modules/User/Invitation/UserInvitations";
 import User from "@/modules/User/User";
 import DepartmentList from "@/modules/setup/departments/DepartmentList";
+import Workspace from "@/modules/Workspace/workspace/Workspace";
 
 Vue.use(Router);
 
@@ -70,6 +71,7 @@ const router = new Router({
             {path: '/users/invitations', name: 'invitations', component: UserInvitations},
           ]
         },
+        {path: '/workspace', name: 'workspace', component: Workspace},
       ]
     },
     {
