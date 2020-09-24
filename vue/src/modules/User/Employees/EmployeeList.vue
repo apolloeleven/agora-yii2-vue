@@ -18,7 +18,7 @@
           <template v-slot:cell(departments)="data">
             <ul v-if="data.item.userDepartments.length > 0" style="width: 100%">
               <li v-for="dep in data.item.userDepartments">
-                {{ dep.department_id }}
+                {{ dep.department.name }}
               </li>
             </ul>
           </template>
@@ -79,7 +79,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getData', 'showEmployeeModal']),
+    ...mapActions(['getData', 'showEmployeeModal','getModalDropdownData']),
     editUser(employee) {
       this.showEmployeeModal(employee);
     }
