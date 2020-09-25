@@ -36,7 +36,7 @@ class UserDepartmentSearch extends UserDepartmentResource
             ->with([
                 'userDepartments',
                 'userDepartments.department',
-                'userDepartments.country'
+                'userDepartments.department.country'
             ])
             ->active();
 

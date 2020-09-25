@@ -31,7 +31,7 @@ class CountryResource extends Country
 
     public function extraFields()
     {
-        return ['createdBy'];
+        return ['createdBy', 'departments'];
     }
 
     public function getCreatedBy()
