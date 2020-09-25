@@ -1,5 +1,7 @@
 import BaseModel from "../../../core/components/input-widget/BaseModel";
 import i18n from "../../../shared/i18n";
+import RoleModel from "@/modules/User/Employees/RoleModel";
+import UserDepartmentModel from "@/modules/User/Employees/UserDepartmentModel";
 
 export default class EmployeeModel extends BaseModel {
   id = null;
@@ -40,25 +42,22 @@ export default class EmployeeModel extends BaseModel {
 
     if (data.userDepartments) {
       for (let userDepartment of data.userDepartments) {
-        userDepartments.push({
+        userDepartments.push(new UserDepartmentModel({
           id: userDepartment.id,
+          position: userDepartment.position,
           country_id: userDepartment.department.country_id,
-          department_id: userDepartment.department.id,
-          position: userDepartment.position
-        });
+          department_id: userDepartment.department.id
+        }))
       }
     }
     const roles = [];
     if (data.roles) {
       for (let role in data.roles) {
         if (data.roles.hasOwnProperty(role)) {
-          roles.push({
-            name: role
-          })
+          roles.push(new RoleModel({name: role}))
         }
       }
     }
-    console.log(roles);
     data.userDepartments = userDepartments;
     data.roles = roles;
     Object.assign(this, {...data});

@@ -42,7 +42,7 @@
                     <div class="row">
                       <div class="col-sm-12 col-md-6">
                         <b-form-group class="mb-0">
-                          <b-form-select v-model="userRoleModel.name" :options="dropdownData.userRoles"/>
+                          <input-widget :model="userRoleModel" attribute="name" type="select" :select-options="dropdownData.userRoles"/>
                         </b-form-group>
                       </div>
                     </div>
@@ -77,23 +77,23 @@
                     <div class="row">
                       <div class="col-sm-12 col-md-4">
                         <b-form-group class="mb-0">
-                          <b-form-select v-model="userDepartmentModel.country_id"
-                                         value-field="id"
-                                         text-field="name"
-                                         :options="dropdownData.countries"/>
+                          <input-widget :model="userDepartmentModel"
+                                        attribute="country_id"
+                                        type="select"
+                                        :select-options="dropdownData.countries"/>
                         </b-form-group>
                       </div>
                       <div class="col-sm-12 col-md-4">
                         <b-form-group class="mb-0">
-                          <b-form-select v-model="userDepartmentModel.department_id"
-                                         value-field="id"
-                                         text-field="name"
-                                         :options="getDepartments(userDepartmentModel)"/>
+                          <input-widget :model="userDepartmentModel"
+                                        attribute="department_id"
+                                        type="select"
+                                        :select-options="getDepartments(userDepartmentModel)"/>
                         </b-form-group>
                       </div>
                       <div class="col-sm-12 col-md-4">
                         <b-form-group class="mb-0">
-                          <b-form-input v-model="userDepartmentModel.position" list="job-title-list"/>
+                          <input-widget :model="userDepartmentModel" attribute="position"/>
                         </b-form-group>
                       </div>
                     </div>

@@ -7,17 +7,37 @@ export default class EmployeeModel extends BaseModel {
   country_id = null;
   department_id = null;
 
-  rules = {}
+  rules = {
+    id: [
+      {rule: 'required'}
+    ],
+    position: [
+      {rule: 'required'}
+    ],
+    country_id: [
+      {rule: 'required'}
+    ],
+    department_id: [
+      {rule: 'required'}
+    ],
+  }
 
-  attributeLabels = {};
+  attributeLabels = {
+    id: ' ',
+    position: ' ',
+    country_id: ' ',
+    department_id: ' ',
+  };
 
   toJSON() {
     let data = super.toJSON();
-    delete data.country_id;
+    //TODO: discuss how to remove extra field without creating bug on initialisation in EmployeeModel.js
+    // delete data.country_id;
     return data;
   }
 
-  constructor() {
+  constructor(data) {
     super();
+    Object.assign(this, {...data})
   }
 }

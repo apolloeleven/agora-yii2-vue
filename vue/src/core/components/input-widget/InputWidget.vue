@@ -48,7 +48,8 @@
         <b-form-select ref="currentInput" :size="size" :disabled="disabled" :options="selectOptions"
                        :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
                        :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
-                       @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
+                       @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)" :value-field="valueField"
+                       :text-field="textField"
         />
         <b-form-invalid-feedback :state="getState(v)">
           {{ getError(v.errors) }}
@@ -137,6 +138,14 @@ export default {
     selectOptions: {
       type: Array,
       default: () => []
+    },
+    valueField: {
+      type: String,
+      default: 'id'
+    },
+    textField: {
+      type: String,
+      default: 'name'
     }
   },
   data() {

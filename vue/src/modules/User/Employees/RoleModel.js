@@ -5,12 +5,17 @@ export default class RoleModel extends BaseModel {
   name = null;
 
   rules = {
+    name: [
+      {rule:'required'}
+    ]
   }
 
   attributeLabels = {
+    name: ' '
   };
 
-  constructor() {
+  constructor(data) {
     super();
+    Object.assign(this, {...data})
   }
 }
