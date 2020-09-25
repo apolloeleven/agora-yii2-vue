@@ -24,8 +24,8 @@
           </template>
           <template v-slot:cell(country)="data">
             <ul v-if="data.item.userDepartments.length > 0" style="width: 100%">
-              <li v-for="dep in data.item.userDepartments" :key="dep.id">
-                {{ dep.country.name }}
+              <li v-for="dep in data.item.userDepartments">
+                {{ dep.department.country.name }}
               </li>
             </ul>
           </template>
@@ -56,6 +56,7 @@
 <script>
 import {createNamespacedHelpers} from 'vuex';
 import ContentSpinner from "../../../core/components/ContentSpinner";
+
 const {mapState, mapActions} = createNamespacedHelpers('user/employees');
 
 export default {
@@ -79,7 +80,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getData', 'showEmployeeModal','getModalDropdownData']),
+    ...mapActions(['getData', 'showEmployeeModal', 'getModalDropdownData']),
     editUser(employee) {
       this.showEmployeeModal(employee);
     }

@@ -11,6 +11,9 @@ const employeeService = {
   },
   getModalDropdownData(params = {expand: 'departments'}) {
     return httpService.get(this.url + '/get-dropdown', {params})
+  },
+  updateUserData(params) {
+    return httpService.put(this.url + '/update-user-data', params)
   }
 }
 
