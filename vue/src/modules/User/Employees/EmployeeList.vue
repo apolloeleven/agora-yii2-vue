@@ -16,21 +16,21 @@
             </div>
           </template>
           <template v-slot:cell(departments)="data">
-            <ul v-if="data.item.userDepartments.length > 0" style="width: 100%">
+            <ul v-if="data.item.userDepartments.length > 0" style="width: 100%; list-style-type: none;padding-inline-start: 0">
               <li v-for="dep in data.item.userDepartments">
                 {{ dep.department.name }}
               </li>
             </ul>
           </template>
           <template v-slot:cell(country)="data">
-            <ul v-if="data.item.userDepartments.length > 0" style="width: 100%">
+            <ul v-if="data.item.userDepartments.length > 0" style="width: 100%; list-style-type: none; padding-inline-start: 0">
               <li v-for="dep in data.item.userDepartments">
                 {{ dep.department.country.name }}
               </li>
             </ul>
           </template>
           <template v-slot:cell(position)="data">
-            <ul v-if="data.item.userDepartments.length > 0" style="width: 100%">
+            <ul v-if="data.item.userDepartments.length > 0" style="width: 100%; list-style-type: none; padding-inline-start: 0">
               <li v-for="dep in data.item.userDepartments" :key="dep.id">
                 {{ dep.position }}
               </li>
