@@ -68,23 +68,9 @@ class EmployeeController extends ActiveController
         $data = [
             'userRoles' => [],
             'userPositions' => [],
-            'countries' => [],
-            'departments' => []
         ];
-        $departmentOptions = DepartmentResource::find()->all();
-
-        foreach ($departmentOptions as $departmentOption) {
-            $data['departments'][] = $departmentOption->getDataForDropdown();
-        }
 
         $data['userRoles'] = UserRoleResource::getUserRoles();
-
-        $countryOptions = CountryResource::find()
-            ->select(['name'])
-            ->asArray()
-            ->all();
-
-        $data['countries'] = ArrayHelper::getColumn($countryOptions,'name');
 
         $positionOptions = UserDepartmentResource::find()
             ->select(['position'])
@@ -92,7 +78,7 @@ class EmployeeController extends ActiveController
             ->asArray()
             ->all();
 
-        $data['userPositions'] = ArrayHelper::getColumn($positionOptions,'position');
+        $data['userPositions'] = ArrayHelper::getColumn($positionOptions, 'position');
 
         return $data;
     }

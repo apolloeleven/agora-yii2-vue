@@ -1,4 +1,5 @@
 import employeesService from "../../modules/User/Employees/employeesService"
+import httpService from "@/core/services/httpService";
 
 export default {
   namespaced: true,
@@ -22,8 +23,15 @@ export default {
       commit('getData', {rows: res.body});
     },
     async getModalDropdownData({commit}) {
-      const res = await employeesService.getModalDropdownData()
-      commit('getModalDropdownData', {rows: res.body})
+      const res = await employeesService.getModalDropdownData();
+      const response = await httpService.get('/v1/setup/countries', {
+        params: {expand: 'departments',}
+      });
+      // TODO get countries from vuex setup module
+      commit('getModalDropdownData', {
+        ...res.body,
+        countries: response.body
+      })
     },
     hideModal({commit}) {
       commit('hideModal');
@@ -33,11 +41,11 @@ export default {
     getData: (state, {rows}) => {
       state.data.rows = rows;
     },
-    getModalDropdownData(state, {rows}) {
-      state.modalDropdownData.userRoles = rows.userRoles;
-      state.modalDropdownData.userPositions = rows.userPositions;
-      state.modalDropdownData.countries = rows.countries;
-      state.modalDropdownData.departments = rows.departments;
+    getModalDropdownData(state, {userRoles, userPositions, countries, departments}) {
+      state.modalDropdownData.userRoles = userRoles;
+      state.modalDropdownData.userPositions = userPositions;
+      state.modalDropdownData.countries = countries;
+      state.modalDropdownData.departments = departments;
     },
     showEmployeeModal: (state, payload) => {
       state.showModal = true;

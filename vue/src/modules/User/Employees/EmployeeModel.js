@@ -1,10 +1,12 @@
 import BaseModel from "../../../core/components/input-widget/BaseModel";
 import i18n from "../../../shared/i18n";
 
-export default class EmployeeListFormModel extends BaseModel {
+export default class EmployeeModel extends BaseModel {
   firstName = null;
   lastName = null;
   email = null;
+  roles = []
+  positions = [];
 
   rules = {
     firstName: [

@@ -5,12 +5,12 @@ const employeeService = {
 
   get(params = {
     sort: '-created_at',
-    expand: 'userDepartments, userProfile, userDepartments.department, userDepartments.country'
+    expand: 'userDepartments, userProfile, userDepartments.department, userDepartments.department.country'
   }) {
     return httpService.get(this.url, {params});
   },
-  getModalDropdownData() {
-    return httpService.get(this.url + '/get-dropdown')
+  getModalDropdownData(params = {expand: 'departments'}) {
+    return httpService.get(this.url + '/get-dropdown', {params})
   }
 }
 
