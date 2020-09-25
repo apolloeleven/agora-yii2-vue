@@ -3,7 +3,7 @@
     <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
     <div v-if="!loading" id="employees" class="p-3">
       <b-card>
-        <b-table responsive small striped hover id="users-table" :items="data.rows" :fields="fields">
+        <b-table class="mb-0" responsive small striped hover id="users-table" :items="data.rows" :fields="fields">
           <template v-slot:table-busy>
             <div class="text-center text-danger my-2">
               <b-spinner class="align-middle"></b-spinner>

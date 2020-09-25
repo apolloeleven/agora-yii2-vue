@@ -2,14 +2,14 @@
   <div id="users" class="d-flex flex-column">
     <div class="page-header">
       <b-nav pills>
-        <b-nav-item :to="{name: 'user.invitations'}" active-class="active">
+        <b-nav-item :to="{name: 'invitations'}" :active="$route.name === 'invitations'">
           {{ $t('Invitations') }}
         </b-nav-item>
-        <b-nav-item :to="{name: 'user.employees'}">
+        <b-nav-item :to="{name: 'employees'}" :active="$route.name === 'employees'">
           {{ $t('Employee List') }}
         </b-nav-item>
       </b-nav>
-      <b-button @click="showDialog" variant="info">
+      <b-button v-if="buttonText" @click="showDialog" variant="info">
         <i class="fas fa-plus-circle"></i>
         {{ buttonText }}
       </b-button>
@@ -36,7 +36,7 @@ export default {
       if (this.$route.name === 'invitations') {
         return this.$t('New Invitation');
       }
-      return this.$t('Add new');
+      return null;
     }
   },
   methods: {
