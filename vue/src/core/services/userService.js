@@ -11,11 +11,25 @@ export default {
 
   async updateProfile(data) {
     const {email} = data;
+    data = data = this.prepareData(data);
     let res = await httpService.post('/v1/setup/my-user/update-profile', data)
     if (res.success) {
       this.updateCurrentUserEmail(email);
       return res;
     }
+  },
+
+  prepareData(data) {
+    if (data.image && data.image instanceof File) {
+      const tmpData = new FormData();
+      for (let key in data) {
+        if (data.hasOwnProperty(key)) {
+          tmpData.append(key, data[key] || '');
+        }
+      }
+      data = tmpData;
+    }
+    return data;
   },
 
   updateCurrentUserEmail(email) {

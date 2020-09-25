@@ -25,6 +25,7 @@
     "serialize-javascript": ">=3.1.0",
     "vee-validate": "3.2.0",
     "vue": "^2.6.10",
+    "vue-avatar-cropper": "^1.0.9",
     "vue-bootstrap-datetimepicker": "^5.0.1",
     "vue-i18n": "^8.14.1",
     "vue-moment": ">=4.1.0",

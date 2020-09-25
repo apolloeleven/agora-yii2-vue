@@ -27,6 +27,8 @@ use Yii;
  */
 class UserProfile extends \yii\db\ActiveRecord
 {
+    public $image;
+
     /**
      * {@inheritdoc}
      */
@@ -62,6 +64,7 @@ class UserProfile extends \yii\db\ActiveRecord
             [['first_name', 'last_name', 'mobile', 'phone'], 'string', 'max' => 255],
             [['hobbies', 'image_path'], 'string', 'max' => 1024],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, jpg']
         ];
     }
 
@@ -86,6 +89,13 @@ class UserProfile extends \yii\db\ActiveRecord
             'updated_by' => 'Updated By',
         ];
     }
+
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        $this->image_path = "/user/" . Yii::$app->security->generateRandomString(25) . '/avatar.png';
+        return parent::save($runValidation, $attributeNames);
+    }
+
     /**
      * Find user profile with id
      *
