@@ -8,7 +8,6 @@
 namespace app\modules\v1\users\resources;
 
 
-use app\modules\v1\setup\models\Country;
 use app\modules\v1\setup\models\Department;
 use app\modules\v1\users\models\UserDepartment;
 use Yii;
@@ -32,16 +31,11 @@ class UserDepartmentResource extends UserDepartment
 
     public function extraFields()
     {
-        return ['department', 'country'];
+        return ['department'];
     }
 
     public function getDepartment()
     {
         return $this->hasOne(Department::class, ['id' => 'department_id']);
-    }
-
-    public function getCountry()
-    {
-        return $this->hasOne(Country::class, ['id' => 'country_id']);
     }
 }

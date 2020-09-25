@@ -3,7 +3,6 @@
 namespace app\modules\v1\users\models;
 
 use app\models\User;
-use app\modules\v1\setup\models\Country;
 use app\modules\v1\setup\models\Department;
 use Yii;
 
@@ -12,7 +11,6 @@ use Yii;
  *
  * @property int $id
  * @property int|null $user_id
- * @property int|null $country_id
  * @property int|null $department_id
  * @property string|null $position
  * @property int|null $created_at
@@ -20,7 +18,6 @@ use Yii;
  * @property int|null $created_by
  * @property int|null $updated_by
  *
- * @property Country $country
  * @property User $createdBy
  * @property Department $department
  * @property User $updatedBy
@@ -42,9 +39,8 @@ class UserDepartment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'country_id', 'department_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['user_id', 'department_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['position'], 'string', 'max' => 1024],
-            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['department_id'], 'exist', 'skipOnError' => true, 'targetClass' => Department::className(), 'targetAttribute' => ['department_id' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
@@ -60,7 +56,6 @@ class UserDepartment extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'country_id' => 'Country ID',
             'department_id' => 'Department ID',
             'position' => 'Position',
             'created_at' => 'Created At',
@@ -68,16 +63,6 @@ class UserDepartment extends \yii\db\ActiveRecord
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
         ];
-    }
-
-    /**
-     * Gets query for [[Country]].
-     *
-     * @return \yii\db\ActiveQuery|\app\modules\v1\setup\models\query\CountryQuery
-     */
-    public function getCountry()
-    {
-        return $this->hasOne(Country::className(), ['id' => 'country_id']);
     }
 
     /**

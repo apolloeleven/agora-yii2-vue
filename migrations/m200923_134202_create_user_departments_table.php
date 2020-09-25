@@ -15,7 +15,6 @@ class m200923_134202_create_user_departments_table extends Migration
         $this->createTable('{{%user_departments}}', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer(),
-            'country_id' => $this->integer(),
             'department_id' => $this->integer(),
             'position' => $this->string(1024),
             'created_at' => $this->integer(),
@@ -34,19 +33,6 @@ class m200923_134202_create_user_departments_table extends Migration
             '{{%user_departments}}',
             'user_id',
             '{{%users}}',
-            'id'
-        );
-
-        $this->createIndex(
-            'idx-user_departments-country_id',
-            '{{%user_departments}}',
-            'country_id'
-        );
-        $this->addForeignKey(
-            'fk-user_departments-country_id',
-            '{{%user_departments}}',
-            'country_id',
-            '{{%countries}}',
             'id'
         );
 
@@ -101,15 +87,6 @@ class m200923_134202_create_user_departments_table extends Migration
         );
         $this->dropIndex(
             'idx-user_departments-user_id',
-            '{{%user_departments}}'
-        );
-
-        $this->dropForeignKey(
-            'fk-user_departments-country_id',
-            '{{%user_departments}}'
-        );
-        $this->dropIndex(
-            'idx-user_departments-country_id',
             '{{%user_departments}}'
         );
 
