@@ -1,12 +1,12 @@
 <template>
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal
-        :visible="showModal" id="user-form" ref="modal" :title='$t(`New Invitation`)' @hidden="onHideModal"
+        :visible="showModal" id="user-form" ref="modal" :title='$t(`Edit employee`)' @hidden="onHideModal"
         @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')" scrollable>
       <content-spinner :show="loading" :text="$t('Please wait...')" :fullscreen="true" class="h-100"/>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
-        <input-widget :model="model" attribute="firstName"/>
-        <input-widget :model="model" attribute="lastName"/>
+        <input-widget :model="model" attribute="first_name"/>
+        <input-widget :model="model" attribute="last_name"/>
         <input-widget :model="model" attribute="email"/>
         <b-card header-tag="header" footer-tag="footer" class="form-cards mb-3" body-class="p-2">
           <template v-slot:header>
@@ -41,7 +41,7 @@
           <template v-slot:header>
             <div class="d-flex align-items-center">
               <h5 class="mb-0">{{ $t('Positions') }}</h5>
-              <b-button size="sm" type="button" v-on:click="addNewPosition" variant="success" class="ml-auto">
+              <b-button size="sm" type="button" v-on:click="addUserDepartment" variant="success" class="ml-auto">
                 <i class="fa fa-plus-circle "></i>
                 {{ $t('Add New') }}
               </b-button>
@@ -49,12 +49,12 @@
           </template>
           <div class="row">
             <div class="col col-12">
-              <div class="mb-3 " v-for="(positionModel, index) in model.positions" :key="index">
+              <div class="mb-3 " v-for="(userDepartmentModel, index) in model.userDepartments" :key="index">
                 <div class="row">
                   <div class="col-sm-1 col-1">
                     <b-form-group>
                       <label class="d-block">&nbsp;</label>
-                      <b-button v-b-tooltip :title="$t('Remove position')" pill v-on:click="removePosition(index)"
+                      <b-button v-b-tooltip :title="$t('Remove position')" pill v-on:click="removeUserDepartment(index)"
                                 variant="outline-danger">
                         <i class="fa fa-times"></i>
                       </b-button>
@@ -63,26 +63,24 @@
                   <div class="col-11">
                     <div class="row">
                       <div class="col-sm-12 col-md-4">
-                        <b-form-group :label="$t('Position')">
-                          <b-form-input v-model="positionModel.name" list="job-title-list"/>
-                          <b-form-datalist id="job-title-list" :options="dropdownData.userPositions"/>
-                        </b-form-group>
-                      </div>
-                      <div class="col-sm-12 col-md-4">
                         <b-form-group :label="$t('Country')">
-                          <b-form-select v-model="positionModel.country_id"
+                          <b-form-select v-model="userDepartmentModel.country_id"
                                          value-field="id"
                                          text-field="name"
                                          :options="dropdownData.countries"/>
                         </b-form-group>
                       </div>
                       <div class="col-sm-12 col-md-4">
-                        <b-form-group :label="$t('Country')">
-                          <b-form-select v-model="positionModel.departments"
-                                         multiple
+                        <b-form-group :label="$t('Department')">
+                          <b-form-select v-model="userDepartmentModel.department_id"
                                          value-field="id"
                                          text-field="name"
-                                         :options="getDepartments(positionModel)"/>
+                                         :options="getDepartments(userDepartmentModel)"/>
+                        </b-form-group>
+                      </div>
+                      <div class="col-sm-12 col-md-4">
+                        <b-form-group :label="$t('Position')">
+                          <b-form-input v-model="userDepartmentModel.position" list="job-title-list"/>
                         </b-form-group>
                       </div>
                     </div>
@@ -104,8 +102,9 @@ import ContentSpinner from "../../../core/components/ContentSpinner";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import EmployeeModel from "./EmployeeModel.js";
 import Vue from "vue"
-import PositionModel from "@/modules/User/Employees/PositionModel";
 import RoleModel from "@/modules/User/Employees/RoleModel";
+import employeeService from "@/modules/User/Employees/employeesService";
+import UserDepartmentModel from "@/modules/User/Employees/UserDepartmentModel";
 
 const {mapState, mapActions} = createNamespacedHelpers('user/employees');
 
@@ -120,24 +119,24 @@ export default {
   },
   computed: {
     ...mapState({
-      showModal: state => state.showModal,
-      employeeData: state => state.modalEmployee,
+      showModal: state => state.modal.show,
+      object: state => state.modal.object,
       dropdownData: state => state.modalDropdownData
     })
   },
   watch: {
-    employeeData() {
-      this.model = new EmployeeModel(this.employeeData.email, this.employeeData.firstName, this.employeeData.lastName);
+    object() {
+      this.model = new EmployeeModel(this.object);
     }
   },
   methods: {
-    ...mapActions(['hideModal']),
-    getDepartments(positionModel) {
-      if (!positionModel.country_id) {
+    ...mapActions(['hideModal', 'getData']),
+    getDepartments(userDepartmentModel) {
+      if (!userDepartmentModel.country_id) {
         return [];
       }
 
-      const country = this.dropdownData.countries.find(c => c.id === positionModel.country_id);
+      const country = this.dropdownData.countries.find(c => c.id === userDepartmentModel.country_id);
 
       if (!country) {
         return [];
@@ -149,11 +148,11 @@ export default {
       this.model = new EmployeeModel();
       this.hideModal();
     },
-    addNewPosition: function () {
-      this.model.positions.push(new PositionModel());
+    addUserDepartment: function () {
+      this.model.userDepartments.push(new UserDepartmentModel());
     },
-    removePosition: function(index) {
-      Vue.delete(this.model.positions, index)
+    removeUserDepartment: function (index) {
+      Vue.delete(this.model.userDepartments, index);
     },
     addNewRole: function () {
       this.model.roles.push(new RoleModel());
@@ -162,7 +161,13 @@ export default {
       Vue.delete(this.model.roles, index);
     },
     async onSubmit() {
-      console.log(this.model);
+      const {success, body} = await employeeService.updateUserData(this.model);
+      if (success) {
+        this.hideModal();
+        await this.getData();
+      } else {
+
+      }
     }
   },
   mounted() {
