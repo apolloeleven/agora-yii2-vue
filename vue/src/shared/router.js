@@ -59,24 +59,9 @@ const router = new Router({
         {path: 'dashboard', name: 'dashboard', component: Dashboard,},
         {path: '/setup', name: 'setup', component: Setup,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
-        {path: '/setup/departments', name: 'departments', component: DepartmentList}
+        {path: '/setup/departments', name: 'departments', component: DepartmentList},
+        {path: '/profile', name: 'profile', component: Profile,},
       ]
-    },
-    {
-      path: '/User',
-      name: 'user',
-      redirect: '/profile',
-      component: DefaultLayout,
-      children: [
-        {
-          path: 'profile',
-          component: Profile,
-        },
-      ]
-    },
-    {
-      path: '/profile',
-      redirect: '/user/profile'
     },
     {
       path: '*',
