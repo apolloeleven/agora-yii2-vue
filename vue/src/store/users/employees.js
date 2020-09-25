@@ -1,11 +1,16 @@
 import employeesService from "../../modules/User/Employees/employeesService"
 import httpService from "@/core/services/httpService";
+import EmployeeFormModal from "@/modules/User/Employees/EmployeeFormModal";
 
 export default {
   namespaced: true,
   state: {
-    showModal: false,
-    modalEmployee: {},
+
+    modal: {
+      show: false,
+      object: {}
+    },
+
     modalDropdownData: {},
     loading: false,
     data: {
@@ -48,17 +53,19 @@ export default {
       state.modalDropdownData.departments = departments;
     },
     showEmployeeModal: (state, payload) => {
-      state.showModal = true;
-      state.modalEmployee = {
-        firstName: payload.userProfile.first_name,
-        lastName: payload.userProfile.last_name,
-        email: payload.email
-      };
+      state.modal.show = true;
+      state.modal.object = {
+        id: payload.id,
+        email: payload.email,
+        roles: payload.roles,
+        userDepartments: payload.userDepartments,
+        ...payload.userProfile
+      }
     },
     changeLoading: state => state.loading = !state.loading,
     hideModal: (state) => {
-      state.showModal = false;
-      state.modalEmployee = {};
+      state.modal.show = false;
+      state.modal.object = {};
     }
   }
 }
