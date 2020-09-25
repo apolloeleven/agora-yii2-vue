@@ -31,4 +31,14 @@ class UserDepartmentQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
+
+    /**
+     * Find departments by user_id
+     *
+     * @param $user_id
+     * @return UserDepartmentQuery
+     */
+    public function byUserId($user_id) {
+        return $this->andWhere(['user_id' => $user_id]);
+    }
 }

@@ -49,4 +49,15 @@ class UserQuery extends \yii\db\ActiveQuery
     {
         return $this->andWhere(['email' => $email]);
     }
+
+    /**
+     * Find users by id
+     *
+     * @param $id
+     * @return UserQuery
+     */
+    public function byId($id)
+    {
+        return $this->andWhere(['id' => $id]);
+    }
 }

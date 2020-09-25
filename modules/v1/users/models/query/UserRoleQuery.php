@@ -31,4 +31,14 @@ class UserRoleQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
+
+    /**
+     * Find roles by user_id
+     *
+     * @param $userId
+     * @return UserRoleQuery
+     */
+    public function byUserId($userId) {
+        return $this->andWhere(['user_id' => $userId]);
+    }
 }
