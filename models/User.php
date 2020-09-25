@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\models\query\UserQuery;
+use app\modules\v1\users\models\UserDepartment;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
@@ -24,6 +25,7 @@ use yii\web\IdentityInterface;
  * @property int|null $updated_at
  *
  * @property UserProfile $userProfile
+ * @property UserDepartment[] $userDepartments
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -213,6 +215,12 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->userProfile->getFullName();
     }
 
+    public function getRoles()
+    {
+        $auth = Yii::$app->authManager;
+        return $auth->getRolesByUser($this->id);
+    }
+
     /**
      * Generates password hash from password and sets it to the model
      *
@@ -222,5 +230,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function setPassword(string $password)
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUserDepartments()
+    {
+        return $this->hasMany(UserDepartment::class, ['user_id' => 'id']);
     }
 }

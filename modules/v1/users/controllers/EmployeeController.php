@@ -8,12 +8,12 @@
 namespace app\modules\v1\users\controllers;
 
 
-use app\modules\v1\setup\resources\CountryResource;
-use app\modules\v1\setup\resources\DepartmentResource;
 use app\modules\v1\users\resources\UserDepartmentResource;
+use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\users\resources\UserRoleResource;
 use app\rest\ActiveController;
 use app\modules\v1\users\models\search\UserDepartmentSearch;
+use app\rest\ValidationException;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
@@ -58,9 +58,42 @@ class EmployeeController extends ActiveController
         return $userDepartmentSearch->search(\Yii::$app->request->get());
     }
 
-    public function actionUpdate()
+    /**
+     * @return array
+     * @throws ValidationException
+     * @throws \yii\db\Exception
+     */
+    public function actionUpdateUserData()
     {
+        $request = \Yii::$app->request;
+        $dbTransaction = \Yii::$app->db->beginTransaction();
 
+        $user = UserResource::find()
+            ->byId($request->post('id'))
+            ->with(['userProfile', 'userDepartments'])
+            ->one();
+
+        if (!$user) {
+            $dbTransaction->rollBack();
+            throw new ValidationException(\Yii::t('app', 'Invalid params provided'));
+        }
+
+        $userProfile = $user->userProfile;
+
+        if (!$user->load($request->post(), '') || !$user->save()) {
+            $dbTransaction->rollBack();
+            return $this->validationError($user->getFirstErrors());
+        }
+
+        if (!$userProfile->load($request->post(), '') || !$userProfile->save()) {
+            $dbTransaction->rollBack();
+            return $this->validationError($userProfile->getFirstErrors());
+        }
+
+        $user->updateRoles($request->post('roles'));
+        $user->updateUserDepartments($request->post('userDepartments'), $dbTransaction);
+
+        $dbTransaction->commit();
     }
 
     public function actionGetDropdown()
