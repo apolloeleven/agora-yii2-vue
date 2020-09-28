@@ -115,14 +115,25 @@ export default class BaseModel {
   }
 
   setMultipleErrors(attributeErrorMap) {
-    const errorObject = (attributeErrorMap.reduce((acc, err) => {
-      acc[err.field] = err.message;
-      return acc;
-    }, {}))
-    this.errors = {
-      ...this.errors,
-      ...errorObject
-    };
+    if (!attributeErrorMap) {
+      return;
+    }
+
+    if (Array.isArray(attributeErrorMap) && attributeErrorMap[0].field) {
+      const errorObject = (attributeErrorMap.reduce((acc, err) => {
+        acc[err.field] = err.message;
+        return acc;
+      }, {}));
+      this.errors = {
+        ...this.errors,
+        ...errorObject
+      };
+    } else if (typeof attributeErrorMap === 'object') {
+      this.errors = {
+        ...this.errors,
+        ...attributeErrorMap
+      };
+    }
   }
 
   resetErrors() {

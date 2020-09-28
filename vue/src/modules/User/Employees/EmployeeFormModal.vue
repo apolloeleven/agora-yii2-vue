@@ -177,7 +177,11 @@ export default {
         this.hideModal();
         await this.getData();
       } else {
-
+        if (body.message) {
+          this.$alert(body.message);
+        } else {
+          this.model.setMultipleErrors(body)
+        }
       }
     }
   },
