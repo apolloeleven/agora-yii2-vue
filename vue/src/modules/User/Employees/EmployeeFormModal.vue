@@ -41,9 +41,8 @@
                   <div class="col-11">
                     <div class="row">
                       <div class="col-sm-12 col-md-6">
-                        <b-form-group class="mb-0">
-                          <input-widget :model="userRoleModel" attribute="name" type="select" :select-options="dropdownData.userRoles"/>
-                        </b-form-group>
+                        <input-widget :model="userRoleModel" attribute="name" type="select"
+                                      :select-options="dropdownData.userRoles"/>
                       </div>
                     </div>
                   </div>
@@ -76,25 +75,23 @@
                   <div class="col-11">
                     <div class="row">
                       <div class="col-sm-12 col-md-4">
-                        <b-form-group class="mb-0">
-                          <input-widget :model="userDepartmentModel"
-                                        attribute="country_id"
-                                        type="select"
-                                        :select-options="dropdownData.countries"/>
-                        </b-form-group>
+                        <input-widget :model="userDepartmentModel"
+                                      attribute="country_id"
+                                      type="select"
+                                      value-field="id"
+                                      text-field="name"
+                                      :select-options="dropdownData.countries"/>
                       </div>
                       <div class="col-sm-12 col-md-4">
-                        <b-form-group class="mb-0">
-                          <input-widget :model="userDepartmentModel"
-                                        attribute="department_id"
-                                        type="select"
-                                        :select-options="getDepartments(userDepartmentModel)"/>
-                        </b-form-group>
+                        <input-widget :model="userDepartmentModel"
+                                      attribute="department_id"
+                                      type="select"
+                                      value-field="id"
+                                      text-field="name"
+                                      :select-options="getDepartments(userDepartmentModel)"/>
                       </div>
                       <div class="col-sm-12 col-md-4">
-                        <b-form-group class="mb-0">
-                          <input-widget :model="userDepartmentModel" attribute="position"/>
-                        </b-form-group>
+                        <input-widget :model="userDepartmentModel" attribute="position"/>
                       </div>
                     </div>
                   </div>

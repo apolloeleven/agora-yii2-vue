@@ -141,11 +141,11 @@ export default {
     },
     valueField: {
       type: String,
-      default: 'id'
+      default: 'value'
     },
     textField: {
       type: String,
-      default: 'name'
+      default: 'text'
     }
   },
   data() {
