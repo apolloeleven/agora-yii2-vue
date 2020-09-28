@@ -14,7 +14,9 @@
 <script>
 import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
-import {mapState} from 'vuex';
+import {mapState, createNamespacedHelpers} from 'vuex';
+
+const {mapActions} = createNamespacedHelpers('user');
 
 export default {
   name: "DefaultLayout",
@@ -27,6 +29,12 @@ export default {
       'menuCollapsed',
       'menuHidden'
     ]),
+  },
+  methods: {
+    ...mapActions(['getProfile'])
+  },
+  mounted() {
+    this.getProfile();
   }
 }
 </script>
@@ -58,11 +66,13 @@ export default {
   & /deep/ .page {
     overflow: hidden;
     display: flex;
+    flex: 1;
     flex-direction: column;
   }
 
   & /deep/ .page-content {
     overflow: auto;
+    flex: 1;
   }
 }
 </style>

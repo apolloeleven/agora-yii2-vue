@@ -7,8 +7,8 @@ export default {
     * @param { array } userProfile
     */
     [SET_USER](state, userProfile) {
-        state.userProfile.data = userProfile;
-        state.userProfile.loaded = true;
+        state.currentUser.data = userProfile;
+        state.currentUser.loaded = true;
     },
 
     /**
@@ -17,6 +17,6 @@ export default {
      * @param { boolean } loading
      */
     [SET_PROFILE_LOADING](state, loading) {
-        state.userProfile.loading = loading;
+        state.currentUser.loading = loading;
     },
 };

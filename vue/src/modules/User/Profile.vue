@@ -1,98 +1,75 @@
 <template>
-  <div class="user-profile-wrapper h-100">
-    <content-spinner :show="userProfile.loading" :text="$t('Please wait...')" class="h-100"/>
-    <div class="page-header" v-if="!userProfile.loading && userProfile.loaded">
-      <b-button variant="info" @click="onUpdateClick" class="mr-4">
-        {{ $t('Update') }}
-      </b-button>
+  <div class="user-profile-wrapper page">
+    <div class="page-content p-3">
+      <content-spinner :show="currentUser.loading" :text="$t('Please wait...')" class="h-100"/>
+      <ValidationObserver ref="loginForm" tag="div">
+        <form v-if="!currentUser.loading && currentUser.loaded" v-on:submit.prevent="onUpdateClick">
+          <div class="row">
+            <div class="col-md-12 col-lg-7 mb-3">
+              <div class="card card-information">
+                <div class="card-header">
+                  <h5 class="m-0">{{ $t('Personal Details') }}</h5>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3 d-flex justify-content-center">
+                    <ImageUploader v-model="image" :src="currentUser.data.image_path" ref="uploader"/>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                      <input-widget :model="userModel" attribute="first_name" type="text"/>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                      <input-widget :model="userModel" attribute="last_name" type="text"/>
+                    </div>
+                  </div>
+                  <input-widget :model="userModel" attribute="email" type="email"/>
+                  <input-widget :model="userModel" attribute="mobile" type="text"/>
+                  <input-widget :model="userModel" attribute="phone" type="text"/>
+                  <input-widget :model="userModel" attribute="birthday" type="date"/>
+                  <input-widget :model="userModel" attribute="hobbies" :multiselect-options='userModel.hobbies'
+                                type="multiselect"/>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <!--                          <input-widget v-if="userModel" :model="userModel" attribute="about_me" type="richtext"/>-->
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <b-button variant="info" @click="onUpdateClick">
+                      {{ $t('Update') }}
+                    </b-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-5">
+              <div class="card card-account">
+                <div class="card-header">
+                  <h5 class="m-0">{{ $t('Change account password') }}</h5>
+                </div>
+                <div class="card-body">
+
+                  <input-widget :model="userModel" attribute="old_password" type="password" vid="password"/>
+                  <input-widget :model="userModel" attribute="password" type="password" vid="password"/>
+                  <input-widget :model="userModel" attribute="confirm_password" type="password"
+                                vid="confirm_password"/>
+
+                  <div class="text-right">
+                    <b-button variant="primary">{{ $t('Change Password') }}</b-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--          This button is necessary in order submit on enter on form to work-->
+          <button style="display: none" type="submit"></button>
+        </form>
+      </ValidationObserver>
     </div>
-
-    <ValidationObserver ref="loginForm">
-      <form v-if="!userProfile.loading && userProfile.loaded" v-on:submit.prevent="onUpdateClick" class="mr-4 ml-4">
-        <div class="row">
-          <div class="col-sm-12 col-md-6">
-            <div class="card card-avatar">
-              <div class="card-header">
-                <h3 class="m-0">{{ $t('Profile image') }}</h3>
-              </div>
-              <div class="card-body">
-                <div class="mt-2 img-container">
-                  <ImageUploader v-model="image" :src="userProfile.data.image_path" ref="uploader"/>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-sm-12 col-md-6">
-            <div class="card card-account h-100">
-              <div class="card-header">
-                <h3 class="m-0">{{ $t('Account') }}</h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col col-sm-12">
-                    <input-widget :model="userModel" attribute="email" type="email"/>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col col-sm-6">
-                    <input-widget :model="userModel" attribute="password" type="password" vid="password"/>
-                  </div>
-                  <div class="col col-sm-6">
-                    <input-widget :model="userModel" attribute="confirm_password" type="password" vid="confirm_password"/>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 col-md-12 mt-4">
-            <div class="row">
-              <div class="col col-sm-12">
-                <div class="card card-information">
-                  <div class="card-header">
-                    <h3 class="m-0">{{ $t('Information') }}</h3>
-                  </div>
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col col-sm-6">
-                        <input-widget :model="userModel" attribute="first_name" type="text"/>
-                      </div>
-                      <div class="col col-sm-6">
-                        <input-widget :model="userModel" attribute="last_name" type="text"/>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col col-sm-6">
-                        <input-widget :model="userModel" attribute="mobile" type="text"/>
-                      </div>
-                      <div class="col col-sm-6">
-                        <input-widget :model="userModel" attribute="phone" type="text"/>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col col-sm-6">
-                        <input-widget :model="userModel" attribute="birthday" type="date"/>
-                      </div>
-                      <div class="col col-sm-6">
-                        <input-widget :model="userModel" attribute="hobbies" :multiselect-options='userModel.hobbies'
-                                      type="multiselect"/>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <input-widget v-if="userModel" :model="userModel" attribute="about_me" type="richtext"/>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-    </ValidationObserver>
+    <!--    <page-footer>-->
+    <!--      <b-button variant="info" @click="onUpdateClick">-->
+    <!--        {{ $t('Update') }}-->
+    <!--      </b-button>-->
+    <!--    </page-footer>-->
   </div>
 </template>
 
@@ -102,11 +79,13 @@ import UserModel from "@/modules/User/UserModel";
 import InputWidget from "@/core/components/input-widget/InputWidget";
 import ContentSpinner from "@/core/components/ContentSpinner";
 import ImageUploader from "@/core/components/ImageUploader";
+import PageHeader from "@/core/components/PageHeader";
+import PageFooter from "@/core/components/PageFooter";
 
 const {mapState, mapActions} = createNamespacedHelpers('user');
 export default {
   name: "Profile",
-  components: {InputWidget, ContentSpinner, ImageUploader},
+  components: {PageFooter, PageHeader, InputWidget, ContentSpinner, ImageUploader},
   data() {
     return {
       userModel: new UserModel(),
@@ -114,48 +93,41 @@ export default {
     }
   },
   computed: {
-    ...mapState(['userProfile']),
+    ...mapState({
+      currentUser: state => state.currentUser,
+      currentUserData: state => state.currentUser.data
+    }),
+  },
+  watch: {
+    currentUserData() {
+      this.initModel()
+    }
   },
   methods: {
     ...mapActions(['getProfile', 'updateProfile']),
     onUpdateClick() {
       this.userModel.resetErrors();
-      this.beforeSubmit();
-      this.updateProfile(this.userModel);
-      this.setProfile();
-    },
-    beforeSubmit() {
-      this.userModel.hobbies = this.userModel.hobbies.map(ob => ob.value);
       this.userModel.image = this.image;
+      const userModel = JSON.parse(JSON.stringify(this.userModel))
+      userModel.hobbies = userModel.hobbies.map(ob => ob.value);
+      userModel.image = this.image;
+      this.updateProfile(userModel);
     },
-    async setProfile() {
-      let response = await this.getProfile();
-      if (response.success) {
+    async initModel() {
+      // We need to set timeout, because the data from backend comes faster then the CkEditor rendered.
+      // TODO Need optimization!
+      setTimeout(() => {
+        const userData = this.currentUser.data;
+        userData.hobbies = userData.hobbies ? userData.hobbies.map(op => ({
+          value: op,
+          text: this.$t(op)
+        })) : [];
+        this.userModel = new UserModel(userData);
+        // console.log(this.userModel);
 
-        // We need to set timeout, because the data from backend comes faster then the CkEditor rendered.
-        // TODO Need optimization!
-        setTimeout(() => {
-          const user = JSON.parse(localStorage.getItem('CURRENT_USER'));
-          this.userModel.email = user.email;
-          this.userModel.first_name = this.userProfile.data.first_name || '';
-          this.userModel.last_name = this.userProfile.data.last_name || '';
-          this.userModel.birthday = this.userProfile.data.birthday || '';
-          this.userModel.phone = this.userProfile.data.phone || '';
-          this.userModel.mobile = this.userProfile.data.mobile || '';
-          this.userModel.about_me = this.userProfile.data.about_me || '';
-          this.userModel.hobbies = this.userProfile.data.hobbies ? this.userProfile.data.hobbies.map(op => ({
-            value: op,
-            text: this.$t(op)
-          })) : [];
-          this.userModel.password = '';
-          this.userModel.confirmPassword = '';
-        }, 500);
-      }
+      }, 500);
     }
   },
-  mounted() {
-    this.setProfile();
-  }
 }
 
 </script>

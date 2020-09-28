@@ -28,6 +28,7 @@
           <!-- Using 'button-content' slot -->
           <template v-slot:button-content>
             <img class="user-avatar" src="assets/img/users/me-160.jpg" alt="..."/>
+            {{ currentUser.data.display_name }}
             <b class="caret"></b>
           </template>
           <b-dropdown-item :to="{name: 'profile'}">{{ $t('Profile') }}</b-dropdown-item>
@@ -40,15 +41,19 @@
 
 <script>
 import SidebarToggle from './components/SidebarToggle'
+import {createNamespacedHelpers} from "vuex";
 
+const {mapState} = createNamespacedHelpers('user');
 export default {
   name: 'Navbar',
   components: {
     SidebarToggle
   },
   data() {
-    return {
-    }
+    return {}
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   methods: {
     onLogoutClick() {

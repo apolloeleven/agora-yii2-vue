@@ -2,22 +2,6 @@ import httpService from "@/core/services/httpService";
 import {CURRENT_USER} from "@/constants";
 
 export default {
-  async getProfile(id) {
-    let res = await httpService.get('/v1/setup/my-user/get-profile?id=' + id)
-    if (res.success) {
-      return res;
-    }
-  },
-
-  async updateProfile(data) {
-    const {email} = data;
-    data = data = this.prepareData(data);
-    let res = await httpService.post('/v1/setup/my-user/update-profile', data)
-    if (res.success) {
-      this.updateCurrentUserEmail(email);
-      return res;
-    }
-  },
 
   prepareData(data) {
     if (data.image && data.image instanceof File) {

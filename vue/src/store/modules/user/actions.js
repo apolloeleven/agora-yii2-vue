@@ -1,5 +1,5 @@
-import httpService from "../../../core/services/userService";
 import {SET_PROFILE_LOADING, SET_USER} from "@/store/modules/user/mutation-types";
+import httpService from "@/core/services/httpService";
 
 /**
  *
@@ -7,9 +7,8 @@ import {SET_PROFILE_LOADING, SET_USER} from "@/store/modules/user/mutation-types
  * @param { object } user
  */
 export async function getProfile({commit}) {
-  const user = JSON.parse(localStorage.getItem('CURRENT_USER'));
   commit(SET_PROFILE_LOADING, true);
-  const response = await httpService.getProfile(user.id);
+  let response = await httpService.get('/v1/setup/my-user/profile');
   if (response.success) {
     commit(SET_USER, response.body);
     commit(SET_PROFILE_LOADING, false);
@@ -24,9 +23,25 @@ export async function getProfile({commit}) {
  */
 export async function updateProfile({commit}, user) {
   commit(SET_PROFILE_LOADING, true);
-  const {success, body} = await httpService.updateProfile(user)
+  const data = prepareData(user);
+  data.append('_method', 'put');
+  let {success, body} = await httpService.post('/v1/setup/my-user/update-profile', data)
   if (success) {
     commit(SET_USER, body);
     commit(SET_PROFILE_LOADING, false);
   }
+}
+
+
+function prepareData(data) {
+  if (data.image && data.image instanceof File) {
+    const tmpData = new FormData();
+    for (let key in data) {
+      if (data.hasOwnProperty(key)) {
+        tmpData.append(key, data[key] || '');
+      }
+    }
+    data = tmpData;
+  }
+  return data;
 }

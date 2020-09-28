@@ -27,7 +27,7 @@ $config = [
         ],
         'user' => [
             'class' => yii\web\User::class,
-            'identityClass' => User::class,
+            'identityClass' => \app\modules\v1\setup\resources\UserResource::class,
             'enableSession' => false,
             'loginUrl' => null,
         ],

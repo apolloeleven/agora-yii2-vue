@@ -3,9 +3,10 @@ import i18n from '../../shared/i18n';
 
 export default class UserModel extends BaseModel {
   email = '';
+  old_password = '';
   password = '';
   confirm_password = '';
-  first_Name = '';
+  first_name = '';
   last_name = '';
   phone = '';
   mobile = '';
@@ -35,6 +36,7 @@ export default class UserModel extends BaseModel {
 
   attributeLabels = {
     email: i18n.t('Email'),
+    old_password: i18n.t('Old Password'),
     password: i18n.t('Password'),
     confirm_password: i18n.t('Confirm Password'),
     first_name: i18n.t('First Name'),
