@@ -3,27 +3,34 @@
 namespace app\models;
 
 use app\models\query\UserQuery;
-use app\modules\v1\setup\models\UserProfile;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
+use yii\helpers\FileHelper;
+use yii\helpers\Json;
 use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "{{%users}}".
  *
- * @property int $id
- * @property string $username
- * @property string $email
- * @property string $password_hash
+ * @property int         $id
+ * @property string      $username
+ * @property string      $email
+ * @property string      $password_hash
+ * @property string      $first_name
+ * @property string      $last_name
+ * @property string      $mobile
+ * @property string      $phone
+ * @property string      $birthday
+ * @property string      $about_me
+ * @property string      $hobbies
+ * @property string      $image_path
  * @property string|null $password_reset_token
- * @property int|null $expire_date
+ * @property int|null    $expire_date
  * @property string|null $access_token
- * @property int|null $status
- * @property int|null $created_at
- * @property int|null $updated_at
- *
- * @property UserProfile $userProfile
+ * @property int|null    $status
+ * @property int|null    $created_at
+ * @property int|null    $updated_at
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -34,6 +41,11 @@ class User extends ActiveRecord implements IdentityInterface
      * Password reset link is valid 48 hours
      */
     const EXPIRE_DATE = 3600 * 48;
+
+    /**
+     * @var \yii\web\UploadedFile
+     */
+    public $image;
 
     public static function tableName()
     {
@@ -50,6 +62,11 @@ class User extends ActiveRecord implements IdentityInterface
             [['password_hash', 'password_reset_token'], 'string', 'max' => 1024],
             [['username'], 'unique'],
             [['email'], 'unique'],
+            [['about_me'], 'string'],
+            [['first_name', 'last_name', 'mobile', 'phone'], 'string', 'max' => 255],
+            [['hobbies', 'image_path'], 'string', 'max' => 1024],
+            [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, jpg'],
+            ['birthday', 'safe']
         ];
     }
 
@@ -60,6 +77,14 @@ class User extends ActiveRecord implements IdentityInterface
             'username' => Yii::t('app', 'Username'),
             'email' => Yii::t('app', 'Email'),
             'password_hash' => Yii::t('app', 'Password Hash'),
+            'first_name' => Yii::t('app', 'First Name'),
+            'last_name' => Yii::t('app', 'Last Name'),
+            'mobile' => Yii::t('app', 'Mobile'),
+            'phone' => Yii::t('app', 'Phone'),
+            'birthday' => Yii::t('app', 'Birthday'),
+            'about_me' => Yii::t('app', 'About Me'),
+            'hobbies' => Yii::t('app', 'Hobbies'),
+            'image_path' => Yii::t('app', 'Image Path'),
             'password_reset_token' => Yii::t('app', 'Password Reset Token'),
             'expire_date' => Yii::t('app', 'Expire Date'),
             'access_token' => Yii::t('app', 'Access Token'),
@@ -197,11 +222,39 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->status == self::STATUS_INACTIVE;
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUserProfile()
+    public function afterFind()
     {
-        return $this->hasOne(UserProfile::class, ['user_id' => 'id']);
+        parent::afterFind();
+        $this->hobbies = $this->hobbies ? Json::decode($this->hobbies) : [];
+        $this->birthday = $this->birthday ? date("d-m-Y", $this->birthday) : null; // @todo must be reviewed
+    }
+
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        $this->hobbies = $this->hobbies ? Json::encode($this->hobbies) : null;
+        $this->birthday = $this->birthday ? strtotime($this->birthday) : null; //@Todo format might be dynamic
+        $oldPath = $this->image_path;
+        if ($this->image) {
+            $this->image_path = "/user/" . Yii::$app->security->generateRandomString(25) . '/' . $this->image->name;
+        }
+        $check = parent::save($runValidation, $attributeNames);
+        $this->hobbies = $this->hobbies ? Json::decode($this->hobbies) : [];
+        $this->birthday = $this->birthday ? date("d-m-Y", $this->birthday) : null; // @todo must be reviewed
+        if (!$check) {
+            return $check;
+        }
+
+        if ($this->image) {
+            $this->image_path = Yii::getAlias("@webroot") . "/storage/user/" . Yii::$app->security->generateRandomString(25) . '/' . $this->image->name;
+            if (!is_dir(dirname($this->image_path))) {
+                FileHelper::createDirectory(dirname($this->image_path));
+            }
+            if (is_dir(dirname($oldPath))) {
+                FileHelper::removeDirectory(dirname($oldPath));
+            }
+            $this->image->saveAs($this->image_path);
+        }
+
+        return $check;
     }
 }
