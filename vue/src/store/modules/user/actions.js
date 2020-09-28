@@ -24,8 +24,13 @@ export async function getProfile({commit}) {
 export async function updateProfile({commit}, user) {
   commit(SET_PROFILE_LOADING, true);
   const data = prepareData(user);
-  data.append('_method', 'put');
-  let {success, body} = await httpService.post('/v1/setup/my-user/update-profile', data)
+  let response;
+  if (data instanceof FormData) {
+    response = await httpService.post('/v1/setup/my-user/update-profile', data)
+  } else {
+    response = await httpService.put('/v1/setup/my-user/update-profile', data)
+  }
+  const {success, body} = response;
   if (success) {
     commit(SET_USER, body);
     commit(SET_PROFILE_LOADING, false);
@@ -42,6 +47,7 @@ function prepareData(data) {
       }
     }
     data = tmpData;
+    data.append('_method', 'PUT')
   }
   return data;
 }
