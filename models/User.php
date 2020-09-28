@@ -235,7 +235,7 @@ class User extends ActiveRecord implements IdentityInterface
         $this->birthday = $this->birthday ? strtotime($this->birthday) : null; //@Todo format might be dynamic
         $oldPath = $this->image_path;
         if ($this->image) {
-            $this->image_path = "/user/" . Yii::$app->security->generateRandomString(25) . '/' . $this->image->name;
+            $this->image_path = "/storage/user/" . Yii::$app->security->generateRandomString(25) . '/' . $this->image->name;
         }
         $check = parent::save($runValidation, $attributeNames);
         $this->hobbies = $this->hobbies ? Json::decode($this->hobbies) : [];
@@ -245,14 +245,19 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         if ($this->image) {
-            $this->image_path = Yii::getAlias("@webroot") . "/storage/user/" . Yii::$app->security->generateRandomString(25) . '/' . $this->image->name;
-            if (!is_dir(dirname($this->image_path))) {
-                FileHelper::createDirectory(dirname($this->image_path));
+            // Delete old image if it exists
+            if ($oldPath) {
+                $oldPath = Yii::getAlias("@webroot" . $oldPath);
+                if (file_exists($oldPath)) {
+                    FileHelper::removeDirectory(dirname($oldPath));
+                }
             }
-            if (is_dir(dirname($oldPath))) {
-                FileHelper::removeDirectory(dirname($oldPath));
+
+            $path = Yii::getAlias("@webroot") . $this->image_path;
+            if (!is_dir(dirname($path))) {
+                FileHelper::createDirectory(dirname($path));
             }
-            $this->image->saveAs($this->image_path);
+            $this->image->saveAs($path);
         }
 
         return $check;

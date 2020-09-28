@@ -22,7 +22,9 @@ class UserResource extends User
     {
         return [
             'id', 'email', 'username', 'first_name', 'last_name', 'mobile', 'phone', 'birthday', 'about_me', 'hobbies',
-            'image_path',
+            'image_url' => function () {
+                return env('API_HOST') . $this->image_path;
+            },
             'display_name' => function () {
                 return $this->first_name . ' ' . $this->last_name;
             }
