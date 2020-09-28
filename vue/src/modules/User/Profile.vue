@@ -12,7 +12,7 @@
                 </div>
                 <div class="card-body">
                   <div class="mb-3 d-flex justify-content-center">
-                    <ImageUploader v-model="image" :src="currentUser.data.image_path" ref="uploader"/>
+                    <ImageUploader v-model="image" :src="currentUser.data.image_url" ref="uploader"/>
                   </div>
                   <div class="row">
                     <div class="col-sm-12 col-md-6">
@@ -26,8 +26,7 @@
                   <input-widget :model="userModel" attribute="mobile" type="text"/>
                   <input-widget :model="userModel" attribute="phone" type="text"/>
                   <input-widget :model="userModel" attribute="birthday" type="date"/>
-                  <input-widget :model="userModel" attribute="hobbies" :multiselect-options='userModel.hobbies'
-                                type="multiselect"/>
+                  <input-widget :model="userModel" attribute="hobbies" type="tags"/>
                   <div class="row">
                     <div class="col-md-6">
                       <!--                          <input-widget v-if="userModel" :model="userModel" attribute="about_me" type="richtext"/>-->
@@ -109,7 +108,6 @@ export default {
       this.userModel.resetErrors();
       this.userModel.image = this.image;
       const userModel = JSON.parse(JSON.stringify(this.userModel))
-      userModel.hobbies = userModel.hobbies.map(ob => ob.value);
       userModel.image = this.image;
       this.updateProfile(userModel);
     },
@@ -117,17 +115,16 @@ export default {
       // We need to set timeout, because the data from backend comes faster then the CkEditor rendered.
       // TODO Need optimization!
       setTimeout(() => {
-        const userData = this.currentUser.data;
-        userData.hobbies = userData.hobbies ? userData.hobbies.map(op => ({
-          value: op,
-          text: this.$t(op)
-        })) : [];
+        const userData = JSON.parse(JSON.stringify(this.currentUser.data));
         this.userModel = new UserModel(userData);
         // console.log(this.userModel);
 
       }, 500);
     }
   },
+  mounted() {
+    this.initModel()
+  }
 }
 
 </script>

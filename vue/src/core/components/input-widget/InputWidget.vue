@@ -91,6 +91,25 @@
         </b-form-invalid-feedback>
       </b-input-group>
     </b-form-group>
+    <b-form-group v-if="isTagsInput()">
+      <label v-if="computedLabel">
+        {{ computedLabel }}
+        <span v-if="v.required" class="text-danger">*</span>
+      </label>
+      <b-input-group :prepend="prepend" :append="append" :size="size">
+        <template v-slot:append v-if="appendQuestion">
+          <b-tooltip :target="`question-mark-tooltip-${attribute}-${uuid}`" :title="appendQuestion"/>
+          <b-input-group-text :id="`question-mark-tooltip-${attribute}-${uuid}`" class="hover-cursor">
+            <i class="fas fa-question-circle"></i>
+          </b-input-group-text>
+        </template>
+        <b-form-tags ref="currentInput" :size="size" :disabled="disabled"
+                      :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
+                      :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
+                      @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
+                      :placeholder="computedPlaceholder" :min="min"/>
+      </b-input-group>
+    </b-form-group>
   </ValidationProvider>
 </template>
 
@@ -238,6 +257,9 @@ export default {
     },
     isRichtext() {
       return this.type === 'richtext';
+    },
+    isTagsInput() {
+      return this.type === 'tags';
     },
     isMultiselect() {
       return this.type === 'multiselect';

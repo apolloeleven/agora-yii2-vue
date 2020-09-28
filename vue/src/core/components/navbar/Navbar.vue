@@ -27,7 +27,7 @@
         <b-nav-item-dropdown right>
           <!-- Using 'button-content' slot -->
           <template v-slot:button-content>
-            <img class="user-avatar" src="assets/img/users/me-160.jpg" alt="..."/>
+            <b-img class="user-avatar mr-2" :src="currentUser.data.image_url" rounded="circle" alt="..."/>
             {{ currentUser.data.display_name }}
             <b class="caret"></b>
           </template>

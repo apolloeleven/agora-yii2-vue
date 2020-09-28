@@ -18,12 +18,12 @@
         :cropper-options="cropperOptions"
       />
     </div>
-    <button class="pick-avatar btn-choose mr-3">
+    <button type="button" class="pick-avatar btn-choose mr-3">
       <input type="file" @change="onFileChoose" ref="fileInput">
       <span v-if="hasImage">{{ $t('Update') }}</span>
       <span v-else>{{$t('Upload')}}</span>
     </button>
-    <button v-if="hasImage" @click="onRemoveClick" class="btn-remove" v-b-tooltip.hover :title="$t('Remove Image')">
+    <button type="button" v-if="hasImage" @click="onRemoveClick" class="btn-remove" v-b-tooltip.hover :title="$t('Remove Image')">
       &times;
     </button>
   </div>
@@ -141,6 +141,11 @@ export default {
       if (this.$refs.fileDrag.classList.contains('active-drag')) {
         this.$refs.fileDrag.classList.remove('active-drag');
       }
+    }
+  },
+  mounted() {
+    if (this.src) {
+      this.hasImage = true;
     }
   }
 }
