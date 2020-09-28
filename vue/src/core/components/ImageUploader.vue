@@ -18,16 +18,14 @@
         :cropper-options="cropperOptions"
       />
     </div>
-    <div class="action-button mt-1">
-      <b-button class="pick-avatar btn-choose mr-3" variant="primary">
-        <input type="file" @change="onFileChoose" ref="fileInput">
-        {{$t('Choose image')}}
-      </b-button>
-      <b-button @click="onRemoveClick" class="btn-remove" variant="danger">
-        {{$t('Remove')}}
-      </b-button>
-    </div>
-
+    <button class="pick-avatar btn-choose mr-3">
+      <input type="file" @change="onFileChoose" ref="fileInput">
+      <span v-if="hasImage">{{ $t('Update') }}</span>
+      <span v-else>{{$t('Upload')}}</span>
+    </button>
+    <button v-if="hasImage" @click="onRemoveClick" class="btn-remove" v-b-tooltip.hover :title="$t('Remove Image')">
+      &times;
+    </button>
   </div>
 </template>
 
@@ -46,6 +44,7 @@ export default {
       imageRemoved: false,
       imageSrc: null,
       fileDragClass: true,
+      hasImage: false,
       cropperLabels: {
         submit: this.$t("Submit"), cancel: this.$t("Cancel")
       },
@@ -71,13 +70,16 @@ export default {
       this.$refs.fileInput.value = '';
       this.imageSrc = '';
       this.imageRemoved = false;
+      this.hasImage = true;
       this.imageSrc = cropper.getCroppedCanvas().toDataURL();
       cropper.getCroppedCanvas().toBlob(blob => {
         this.$emit('input', new File([blob], "avatar.png"))
       });
     },
     onFileChoose(ev) {
+      debugger;
       this.imageSrc = '';
+      this.hasImage = true;
       this.imageRemoved = false;
       const reader = new FileReader();
       reader.onload = () => {
@@ -91,6 +93,7 @@ export default {
     },
     onRemoveClick() {
       this.imageSrc = '';
+      this.hasImage = false;
       this.imageRemoved = true;
       if (this.$refs.fileDrag.classList.contains('complete-drag')) {
         this.$refs.fileDrag.classList.remove('complete-drag');
@@ -108,6 +111,7 @@ export default {
     onFileDrop(ev) {
       this.imageSrc = '';
       this.imageRemoved = false;
+      this.hasImage = true;
       const reader = new FileReader();
 
       if (this.showCropper) {
@@ -146,16 +150,91 @@ export default {
 
 <style lang="scss" scoped>
 $dragColor: #737373;
-.file-preview-ctr {
+
+.file-uploader {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
   background-color: #efefef;
-  min-width: 250px;
-  min-height: 250px;
+  border: 1px dashed #737373;
+  border-radius: 50%;
+
+  .file-preview-ctr {
+    padding: 5px;
+  }
+
+
+  .btn-choose {
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #FFF;
+    padding: 10px 15px;
+    cursor: pointer;
+    opacity: 0;
+    z-index: 1000;
+
+    input {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      opacity: 0;
+    }
+  }
+
+  .btn-remove {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 24px;
+    height: 24px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    background-color: transparent;
+    z-index: 1001;
+    padding: 2px;
+    opacity: 0;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #FFF;
+    }
+  }
+
+
+  &:hover {
+    .btn-choose,
+    .btn-remove{
+      opacity: 1;
+    }
+  }
+}
+
+.file-preview-ctr {
+  //background-color: #efefef;
+  width: 160px;
+  height: 160px;
   display: inline-flex;
   align-items: center;
   position: relative;
 
   .file-drag-ctr {
-    border: 1px dashed #737373;
+    //border: 1px dashed #737373;
     z-index: 3;
     width: 100%;
     height: 100%;
@@ -191,27 +270,12 @@ $dragColor: #737373;
   }
 
   .image-preview {
-    max-width: 250px;
+    width: 150px;
+    border-radius: 50%;
     z-index: 2;
   }
 }
 
-.btn-choose {
-  position: relative;
-  overflow: hidden;
-
-  input {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    opacity: 0;
-  }
-}
 </style>
 <style>
 
