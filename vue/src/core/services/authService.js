@@ -102,5 +102,5 @@ export default {
    */
   async checkToken(token) {
     return await httpService.get('/user/check-token-validity?token=' + token);
-  }
+  },
 }

@@ -5,3 +5,4 @@ import './confirm-dialog';
 import './alert-dialog';
 import './notification';
 import './toaster';
+import './ckeditor';
