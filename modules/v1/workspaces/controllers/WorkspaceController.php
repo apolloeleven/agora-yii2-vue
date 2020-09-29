@@ -4,6 +4,7 @@
 namespace app\modules\v1\workspaces\controllers;
 
 
+use app\modules\v1\workspaces\resources\WorkspaceResource;
 use app\rest\ActiveController;
 
 /**
@@ -12,11 +13,5 @@ use app\rest\ActiveController;
  */
 class WorkspaceController extends ActiveController
 {
-    /**
-     * @return array
-     */
-    public function actions()
-    {
-        return parent::actions();
-    }
+    public $modelClass = WorkspaceResource::class;
 }

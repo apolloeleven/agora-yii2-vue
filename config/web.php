@@ -68,6 +68,7 @@ $config = [
                     'pluralize' => false,
                     'controller' => [
                         'v1/users/invitation',
+                        'v1/workspaces/workspace',
                     ]
                 ]
             ],
@@ -82,6 +83,9 @@ $config = [
                 ],
                 'users' => [
                     'class' => \app\modules\v1\users\UserModule::class
+                ],
+                'workspaces' => [
+                    'class' => \app\modules\v1\workspaces\WorkspaceModule::class
                 ]
             ]
         ]

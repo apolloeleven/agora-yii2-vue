@@ -18,6 +18,7 @@ use yii\db\ActiveRecord;
  * @property string|null $abbreviation
  * @property string|null $description
  * @property string|null $image_path
+ * @property int $folder_in_folder
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $created_by
@@ -28,6 +29,8 @@ use yii\db\ActiveRecord;
  */
 class Workspace extends ActiveRecord
 {
+    public $image;
+
     /**
      * {@inheritdoc}
      */
@@ -55,7 +58,7 @@ class Workspace extends ActiveRecord
         return [
             [['name'], 'required'],
             [['description'], 'string'],
-            [['created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['folder_in_folder', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['abbreviation'], 'string', 'max' => 55],
             [['image_path'], 'string', 'max' => 1024],
@@ -76,6 +79,7 @@ class Workspace extends ActiveRecord
             'abbreviation' => Yii::t('app', 'Abbreviation'),
             'description' => Yii::t('app', 'Description'),
             'image_path' => Yii::t('app', 'Image Path'),
+            'folder_in_folder' => Yii::t('app', 'Folder in Folder'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'created_by' => Yii::t('app', 'Created By'),
