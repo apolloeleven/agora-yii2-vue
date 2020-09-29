@@ -1,7 +1,7 @@
 <template>
   <ValidationProvider :name="`${attribute}-${uuid}`" :rules="model.getRules(attribute, rules || null)"
                       :customMessages="model.getMessages(attribute, rules || null)" v-slot="v" tag="div" :vid="vid">
-    <b-form-group v-if="isInput() || isTextarea()">
+    <b-form-group v-if="isInput() || isTextarea()|| isCkeditor()">
       <label v-if="computedLabel">
         {{ computedLabel }}
         <span v-if="v.required" class="text-danger">*</span>
@@ -26,6 +26,11 @@
       <b-form-textarea v-if="isTextarea()" ref="currentInput" :type="type" :name="`${attribute}-${uuid}`"
                        :key="`${attribute}-${uuid}`" v-model="model[attribute]" :state="getState(v)"
                        :placeholder="computedPlaceholder"/>
+      <ckeditor v-if="isCkeditor()" :editor="ckeditorConfig.editor" ref="currentInput" :disabled="disabled"
+                tag-name="div"
+                :name="`${attribute}-${uuid}`" :key="`${attribute}-${uuid}`" :state="getState(v)"
+                :class="{'is-invalid': getState(v)}" v-model="model[attribute]" :placeholder="computedPlaceholder"
+                :config="ckeditorConfig.editorConfig"/>
       <b-form-invalid-feedback :state="getState(v)">
         {{ getError(v.errors) }}
       </b-form-invalid-feedback>
@@ -60,14 +65,14 @@
                        :key="`${attribute}-${uuid}`" v-model="model[attribute]" :switch="isSwitch" :size="size"
                        :state="getState(v)">
         <span v-if="computedLabel">
-          {{computedLabel}}
+          {{ computedLabel }}
           <span v-if="v.required" class="text-danger">*</span>
         </span>
       </b-form-checkbox>
-      <b-form-invalid-feedback :state="getState(v)">{{getError(v.errors)}}
+      <b-form-invalid-feedback :state="getState(v)">{{ getError(v.errors) }}
       </b-form-invalid-feedback>
       <b-form-text v-if="computedHint">
-        {{computedHint}}
+        {{ computedHint }}
       </b-form-text>
     </b-form-group>
   </ValidationProvider>
@@ -77,6 +82,7 @@
 
 import BaseModel from "./BaseModel";
 import {uuid} from 'vue-uuid';
+import InlineEditor from '@ckeditor/ckeditor5-build-inline';
 
 export default {
   name: 'InputWidget',
@@ -161,6 +167,7 @@ export default {
   data() {
     return {
       uuid: uuid.v4(),
+      ckeditorConfig: getCkeditorDefaultConfig(),
     }
   },
   methods: {
@@ -202,6 +209,9 @@ export default {
     },
     isCheckbox() {
       return this.type === 'checkbox';
+    },
+    isCkeditor() {
+      return this.type === 'ckeditor';
     },
     onChange(val) {
       if (this.type === 'number' && val === '') {
@@ -249,6 +259,16 @@ export default {
     },
   }
 };
+
+function getCkeditorDefaultConfig() {
+  return {
+    editor: InlineEditor,
+    editorData: '',
+    editorConfig: {
+      toolbar: ['bold', 'italic']
+    }
+  };
+}
 
 </script>
 

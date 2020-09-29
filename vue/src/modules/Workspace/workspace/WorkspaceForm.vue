@@ -6,9 +6,10 @@
         @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')"
         scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
-        <input-widget :model="model" attribute="folder_in_folder" type="checkbox"/>
+        <input-widget :model="model" attribute="folder_in_folder" type="checkbox"></input-widget>
         <input-widget :model="model" attribute="name"></input-widget>
         <input-widget :model="model" attribute="abbreviation"></input-widget>
+        <!--<input-widget :model="model" attribute="description" type="ckeditor"></input-widget>-->
       </b-form>
     </b-modal>
   </ValidationObserver>
@@ -41,7 +42,7 @@ export default {
         this.model.name = w.name;
         this.model.abbreviation = w.abbreviation;
         // this.model.image_url= w.image_url;
-        // this.model.description= w.description;
+        this.model.description = w.description;
         this.model.folder_in_folder = !!w.folder_in_folder;
       } else {
         this.model = new WorkspaceFormModel()
