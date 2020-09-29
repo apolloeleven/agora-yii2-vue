@@ -14,4 +14,9 @@ use app\rest\ActiveController;
 class WorkspaceController extends ActiveController
 {
     public $modelClass = WorkspaceResource::class;
+
+    public function actionGetUserWorkspaces()
+    {
+        return WorkspaceResource::find()->all();
+    }
 }

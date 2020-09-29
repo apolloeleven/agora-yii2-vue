@@ -92,22 +92,4 @@ export default {
   right: 0;
   top: 0;
 }
-
-.image-wrapper {
-  a {
-    display: flex;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-
-  .card-img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-  }
-}
 </style>

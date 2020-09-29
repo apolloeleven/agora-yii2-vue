@@ -2,10 +2,9 @@
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal
         :visible="showModal" id="workspace-form" ref="modal"
-        :title='model.id ? $t(`Update workspace "{workspace}"`,{workspace:model.name}) : $t(`Add New Workspace`)'
+        :title='modalWorkspace ? $t(`Update workspace "{workspace}"`,{workspace:model.name}) : $t(`Add New Workspace`)'
         @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')"
         scrollable>
-      <!--<content-spinner :show="loading" :text="$t('Please wait...')" :fullscreen="true" class="h-100"/>-->
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
         <input-widget :model="model" attribute="folder_in_folder" type="checkbox"/>
         <input-widget :model="model" attribute="name"></input-widget>
@@ -19,13 +18,12 @@
 import WorkspaceFormModel from "./WorkspaceFormModel";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import {createNamespacedHelpers} from "vuex";
-import ContentSpinner from "../../../core/components/ContentSpinner";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "WorkspaceForm",
-  components: {ContentSpinner, InputWidget},
+  components: {InputWidget},
   data() {
     return {
       model: new WorkspaceFormModel(),
@@ -33,17 +31,36 @@ export default {
     }
   },
   computed: {
-    ...mapState(['loading', 'showModal']),
+    ...mapState(['loading', 'showModal', 'modalWorkspace']),
+  },
+  watch: {
+    modalWorkspace() {
+      const w = this.modalWorkspace;
+      if (w) {
+        this.model.id = w.id;
+        this.model.name = w.name;
+        this.model.abbreviation = w.abbreviation;
+        // this.model.image_url= w.image_url;
+        // this.model.description= w.description;
+        this.model.folder_in_folder = !!w.folder_in_folder;
+      } else {
+        this.model = new WorkspaceFormModel()
+      }
+    }
   },
   methods: {
-    ...mapActions(['hideWorkspaceModal', 'createWorkspace',]),
+    ...mapActions(['hideWorkspaceModal', 'createWorkspace', 'updateWorkspace']),
     async onSubmit() {
-      let res
-
       this.model.folder_in_folder = this.model.folder_in_folder ? 1 : 0;
 
-      this.action = 'created';
-      res = await this.createWorkspace(this.model);
+      let res
+      if (this.model.id) {
+        this.action = 'updated';
+        res = await this.updateWorkspace(this.model);
+      } else {
+        this.action = 'created';
+        res = await this.createWorkspace(this.model);
+      }
       if (res.success) {
         this.$toast(this.$t(`The workspace '{name}' was successfully ${this.action}`, {name: this.model.name}));
         this.hideWorkspaceModal()

@@ -5,5 +5,6 @@
   "The workspace '{name}' was successfully created": "The workspace '{name}' was successfully created",
   "The workspace '{name}' was successfully updated": "The workspace '{name}' was successfully updated",
   "The workspace '{name}' was not created": "The workspace '{name}' was not created",
-  "The workspace '{name}' was not updated": "The workspace '{name}' was not updated"
+  "The workspace '{name}' was not updated": "The workspace '{name}' was not updated",
+  "The workspace '{name}' was successfully deleted": "The workspace '{name}' was successfully deleted"
 }
