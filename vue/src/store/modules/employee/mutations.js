@@ -17,9 +17,10 @@ export default {
     state.modal.object = {
       id: payload.id,
       email: payload.email,
+      first_name: payload.first_name,
+      last_name: payload.last_name,
       roles: payload.roles,
       userDepartments: payload.userDepartments,
-      ...payload.userProfile
     }
   },
 

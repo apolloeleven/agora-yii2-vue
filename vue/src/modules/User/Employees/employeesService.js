@@ -5,7 +5,7 @@ const employeeService = {
 
   get(params = {
     sort: '-created_at',
-    expand: 'userDepartments, userProfile, userDepartments.department, userDepartments.department.country'
+    expand: 'userDepartments, userDepartments.department, userDepartments.department.country'
   }) {
     return httpService.get(this.url, {params});
   },

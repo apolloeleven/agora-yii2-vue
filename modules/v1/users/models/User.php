@@ -103,14 +103,6 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @return ActiveQuery
-     */
-    public function getUserProfile()
-    {
-        return $this->hasOne(UserProfile::class, ['user_id' => 'id']);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public static function findIdentity($id)
@@ -238,7 +230,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getDisplayName()
     {
-        return $this->userProfile->getFullName();
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     public function getRoles()
