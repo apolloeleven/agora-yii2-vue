@@ -23,11 +23,17 @@ use yii\helpers\ArrayHelper;
  */
 class UserResource extends User
 {
+    const ROLE_USER = 'User';
+    const ROLE_ADMIN = 'Admin';
+    const ROLE_WORKSPACE_ADMIN = 'Workspace Admin';
+
     public function fields()
     {
         return [
             'id',
             'username',
+            'first_name',
+            'last_name',
             'created_at' => function () {
                 return Yii::$app->formatter->asDatetime($this->created_at);
             },
@@ -48,15 +54,7 @@ class UserResource extends User
 
     public function extraFields()
     {
-        return ['userProfile', 'userDepartments'];
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getUserProfile()
-    {
-        return $this->hasOne(UserProfileResource::class, ['user_id' => 'id']);
+        return ['userDepartments'];
     }
 
     /**
@@ -65,6 +63,26 @@ class UserResource extends User
     public function getUserDepartments()
     {
         return $this->hasMany(UserDepartmentResource::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return string[][]
+     */
+    public static function getUserRoles() {
+        return [
+            [
+                'value' => 'user',
+                'text' => self::ROLE_USER
+            ],
+            [
+                'value' => 'admin',
+                'text' => self::ROLE_ADMIN
+            ],
+            [
+                'value' => 'workspaceAdmin',
+                'text' => self::ROLE_WORKSPACE_ADMIN
+            ]
+        ];
     }
 
     /**
