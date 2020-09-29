@@ -35,6 +35,7 @@ export async function updateProfile({commit}, user) {
     commit(SET_USER, body);
     commit(SET_PROFILE_LOADING, false);
   }
+  return response;
 }
 
 export async function changePassword({commit}, passwordData) {

@@ -1,11 +1,10 @@
 <template>
   <div class="user-profile-wrapper page">
     <div class="page-content p-3">
-      <content-spinner :show="currentUser.loading" :text="$t('Please wait...')" class="h-100"/>
       <div class="row">
         <div class="col-md-12 col-lg-7 mb-3">
-          <ValidationObserver ref="loginForm" tag="div" v-slot="{invalid}">
-            <form v-if="!currentUser.loading && currentUser.loaded" v-on:submit.prevent="onUpdateClick">
+          <ValidationObserver ref="profileForm" tag="div" v-slot="{invalid}">
+            <form v-if="currentUser.loaded" v-on:submit.prevent="onUpdateClick">
               <div class="card card-information">
                 <div class="card-header">
                   <h5 class="m-0">{{ $t('Personal Details') }}</h5>
@@ -33,7 +32,8 @@
                     </div>
                   </div>
                   <div class="text-right">
-                    <b-button variant="info" @click="onUpdateClick">
+                    <b-button variant="info" @click="onUpdateClick"  :disabled="invalid || currentUser.loading">
+                      <b-spinner v-if="currentUser.loading" small></b-spinner>
                       {{ $t('Update') }}
                     </b-button>
                   </div>
@@ -46,18 +46,17 @@
           </ValidationObserver>
         </div>
         <div class="col-md-12 col-lg-5">
-          <ValidationObserver ref="loginForm" tag="div" v-slot="{invalid}">
-            <form v-if="!currentUser.loading && currentUser.loaded" v-on:submit.prevent="onUpdateClick">
+          <ValidationObserver ref="changePasswordForm" tag="div" v-slot="{invalid}">
+            <form v-on:submit.prevent="onUpdateClick">
               <div class="card card-account">
                 <div class="card-header">
                   <h5 class="m-0">{{ $t('Change account password') }}</h5>
                 </div>
                 <div class="card-body">
 
-                  <input-widget :model="passwordResetModel" attribute="old_password" type="password" vid="password"/>
-                  <input-widget :model="passwordResetModel" attribute="password" type="password" vid="password"/>
-                  <input-widget :model="passwordResetModel" attribute="confirm_password" type="password"
-                                vid="confirm_password"/>
+                  <input-widget :model="passwordResetModel" attribute="old_password" type="password"/>
+                  <input-widget :model="passwordResetModel" attribute="password" type="password"/>
+                  <input-widget :model="passwordResetModel" attribute="confirm_password" type="password"/>
 
                   <div class="text-right">
                     <b-button variant="primary" @click="onPasswordChange()" :disabled="invalid || passwordForm.loading">
@@ -116,12 +115,16 @@ export default {
   },
   methods: {
     ...mapActions(['getProfile', 'updateProfile', 'changePassword']),
-    onUpdateClick() {
+    async onUpdateClick() {
       this.userModel.resetErrors();
       this.userModel.image = this.image;
       const userModel = JSON.parse(JSON.stringify(this.userModel))
       userModel.image = this.image;
-      this.updateProfile(userModel);
+      const {success} = await this.updateProfile(userModel);
+      if (success) {
+        this.$successToast(i18n.t('Your profile was updated'))
+        this.$refs.userModel.reset()
+      }
     },
     async initModel() {
       // We need to set timeout, because the data from backend comes faster then the CkEditor rendered.
@@ -140,6 +143,8 @@ export default {
         this.passwordResetModel.setMultipleErrors(body);
       } else {
         this.$successToast(i18n.t('Your password was updated'))
+        this.passwordResetModel = new PasswordResetModel();
+        this.$refs.changePasswordForm.reset()
       }
     }
   },

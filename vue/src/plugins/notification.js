@@ -13,7 +13,6 @@ const SuccessNotification = {
           type: 'success',
           title,
           text: message,
-          duration: 1000000
         });
     }
   }

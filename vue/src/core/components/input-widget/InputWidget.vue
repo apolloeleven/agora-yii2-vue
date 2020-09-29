@@ -1,6 +1,6 @@
 <template>
   <ValidationProvider :name="`${attribute}-${uuid}`" :rules="model.getRules(attribute, rules || null)"
-                      :customMessages="model.getMessages(attribute, rules || null)" v-slot="v" tag="div" :vid="vid">
+                      :customMessages="model.getMessages(attribute, rules || null)" v-slot="v" tag="div" :vid="vid || attribute">
     <b-form-group v-if="isInput() || isTextarea()">
       <label v-if="computedLabel">
         {{ computedLabel }}
@@ -194,9 +194,7 @@ export default {
     },
     vid: {
       type: String,
-      default() {
-        return `vid-${this.attribute}-${uuid.v4()}`
-      }
+      default: ''
     },
     min: {
       type: [String, Number],
