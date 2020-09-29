@@ -49,6 +49,16 @@ class EmployeeController extends ActiveController
         return $actions;
     }
 
+    protected function verbs()
+    {
+        $verbs = parent::verbs();
+        $verbs['index'] = ['GET', 'HEAD', 'OPTIONS'];
+        $verbs['update-user-data'] = ['PUT', 'OPTIONS'];
+        $verbs['get-dropdown'] = ['GET', 'HEAD', 'OPTIONS'];
+
+        return $verbs;
+    }
+
     /**
      * @return ActiveDataProvider
      */
