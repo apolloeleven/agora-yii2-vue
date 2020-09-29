@@ -26,11 +26,11 @@
       <b-form-textarea v-if="isTextarea()" ref="currentInput" :type="type" :name="`${attribute}-${uuid}`"
                        :key="`${attribute}-${uuid}`" v-model="model[attribute]" :state="getState(v)"
                        :placeholder="computedPlaceholder"/>
-      <ckeditor v-if="isCkeditor()" :editor="ckeditorConfig.editor" ref="currentInput" :disabled="disabled"
-                tag-name="div"
-                :name="`${attribute}-${uuid}`" :key="`${attribute}-${uuid}`" :state="getState(v)"
-                :class="{'is-invalid': getState(v)}" v-model="model[attribute]" :placeholder="computedPlaceholder"
-                :config="ckeditorConfig.editorConfig"/>
+<!--      <ckeditor v-if="isCkeditor()" :editor="ckeditorConfig.editor" ref="currentInput" :disabled="disabled"-->
+<!--                tag-name="div"-->
+<!--                :name="`${attribute}-${uuid}`" :key="`${attribute}-${uuid}`" :state="getState(v)"-->
+<!--                :class="{'is-invalid': getState(v)}" v-model="model[attribute]" :placeholder="computedPlaceholder"-->
+<!--                :config="ckeditorConfig.editorConfig"/>-->
       <b-form-invalid-feedback :state="getState(v)">
         {{ getError(v.errors) }}
       </b-form-invalid-feedback>
@@ -141,7 +141,6 @@ import datePicker from 'vue-bootstrap-datetimepicker';
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 import Multiselect from 'vue-multiselect'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import InlineEditor from '@ckeditor/ckeditor5-build-inline';
 
 export default {
   name: 'InputWidget',
@@ -238,7 +237,7 @@ export default {
       },
       editor: ClassicEditor,
       editorConfig: {},
-      ckeditorConfig: getCkeditorDefaultConfig(),
+      // ckeditorConfig: getCkeditorDefaultConfig(),
     }
   },
   methods: {
@@ -300,9 +299,9 @@ export default {
     isCheckbox() {
       return this.type === 'checkbox';
     },
-    isCkeditor() {
-      return this.type === 'ckeditor';
-    },
+    // isCkeditor() {
+    //   return this.type === 'ckeditor';
+    // },
     onChange(val) {
       if (this.type === 'number' && val === '') {
         this.model[this.attribute] = null;
@@ -350,15 +349,15 @@ export default {
   }
 };
 
-function getCkeditorDefaultConfig() {
-  return {
-    editor: InlineEditor,
-    editorData: '',
-    editorConfig: {
-      toolbar: ['bold', 'italic']
-    }
-  };
-}
+// function getCkeditorDefaultConfig() {
+//   return {
+//     editor: InlineEditor,
+//     editorData: '',
+//     editorConfig: {
+//       toolbar: ['bold', 'italic']
+//     }
+//   };
+// }
 
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

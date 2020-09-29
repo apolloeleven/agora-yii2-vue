@@ -1,4 +1,4 @@
-import invitationService from "../../modules/User/Invitation/invitationService";
+import invitationService from "../../../../modules/User/Invitation/invitationService";
 
 export default {
   namespaced: true,
