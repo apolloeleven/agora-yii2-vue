@@ -3,19 +3,25 @@ import i18n from "../../../shared/i18n";
 
 export default class WorkspaceFormModel extends BaseModel {
   name = '';
-  abbr = '';
+  abbreviation = '';
   description = '';
+  image = null;
+  folder_in_folder = false;
 
   rules = {
     name: 'required',
-    abbr: '',
+    abbreviation: '',
     description: '',
+    image: '',
+    folder_in_folder: ''
   };
 
   attributeLabels = {
     name: i18n.t('Name'),
-    abbr: i18n.t('Abbreviation'),
+    abbreviation: i18n.t('Abbreviation'),
     description: i18n.t('Description'),
+    image: i18n.t('Image'),
+    folder_in_folder: i18n.t('Enable creating folders inside folders'),
   };
 
   constructor(data = {}) {
