@@ -4,7 +4,7 @@ import {
   GET_USER_WORKSPACES,
   WORKSPACE_DELETED
 } from './mutation-types';
-import workspaceService from "../../../modules/Workspace/workspaceService";
+import httpService from "../../../core/services/httpService";
 
 /**
  *
@@ -25,52 +25,54 @@ export function hideWorkspaceModal({commit}, hideModal) {
 }
 
 /**
+ * Create new workspace
  *
  * @param dispatch
- * @param { Object } workspace
+ * @param { Object } data
  * @returns {Promise<unknown>}
  */
-export async function createWorkspace({dispatch}, workspace) {
-  const res = await workspaceService.create(workspace);
+export async function createWorkspace({dispatch}, data) {
+  const res = await httpService.post(`/v1/workspaces/workspace?expand=updatedBy`, data);
   if (res.success) {
     dispatch('getUserWorkspaces');
-    return res
   }
+  return res
 }
 
 /**
+ * Update workspace
  *
  * @param dispatch
- * @param { Object } workspace
+ * @param { Object } data
  * @returns {Promise<unknown>}
  */
-export async function updateWorkspace({dispatch}, workspace) {
-  const res = await workspaceService.update(workspace);
+export async function updateWorkspace({dispatch}, data) {
+  const res = await httpService.put(`/v1/workspaces/workspace/${data.id}`, data);
   if (res.success) {
     dispatch('getUserWorkspaces');
-    return res;
   }
+  return res;
 }
 
 /**
  *
  * @param { function } commit
  * @param dispatch
- * @param { Object } workspace
+ * @param { Object } data
  * @returns {Promise<unknown>}
  */
-export async function deleteWorkspace({commit, dispatch}, workspace) {
-  const res = await workspaceService.delete(workspace.id);
+export async function deleteWorkspace({commit, dispatch}, data) {
+  const res = await httpService.delete(`/v1/workspaces/workspace/${data.id}`);
   if (res.success) {
-    commit(WORKSPACE_DELETED, workspace.id);
+    commit(WORKSPACE_DELETED, data.id);
     dispatch('getUserWorkspaces');
-    return res;
   }
+  return res;
 }
 
 export async function getUserWorkspaces({commit}) {
-  const res = await workspaceService.getUserWorkspaces();
-  if (res.success) {
-    commit(GET_USER_WORKSPACES, res.body);
+  const {success, body} = await httpService.get(`/v1/workspaces/workspace/get-user-workspaces?expand=updatedBy&sort=name`);
+  if (success) {
+    commit(GET_USER_WORKSPACES, body);
   }
 }
