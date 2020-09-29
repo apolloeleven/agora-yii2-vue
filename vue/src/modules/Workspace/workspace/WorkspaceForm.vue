@@ -6,6 +6,9 @@
       @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')"
       scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
+        <b-form-group :label="$t('Upload Image')">
+          <input :model="image" type="file"/>
+        </b-form-group>
         <input-widget :model="model" attribute="folder_in_folder" type="checkbox"></input-widget>
         <input-widget :model="model" attribute="name"></input-widget>
         <input-widget :model="model" attribute="abbreviation"></input-widget>
@@ -29,6 +32,7 @@ export default {
     return {
       model: new WorkspaceFormModel(),
       action: '',
+      image: null,
     }
   },
   computed: {
@@ -41,7 +45,6 @@ export default {
         this.model.id = w.id;
         this.model.name = w.name;
         this.model.abbreviation = w.abbreviation;
-        // this.model.image_url= w.image_url;
         this.model.description = w.description;
         this.model.folder_in_folder = !!w.folder_in_folder;
       } else {
@@ -53,6 +56,7 @@ export default {
     ...mapActions(['hideWorkspaceModal', 'createWorkspace', 'updateWorkspace']),
     async onSubmit() {
       this.model.folder_in_folder = this.model.folder_in_folder ? 1 : 0;
+      this.model.image = this.image;
 
       let res
       if (this.model.id) {
