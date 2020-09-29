@@ -117,7 +117,7 @@ import RoleModel from "@/modules/User/Employees/RoleModel";
 import employeeService from "@/modules/User/Employees/employeesService";
 import UserDepartmentModel from "@/modules/User/Employees/UserDepartmentModel";
 
-const {mapState, mapActions} = createNamespacedHelpers('user/employees');
+const {mapState, mapActions} = createNamespacedHelpers('employee');
 
 export default {
   name: "EmployeeFormModal",

@@ -33,7 +33,7 @@
 import {createNamespacedHelpers} from 'vuex';
 import ContentSpinner from "../../../core/components/ContentSpinner";
 
-const {mapState, mapActions} = createNamespacedHelpers('user/invitations');
+const {mapState, mapActions} = createNamespacedHelpers('invitation');
 
 export default {
   name: "UserInvitations",

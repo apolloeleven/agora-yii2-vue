@@ -2,6 +2,8 @@ import Vuex from "vuex";
 import Vue from 'vue';
 import setup from './modules/setup';
 import user from './modules/user';
+import employee from './modules/employee'
+import invitation from './modules/invitation'
 
 // Load vuex
 Vue.use(Vuex);
@@ -44,6 +46,8 @@ export default new Vuex.Store({
   },
   modules: {
     setup,
-    user
+    user,
+    employee,
+    invitation,
   }
 });

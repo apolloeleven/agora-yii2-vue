@@ -57,7 +57,7 @@
 import {createNamespacedHelpers} from 'vuex';
 import ContentSpinner from "../../../core/components/ContentSpinner";
 
-const {mapState, mapActions} = createNamespacedHelpers('user/employees');
+const {mapState, mapActions} = createNamespacedHelpers('employee');
 
 export default {
   name: "EmployeeList",

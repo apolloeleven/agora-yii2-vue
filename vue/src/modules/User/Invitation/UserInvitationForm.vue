@@ -18,7 +18,7 @@ import UserInvitationFormModel from "./UserInvitationFormModel";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import ContentSpinner from "../../../core/components/ContentSpinner";
 
-const {mapState: mapStateInvitations, mapActions} = createNamespacedHelpers('user/invitations');
+const {mapState, mapActions} = createNamespacedHelpers('invitation');
 
 export default {
   name: "UserInvitationForm",
@@ -30,7 +30,7 @@ export default {
     }
   },
   computed: {
-    ...mapStateInvitations(['showModal', 'modalInvitation'])
+    ...mapState(['showModal', 'modalInvitation'])
   },
   methods: {
     ...mapActions(['hideModal', 'inviteUser']),
