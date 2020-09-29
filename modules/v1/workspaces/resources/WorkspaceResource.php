@@ -9,7 +9,6 @@ use app\modules\v1\workspaces\models\Workspace;
 use Yii;
 use yii\db\ActiveQuery;
 
-
 /**
  * Class WorkspaceResource
  *

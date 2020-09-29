@@ -1,9 +1,11 @@
 <?php
 
+
 namespace app\modules\v1\workspaces\models;
 
+
 use app\models\User;
-use app\modules\v1\workspaces\models\query\WorkspaceQuery;
+use app\modules\v1\workspaces\models\query\UserWorkspaceQuery;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -11,14 +13,11 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "{{%workspaces}}".
+ * This is the model class for table "{{%user_workspaces}}".
  *
  * @property int $id
- * @property string $name
- * @property string|null $abbreviation
- * @property string|null $description
- * @property string|null $image_path
- * @property int $folder_in_folder
+ * @property int|null $user_id
+ * @property string|null $role
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $created_by
@@ -26,18 +25,17 @@ use yii\db\ActiveRecord;
  *
  * @property User $createdBy
  * @property User $updatedBy
- * @property Workspace $userWorkspaces
+ * @property User $user
+ * @property Workspace $workspace
  */
-class Workspace extends ActiveRecord
+class UserWorkspace extends ActiveRecord
 {
-    public $image;
-
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return '{{%workspaces}}';
+        return '{{%user_workspaces}}';
     }
 
     /**
@@ -57,15 +55,12 @@ class Workspace extends ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
-            [['description'], 'string'],
-            [['folder_in_folder', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
-            [['name'], 'string', 'max' => 255],
-            [['abbreviation'], 'string', 'max' => 55],
-            [['image_path'], 'string', 'max' => 1024],
+            [['user_id', 'workspace_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['role'], 'string', 'max' => 64],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
-            [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, gif, jpg']
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [['workspace_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workspace::class, 'targetAttribute' => ['workspace_id' => 'id']],
         ];
     }
 
@@ -76,11 +71,9 @@ class Workspace extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
-            'abbreviation' => Yii::t('app', 'Abbreviation'),
-            'description' => Yii::t('app', 'Description'),
-            'image_path' => Yii::t('app', 'Image Path'),
-            'folder_in_folder' => Yii::t('app', 'Folder in Folder'),
+            'user_id' => Yii::t('app', 'User ID'),
+            'workspace_id' => Yii::t('app', 'Workspace ID'),
+            'role' => Yii::t('app', 'Role'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'created_by' => Yii::t('app', 'Created By'),
@@ -89,11 +82,12 @@ class Workspace extends ActiveRecord
     }
 
     /**
-     * @return WorkspaceQuery|ActiveQuery
+     * @inheritdoc
+     * @return UserWorkspaceQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new WorkspaceQuery(get_called_class());
+        return new UserWorkspaceQuery(get_called_class());
     }
 
     /**
@@ -117,10 +111,22 @@ class Workspace extends ActiveRecord
     }
 
     /**
+     * Gets query for [[User]].
+     *
      * @return ActiveQuery
      */
-    public function getUserWorkspaces()
+    public function getUser()
     {
-        return $this->hasMany(UserWorkspace::class, ['workspace_id' => 'id']);
+        return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * Gets query for [[Workspace]].
+     *
+     * @return ActiveQuery
+     */
+    public function getWorkspace()
+    {
+        return $this->hasOne(Workspace::class, ['id' => 'workspace_id']);
     }
 }
