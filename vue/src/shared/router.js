@@ -14,6 +14,7 @@ import UserInvitations from "@/modules/User/Invitation/UserInvitations";
 import User from "@/modules/User/User";
 import DepartmentList from "@/modules/setup/departments/DepartmentList";
 import Workspace from "@/modules/Workspace/workspace/Workspace";
+import WorkspaceView from "@/modules/Workspace/workspace/WorkspaceView";
 
 Vue.use(Router);
 
@@ -64,14 +65,13 @@ const router = new Router({
         {path: '/setup/departments', name: 'departments', component: DepartmentList},
         {path: '/setup/countries', name: 'countries', component: CountryList},
         {
-          path: '/users',
-          name: 'user',
-          component: User,
+          path: '/users', name: 'user', component: User,
           children: [
             {path: '/users/invitations', name: 'invitations', component: UserInvitations},
           ]
         },
         {path: '/workspace', name: 'workspace', component: Workspace},
+        {path: 'workspace/:id', name: 'workspace.view', component: WorkspaceView}
       ]
     },
     {
