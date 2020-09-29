@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\v1\users\controllers;
 
 use app\helpers\MailHelper;
 use app\models\LoginForm;
@@ -12,11 +12,11 @@ use Yii;
 use yii\base\Exception;
 
 /**
- * Class UserController
+ * Class AuthController
  *
  * @package app\controllers
  */
-class UserController extends Controller
+class AuthController extends Controller
 {
     public function actionLogin()
     {

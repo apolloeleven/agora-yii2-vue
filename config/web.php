@@ -32,7 +32,7 @@ $config = [
             'loginUrl' => null,
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'v1/setup/site/error',
         ],
         'mailer' => [
             'class' => \intermundia\mailer\SwiftMailer::class,
