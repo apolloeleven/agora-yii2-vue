@@ -15,7 +15,7 @@
 import {createNamespacedHelpers} from "vuex";
 import ContentSpinner from "../../../core/components/ContentSpinner";
 
-const {mapState} = createNamespacedHelpers('workspace');
+const {mapState, mapActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "Workspace",
@@ -33,8 +33,9 @@ export default {
     ...mapState(['loading'])
   },
   methods: {
+    ...mapActions(['showWorkspaceModal']),
     showModal() {
-      console.log('Works')
+      this.showWorkspaceModal()
     },
   },
 }
