@@ -5,6 +5,9 @@ const STATE = {
     loaded: false,
     data: []
   },
+  passwordForm: {
+    loading: false
+  }
 };
 
 export default STATE;

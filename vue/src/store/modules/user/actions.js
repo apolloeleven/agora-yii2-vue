@@ -1,4 +1,4 @@
-import {SET_PROFILE_LOADING, SET_USER} from "@/store/modules/user/mutation-types";
+import {SET_PASSWORD_FORM_LOADING, SET_PROFILE_LOADING, SET_USER} from "@/store/modules/user/mutation-types";
 import httpService from "@/core/services/httpService";
 
 /**
@@ -37,6 +37,14 @@ export async function updateProfile({commit}, user) {
   }
 }
 
+export async function changePassword({commit}, passwordData) {
+  commit(SET_PASSWORD_FORM_LOADING, true);
+
+  const response = await httpService.put('/v1/setup/my-user/change-password', passwordData)
+
+  commit(SET_PASSWORD_FORM_LOADING, false);
+  return response;
+}
 
 function prepareData(data) {
   if (data.image && data.image instanceof File) {

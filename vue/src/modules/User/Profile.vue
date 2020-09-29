@@ -2,10 +2,10 @@
   <div class="user-profile-wrapper page">
     <div class="page-content p-3">
       <content-spinner :show="currentUser.loading" :text="$t('Please wait...')" class="h-100"/>
-      <ValidationObserver ref="loginForm" tag="div">
-        <form v-if="!currentUser.loading && currentUser.loaded" v-on:submit.prevent="onUpdateClick">
-          <div class="row">
-            <div class="col-md-12 col-lg-7 mb-3">
+      <div class="row">
+        <div class="col-md-12 col-lg-7 mb-3">
+          <ValidationObserver ref="loginForm" tag="div" v-slot="{invalid}">
+            <form v-if="!currentUser.loading && currentUser.loaded" v-on:submit.prevent="onUpdateClick">
               <div class="card card-information">
                 <div class="card-header">
                   <h5 class="m-0">{{ $t('Personal Details') }}</h5>
@@ -39,30 +39,38 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-12 col-lg-5">
+
+              <!--          This button is necessary in order submit on enter on form to work-->
+              <button style="display: none" type="submit"></button>
+            </form>
+          </ValidationObserver>
+        </div>
+        <div class="col-md-12 col-lg-5">
+          <ValidationObserver ref="loginForm" tag="div" v-slot="{invalid}">
+            <form v-if="!currentUser.loading && currentUser.loaded" v-on:submit.prevent="onUpdateClick">
               <div class="card card-account">
                 <div class="card-header">
                   <h5 class="m-0">{{ $t('Change account password') }}</h5>
                 </div>
                 <div class="card-body">
 
-                  <input-widget :model="userModel" attribute="old_password" type="password" vid="password"/>
-                  <input-widget :model="userModel" attribute="password" type="password" vid="password"/>
-                  <input-widget :model="userModel" attribute="confirm_password" type="password"
+                  <input-widget :model="passwordResetModel" attribute="old_password" type="password" vid="password"/>
+                  <input-widget :model="passwordResetModel" attribute="password" type="password" vid="password"/>
+                  <input-widget :model="passwordResetModel" attribute="confirm_password" type="password"
                                 vid="confirm_password"/>
 
                   <div class="text-right">
-                    <b-button variant="primary">{{ $t('Change Password') }}</b-button>
+                    <b-button variant="primary" @click="onPasswordChange()" :disabled="invalid || passwordForm.loading">
+                      <b-spinner v-if="passwordForm.loading" small></b-spinner>
+                      {{ $t('Change Password') }}
+                    </b-button>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <!--          This button is necessary in order submit on enter on form to work-->
-          <button style="display: none" type="submit"></button>
-        </form>
-      </ValidationObserver>
+            </form>
+          </ValidationObserver>
+        </div>
+      </div>
     </div>
     <!--    <page-footer>-->
     <!--      <b-button variant="info" @click="onUpdateClick">-->
@@ -80,21 +88,25 @@ import ContentSpinner from "@/core/components/ContentSpinner";
 import ImageUploader from "@/core/components/ImageUploader";
 import PageHeader from "@/core/components/PageHeader";
 import PageFooter from "@/core/components/PageFooter";
+import PasswordResetModel from "@/modules/User/PasswordResetModel";
+import i18n from "@/shared/i18n";
 
 const {mapState, mapActions} = createNamespacedHelpers('user');
 export default {
   name: "Profile",
-  components: {PageFooter, PageHeader, InputWidget, ContentSpinner, ImageUploader},
+  components: {InputWidget, ContentSpinner, ImageUploader},
   data() {
     return {
       userModel: new UserModel(),
       image: null,
+      passwordResetModel: new PasswordResetModel(),
     }
   },
   computed: {
     ...mapState({
       currentUser: state => state.currentUser,
-      currentUserData: state => state.currentUser.data
+      currentUserData: state => state.currentUser.data,
+      passwordForm: state => state.passwordForm
     }),
   },
   watch: {
@@ -103,7 +115,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getProfile', 'updateProfile']),
+    ...mapActions(['getProfile', 'updateProfile', 'changePassword']),
     onUpdateClick() {
       this.userModel.resetErrors();
       this.userModel.image = this.image;
@@ -120,6 +132,15 @@ export default {
         // console.log(this.userModel);
 
       }, 500);
+    },
+    async onPasswordChange() {
+      this.passwordResetModel.resetErrors();
+      const {success, body} = await this.changePassword(this.passwordResetModel)
+      if (!success) {
+        this.passwordResetModel.setMultipleErrors(body);
+      } else {
+        this.$successToast(i18n.t('Your password was updated'))
+      }
     }
   },
   mounted() {
