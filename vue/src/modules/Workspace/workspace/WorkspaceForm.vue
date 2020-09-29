@@ -1,15 +1,15 @@
 <template>
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal
-        :visible="showModal" id="workspace-form" ref="modal"
-        :title='modalWorkspace ? $t(`Update workspace "{workspace}"`,{workspace:model.name}) : $t(`Add New Workspace`)'
-        @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')"
-        scrollable>
+      :visible="showModal" id="workspace-form" ref="modal" size="lg"
+      :title='modalWorkspace ? $t(`Update workspace "{workspace}"`,{workspace:model.name}) : $t(`Add New Workspace`)'
+      @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')"
+      scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
         <input-widget :model="model" attribute="folder_in_folder" type="checkbox"></input-widget>
         <input-widget :model="model" attribute="name"></input-widget>
         <input-widget :model="model" attribute="abbreviation"></input-widget>
-        <!--<input-widget :model="model" attribute="description" type="ckeditor"></input-widget>-->
+        <input-widget :model="model" attribute="description" type="richtext"></input-widget>
       </b-form>
     </b-modal>
   </ValidationObserver>
@@ -79,6 +79,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>
