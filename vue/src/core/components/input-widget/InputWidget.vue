@@ -1,7 +1,7 @@
 <template>
   <ValidationProvider :name="`${attribute}-${uuid}`" :rules="model.getRules(attribute, rules || null)"
                       :customMessages="model.getMessages(attribute, rules || null)" v-slot="v" tag="div" :vid="vid">
-    <b-form-group v-if="isInput() || isTextarea()|| isCkeditor()">
+    <b-form-group v-if="isInput() || isTextarea() || isCkeditor()">
       <label v-if="computedLabel">
         {{ computedLabel }}
         <span v-if="v.required" class="text-danger">*</span>
@@ -38,7 +38,7 @@
         {{ computedHint }}
       </b-form-text>
     </b-form-group>
-    <b-form-group v-if="isSelect()">
+    <b-form-group v-if="isSelect() || isDate() || isMultiselect() || isRichtext()">
       <label v-if="computedLabel">
         {{ computedLabel }}
         <span v-if="v.required" class="text-danger">*</span>
@@ -50,14 +50,69 @@
             <i class="fas fa-question-circle"></i>
           </b-input-group-text>
         </template>
-        <b-form-select ref="currentInput" :size="size" :disabled="disabled" :options="selectOptions"
+
+        <b-form-select v-if="isSelect()" ref="currentInput" :size="size" :disabled="disabled" :options="selectOptions"
                        :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
                        :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
                        @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
         />
+
+        <datePicker v-if="isDate()" ref="currentInput" :size="size" :disabled="disabled" :config="datePickerOptions"
+                    :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
+                    :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
+                    @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
+        />
+
+        <Multiselect v-if="isMultiselect()" ref="currentInput" :size="size" :disabled="disabled"
+                     :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`"
+                     :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" :state="getState(v)"
+                     :tag-placeholder="$t(multiselectPlaceholder)"
+                     :placeholder="computedPlaceholder"
+                     :options="multiselectOptions"
+                     :multiple="true"
+                     :taggable="true"
+                     :selectLabel="$t('Press enter to select')"
+                     :deselectLabel="$t('Press enter to remove')"
+                     :selectedLabel="$t('Selected')"
+                     track-by="value"
+                     label="text"
+                     @tag="addMultiselect">
+          <span slot="noOptions">{{ $t('List is empty.') }}</span>
+          <template slot="tag" slot-scope="{ option, remove }">
+                            <span class="multiselect__tag">
+                              <span>{{ $t(option.value) }}</span>
+                              <span class="multiselect__tag-icon" @click="remove(option)"></span>
+                            </span>
+          </template>
+        </Multiselect>
+
+        <ckeditor v-if="isRichtext()" :editor="editor" :config="editorConfig" ref="currentInput" :size="size"
+                  :disabled="disabled" :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`"
+                  :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]"
+        />
+
         <b-form-invalid-feedback :state="getState(v)">
           {{ getError(v.errors) }}
         </b-form-invalid-feedback>
+      </b-input-group>
+    </b-form-group>
+    <b-form-group v-if="isTagsInput()">
+      <label v-if="computedLabel">
+        {{ computedLabel }}
+        <span v-if="v.required" class="text-danger">*</span>
+      </label>
+      <b-input-group :prepend="prepend" :append="append" :size="size">
+        <template v-slot:append v-if="appendQuestion">
+          <b-tooltip :target="`question-mark-tooltip-${attribute}-${uuid}`" :title="appendQuestion"/>
+          <b-input-group-text :id="`question-mark-tooltip-${attribute}-${uuid}`" class="hover-cursor">
+            <i class="fas fa-question-circle"></i>
+          </b-input-group-text>
+        </template>
+        <b-form-tags ref="currentInput" :size="size" :disabled="disabled"
+                      :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
+                      :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
+                      @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
+                      :placeholder="computedPlaceholder" :min="min"/>
       </b-input-group>
     </b-form-group>
     <b-form-group v-if="isCheckbox()">
@@ -82,14 +137,27 @@
 
 import BaseModel from "./BaseModel";
 import {uuid} from 'vue-uuid';
+import datePicker from 'vue-bootstrap-datetimepicker';
+import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
+import Multiselect from 'vue-multiselect'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import InlineEditor from '@ckeditor/ckeditor5-build-inline';
 
 export default {
   name: 'InputWidget',
-  components: {},
+  components: {datePicker, Multiselect},
   props: {
     model: BaseModel,
     attribute: String,
+    multiselectOptions: {
+      type: Array,
+      default: Array
+    },
+    multiselectPlaceholder: {
+      type: String,
+      default: '',
+      required: false
+    },
     label: {
       type: [String, Boolean],
       default: null
@@ -147,9 +215,7 @@ export default {
     },
     vid: {
       type: String,
-      default() {
-        return `vid-${this.attribute}-${uuid.v4()}`
-      }
+      default: ''
     },
     min: {
       type: [String, Number],
@@ -167,10 +233,22 @@ export default {
   data() {
     return {
       uuid: uuid.v4(),
+      datePickerOptions: {
+        format: 'DD-MM-YYYY'
+      },
+      editor: ClassicEditor,
+      editorConfig: {},
       ckeditorConfig: getCkeditorDefaultConfig(),
     }
   },
   methods: {
+    addMultiselect(newMultiselect) {
+      const tag = {
+        value: newMultiselect,
+        text: newMultiselect
+      };
+      this.model[this.attribute].push(tag);
+    },
     getError(errors) {
       if (this.model.hasError(this.attribute)) {
         return this.model.getFirstError(this.attribute);
@@ -199,7 +277,19 @@ export default {
       this.$refs.currentInput.focus();
     },
     isInput() {
-      return ['text', 'number', 'date', 'password', 'email', 'search', 'url', 'tel', 'time', 'range', 'color'].includes(this.type)
+      return ['text', 'number', 'password', 'email', 'search', 'url', 'tel', 'time', 'range', 'color'].includes(this.type)
+    },
+    isRichtext() {
+      return this.type === 'richtext';
+    },
+    isTagsInput() {
+      return this.type === 'tags';
+    },
+    isMultiselect() {
+      return this.type === 'multiselect';
+    },
+    isDate() {
+      return this.type === 'date';
     },
     isTextarea() {
       return this.type === 'textarea';
@@ -271,6 +361,7 @@ function getCkeditorDefaultConfig() {
 }
 
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style lang="scss">
 

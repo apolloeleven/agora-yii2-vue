@@ -6,7 +6,7 @@
         {{ $t('Add new country') }}
       </b-button>
     </page-header>
-    <div class="content-wrapper p-3">
+    <div class="page-content p-3">
       <content-spinner :show="countries.loading" :text="$t('Please wait...')" class="h-100"/>
       <b-card v-if="!countries.loading && countries.loaded" no-body>
         <b-table striped hover :items="countries.data" :fields="fields" class="mb-0">

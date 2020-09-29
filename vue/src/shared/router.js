@@ -13,6 +13,7 @@ import CountryList from "@/modules/setup/countries/CountryList";
 import UserInvitations from "@/modules/User/Invitation/UserInvitations";
 import User from "@/modules/User/User";
 import DepartmentList from "@/modules/setup/departments/DepartmentList";
+import Profile from "@/modules/User/Profile";
 import Workspace from "@/modules/Workspace/workspace/Workspace";
 import WorkspaceView from "@/modules/Workspace/workspace/WorkspaceView";
 
@@ -63,6 +64,7 @@ const router = new Router({
         {path: '/setup', name: 'setup', component: Setup,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
         {path: '/setup/departments', name: 'departments', component: DepartmentList},
+        {path: '/profile', name: 'profile', component: Profile,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
         {
           path: '/users', name: 'user', component: User,

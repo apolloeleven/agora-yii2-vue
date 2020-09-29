@@ -4,7 +4,7 @@ import {
   SET_DEPARTMENTS,
   SET_DEPARTMENTS_LOADING,
   SHOW_DEPARTMENT_MODAL
-} from "@/store/setup/mutation-types";
+} from "@/store/modules/setup/mutation-types";
 
 export default {
   [SET_COUNTRIES_LOADING](state, loading) {

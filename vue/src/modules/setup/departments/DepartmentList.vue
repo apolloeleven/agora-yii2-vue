@@ -6,7 +6,7 @@
         {{$t('Add new department')}}
       </b-button>
     </page-header>
-    <div class="content-wrapper p-3">
+    <div class="page-content p-3">
       <content-spinner :show="departments.loading" :text="$t('Please wait...')" class="h-100"/>
       <b-card no-body>
         <department-list-group v-if="!departments.loading && departments.loaded"

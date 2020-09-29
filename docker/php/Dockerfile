@@ -13,9 +13,18 @@ RUN docker-php-ext-install zip intl mbstring pdo_mysql exif \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd
 
-COPY ./install-composer.sh /
+RUN pecl install -o -f xdebug \
+    && rm -rf /tmp/pear
 
-RUN sh /install-composer.sh \
+COPY ./install-composer.sh /
+COPY ./php.ini /usr/local/etc/php/
+COPY ./www.conf /usr/local/etc/php/
+
+RUN apt-get purge -y g++ \
+    && apt-get autoremove -y \
+    && rm -r /var/lib/apt/lists/* \
+    && rm -rf /tmp/* \
+    && sh /install-composer.sh \
     && rm /install-composer.sh
 
 RUN usermod -u 1000 www-data
@@ -24,5 +33,4 @@ VOLUME /root/.composer
 WORKDIR /app
 
 EXPOSE 9000
-CMD ["echo", "Hello world"]
 CMD ["php-fpm"]

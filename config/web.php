@@ -1,8 +1,5 @@
 <?php
 
-use app\models\User;
-use yii\rest\UrlRule;
-
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -28,7 +25,7 @@ $config = [
         ],
         'user' => [
             'class' => yii\web\User::class,
-            'identityClass' => User::class,
+            'identityClass' => \app\modules\v1\setup\resources\UserResource::class,
             'enableSession' => false,
             'loginUrl' => null,
         ],
@@ -63,6 +60,7 @@ $config = [
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/department'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/my-user'],
                 [
                     'class' => UrlRule::class,
                     'pluralize' => false,
