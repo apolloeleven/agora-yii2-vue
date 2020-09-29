@@ -3,7 +3,7 @@ services:
   app:
     build: docker/php
     networks:
-      - test
+      - agora
     volumes:
       - ./:/app
     depends_on:
@@ -14,7 +14,7 @@ services:
   nginx:
     image: nginx:1.12-alpine
     networks:
-      - test
+      - agora
     ports:
       - 80:80
     volumes:
@@ -26,7 +26,7 @@ services:
   db:
     image: mysql:5.7
     networks:
-      - test
+      - agora
     volumes:
       - /var/lib/mysql
       - ./docker/mysql/config.cnf:/etc/mysql/conf.d/config.cnf
@@ -39,6 +39,6 @@ services:
       MYSQL_PASSWORD: 123456
 
 networks:
-  test:
+  agora:
     external:
       name: nat
