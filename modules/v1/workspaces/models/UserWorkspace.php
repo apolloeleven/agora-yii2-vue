@@ -17,6 +17,7 @@ use yii\db\ActiveRecord;
  *
  * @property int $id
  * @property int|null $user_id
+ * @property int|null $workspace_id
  * @property string|null $role
  * @property int|null $created_at
  * @property int|null $updated_at

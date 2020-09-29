@@ -5,7 +5,9 @@ namespace app\modules\v1\workspaces\resources;
 
 
 use app\modules\v1\users\resources\UserResource;
+use app\modules\v1\workspaces\models\UserWorkspace;
 use app\modules\v1\workspaces\models\Workspace;
+use app\rest\ValidationException;
 use Yii;
 use yii\db\ActiveQuery;
 
@@ -55,5 +57,26 @@ class WorkspaceResource extends Workspace
     public function getUpdatedBy()
     {
         return $this->hasOne(UserResource::class, ['id' => 'updated_by']);
+    }
+
+    /**
+     * After save workspace create new user workspace
+     *
+     * @param $insert
+     * @param $changedAttributes
+     * @throws ValidationException
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if ($insert) {
+            $userWorkspace = new UserWorkspace();
+            $userWorkspace->workspace_id = $this->id;
+            $userWorkspace->user_id = Yii::$app->user->id;
+
+            if (!$userWorkspace->save()) {
+                throw new ValidationException(Yii::t('app', 'Unable to create user workspace'));
+            }
+        }
     }
 }

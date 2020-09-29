@@ -31,6 +31,7 @@ use yii\db\ActiveRecord;
 class Workspace extends ActiveRecord
 {
     public $image;
+    public $image_url;
 
     /**
      * {@inheritdoc}
@@ -65,6 +66,7 @@ class Workspace extends ActiveRecord
             [['image_path'], 'string', 'max' => 1024],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
+            [['image_url'], 'string'],
             [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, gif, jpg']
         ];
     }
