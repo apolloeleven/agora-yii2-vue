@@ -1,8 +1,9 @@
 <?php
 
-namespace app\models\query;
+namespace app\modules\v1\users\models\query;
 
-use app\models\User;
+
+use app\modules\v1\users\models\User;
 
 /**
  * This is the ActiveQuery class for [[\app\models\User]].

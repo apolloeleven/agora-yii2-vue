@@ -3,9 +3,9 @@
 namespace app\modules\v1\users\controllers;
 
 use app\helpers\MailHelper;
-use app\models\LoginForm;
-use app\models\SignupForm;
-use app\models\User;
+use app\modules\v1\users\models\LoginForm;
+use app\modules\v1\users\models\SignupForm;
+use app\modules\v1\users\models\User;
 use app\modules\v1\users\resources\InvitationResource;
 use app\rest\Controller;
 use Yii;

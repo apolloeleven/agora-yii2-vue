@@ -8,7 +8,7 @@
 namespace app\modules\v1\users\resources;
 
 
-use app\models\User;
+use app\modules\v1\users\models\User;
 use app\modules\v1\users\models\UserDepartment;
 use app\rest\ValidationException;
 use Yii;

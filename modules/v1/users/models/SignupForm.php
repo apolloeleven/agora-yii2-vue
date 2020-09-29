@@ -1,10 +1,10 @@
 <?php
 
-namespace app\models;
+namespace app\modules\v1\users\models;
 
 
 use app\helpers\MailHelper;
-use app\modules\v1\users\models\Invitation;
+use app\models\UserProfile;
 use app\rest\ValidationException;
 use Yii;
 use yii\base\Exception;

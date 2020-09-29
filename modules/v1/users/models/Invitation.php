@@ -5,7 +5,6 @@ namespace app\modules\v1\users\models;
 
 
 use app\modules\v1\users\models\query\InvitationQuery;
-use app\models\User;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;

@@ -1,8 +1,8 @@
 <?php
 
-namespace app\models;
+namespace app\modules\v1\users\models;
 
-use app\models\query\UserQuery;
+use app\modules\v1\users\models\query\UserQuery;
 use app\modules\v1\users\models\UserDepartment;
 use Yii;
 use yii\base\Exception;

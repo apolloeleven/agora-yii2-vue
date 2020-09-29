@@ -2,7 +2,7 @@
 
 namespace app\modules\v1\setup\models;
 
-use app\models\User;
+use app\modules\v1\users\models\User;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -90,7 +90,7 @@ class Department extends \yii\db\ActiveRecord
     /**
      * Gets query for [[CreatedBy]].
      *
-     * @return \yii\db\ActiveQuery|\app\models\query\UserQuery
+     * @return \yii\db\ActiveQuery|\app\modules\v1\users\models\query\UserQuery
      */
     public function getCreatedBy()
     {
@@ -120,7 +120,7 @@ class Department extends \yii\db\ActiveRecord
     /**
      * Gets query for [[UpdatedBy]].
      *
-     * @return \yii\db\ActiveQuery|\app\models\query\UserQuery
+     * @return \yii\db\ActiveQuery|\app\modules\v1\users\models\query\UserQuery
      */
     public function getUpdatedBy()
     {

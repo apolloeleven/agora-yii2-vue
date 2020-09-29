@@ -8,7 +8,7 @@
 namespace app\modules\v1\setup\resources;
 
 
-use app\models\User;
+use app\modules\v1\users\models\User;
 
 /**
  * Class UserResource

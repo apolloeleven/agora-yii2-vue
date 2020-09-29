@@ -2,7 +2,6 @@
 
 namespace app\modules\v1\users\models;
 
-use app\models\User;
 use app\modules\v1\setup\models\Department;
 use Yii;
 
@@ -68,7 +67,7 @@ class UserDepartment extends \yii\db\ActiveRecord
     /**
      * Gets query for [[CreatedBy]].
      *
-     * @return \yii\db\ActiveQuery| \app\models\query\UserQuery
+     * @return \yii\db\ActiveQuery| \app\modules\v1\users\models\query\UserQuery
      */
     public function getCreatedBy()
     {
@@ -88,7 +87,7 @@ class UserDepartment extends \yii\db\ActiveRecord
     /**
      * Gets query for [[UpdatedBy]].
      *
-     * @return \yii\db\ActiveQuery|\app\models\query\UserQuery
+     * @return \yii\db\ActiveQuery|\app\modules\v1\users\models\query\UserQuery
      */
     public function getUpdatedBy()
     {
@@ -98,7 +97,7 @@ class UserDepartment extends \yii\db\ActiveRecord
     /**
      * Gets query for [[User]].
      *
-     * @return \yii\db\ActiveQuery|\app\models\query\UserQuery
+     * @return \yii\db\ActiveQuery|\app\modules\v1\users\models\query\UserQuery
      */
     public function getUser()
     {
