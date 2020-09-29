@@ -2,7 +2,7 @@ import Vuex from "vuex";
 import Vue from 'vue';
 import setup from './modules/setup';
 import user from './modules/user';
-import workspace from './workspaces/workspace';
+import workspace from './modules/workspace';
 
 // Load vuex
 Vue.use(Vuex);
