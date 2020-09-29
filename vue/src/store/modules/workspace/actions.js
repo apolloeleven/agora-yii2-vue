@@ -7,6 +7,7 @@ import {
 import httpService from "../../../core/services/httpService";
 
 /**
+ * Show workspace form's modal
  *
  * @param { function } commit
  * @param { bool } showModal
@@ -16,6 +17,7 @@ export function showWorkspaceModal({commit}, showModal) {
 }
 
 /**
+ * Hide workspace form's modal
  *
  * @param { function } commit
  * @param { bool } hideModal
@@ -55,6 +57,7 @@ export async function updateWorkspace({dispatch}, data) {
 }
 
 /**
+ * Delete workspace
  *
  * @param { function } commit
  * @param dispatch
@@ -70,6 +73,12 @@ export async function deleteWorkspace({commit, dispatch}, data) {
   return res;
 }
 
+/**
+ * Get workspaces by user
+ *
+ * @param commit
+ * @returns {Promise<void>}
+ */
 export async function getUserWorkspaces({commit}) {
   const {success, body} = await httpService.get(`/v1/workspaces/workspace/get-user-workspaces?expand=updatedBy&sort=name`);
   if (success) {
