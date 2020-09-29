@@ -51,10 +51,10 @@ class UserQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * Find users by id
+     * Find user by id
      *
      * @param $id
-     * @return UserQuery
+     * @return mixed
      */
     public function byId($id)
     {

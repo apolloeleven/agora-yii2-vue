@@ -65,4 +65,12 @@ body,
 .fade-leave-active {
   opacity: 0
 }
+
+.vue-notification-group {
+  margin: 15px;
+  .vue-notification {
+    cursor: pointer;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+  }
+}
 </style>

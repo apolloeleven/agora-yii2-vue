@@ -119,7 +119,7 @@ export default class BaseModel {
       return;
     }
 
-    if (Array.isArray(attributeErrorMap) && attributeErrorMap[0].field) {
+    if (Array.isArray(attributeErrorMap) && attributeErrorMap.length) {
       const errorObject = (attributeErrorMap.reduce((acc, err) => {
         acc[err.field] = err.message;
         return acc;

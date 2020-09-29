@@ -1,0 +1,3 @@
+export const SET_USER = 'user/SET_USER';
+export const SET_PROFILE_LOADING = 'user/SET_PROFILE_LOADING';
+export const SET_PASSWORD_FORM_LOADING = 'user/SET_PASSWORD_FORM_LOADING';
