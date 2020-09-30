@@ -12,12 +12,8 @@ export default class EmployeeModel extends BaseModel {
   userDepartments = [];
 
   rules = {
-    first_name: [
-      {rule: 'required'},
-    ],
-    last_name: [
-      {rule: 'required'}
-    ],
+    first_name: 'required',
+    last_name: 'required',
     email: [
       {rule: 'required'},
       {rule: 'email'},
@@ -29,11 +25,6 @@ export default class EmployeeModel extends BaseModel {
     first_name: i18n.t('First Name'),
     last_name: i18n.t('Last Name'),
   };
-
-  toJSON() {
-    let data = super.toJSON();
-    return data;
-  }
 
   constructor(data = {}) {
     super();

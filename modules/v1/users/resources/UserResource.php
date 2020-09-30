@@ -23,9 +23,9 @@ use yii\helpers\ArrayHelper;
  */
 class UserResource extends User
 {
-    const ROLE_USER = 'User';
-    const ROLE_ADMIN = 'Admin';
-    const ROLE_WORKSPACE_ADMIN = 'Workspace Admin';
+    const ROLE_USER = 'user';
+    const ROLE_ADMIN = 'admin';
+    const ROLE_WORKSPACE_ADMIN = 'workspaceAdmin';
 
     public function fields()
     {
@@ -68,19 +68,20 @@ class UserResource extends User
     /**
      * @return string[][]
      */
-    public static function getUserRoles() {
+    public static function getUserRoles()
+    {
         return [
             [
-                'value' => 'user',
-                'text' => self::ROLE_USER
+                'value' => self::ROLE_USER,
+                'text' => Yii::t('app', 'User')
             ],
             [
-                'value' => 'admin',
-                'text' => self::ROLE_ADMIN
+                'value' => self::ROLE_ADMIN,
+                'text' => Yii::t('app', 'Admin')
             ],
             [
-                'value' => 'workspaceAdmin',
-                'text' => self::ROLE_WORKSPACE_ADMIN
+                'value' => self::ROLE_WORKSPACE_ADMIN,
+                'text' => Yii::t('app', 'Workspace Admin')
             ]
         ];
     }

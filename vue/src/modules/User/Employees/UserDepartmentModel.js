@@ -24,9 +24,9 @@ export default class EmployeeModel extends BaseModel {
 
   attributeLabels = {
     id: ' ',
-    position: ' ',
-    country_id: ' ',
-    department_id: ' ',
+    position: 'Position',
+    country_id: 'Country',
+    department_id: 'Department',
   };
 
   toJSON() {

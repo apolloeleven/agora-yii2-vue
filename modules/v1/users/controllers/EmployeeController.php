@@ -19,7 +19,7 @@ use yii\helpers\ArrayHelper;
 
 class EmployeeController extends ActiveController
 {
-    public $modelClass = UserDepartmentResource::class;
+    public $modelClass = UserResource::class;
 
     public function behaviors()
     {
@@ -27,11 +27,11 @@ class EmployeeController extends ActiveController
 
         $behaviors['access'] = [
             'class' => AccessControl::class,
-            'only' => ['index', 'create', 'delete'],
+            'only' => ['index', 'create', 'delete', 'update'],
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => ['index', 'create', 'delete'],
+                    'actions' => ['index', 'create', 'delete', 'update'],
                     //TODO roles
                 ]
             ]
@@ -43,7 +43,8 @@ class EmployeeController extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-        unset($actions['update'], $actions['view'], $actions['index']);
+        unset($actions['update'], $actions['view']);
+        $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
 
         return $actions;
     }
@@ -51,20 +52,15 @@ class EmployeeController extends ActiveController
     protected function verbs()
     {
         $verbs = parent::verbs();
-        $verbs['index'] = ['GET', 'HEAD', 'OPTIONS'];
-        $verbs['update-user-data'] = ['PUT', 'OPTIONS'];
         $verbs['get-dropdown'] = ['GET', 'HEAD', 'OPTIONS'];
 
         return $verbs;
     }
 
-    /**
-     * @return ActiveDataProvider
-     */
-    public function actionIndex()
+    public function prepareDataProvider()
     {
-        $userDepartmentSearch = new UserDepartmentSearch();
-        return $userDepartmentSearch->search(\Yii::$app->request->get());
+        $searchModel = new UserDepartmentSearch();
+        return $searchModel->search(\Yii::$app->request->get());
     }
 
     /**
@@ -72,7 +68,7 @@ class EmployeeController extends ActiveController
      * @throws ValidationException
      * @throws \yii\db\Exception
      */
-    public function actionUpdateUserData()
+    public function actionUpdate()
     {
         $request = \Yii::$app->request;
         $dbTransaction = \Yii::$app->db->beginTransaction();

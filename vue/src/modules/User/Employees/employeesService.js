@@ -5,7 +5,7 @@ const employeeService = {
 
   get(params = {
     sort: '-created_at',
-    expand: 'userDepartments, userDepartments.department, userDepartments.department.country'
+    expand: 'userDepartments,userDepartments.department,userDepartments.department.country'
   }) {
     return httpService.get(this.url, {params});
   },
@@ -13,7 +13,7 @@ const employeeService = {
     return httpService.get(this.url + '/get-dropdown', {params})
   },
   updateUserData(params) {
-    return httpService.put(this.url + '/update-user-data', params)
+    return httpService.put(this.url + '/update', params)
   }
 }
 
