@@ -10,6 +10,7 @@
     </div>
     <UserInvitationForm/>
     <WorkspaceForm/>
+    <ArticleForm/>
   </div>
 </template>
 
@@ -18,6 +19,7 @@ import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
 import UserInvitationForm from "../../../../modules/User/Invitation/UserInvitationForm";
 import WorkspaceForm from "../../../../modules/Workspace/workspace/WorkspaceForm";
+import ArticleForm from "../../../../modules/Workspace/article/ArticleForm";
 import {mapState, createNamespacedHelpers} from 'vuex';
 
 const {mapActions} = createNamespacedHelpers('user');
@@ -29,6 +31,7 @@ export default {
     Navbar,
     UserInvitationForm,
     WorkspaceForm,
+    ArticleForm,
   },
   computed: {
     ...mapState([
