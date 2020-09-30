@@ -3,11 +3,11 @@
     <b-modal
       :visible="showModal" id="workspace-form" ref="modal" size="lg"
       :title='modalWorkspace ? $t(`Update workspace "{workspace}"`,{workspace:model.name}) : $t(`Add New Workspace`)'
-      @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')"
+      @hidden="hideWorkspaceModal" @ok.prevent="handleSubmit(onSubmit)" :ok-title="$t('Submit')"
       scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
         <b-form-group :label="$t('Upload Image')">
-          <input :model="image" type="file"/>
+          <input :model="model.image" type="file"/>
         </b-form-group>
         <input-widget :model="model" attribute="folder_in_folder" type="checkbox"></input-widget>
         <input-widget :model="model" attribute="name"></input-widget>
@@ -32,11 +32,10 @@ export default {
     return {
       model: new WorkspaceFormModel(),
       action: '',
-      image: null,
     }
   },
   computed: {
-    ...mapState(['loading', 'showModal', 'modalWorkspace']),
+    ...mapState(['showModal', 'modalWorkspace']),
   },
   watch: {
     modalWorkspace() {
@@ -76,9 +75,6 @@ export default {
         this.model = new WorkspaceFormModel()
       }
     },
-    hideModal() {
-      this.hideWorkspaceModal()
-    }
   }
 }
 </script>

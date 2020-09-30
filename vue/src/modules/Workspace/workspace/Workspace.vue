@@ -1,6 +1,6 @@
 <template>
   <div id="workspace" class="page">
-    <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
+    <content-spinner :show="loading" :text="$t('Loading...')" :fullscreen="true" class="h-100"/>
     <div class="page-header">
       <b-breadcrumb :items="breadCrumb" class="d-none d-sm-flex"></b-breadcrumb>
       <b-button @click="showModal" variant="info">

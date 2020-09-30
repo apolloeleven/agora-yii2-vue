@@ -5,7 +5,7 @@ import {
   WORKSPACE_DELETED,
   GET_BREAD_CRUMB
 } from './mutation-types';
-import httpService from "../../../core/services/httpService";
+import httpService from "../../../../core/services/httpService";
 
 /**
  * Show workspace form's modal

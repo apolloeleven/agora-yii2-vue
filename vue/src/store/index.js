@@ -2,7 +2,8 @@ import Vuex from "vuex";
 import Vue from 'vue';
 import setup from './modules/setup';
 import user from './modules/user';
-import workspace from './modules/workspace';
+import workspace from './modules/workspaces/workspace';
+import article from './modules/workspaces/article';
 
 // Load vuex
 Vue.use(Vuex);
@@ -47,5 +48,6 @@ export default new Vuex.Store({
     setup,
     user,
     workspace,
+    article,
   }
 });
