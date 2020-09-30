@@ -67,13 +67,11 @@ export default {
       }
       if (res.success) {
         this.$toast(this.$t(`The workspace '{name}' was successfully ${this.action}`, {name: this.model.name}));
-        this.hideWorkspaceModal()
-        this.model = new WorkspaceFormModel()
       } else {
         this.$toast(this.$t(`The workspace '{name}' was not ${this.action}`, {name: this.model.name}), 'danger');
-        this.hideWorkspaceModal()
-        this.model = new WorkspaceFormModel()
       }
+      this.hideWorkspaceModal()
+      this.model = new WorkspaceFormModel()
     },
   }
 }

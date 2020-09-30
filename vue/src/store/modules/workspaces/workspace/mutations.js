@@ -21,7 +21,8 @@ export default {
    * @param state
    */
   [HIDE_WORKSPACE_MODAL](state) {
-    state.showModal = false
+    state.showModal = false;
+    state.modalWorkspace = null;
   },
   /**
    *
