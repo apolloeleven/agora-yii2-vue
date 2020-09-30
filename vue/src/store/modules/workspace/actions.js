@@ -2,7 +2,8 @@ import {
   SHOW_WORKSPACE_MODAL,
   HIDE_WORKSPACE_MODAL,
   GET_USER_WORKSPACES,
-  WORKSPACE_DELETED
+  WORKSPACE_DELETED,
+  GET_BREAD_CRUMB
 } from './mutation-types';
 import httpService from "../../../core/services/httpService";
 
@@ -84,4 +85,17 @@ export async function getUserWorkspaces({commit}) {
   if (success) {
     commit(GET_USER_WORKSPACES, body);
   }
+}
+
+/**
+ * Get breadcrumb for workspace view page
+ *
+ * @param commit
+ * @param workspaceId
+ * @returns {Promise<void>}
+ */
+export async function getWorkspaceBreadCrumb({commit}, workspaceId) {
+  const res = await httpService.get(`/v1/workspaces/workspace/get-bread-crumb?workspaceId=${workspaceId}`);
+  if (res.success) commit(GET_BREAD_CRUMB, res.body);
+  return res;
 }

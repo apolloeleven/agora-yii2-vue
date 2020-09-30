@@ -5,6 +5,7 @@ const STATE = {
   workspaces: [],
   userWorkspaces: [],
   modalWorkspace: null,
+  breadCrumb: [],
 };
 
 export default STATE;

@@ -2,7 +2,7 @@
   <div class="workspace-view page">
     <div class="page-header">
       <back-button/>
-      <b-breadcrumb class="d-none d-sm-flex"></b-breadcrumb>
+      <b-breadcrumb :items="breadCrumb" class="d-none d-sm-flex"></b-breadcrumb>
       <b-button variant="info">
         <i class="fas fa-plus-circle"></i>
         {{ $t('Create new folder') }}
@@ -23,10 +23,29 @@
 
 <script>
 import BackButton from "../components/BackButton";
+import {createNamespacedHelpers} from "vuex";
+
+const {mapState, mapActions} = createNamespacedHelpers('workspace')
 
 export default {
   name: "WorkspaceView",
   components: {BackButton},
+  computed: {
+    ...mapState(['breadCrumb']),
+  },
+  methods: {
+    ...mapActions(['getWorkspaceBreadCrumb']),
+    async getBreadCrumb() {
+      const res = await this.getWorkspaceBreadCrumb(this.$route.params.id)
+      if (!res.success) {
+        this.$toast(this.$t(res.body), 'danger')
+        this.$router.push({name: 'workspace'});
+      }
+    }
+  },
+  mounted() {
+    this.getBreadCrumb()
+  }
 }
 </script>
 
