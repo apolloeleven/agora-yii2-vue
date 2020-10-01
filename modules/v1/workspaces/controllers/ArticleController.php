@@ -3,7 +3,6 @@
 
 namespace app\modules\v1\workspaces\controllers;
 
-use app\modules\v1\workspaces\models\Article;
 use app\modules\v1\workspaces\resources\ArticleResource;
 use app\rest\ActiveController;
 use Yii;
@@ -22,6 +21,7 @@ class ArticleController extends ActiveController
     {
         $actions = parent::actions();
         $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
+        unset($actions['create']);
 
         return $actions;
     }
@@ -36,6 +36,44 @@ class ArticleController extends ActiveController
         return new ActiveDataProvider([
             'query' => $query
         ]);
+    }
+
+    public function actionCreate()
+    {
+        $request = Yii::$app->request;
+        $articleId = $request->post('article_id');
+
+        $parentFolder = null;
+        if ($articleId) {
+            $parentFolder = ArticleResource::findOne($articleId);
+            if (!$parentFolder) {
+                return $this->validationError($parentFolder->getFirstErrors());
+            }
+        }
+
+        $article = new ArticleResource();
+
+        $article->title = $request->post('title');
+        $article->body = $request->post('body');
+        $article->workspace_id = $request->post('workspace_id');
+        $article->is_folder = !$parentFolder ? 1 : (int)($parentFolder->depth === 0 && $parentFolder->workspace->folder_in_folder);
+
+        if ((!$article->load($request->post(), '')) && !$article->validate()) {
+            return $this->validationError($article->getFirstErrors());
+        }
+
+        if (!$articleId) {
+            if (!$article->makeRoot()) {
+                $this->validationError($article->getFirstErrors());
+            }
+        } else {
+            $article->parent_id = $articleId;
+            if (!$article->appendTo($parentFolder)) {
+                $this->validationError($article->getFirstErrors());
+            }
+        }
+
+        return $this->response($article, 201);
     }
 
     /**

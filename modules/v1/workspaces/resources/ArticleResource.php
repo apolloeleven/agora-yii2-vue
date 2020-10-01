@@ -48,17 +48,4 @@ class ArticleResource extends Article
     {
         return ['children', 'workspace', 'createdBy', 'updatedBy'];
     }
-
-    /**
-     * @param bool $insert
-     * @return bool
-     */
-
-    public function beforeSave($insert)
-    {
-        if ($insert) {
-            $this->depth = 0;
-        }
-        return parent::beforeSave($insert);
-    }
 }

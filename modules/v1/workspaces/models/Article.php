@@ -4,6 +4,7 @@ namespace app\modules\v1\workspaces\models;
 
 use app\models\User;
 use app\modules\v1\workspaces\models\query\ArticleQuery;
+use creocoder\nestedsets\NestedSetsBehavior;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -55,6 +56,10 @@ class Article extends ActiveRecord
         return array_merge(parent::behaviors(), [
             TimestampBehavior::class,
             BlameableBehavior::class,
+            'NestedSetsModel' => [
+                'class' => NestedSetsBehavior::class,
+                'treeAttribute' => 'tree',
+            ],
         ]);
     }
 

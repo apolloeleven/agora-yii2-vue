@@ -4,6 +4,7 @@
 namespace app\modules\v1\workspaces\models\query;
 
 use app\modules\v1\workspaces\models\Article;
+use creocoder\nestedsets\NestedSetsQueryBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -14,6 +15,13 @@ use yii\db\ActiveRecord;
  */
 class ArticleQuery extends ActiveQuery
 {
+    public function behaviors()
+    {
+        return [
+            NestedSetsQueryBehavior::class
+        ];
+    }
+
     /**
      * @param null $db
      * @return Article[]
