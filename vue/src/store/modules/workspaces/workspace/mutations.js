@@ -3,12 +3,12 @@ import {
   HIDE_WORKSPACE_MODAL,
   GET_USER_WORKSPACES,
   WORKSPACE_DELETED,
-  GET_BREAD_CRUMB
+  GET_BREAD_CRUMB,
+  GET_CURRENT_WORKSPACE,
 } from './mutation-types';
 
 export default {
   /**
-   *
    * @param state
    * @param workspace
    */
@@ -17,7 +17,6 @@ export default {
     state.modalWorkspace = workspace;
   },
   /**
-   *
    * @param state
    */
   [HIDE_WORKSPACE_MODAL](state) {
@@ -25,7 +24,6 @@ export default {
     state.modalWorkspace = null;
   },
   /**
-   *
    * @param state
    * @param data
    */
@@ -34,7 +32,6 @@ export default {
     state.workspaces = data;
   },
   /**
-   *
    * @param state
    * @param id
    */
@@ -42,11 +39,17 @@ export default {
     state.workspaces = state.workspaces.filter(workspace => workspace.id !== id)
   },
   /**
-   *
    * @param state
    * @param data
    */
   [GET_BREAD_CRUMB](state, data) {
     state.breadCrumb = data
   },
+  /**
+   * @param state
+   * @param data
+   */
+  [GET_CURRENT_WORKSPACE](state, data) {
+    state.currentWorkspace = data || {}
+  }
 };

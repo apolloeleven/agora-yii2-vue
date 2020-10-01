@@ -20,6 +20,7 @@ import ArticleFormModel from "./ArticleFormModel";
 import {createNamespacedHelpers} from "vuex";
 
 const {mapState, mapActions} = createNamespacedHelpers('article');
+const {mapState: mapWorkspaceState} = createNamespacedHelpers('workspace');
 
 export default {
   name: "ArticleForm",
@@ -33,6 +34,7 @@ export default {
   },
   computed: {
     ...mapState(['showModal', 'modalArticle']),
+    ...mapWorkspaceState(['currentWorkspace']),
     modalTitle() {
       if (this.model.workspace_id) {
         if (this.modalArticle) {
@@ -67,7 +69,7 @@ export default {
     ...mapActions(['hideArticleModal', 'createArticle', 'updateArticle']),
     async onSubmit() {
       this.resource = 'folder';
-      this.model.workspace_id = this.$route.params.id;
+      this.model.workspace_id = this.currentWorkspace.id;
 
       if (this.model.workspace_id) {
         this.resource = 'folder';

@@ -3,7 +3,8 @@ import {
   HIDE_WORKSPACE_MODAL,
   GET_USER_WORKSPACES,
   WORKSPACE_DELETED,
-  GET_BREAD_CRUMB
+  GET_BREAD_CRUMB,
+  GET_CURRENT_WORKSPACE,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 
@@ -74,6 +75,21 @@ export async function deleteWorkspace({commit, dispatch}, data) {
     dispatch('getUserWorkspaces');
   }
   return res;
+}
+
+/**
+ * Get current workspace
+ *
+ * @param commit
+ * @param workspaceId
+ * @returns {Promise<void>}
+ */
+
+export async function getCurrentWorkspace({commit}, workspaceId) {
+  const {success, body} = await httpService.get(`${url}/${workspaceId}`)
+  if (success) {
+    commit(GET_CURRENT_WORKSPACE, body);
+  }
 }
 
 /**

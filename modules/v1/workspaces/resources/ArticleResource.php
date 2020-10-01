@@ -4,11 +4,9 @@
 namespace app\modules\v1\workspaces\resources;
 
 
-use app\rest\ValidationException;
 use Yii;
 use app\modules\v1\workspaces\models\Article;
 use yii\helpers\StringHelper;
-use yii\helpers\VarDumper;
 
 /**
  * Class ArticleResource
@@ -47,5 +45,18 @@ class ArticleResource extends Article
     public function extraFields()
     {
         return ['children', 'workspace', 'createdBy', 'updatedBy'];
+    }
+
+    /**
+     * Delete article with children
+     *
+     * @return bool|int
+     */
+    public function delete()
+    {
+        if (!$this->deleteWithChildren()) {
+            return false;
+        }
+        return true;
     }
 }
