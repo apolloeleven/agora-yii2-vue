@@ -24,7 +24,7 @@
 <script>
 import {createNamespacedHelpers} from "vuex";
 import ContentSpinner from "../../../core/components/ContentSpinner";
-import WorkspaceItem from "../components/WorkspaceItem";
+import WorkspaceItem from "./WorkspaceItem";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace');
 

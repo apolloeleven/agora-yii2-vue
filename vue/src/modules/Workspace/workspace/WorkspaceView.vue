@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     ...mapActions(['getWorkspaceBreadCrumb']),
-    ...mapArticleActions(['showArticleModal']),
+    ...mapArticleActions(['showArticleModal', 'getArticlesByWorkspace']),
     async getBreadCrumb() {
       const res = await this.getWorkspaceBreadCrumb(this.$route.params.id)
       if (!res.success) {
@@ -49,7 +49,8 @@ export default {
     },
   },
   mounted() {
-    this.getBreadCrumb()
+    this.getBreadCrumb();
+    this.getArticlesByWorkspace(this.$route.params.id);
   }
 }
 </script>
