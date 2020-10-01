@@ -27,46 +27,63 @@ export default {
   data() {
     return {
       model: new ArticleFormModel(),
+      action: '',
+      resource: '',
     }
   },
   computed: {
     ...mapState(['showModal', 'modalArticle']),
     modalTitle() {
-      if (this.model.article_id) {
-        if (this.modalArticle) {
-          return this.$t(`Update article '{name}'`, {name: this.modalArticle.title});
-        } else {
-          return this.$t(`Create new article`);
-        }
-      } else {
+      if (this.model.workspace_id) {
         if (this.modalArticle) {
           return this.$t(`Update folder '{name}'`, {name: this.modalArticle.title});
         } else {
           return this.$t(`Create new folder`);
+        }
+      } else {
+        if (this.modalArticle) {
+          return this.$t(`Update article '{name}'`, {name: this.modalArticle.title});
+        } else {
+          return this.$t(`Create new article`);
         }
       }
     }
   },
   watch: {
     modalArticle() {
-      const ar = this.modalArticle;
-      if (ar) {
-        this.model.id = ar.id;
-        this.model.workspace_id = ar.workspace_id;
-        this.model.article_id = ar.article_id;
-        this.model.title = ar.title;
-        this.model.body = ar.body || '';
+      const a = this.modalArticle;
+      if (a) {
+        this.model.id = a.id;
+        this.model.workspace_id = a.workspace_id;
+        this.model.article_id = a.article_id;
+        this.model.title = a.title;
+        this.model.body = a.body || '';
       } else {
         this.model = new ArticleFormModel();
       }
     },
   },
   methods: {
-    ...mapActions(['hideArticleModal', 'createArticle']),
+    ...mapActions(['hideArticleModal', 'createArticle', 'updateArticle']),
     async onSubmit() {
       this.resource = 'folder';
       this.model.workspace_id = this.$route.params.id;
-      let res = await this.createArticle(this.model);
+
+      if (this.model.workspace_id) {
+        this.resource = 'folder';
+      } else {
+        this.resource = 'article';
+      }
+
+      let res
+      if (this.model.id) {
+        this.action = 'updated';
+        res = await this.updateArticle(this.model);
+      } else {
+        this.action = 'created';
+        res = await this.createArticle(this.model);
+      }
+
       if (res.success) {
         this.$toast(this.$t(`The ${this.resource} '{title}' was successfully ${this.action}`, {title: this.model.title}));
       } else {

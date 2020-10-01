@@ -12,6 +12,17 @@
       <div class="row">
         <div class="col-sm-12 col-lg-6 col-xl-7 mb-4 order-lg-3 col-folders">
           <h4 class="border-bottom pb-1 mb-3">{{ $t('Folders') }}</h4>
+          <div class="folder-list">
+            <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
+            <div v-if="!articles.length && !loading" class="no-data">
+              {{ $t('There are no folders') }}
+            </div>
+            <div v-if="articles" class="folder-wrapper row">
+              <ArticleItem
+                class="mb-2 col-md-12 col-xl-6" v-for="(article, index) in articles"
+                :article="article" :index="index" :key="article.id"/>
+            </div>
+          </div>
         </div>
         <div class="col-sm-12 col-lg-6 col-xl-5 order-lg-2 mb-4 col-timeline">
           <h4 class="border-bottom pb-1 mb-3">{{ $t('Timeline') }}</h4>
@@ -24,15 +35,23 @@
 <script>
 import BackButton from "../components/BackButton";
 import {createNamespacedHelpers} from "vuex";
+import ArticleItem from "../article/ArticleItem";
+import ContentSpinner from "../../../core/components/ContentSpinner";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace')
-const {mapActions:mapArticleActions} = createNamespacedHelpers('article')
+const {mapState: mapArticleStates, mapActions: mapArticleActions} = createNamespacedHelpers('article')
 
 export default {
   name: "WorkspaceView",
-  components: {BackButton},
+  components: {ContentSpinner, ArticleItem, BackButton},
   computed: {
     ...mapState(['breadCrumb']),
+    ...mapArticleStates(['articles', 'loading']),
+  },
+  watch: {
+    '$route.params.id': function (id) {
+      this.getArticlesByWorkspace(id);
+    },
   },
   methods: {
     ...mapActions(['getWorkspaceBreadCrumb']),
@@ -56,5 +75,16 @@ export default {
 </script>
 
 <style scoped>
-
+.no-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  color: #b6b6b6;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #FFFFFF;
+  font-size: 1.275rem;
+  min-height: 200px;
+}
 </style>

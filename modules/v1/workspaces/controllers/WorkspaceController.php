@@ -45,7 +45,7 @@ class WorkspaceController extends ActiveController
         $request = Yii::$app->request;
         $workspaceId = $request->get('workspaceId');
 
-        $workspace = Workspace::find()->byId($workspaceId)->one();
+        $workspace = WorkspaceResource::find()->byId($workspaceId)->one();
 
         if (!$workspace) {
             return $this->validationError(Yii::t('app', 'This workspace not exist'));

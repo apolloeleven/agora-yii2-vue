@@ -4,8 +4,11 @@
 namespace app\modules\v1\workspaces\resources;
 
 
+use app\rest\ValidationException;
 use Yii;
 use app\modules\v1\workspaces\models\Article;
+use yii\helpers\StringHelper;
+use yii\helpers\VarDumper;
 
 /**
  * Class ArticleResource
@@ -30,6 +33,11 @@ class ArticleResource extends Article
             'updated_at' => function () {
                 return Yii::$app->formatter->asDatetime($this->updated_at);
             },
+            'short_description' => function ($model) {
+                $length = 240;
+                $model->depth == 0 ?: $length = 80;
+                return StringHelper::truncate(strip_tags($model->body), $length);
+            },
         ];
     }
 
@@ -39,5 +47,18 @@ class ArticleResource extends Article
     public function extraFields()
     {
         return ['children', 'workspace', 'createdBy', 'updatedBy'];
+    }
+
+    /**
+     * @param bool $insert
+     * @return bool
+     */
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->depth = 0;
+        }
+        return parent::beforeSave($insert);
     }
 }

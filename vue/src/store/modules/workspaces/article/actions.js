@@ -1,6 +1,11 @@
 import {
   SHOW_ARTICLE_MODAL,
   HIDE_ARTICLE_MODAL,
+  GET_ALL_ARTICLES,
+  START_LOADING,
+  STOP_LOADING,
+  ARTICLE_DELETED,
+  GET_BREAD_CRUMB
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 
@@ -27,12 +32,68 @@ export function hideArticleModal({commit}, hideModal) {
 }
 
 /**
- * Create article
- *
  * @param payload
  * @returns {Promise<unknown>}
  * @param { Object } data
  */
-export async function createArticle({}, data) {
-  return await httpService.post(url, data)
+export async function createArticle({dispatch}, data) {
+  const res = await httpService.post(url, data)
+  if (res.success) {
+    dispatch('getArticlesByWorkspace', res.body.workspace_id)
+  }
+  return res;
+}
+
+/**
+ * @param dispatch
+ * @param { Object } data
+ * @returns {Promise<unknown>}
+ */
+export async function updateArticle({dispatch}, data) {
+  const res = await httpService.put(`${url}/${data.id}`, data);
+  if (res.success) {
+    dispatch('getArticlesByWorkspace', res.body.workspace_id);
+  }
+  return res;
+}
+
+/**
+ * @param commit
+ * @param { Object } data
+ * @returns {Promise<unknown>}
+ */
+export async function deleteArticle({commit}, data) {
+  const res = await httpService.delete(`${url}/${data.id}`);
+  if (res.success) {
+    commit(ARTICLE_DELETED, data.id)
+  }
+  return res;
+}
+
+/**
+ * Get articles for workspace view
+ *
+ * @param commit
+ * @param { int } workspaceId
+ * @returns {Promise<void>}
+ */
+export async function getArticlesByWorkspace({commit}, workspaceId) {
+  const {success, body} = await httpService.get(`${url}?workspace_id=${workspaceId}&sort=title`)
+  if (success) {
+    commit(GET_ALL_ARTICLES, body)
+    commit(START_LOADING)
+  }
+  commit(STOP_LOADING)
+}
+/**
+ * Get breadcrumb for article view page
+ *
+ * @param commit
+ * @param { int } articleId
+ * @returns {Promise<void>}
+ */
+export async function getArticleBreadCrumb({commit}, articleId) {
+  const res = await httpService.get(`${url}/get-bread-crumb?articleId=${articleId}`);
+  if (res.success) commit(GET_BREAD_CRUMB, res.body);
+  return res;
 }

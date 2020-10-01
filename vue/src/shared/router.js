@@ -16,6 +16,7 @@ import DepartmentList from "@/modules/setup/departments/DepartmentList";
 import Profile from "@/modules/User/Profile";
 import Workspace from "@/modules/Workspace/workspace/Workspace";
 import WorkspaceView from "@/modules/Workspace/workspace/WorkspaceView";
+import ArticleView from "@/modules/Workspace/article/ArticleView";
 
 Vue.use(Router);
 
@@ -73,7 +74,8 @@ const router = new Router({
           ]
         },
         {path: '/workspace', name: 'workspace', component: Workspace},
-        {path: 'workspace/:id', name: 'workspace.view', component: WorkspaceView}
+        {path: '/workspace/:id', name: 'workspace.view', component: WorkspaceView},
+        {path: '/article/:id', name: 'article.view', component: ArticleView},
       ]
     },
     {
