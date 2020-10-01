@@ -6,6 +6,7 @@ import {
   STOP_LOADING,
   ARTICLE_DELETED,
   GET_BREAD_CRUMB,
+  GET_CURRENT_ARTICLE,
 } from "./mutation-types";
 
 export default {
@@ -57,5 +58,13 @@ export default {
    */
   [GET_BREAD_CRUMB](state, data) {
     state.breadCrumb = data
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_CURRENT_ARTICLE](state, data) {
+    state.currentArticle = data || {}
   },
 };

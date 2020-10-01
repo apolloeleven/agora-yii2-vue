@@ -5,7 +5,8 @@ import {
   START_LOADING,
   STOP_LOADING,
   ARTICLE_DELETED,
-  GET_BREAD_CRUMB
+  GET_BREAD_CRUMB,
+  GET_CURRENT_ARTICLE,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 
@@ -71,6 +72,20 @@ export async function deleteArticle({commit}, data) {
 }
 
 /**
+ * Get current article
+ *
+ * @param commit
+ * @param { int } articleId
+ * @returns {Promise<void>}
+ */
+export async function getCurrentArticle({commit}, articleId) {
+  const {success, body} = await httpService.get(`${url}/${articleId}?expand=workspace`)
+  if (success) {
+    commit(GET_CURRENT_ARTICLE, body);
+  }
+}
+
+/**
  * Get articles for workspace view
  *
  * @param commit
@@ -85,6 +100,7 @@ export async function getArticlesByWorkspace({commit}, workspaceId) {
   }
   commit(STOP_LOADING)
 }
+
 /**
  * Get breadcrumb for article view page
  *

@@ -81,10 +81,9 @@ export async function deleteWorkspace({commit, dispatch}, data) {
  * Get current workspace
  *
  * @param commit
- * @param workspaceId
+ * @param { int } workspaceId
  * @returns {Promise<void>}
  */
-
 export async function getCurrentWorkspace({commit}, workspaceId) {
   const {success, body} = await httpService.get(`${url}/${workspaceId}`)
   if (success) {

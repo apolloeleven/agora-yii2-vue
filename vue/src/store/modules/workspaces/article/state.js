@@ -5,6 +5,7 @@ const STATE = {
   modalArticle: null,
   articles: [],
   breadCrumb: [],
+  currentArticle: {},
 };
 
 export default STATE;

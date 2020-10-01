@@ -33,7 +33,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['showModal', 'modalArticle']),
+    ...mapState(['showModal', 'modalArticle', 'currentArticle']),
     ...mapWorkspaceState(['currentWorkspace']),
     modalTitle() {
       if (this.model.workspace_id) {
@@ -70,11 +70,12 @@ export default {
     async onSubmit() {
       this.resource = 'folder';
       this.model.workspace_id = this.currentWorkspace.id;
+      this.model.article_id = this.currentArticle.id;
 
-      if (this.model.workspace_id) {
-        this.resource = 'folder';
-      } else {
+      if (this.model.article_id) {
         this.resource = 'article';
+      } else if (this.model.workspace_id) {
+        this.resource = 'folder';
       }
 
       let res
