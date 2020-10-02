@@ -67,7 +67,7 @@ export default {
       }
     },
     showModal() {
-      this.showArticleModal(null, false)
+      this.showArticleModal({isArticle: false, article: null})
     },
   },
   mounted() {

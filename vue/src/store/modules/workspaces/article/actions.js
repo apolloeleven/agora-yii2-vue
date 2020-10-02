@@ -16,11 +16,11 @@ const url = '/v1/workspaces/article';
  * Show article form's modal
  *
  * @param { function } commit
+ * @param data
  * @param { bool } isArticle
- * @param { bool } showModal
  */
-export function showArticleModal({commit}, isArticle, showModal) {
-  commit(SHOW_ARTICLE_MODAL, isArticle, showModal);
+export function showArticleModal({commit}, data) {
+  commit(SHOW_ARTICLE_MODAL, data);
 }
 
 /**
@@ -39,11 +39,7 @@ export function hideArticleModal({commit}, hideModal) {
  * @param { Object } data
  */
 export async function createArticle({dispatch}, data) {
-  const res = await httpService.post(url, data)
-  if (res.success) {
-    dispatch('getArticlesByWorkspace', res.body.workspace_id)
-  }
-  return res;
+  return await httpService.post(url, data);
 }
 
 /**
@@ -52,11 +48,7 @@ export async function createArticle({dispatch}, data) {
  * @returns {Promise<unknown>}
  */
 export async function updateArticle({dispatch}, data) {
-  const res = await httpService.put(`${url}/${data.id}`, data);
-  if (res.success) {
-    dispatch('getArticlesByWorkspace', res.body.workspace_id);
-  }
-  return res;
+  return await httpService.put(`${url}/${data.id}`, data);
 }
 
 /**
@@ -95,6 +87,22 @@ export async function getCurrentArticle({commit}, articleId) {
  */
 export async function getArticlesByWorkspace({commit}, workspaceId) {
   const {success, body} = await httpService.get(`${url}?workspace_id=${workspaceId}&sort=title`)
+  if (success) {
+    commit(GET_ALL_ARTICLES, body)
+    commit(START_LOADING)
+  }
+  commit(STOP_LOADING)
+}
+
+/**
+ * Get articles by parent id for article view page
+ *
+ * @param commit
+ * @param parentId
+ * @returns {Promise<void>}
+ */
+export async function getArticlesByParent({commit}, parentId) {
+  const {success, body} = await httpService.get(`${url}/by-parent?articleId=${parentId}&sort=title`)
   if (success) {
     commit(GET_ALL_ARTICLES, body)
     commit(START_LOADING)

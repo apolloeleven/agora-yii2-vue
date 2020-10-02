@@ -16,8 +16,8 @@
             <i class="fas fa-ellipsis-v"></i>
           </b-button>
         </template>
-        <edit-button :model="article" type="article"/>
-        <delete-button :model="article" type="article"/>
+        <edit-button :model="article" type="folder"/>
+        <delete-button :model="article" type="folder"/>
       </b-dropdown>
     </b-card>
   </div>

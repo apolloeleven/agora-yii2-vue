@@ -38,7 +38,7 @@ export default {
           }
         }
       } else {
-        if (this.model.workspace_id) {
+        if (this.type === 'folder') {
           this.resource = 'folder';
         } else {
           this.resource = 'article';

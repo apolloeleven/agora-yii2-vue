@@ -66,7 +66,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['hideArticleModal', 'createArticle', 'updateArticle']),
+    ...mapActions(['hideArticleModal', 'createArticle', 'updateArticle', 'getArticlesByParent', 'getArticlesByWorkspace']),
     async onSubmit() {
       this.resource = 'folder';
       this.model.workspace_id = this.currentWorkspace.id;
@@ -78,7 +78,6 @@ export default {
       } else {
         this.resource = 'folder';
       }
-
       let res
       if (this.model.id) {
         this.action = 'updated';
@@ -86,6 +85,12 @@ export default {
       } else {
         this.action = 'created';
         res = await this.createArticle(this.model);
+      }
+
+      if (this.model.article_id) {
+        this.getArticlesByParent(this.model.article_id);
+      } else if(this.model.workspace_id){
+        this.getArticlesByWorkspace(this.model.workspace_id);
       }
 
       if (res.success) {
@@ -96,6 +101,9 @@ export default {
       this.hideArticleModal()
       this.model = new ArticleFormModel()
     }
+  },
+  destroyed() {
+    this.currentArticle = {};
   }
 }
 </script>

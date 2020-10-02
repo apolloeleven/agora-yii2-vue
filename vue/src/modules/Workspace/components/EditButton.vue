@@ -28,8 +28,10 @@ export default {
     onEditClick() {
       if (this.type === 'workspace') {
         this.showWorkspaceModal(this.model)
+      } else if (this.type === 'folder') {
+        this.showArticleModal({isArticle: false, article: this.model})
       } else {
-        this.showArticleModal(this.model)
+        this.showArticleModal({isArticle: true, article: this.model})
       }
     }
   },

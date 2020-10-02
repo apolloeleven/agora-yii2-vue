@@ -9,11 +9,12 @@
             <i class="fas fa-plus-circle fa-2x"></i>
           </b-button>
         </template>
-        <b-dropdown-item v-if="currentArticle.depth < 3 && currentArticle.workspace.folder_in_folder" @click="showArticleModal(false)">
+        <b-dropdown-item v-if="currentArticle.depth < 3 && currentArticle.workspace.folder_in_folder"
+                         @click="showModal()">
           <i class="fas fa-plus-circle"></i>
           {{ $t('Create new folder') }}
         </b-dropdown-item>
-        <b-dropdown-item @click="showArticleModal(true)">
+        <b-dropdown-item @click="showModal(true)">
           <i class="fas fa-plus-circle"></i>
           {{ $t('Create new article') }}
         </b-dropdown-item>
@@ -42,7 +43,6 @@
               <template v-slot:header>
                 <h5 class="mb-0">{{ currentArticle.title }}</h5>
               </template>
-
               <b-card-body>
                 <div class="article-content">
                   <i class="fas fa-folder-open fa-4x"></i>
@@ -76,24 +76,38 @@ export default {
     '$route.params.id': function (id) {
       this.getCurrentArticle(id);
       this.getBreadCrumb(id);
+      this.getArticlesByParent(id)
     }
   },
   methods: {
-    ...mapActions(['getArticleBreadCrumb', 'getCurrentArticle', 'showArticleModal']),
+    ...mapActions(['getArticleBreadCrumb', 'getCurrentArticle', 'showArticleModal', 'getArticlesByParent']),
     async getBreadCrumb() {
       const res = await this.getArticleBreadCrumb(this.$route.params.id)
       if (!res.success) {
         this.$toast(this.$t(res.body), 'danger')
       }
     },
+    showModal(isArticle = false) {
+      this.showArticleModal({isArticle: isArticle, article: null})
+    }
   },
   mounted() {
     this.getBreadCrumb();
     this.getCurrentArticle(this.$route.params.id);
-  }
+    this.getArticlesByParent(this.$route.params.id);
+  },
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.article-item {
+  .media-body {
+    display: flex;
+    align-items: start;
+  }
+}
 
+.article-description {
+  word-break: break-word;
+}
 </style>
