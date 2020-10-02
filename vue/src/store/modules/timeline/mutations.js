@@ -2,7 +2,8 @@ import {
   SHOW_TIMELINE_MODAL,
   SET_TIMELINE_DATA,
   SET_TIMELINE_LOADING,
-  HIDE_TIMELINE_MODAL
+  HIDE_TIMELINE_MODAL,
+  SET_DROPDOWN_DATA
 } from './mutation-types'
 
 export default {
@@ -20,5 +21,9 @@ export default {
 
   [SET_TIMELINE_DATA](state, data) {
     state.data = data;
+  },
+
+  [SET_DROPDOWN_DATA](state, data) {
+    state.dropdownData['userWorkspaces'] = data
   }
 }
