@@ -1,6 +1,6 @@
 <template>
   <div class="article-item">
-    <b-card no-body class="root-article-item">
+    <b-card no-body class="root-article-item" :style="'animation-delay: '+(index / 10)+'s'">
       <router-link :to="{name: 'article.view', params: {id: article.id}}">
         <b-media class="p-3 d-flex align-items-center">
           <template v-slot:aside>
