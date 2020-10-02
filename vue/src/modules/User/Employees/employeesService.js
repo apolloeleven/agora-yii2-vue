@@ -13,7 +13,7 @@ const employeeService = {
     return httpService.get(this.url + '/get-dropdown', {params})
   },
   updateUserData(params) {
-    return httpService.put(this.url + '/update', params)
+    return httpService.put(this.url + `/${params.id}`, params)
   }
 }
 
