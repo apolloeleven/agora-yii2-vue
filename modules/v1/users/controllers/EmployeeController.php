@@ -11,9 +11,6 @@ namespace app\modules\v1\users\controllers;
 use app\modules\v1\users\resources\UserDepartmentResource;
 use app\modules\v1\users\resources\UserResource;
 use app\rest\ActiveController;
-use app\modules\v1\users\models\search\UserDepartmentSearch;
-use app\rest\ValidationException;
-use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 
@@ -43,9 +40,7 @@ class EmployeeController extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-        unset($actions['update'], $actions['view']);
-        $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
-
+        unset($actions['view']);
         return $actions;
     }
 
@@ -53,45 +48,7 @@ class EmployeeController extends ActiveController
     {
         $verbs = parent::verbs();
         $verbs['get-dropdown'] = ['GET', 'HEAD', 'OPTIONS'];
-
         return $verbs;
-    }
-
-    public function prepareDataProvider()
-    {
-        $searchModel = new UserDepartmentSearch();
-        return $searchModel->search(\Yii::$app->request->get());
-    }
-
-    /**
-     * @return array
-     * @throws ValidationException
-     * @throws \yii\db\Exception
-     */
-    public function actionUpdate()
-    {
-        $request = \Yii::$app->request;
-        $dbTransaction = \Yii::$app->db->beginTransaction();
-
-        $user = UserResource::find()
-            ->byId($request->post('id'))
-            ->with(['userDepartments'])
-            ->one();
-
-        if (!$user) {
-            $dbTransaction->rollBack();
-            throw new ValidationException(\Yii::t('app', 'Invalid params provided'));
-        }
-
-        if (!$user->load($request->post(), '') || !$user->save()) {
-            $dbTransaction->rollBack();
-            return $this->validationError($user->getFirstErrors());
-        }
-
-        $user->updateRoles($request->post('roles'));
-        $user->updateUserDepartments($request->post('userDepartments'), $dbTransaction);
-
-        $dbTransaction->commit();
     }
 
     public function actionGetDropdown()
