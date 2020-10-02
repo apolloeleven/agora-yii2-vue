@@ -31,4 +31,21 @@ class WorkspaceTimelinePostQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
+
+    /**
+     * @param $id
+     * @return WorkspaceTimelinePostQuery
+     */
+    public function byWorkspaceId($id)
+    {
+        return $this->andWhere(['workspace_id' => $id]);
+    }
+
+    /**
+     * @param $id
+     * @return WorkspaceTimelinePostQuery
+     */
+    public function byTimelinePostId($id) {
+        return $this->andWhere(['timeline_post_id' => $id]);
+    }
 }
