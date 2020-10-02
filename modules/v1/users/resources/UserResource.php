@@ -27,6 +27,8 @@ class UserResource extends User
     const ROLE_ADMIN = 'admin';
     const ROLE_WORKSPACE_ADMIN = 'workspaceAdmin';
 
+    public $roles, $userDepartmentsData;
+
     public function fields()
     {
         return [
@@ -55,6 +57,28 @@ class UserResource extends User
     public function extraFields()
     {
         return ['userDepartments'];
+    }
+
+    public function rules()
+    {
+        return ArrayHelper::merge(parent::rules(), [[['roles', 'userDepartmentsData'], 'safe']]);
+    }
+
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $parentSave = parent::save($runValidation, $attributeNames);
+            if (!$parentSave) {
+                $transaction->rollBack();
+            }
+            $this->updateRoles($this->roles);
+            $this->updateUserDepartments($this->userDepartmentsData);
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            $parentSave = false;
+        }
+        return $parentSave;
     }
 
     /**
@@ -129,7 +153,7 @@ class UserResource extends User
      * @param $dbTransaction
      * @throws ValidationException
      */
-    public function updateUserDepartments($data, $dbTransaction)
+    public function updateUserDepartments($data)
     {
         $userDepartmentIdsFromPost = ArrayHelper::getColumn($data, 'id');
         $idsToBeDeleted = [];
@@ -143,7 +167,6 @@ class UserResource extends User
         if ($idsToBeDeleted) {
             $count = UserDepartment::deleteAll(['id' => $idsToBeDeleted]);
             if ($count !== count($idsToBeDeleted)) {
-                $dbTransaction->rollBack();
                 throw new ValidationException(\Yii::t('app', 'Error while deleting user departments'));
             }
         }
@@ -162,7 +185,6 @@ class UserResource extends User
             }
 
             if (!$userDepartment->load($userDepartmentData, '') || !$userDepartment->save()) {
-                $dbTransaction->rollBack();
                 throw new ValidationException(\Yii::t('app', 'Error while saving user department'));
             }
         }
