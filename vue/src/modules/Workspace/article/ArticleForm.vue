@@ -33,20 +33,20 @@ export default {
     }
   },
   computed: {
-    ...mapState(['showModal', 'modalArticle', 'currentArticle']),
+    ...mapState(['showModal', 'modalArticle', 'currentArticle', 'isArticle']),
     ...mapWorkspaceState(['currentWorkspace']),
     modalTitle() {
-      if (this.model.workspace_id) {
-        if (this.modalArticle) {
-          return this.$t(`Update folder '{name}'`, {name: this.modalArticle.title});
-        } else {
-          return this.$t(`Create new folder`);
-        }
-      } else {
+      if (this.isArticle) {
         if (this.modalArticle) {
           return this.$t(`Update article '{name}'`, {name: this.modalArticle.title});
         } else {
           return this.$t(`Create new article`);
+        }
+      } else {
+        if (this.modalArticle) {
+          return this.$t(`Update folder '{name}'`, {name: this.modalArticle.title});
+        } else {
+          return this.$t(`Create new folder`);
         }
       }
     }
@@ -71,10 +71,11 @@ export default {
       this.resource = 'folder';
       this.model.workspace_id = this.currentWorkspace.id;
       this.model.article_id = this.currentArticle.id;
+      this.model.isArticle = this.isArticle;
 
-      if (this.model.article_id) {
+      if (this.isArticle) {
         this.resource = 'article';
-      } else if (this.model.workspace_id) {
+      } else {
         this.resource = 'folder';
       }
 
@@ -90,7 +91,7 @@ export default {
       if (res.success) {
         this.$toast(this.$t(`The ${this.resource} '{title}' was successfully ${this.action}`, {title: this.model.title}));
       } else {
-        this.$toast(this.$t(`The ${this.resource} '{title}' was not ${this.action}`, {title: this.model.title}));
+        this.$toast(this.$t(`The ${this.resource} '{title}' was not ${this.action}`, {title: this.model.title}), 'danger');
       }
       this.hideArticleModal()
       this.model = new ArticleFormModel()

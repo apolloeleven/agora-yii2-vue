@@ -6,6 +6,7 @@ const STATE = {
   articles: [],
   breadCrumb: [],
   currentArticle: {},
+  isArticle: false,
 };
 
 export default STATE;

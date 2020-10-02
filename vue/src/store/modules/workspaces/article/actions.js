@@ -16,10 +16,11 @@ const url = '/v1/workspaces/article';
  * Show article form's modal
  *
  * @param { function } commit
+ * @param { bool } isArticle
  * @param { bool } showModal
  */
-export function showArticleModal({commit}, showModal) {
-  commit(SHOW_ARTICLE_MODAL, showModal);
+export function showArticleModal({commit}, isArticle, showModal) {
+  commit(SHOW_ARTICLE_MODAL, isArticle, showModal);
 }
 
 /**

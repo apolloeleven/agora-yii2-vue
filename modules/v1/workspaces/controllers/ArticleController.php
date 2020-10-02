@@ -42,6 +42,8 @@ class ArticleController extends ActiveController
     {
         $request = Yii::$app->request;
         $articleId = $request->post('article_id');
+        $workspaceId = $request->post('workspace_id');
+        $isArticle = $request->post('isArticle');
 
         $parentFolder = null;
         if ($articleId) {
@@ -49,14 +51,15 @@ class ArticleController extends ActiveController
             if (!$parentFolder) {
                 return $this->validationError($parentFolder->getFirstErrors());
             }
+            $workspaceId = $parentFolder->workspace_id;
         }
 
         $article = new ArticleResource();
 
         $article->title = $request->post('title');
         $article->body = $request->post('body');
-        $article->workspace_id = $request->post('workspace_id');
-        $article->is_folder = !$parentFolder ? 1 : (int)($parentFolder->depth === 0 && $parentFolder->workspace->folder_in_folder);
+        $article->workspace_id = $workspaceId;
+        $article->is_folder = $isArticle ? 0 : 1;
 
         if ((!$article->load($request->post(), '')) && !$article->validate()) {
             return $this->validationError($article->getFirstErrors());

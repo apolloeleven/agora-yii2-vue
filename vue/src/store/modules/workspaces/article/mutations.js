@@ -12,11 +12,13 @@ import {
 export default {
   /**
    * @param state
+   * @param { bool } isArticle
    * @param { Object } article
    */
-  [SHOW_ARTICLE_MODAL](state, article) {
+  [SHOW_ARTICLE_MODAL](state, isArticle, article) {
     state.showModal = true;
     state.modalArticle = article;
+    state.isArticle = isArticle;
   },
   /**
    * @param state

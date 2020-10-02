@@ -10,6 +10,9 @@
   "The folder '{title}' was successfully created": "The folder '{title}' was successfully created",
   "The folder '{title}' was successfully updated": "The folder '{title}' was successfully updated",
   "The folder '{title}' was successfully deleted": "The folder '{title}' was successfully deleted",
+  "The article '{title}' was successfully created": "The article '{title}' was successfully created",
+  "The article '{title}' was successfully updated": "The article '{title}' was successfully updated",
+  "The article '{title}' was successfully deleted": "The article '{title}' was successfully deleted",
   "Update folder '{name}'": "Update folder '{name}'",
   "Update article '{name}'": "Update article '{name}'"
 }
