@@ -9,9 +9,7 @@ namespace app\modules\v1\workspaces\controllers;
 
 
 use app\modules\v1\workspaces\models\search\TimelinePostSearch;
-use app\modules\v1\workspaces\models\UserWorkspace;
 use app\modules\v1\workspaces\resources\TimelinePostResource;
-use app\modules\v1\workspaces\resources\WorkspaceResource;
 use app\rest\ActiveController;
 use yii\db\ActiveQuery;
 use yii\filters\AccessControl;
@@ -26,11 +24,11 @@ class TimelineController extends ActiveController
 
         $behaviors['access'] = [
             'class' => AccessControl::class,
-            'only' => ['index', 'create', 'delete'],
+            'only' => ['index', 'create', 'delete', 'update'],
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => ['index', 'create', 'delete'],
+                    'actions' => ['index', 'create', 'delete', 'update'],
                     //TODO roles
                 ]
             ]
@@ -42,7 +40,7 @@ class TimelineController extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-        unset($actions['update'], $actions['view']);
+        unset($actions['view']);
         $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
         return $actions;
     }
@@ -51,13 +49,5 @@ class TimelineController extends ActiveController
     {
         $query = new TimelinePostSearch();
         return $query->search(\Yii::$app->request->get());
-    }
-
-    public function actionGetDropdownData()
-    {
-        $workspace = WorkspaceResource::find()
-            ->innerJoinWith(['userWorkspaces'])
-            ->andWhere([UserWorkspace::tableName() . '.user_id' => \Yii::$app->user->id]);
-
     }
 }
