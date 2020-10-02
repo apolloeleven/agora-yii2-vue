@@ -82,13 +82,11 @@ class ArticleController extends ActiveController
     /**
      * Get breadcrumb for article view page
      *
+     * @param $articleId
      * @return array
      */
-    public function actionGetBreadCrumb()
+    public function actionGetBreadCrumb($articleId)
     {
-        $request = Yii::$app->request;
-        $articleId = $request->get('articleId');
-
         $article = ArticleResource::find()->byId($articleId)->one();
         $workspace = $article->workspace;
 
@@ -113,18 +111,38 @@ class ArticleController extends ActiveController
             ]
         ];
 
-        // TODO all article children
+        $parents = $article->parents()->all();
 
-        $breadCrumb[] = [
-            'text' => $article->title,
-            'to' => [
-                'name' => 'article.view',
-                'params' => [
-                    'id' => $article->id
+        foreach ($parents as $parent) {
+            $breadCrumb[] = [
+                'text' => $parent->title,
+                'to' => [
+                    'name' => 'article.view',
+                    'params' => [
+                        'id' => $parent->id
+                    ]
                 ]
-            ]
+            ];
+        }
+        $breadCrumb[] = [
+            'text' => $article->title
         ];
 
         return $breadCrumb;
+    }
+
+    /**
+     * Get articles by parent
+     *
+     * @param $articleId
+     * @return ActiveDataProvider
+     */
+    public function actionByParent($articleId)
+    {
+        $query = ArticleResource::find()->byParentId($articleId);
+
+        return new ActiveDataProvider([
+            'query' => $query
+        ]);
     }
 }
