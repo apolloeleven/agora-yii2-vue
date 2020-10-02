@@ -69,6 +69,7 @@ $config = [
                     'controller' => [
                         'v1/users/invitation',
                         'v1/workspaces/workspace',
+                        'v1/workspaces/timeline'
                     ]
                 ]
             ],
