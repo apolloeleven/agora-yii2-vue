@@ -19,7 +19,7 @@ export default {
     },
   },
   created() {
-    this.getUserWorkspaces();
+    this.getData();
   },
 }
 </script>
