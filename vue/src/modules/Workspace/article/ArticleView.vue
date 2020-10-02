@@ -21,6 +21,7 @@
       </b-dropdown>
     </div>
     <div class="page-content">
+      <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
       <b-card no-body class="mb-1" v-if="isFolder">
         <b-card-header header-tag="header" class="p-1" aria-controls="collapse"
                        :aria-expanded="visible ? 'true' : 'false'" @click="visible = !visible">
@@ -94,7 +95,6 @@
           <div class="col-sm-12 col-lg-6">
             <h4 class="border-bottom pb-1 mb-3">{{ $t('Articles') }}</h4>
             <div class="article-list">
-              <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
               <div v-if="!filteredArticles.length && !loading" class="no-data">
                 {{ $t('There are no articles') }}
               </div>
