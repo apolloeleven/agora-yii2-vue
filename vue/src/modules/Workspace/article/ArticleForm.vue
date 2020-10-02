@@ -102,9 +102,6 @@ export default {
       this.model = new ArticleFormModel()
     }
   },
-  destroyed() {
-    this.currentArticle = {};
-  }
 }
 </script>
 

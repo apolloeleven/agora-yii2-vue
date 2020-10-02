@@ -9,6 +9,30 @@
       </b-button>
     </div>
     <div class="page-content">
+      <b-card no-body class="mb-1">
+        <b-card-header header-tag="header" class="p-1" aria-controls="collapse"
+                       :aria-expanded="visible ? 'true' : 'false'" @click="visible = !visible">
+          <i v-if="!visible" class="fas fa-angle-double-down fa-2x"></i>
+          <i v-else class="fas fa-angle-double-up fa-2x"></i>
+        </b-card-header>
+        <b-collapse id="collapse" v-model="visible">
+          <b-card-body>
+            <div class="row">
+              <div class="col-md-4 col-sm-12">
+                <b-media class="article-header align-items-center">
+                  <i class="fas fa-folder-open fa-4x"></i>
+                </b-media>
+              </div>
+              <div class="col-md-8 col-sm-12">
+                <div>
+                  <h3 class="mt-0">{{ currentWorkspace.name }}</h3>
+                </div>
+                <div v-html="currentWorkspace.description"></div>
+              </div>
+            </div>
+          </b-card-body>
+        </b-collapse>
+      </b-card>
       <div class="content-wrapper p-3">
         <div class="row">
           <div class="col-sm-12 col-lg-6 col-xl-7 mb-4 order-lg-3 col-folders">
@@ -46,6 +70,11 @@ const {mapState: mapArticleStates, mapActions: mapArticleActions} = createNamesp
 export default {
   name: "WorkspaceView",
   components: {ContentSpinner, ArticleItem, BackButton},
+  data(){
+    return {
+      visible: false,
+    }
+  },
   computed: {
     ...mapState(['breadCrumb', 'currentWorkspace']),
     ...mapArticleStates(['articles', 'loading']),
