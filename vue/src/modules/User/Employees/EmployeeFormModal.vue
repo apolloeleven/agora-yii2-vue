@@ -116,6 +116,7 @@ import Vue from "vue"
 import RoleModel from "@/modules/User/Employees/RoleModel";
 import employeeService from "@/modules/User/Employees/employeesService";
 import UserDepartmentModel from "@/modules/User/Employees/UserDepartmentModel";
+import {clone} from "lodash";
 
 const {mapState, mapActions} = createNamespacedHelpers('employee');
 
@@ -172,7 +173,12 @@ export default {
       Vue.delete(this.model.roles, index);
     },
     async onSubmit() {
-      const {success, body} = await employeeService.updateUserData(this.model);
+      let data;
+      data = clone(this.model);
+      let keyToRename = data['userDepartments'];
+      delete data['userDepartments'];
+      data['userDepartmentsData'] = keyToRename;
+      const {success, body} = await employeeService.updateUserData(data);
       if (success) {
         this.hideModal();
         await this.getData();
