@@ -4,6 +4,8 @@ namespace app\modules\v1\workspaces\models;
 
 use app\models\User;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%workspace_timeline_posts}}".
@@ -59,6 +61,14 @@ class WorkspaceTimelinePost extends \yii\db\ActiveRecord
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
         ];
+    }
+
+    public function behaviors()
+    {
+        return array_merge(parent::behaviors(), [
+            TimestampBehavior::class,
+            BlameableBehavior::class,
+        ]);
     }
 
     /**

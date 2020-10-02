@@ -4,6 +4,10 @@ namespace app\modules\v1\workspaces\models;
 
 use app\models\User;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\helpers\FileHelper;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "{{%timeline_posts}}".
@@ -23,6 +27,11 @@ use Yii;
 class TimelinePost extends \yii\db\ActiveRecord
 {
     /**
+     * @var UploadedFile
+     */
+    public $image;
+
+    /**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -41,7 +50,16 @@ class TimelinePost extends \yii\db\ActiveRecord
             [['image_path'], 'string', 'max' => 1024],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
+            [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, jpg'],
         ];
+    }
+
+    public function behaviors()
+    {
+        return array_merge(parent::behaviors(), [
+            TimestampBehavior::class,
+            BlameableBehavior::class,
+        ]);
     }
 
     /**
@@ -57,6 +75,7 @@ class TimelinePost extends \yii\db\ActiveRecord
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
+            'image' => 'Image'
         ];
     }
 
@@ -97,5 +116,33 @@ class TimelinePost extends \yii\db\ActiveRecord
     public static function find()
     {
         return new \app\modules\v1\workspaces\models\query\TimelinePostQuery(get_called_class());
+    }
+
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        $oldImage = $this->image_path;
+        if ($this->image) {
+            $this->image_path = "/storage/timeline/" . Yii::$app->security->generateRandomString(25) . '/' . $this->image->name;
+        }
+        $parentSave = parent::save($runValidation, $attributeNames);
+        if (!$parentSave) {
+            return $parentSave;
+        }
+        if ($this->image) {
+            // Delete old image if it exists
+            if ($oldImage) {
+                $oldPath = Yii::getAlias("@webroot" . $oldImage);
+                if (file_exists($oldPath)) {
+                    FileHelper::removeDirectory(dirname($oldPath));
+                }
+            }
+
+            $path = Yii::getAlias("@webroot") . $this->image_path;
+            if (!is_dir(dirname($path))) {
+                FileHelper::createDirectory(dirname($path));
+            }
+            $this->image->saveAs($path);
+        }
+        return $parentSave;
     }
 }
