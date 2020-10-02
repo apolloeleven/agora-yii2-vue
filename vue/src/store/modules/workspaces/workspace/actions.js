@@ -92,6 +92,16 @@ export async function getCurrentWorkspace({commit}, workspaceId) {
 }
 
 /**
+ *
+ * @param commit
+ * @param { Object }workspace
+ * @returns {Promise<void>}
+ */
+export async function destroyCurrentWorkspace({commit}, workspace) {
+  commit(GET_CURRENT_WORKSPACE, workspace)
+}
+
+/**
  * Get workspaces by user
  *
  * @param commit

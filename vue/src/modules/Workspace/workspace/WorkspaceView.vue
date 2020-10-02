@@ -86,7 +86,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getWorkspaceBreadCrumb', 'getCurrentWorkspace']),
+    ...mapActions(['getWorkspaceBreadCrumb', 'getCurrentWorkspace', 'destroyCurrentWorkspace']),
     ...mapArticleActions(['showArticleModal', 'getArticlesByWorkspace']),
     async getBreadCrumb() {
       const res = await this.getWorkspaceBreadCrumb(this.$route.params.id)
@@ -104,6 +104,9 @@ export default {
     this.getArticlesByWorkspace(this.$route.params.id);
     this.getCurrentWorkspace(this.$route.params.id);
   },
+  destroyed() {
+    this.destroyCurrentWorkspace({});
+  }
 }
 </script>
 

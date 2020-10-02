@@ -79,6 +79,16 @@ export async function getCurrentArticle({commit}, articleId) {
 }
 
 /**
+ *
+ * @param commit
+ * @param { Object } article
+ * @returns {Promise<void>}
+ */
+export async function destroyCurrentArticle({commit}, article) {
+  commit(GET_CURRENT_ARTICLE, article)
+}
+
+/**
  * Get articles for workspace view
  *
  * @param commit

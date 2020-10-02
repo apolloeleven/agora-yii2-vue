@@ -148,7 +148,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getArticleBreadCrumb', 'getCurrentArticle', 'showArticleModal', 'getArticlesByParent']),
+    ...mapActions(['getArticleBreadCrumb', 'getCurrentArticle', 'showArticleModal', 'getArticlesByParent', 'destroyCurrentArticle']),
     async getBreadCrumb() {
       const res = await this.getArticleBreadCrumb(this.$route.params.id)
       if (!res.success) {
@@ -164,6 +164,9 @@ export default {
     this.getCurrentArticle(this.$route.params.id);
     this.getArticlesByParent(this.$route.params.id);
   },
+  destroyed() {
+    this.destroyCurrentArticle({});
+  }
 }
 </script>
 
