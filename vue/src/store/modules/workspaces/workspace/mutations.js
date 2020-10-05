@@ -1,7 +1,7 @@
 import {
   SHOW_WORKSPACE_MODAL,
   HIDE_WORKSPACE_MODAL,
-  GET_USER_WORKSPACES,
+  GET_WORKSPACES,
   WORKSPACE_DELETED,
   GET_BREAD_CRUMB,
   GET_CURRENT_WORKSPACE,
@@ -27,8 +27,7 @@ export default {
    * @param state
    * @param data
    */
-  [GET_USER_WORKSPACES](state, data) {
-    state.userWorkspaces = data;
+  [GET_WORKSPACES](state, data) {
     state.workspaces = data;
   },
   /**

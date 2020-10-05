@@ -1,7 +1,7 @@
 import {
   SHOW_WORKSPACE_MODAL,
   HIDE_WORKSPACE_MODAL,
-  GET_USER_WORKSPACES,
+  GET_WORKSPACES,
   WORKSPACE_DELETED,
   GET_BREAD_CRUMB,
   GET_CURRENT_WORKSPACE,
@@ -40,7 +40,7 @@ export function hideWorkspaceModal({commit}, hideModal) {
 export async function createWorkspace({dispatch}, data) {
   const res = await httpService.post(`${url}?expand=updatedBy`, data);
   if (res.success) {
-    dispatch('getUserWorkspaces');
+    dispatch('getWorkspaces');
   }
   return res
 }
@@ -55,7 +55,7 @@ export async function createWorkspace({dispatch}, data) {
 export async function updateWorkspace({dispatch}, data) {
   const res = await httpService.put(`${url}/${data.id}`, data);
   if (res.success) {
-    dispatch('getUserWorkspaces');
+    dispatch('getWorkspaces');
   }
   return res;
 }
@@ -72,7 +72,7 @@ export async function deleteWorkspace({commit, dispatch}, data) {
   const res = await httpService.delete(`${url}/${data.id}`);
   if (res.success) {
     commit(WORKSPACE_DELETED, data.id);
-    dispatch('getUserWorkspaces');
+    dispatch('getWorkspaces');
   }
   return res;
 }
@@ -107,10 +107,10 @@ export async function destroyCurrentWorkspace({commit}, workspace) {
  * @param commit
  * @returns {Promise<void>}
  */
-export async function getUserWorkspaces({commit}) {
-  const {success, body} = await httpService.get(`${url}/get-user-workspaces?expand=updatedBy&sort=name`);
+export async function getWorkspaces({commit}) {
+  const {success, body} = await httpService.get(`${url}/get-workspaces?expand=updatedBy&sort=name`);
   if (success) {
-    commit(GET_USER_WORKSPACES, body);
+    commit(GET_WORKSPACES, body);
   }
 }
 

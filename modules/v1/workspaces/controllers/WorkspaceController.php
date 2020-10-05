@@ -24,7 +24,7 @@ class WorkspaceController extends ActiveController
      *
      * @return ActiveDataProvider
      */
-    public function actionGetUserWorkspaces()
+    public function actionGetWorkspaces()
     {
         $query = WorkspaceResource::find()
             ->innerJoinWith(['userWorkspaces'])
