@@ -4,10 +4,10 @@
 namespace app\modules\v1\workspaces\controllers;
 
 
-use app\modules\v1\workspaces\models\UserWorkspace;
 use app\modules\v1\workspaces\models\Workspace;
 use app\modules\v1\workspaces\resources\WorkspaceResource;
 use app\rest\ActiveController;
+use app\rest\ValidationException;
 use Yii;
 use yii\data\ActiveDataProvider;
 
@@ -26,9 +26,7 @@ class WorkspaceController extends ActiveController
      */
     public function actionGetUserWorkspaces()
     {
-        $query = WorkspaceResource::find()
-            ->innerJoinWith(['userWorkspaces'])
-            ->andWhere([UserWorkspace::tableName() . '.user_id' => Yii::$app->user->id]);
+        $query = WorkspaceResource::find()->byUserId(Yii::$app->user->id);
 
         return new ActiveDataProvider([
             'query' => $query,
@@ -39,6 +37,7 @@ class WorkspaceController extends ActiveController
      * Get breadcrumb for workspace view page
      *
      * @return array
+     * @throws ValidationException
      */
     public function actionGetBreadCrumb()
     {
@@ -48,7 +47,7 @@ class WorkspaceController extends ActiveController
         $workspace = Workspace::find()->byId($workspaceId)->one();
 
         if (!$workspace) {
-            return $this->validationError(Yii::t('app', 'This workspace not exist'));
+            throw new ValidationException(Yii::t('app', 'This workspace not exist'));
         }
 
         $breadCrumb[] = [
