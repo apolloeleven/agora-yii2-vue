@@ -6,6 +6,5 @@ MenuService.addItem(new MenuItem('workspace', {
   text: i18n.t('My Workspaces'),
   path: '/workspace',
   weight: 1000,
-  icon: 'fas fa-file-word',
-  children: []
+  icon: 'fas fa-home',
 }));

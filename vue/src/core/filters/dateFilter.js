@@ -10,5 +10,5 @@ Vue.filter('toDatetime', function (value) {
 Vue.filter('relativeDate', function (value) {
   if (!value) return '';
   moment.locale(i18n.locale);
-  return moment(value).fromNow()
+  return moment.tz(value, 'Asia/Tbilisi').fromNow()
 });
