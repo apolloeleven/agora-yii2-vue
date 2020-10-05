@@ -31,7 +31,6 @@ export default {
           this.$t('This operation can not be undone'))
         if (result) {
           const res = await this.deleteWorkspace(this.model);
-          console.log(res)
           if (res.success) {
             this.$toast(this.$t(`The workspace '{name}' was successfully deleted`, {name: this.model.name}));
           } else {

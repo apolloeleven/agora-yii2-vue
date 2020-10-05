@@ -3,17 +3,17 @@
     <b-card-body>
       <b-media>
         <h5 class="mt-0">
-          <router-link :to="{name: 'article.view', params: {id: article.id}}">
-            {{ article.title }}
+          <router-link :to="{name: 'article.view', params: {id: model.id}}">
+            {{ model.title }}
           </router-link>
         </h5>
         <p class="mb-0">
           <i class="fas fa-clock"></i>
-          {{ article.updated_at | relativeDate }}
+          {{ model.updated_at | relativeDate }}
         </p>
       </b-media>
       <b-media class="article-item mt-3">
-        <div class="article-description mb-0" v-html="article.short_description"></div>
+        <div class="article-description mb-0" v-html="model.short_description"></div>
       </b-media>
     </b-card-body>
 
@@ -23,8 +23,8 @@
           <i class="fas fa-ellipsis-v fa-lg"></i>
         </b-button>
       </template>
-      <edit-button :model="article" :type="modalType"/>
-      <delete-button :model="article" :type="modalType"/>
+      <edit-button :model="model" :type="modalType"/>
+      <delete-button :model="model" :type="modalType"/>
     </b-dropdown>
   </b-card>
 </template>
@@ -40,12 +40,12 @@ export default {
   name: "ArticleChildItem",
   components: {DeleteButton, EditButton},
   props: {
-    index: Number,
-    article: Object
+    model: Object,
+    index: Number
   },
   computed: {
     modalType() {
-      return this.article.is_folder ? 'folder' : 'article';
+      return this.model.is_folder ? 'folder' : 'article';
     }
   }
 }

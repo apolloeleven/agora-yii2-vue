@@ -36,7 +36,7 @@ export default {
    * @param id
    */
   [WORKSPACE_DELETED](state, id) {
-    state.workspaces = state.workspaces.filter(workspace => workspace.id !== id)
+    state.workspaces = state.workspaces.filter(w => w.id !== id)
   },
   /**
    * @param state

@@ -47,10 +47,10 @@ export default {
   },
   /**
    * @param state
-   * @param articleId
+   * @param id
    */
-  [ARTICLE_DELETED](state, articleId) {
-    state.articles = state.articles.filter(a => a.id !== articleId)
+  [ARTICLE_DELETED](state, id) {
+    state.articles = state.articles.filter(a => a.id !== id)
   },
   /**
    *

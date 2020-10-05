@@ -54,7 +54,8 @@
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
               <no-data :model="filteredArticles" :loading="loading" :text="$t('There are no articles')"></no-data>
               <div class="article-list">
-                <ArticleChildItem v-for="(article, index) in filteredArticles" :index="index" :article="article"/>
+                <ArticleChildItem
+                  v-for="(article, index) in filteredArticles" :index="index" :model="article" :key="article.id"/>
               </div>
             </div>
           </div>
@@ -64,7 +65,8 @@
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
               <no-data :model="filteredFolders" :loading="loading" :text="$t('There are no folders')"></no-data>
               <div class="article-list">
-                <ArticleChildItem v-for="(folder, index) in filteredFolders" :index="index" :article="folder"/>
+                <ArticleChildItem
+                  v-for="(folder, index) in filteredFolders" :index="index" :model="folder" :key="folder.id"/>
               </div>
             </div>
           </div>
@@ -85,7 +87,8 @@
               </b-card-body>
             </b-card>
             <div class="article-list">
-              <ArticleChildItem v-for="(art, index) in filteredArticles" :index="index" :article="art"/>
+              <ArticleChildItem
+                v-for="(article, index) in filteredArticles" :index="index" :model="article" :key="article.id"/>
             </div>
           </div>
         </div>
@@ -94,8 +97,9 @@
             <h4 class="border-bottom pb-1 mb-3">{{ $t('Articles') }}</h4>
             <div class="article-list">
               <no-data :model="filteredArticles" :loading="loading" :text="$t('There are no articles')"></no-data>
-              <div class="article-list">
-                <ArticleChildItem v-for="(article, index) in filteredArticles" :index="index" :article="article"/>
+              <div v-if="filteredArticles" class="article-list">
+                <ArticleChildItem
+                  v-for="(article, index) in filteredArticles" :index="index" :model="article" :key="article.id"/>
               </div>
             </div>
           </div>
