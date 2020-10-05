@@ -2,6 +2,7 @@ import BaseModel from "../../../core/components/input-widget/BaseModel";
 import i18n from "../../../shared/i18n";
 
 export default class WorkspaceFormModel extends BaseModel {
+  id = null;
   name = '';
   abbreviation = '';
   description = '';
@@ -26,6 +27,7 @@ export default class WorkspaceFormModel extends BaseModel {
 
   constructor(data = {}) {
     super();
+    data.folder_in_folder = !!data.folder_in_folder;
     Object.assign(this, {...data});
   }
 }

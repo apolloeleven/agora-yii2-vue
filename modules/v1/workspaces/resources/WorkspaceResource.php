@@ -27,12 +27,8 @@ class WorkspaceResource extends Workspace
             'abbreviation',
             'description',
             'folder_in_folder',
-            'created_at' => function () {
-                return Yii::$app->formatter->asDatetime($this->created_at);
-            },
-            'updated_at' => function () {
-                return Yii::$app->formatter->asDatetime($this->updated_at);
-            },
+            'created_at',
+            'updated_at',
         ];
     }
 

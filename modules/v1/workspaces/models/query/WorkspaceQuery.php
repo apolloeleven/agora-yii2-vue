@@ -3,6 +3,7 @@
 
 namespace app\modules\v1\workspaces\models\query;
 
+use app\modules\v1\workspaces\models\UserWorkspace;
 use app\modules\v1\workspaces\models\Workspace;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -39,5 +40,15 @@ class WorkspaceQuery extends ActiveQuery
     public function byId($id)
     {
         return $this->andWhere([Workspace::tableName() . '.id' => $id]);
+    }
+
+    /**
+     * @param $userId
+     * @return WorkspaceQuery
+     */
+    public function byUserId($userId)
+    {
+        return $this->innerJoin(UserWorkspace::tableName() . ' uw', 'uw.workspace_id = ' . Workspace::tableName() . '.id')
+            ->andWhere(['user_id' => $userId]);
     }
 }

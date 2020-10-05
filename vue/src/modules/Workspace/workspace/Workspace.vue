@@ -12,7 +12,7 @@
     <div class="page-content p-3">
       <div class="workspace-list">
         <div class="row">
-          <div v-for="(workspace, index) in workspaces" :key="workspace.id" class="col-lg-2 col-sm-6 mb-3">
+          <div v-for="(workspace, index) in workspaces" :key="`workspace-wrapper-${workspace.id}`" class="col-lg-2 col-sm-6 mb-3">
             <WorkspaceItem :workspace="workspace" :index="index" />
           </div>
         </div>
