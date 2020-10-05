@@ -31,7 +31,6 @@ export default {
   data() {
     return {
       model: new WorkspaceFormModel(),
-      action: '',
       image: null,
     }
   },
@@ -40,15 +39,8 @@ export default {
   },
   watch: {
     modalWorkspace() {
-      const w = this.modalWorkspace;
-      if (w) {
-        this.model.id = w.id;
-        this.model.name = w.name;
-        this.model.abbreviation = w.abbreviation;
-        this.model.description = w.description;
-        this.model.folder_in_folder = !!w.folder_in_folder;
-      } else {
-        this.model = new WorkspaceFormModel()
+      if (this.modalWorkspace) {
+        this.model = new WorkspaceFormModel(this.modalWorkspace);
       }
     }
   },
@@ -58,26 +50,25 @@ export default {
       this.model.folder_in_folder = this.model.folder_in_folder ? 1 : 0;
       this.model.image = this.image;
 
+      let action
       let res
       if (this.model.id) {
-        this.action = 'updated';
+        action = 'updated';
         res = await this.updateWorkspace(this.model);
       } else {
-        this.action = 'created';
+        action = 'created';
         res = await this.createWorkspace(this.model);
       }
       if (res.success) {
-        this.$toast(this.$t(`The workspace '{name}' was successfully ${this.action}`, {name: this.model.name}));
-        this.hideWorkspaceModal()
-        this.model = new WorkspaceFormModel()
+        this.$toast(this.$t(`The workspace '{name}' was successfully ${action}`, {name: this.model.name}));
+        this.hideModal()
       } else {
-        this.$toast(this.$t(`The workspace '{name}' was not ${this.action}`, {name: this.model.name}), 'danger');
-        this.hideWorkspaceModal()
-        this.model = new WorkspaceFormModel()
+        this.$toast(this.$t(`The workspace '{name}' was not ${action}`, {name: this.model.name}), 'danger');
       }
     },
     hideModal() {
-      this.hideWorkspaceModal()
+      this.hideWorkspaceModal();
+      this.model = new WorkspaceFormModel()
     }
   }
 }
