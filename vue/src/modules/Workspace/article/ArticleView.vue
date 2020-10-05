@@ -52,9 +52,7 @@
             <h4 class="border-bottom pb-1 mb-3">{{ $t('Articles') }}</h4>
             <div class="article-list">
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
-              <div v-if="!filteredArticles.length && !loading" class="no-data">
-                {{ $t('There are no articles') }}
-              </div>
+              <no-data :model="filteredArticles" :loading="loading" :text="$t('There are no articles')"></no-data>
               <div class="article-list">
                 <ArticleChildItem v-for="(article, index) in filteredArticles" :index="index" :article="article"/>
               </div>
@@ -64,9 +62,7 @@
             <h4 class="border-bottom pb-1 mb-3">{{ $t('Folders') }}</h4>
             <div class="article-list">
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
-              <div v-if="!filteredFolders.length && !loading" class="no-data">
-                {{ $t('There are no folders') }}
-              </div>
+              <no-data :model="filteredFolders" :loading="loading" :text="$t('There are no folders')"></no-data>
               <div class="article-list">
                 <ArticleChildItem v-for="(folder, index) in filteredFolders" :index="index" :article="folder"/>
               </div>
@@ -82,7 +78,9 @@
               <b-card-body>
                 <div class="article-content">
                   <div v-if="currentArticle.body" class="article-body" v-html="currentArticle.body"></div>
-                  <div v-else class="no-data">{{ $t('There is no description') }}</div>
+                  <no-data v-else :model="currentArticle" :loading="loading"
+                           :text="$t('There is no description')">
+                  </no-data>
                 </div>
               </b-card-body>
             </b-card>
@@ -95,9 +93,7 @@
           <div class="col-sm-12 col-lg-6">
             <h4 class="border-bottom pb-1 mb-3">{{ $t('Articles') }}</h4>
             <div class="article-list">
-              <div v-if="!filteredArticles.length && !loading" class="no-data">
-                {{ $t('There are no articles') }}
-              </div>
+              <no-data :model="filteredArticles" :loading="loading" :text="$t('There are no articles')"></no-data>
               <div class="article-list">
                 <ArticleChildItem v-for="(article, index) in filteredArticles" :index="index" :article="article"/>
               </div>
@@ -114,12 +110,13 @@ import BackButton from "../components/BackButton";
 import {createNamespacedHelpers} from "vuex";
 import ArticleChildItem from "./ArticleChildItem";
 import ContentSpinner from "../../../core/components/ContentSpinner";
+import NoData from "../components/NoData";
 
 const {mapState, mapActions} = createNamespacedHelpers('article')
 
 export default {
   name: "ArticleView",
-  components: {ContentSpinner, ArticleChildItem, BackButton},
+  components: {NoData, ContentSpinner, ArticleChildItem, BackButton},
   data() {
     return {
       visible: false,
@@ -180,18 +177,5 @@ export default {
 
 .article-description {
   word-break: break-word;
-}
-
-.no-data {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  flex-direction: column;
-  color: #b6b6b6;
-  font-weight: bold;
-  text-shadow: 1px 1px 0 #FFFFFF;
-  font-size: 1.275rem;
-  min-height: 200px;
 }
 </style>

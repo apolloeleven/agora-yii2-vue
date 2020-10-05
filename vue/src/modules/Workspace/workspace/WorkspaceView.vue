@@ -39,9 +39,7 @@
             <h4 class="border-bottom pb-1 mb-3">{{ $t('Folders') }}</h4>
             <div class="folder-list">
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
-              <div v-if="!articles.length && !loading" class="no-data">
-                {{ $t('There are no folders') }}
-              </div>
+              <no-data :model="articles" :loading="loading" :text="$t('There are no folders')"></no-data>
               <div v-if="articles" class="folder-wrapper row">
                 <ArticleItem
                   class="mb-2 col-md-12 col-xl-6" v-for="(article, index) in articles"
@@ -63,14 +61,15 @@ import BackButton from "../components/BackButton";
 import {createNamespacedHelpers} from "vuex";
 import ArticleItem from "../article/ArticleItem";
 import ContentSpinner from "../../../core/components/ContentSpinner";
+import NoData from "../components/NoData";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace')
 const {mapState: mapArticleStates, mapActions: mapArticleActions} = createNamespacedHelpers('article')
 
 export default {
   name: "WorkspaceView",
-  components: {ContentSpinner, ArticleItem, BackButton},
-  data(){
+  components: {NoData, ContentSpinner, ArticleItem, BackButton},
+  data() {
     return {
       visible: false,
     }
@@ -111,16 +110,5 @@ export default {
 </script>
 
 <style scoped>
-.no-data {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  flex-direction: column;
-  color: #b6b6b6;
-  font-weight: bold;
-  text-shadow: 1px 1px 0 #FFFFFF;
-  font-size: 1.275rem;
-  min-height: 200px;
-}
+
 </style>
