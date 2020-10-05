@@ -17,6 +17,7 @@ export default new Vuex.Store({
   },
   getters: {
     menuItems: state => Object.values(state._menuItems).sort((a, b) => a.weight - b.weight),
+    favourites: state => Object.values(state._menuItems).filter(item => item.favourite).sort((a, b) => a.weight - b.weight),
   },
   actions: {
     addMenuItem({commit}, {name, menuItem}) {
@@ -36,7 +37,6 @@ export default new Vuex.Store({
     toggleMenuCollapse: (state, collapsed) => state.menuCollapsed = collapsed,
     toggleMenuHide: (state, hide) => state.menuHidden = hide,
     addMenuItem: (state, {name, menuItem}) => {
-      console.log(name)
       state._menuItems = {
         ...state._menuItems,
         [name]: menuItem

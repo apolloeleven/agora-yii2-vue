@@ -30,6 +30,7 @@ use yii\web\IdentityInterface;
  * @property int|null    $expire_date
  * @property string|null $access_token
  * @property int|null    $status
+ * @property string      $favourites
  * @property int|null    $created_at
  * @property int|null    $updated_at
  */
@@ -63,7 +64,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['password_hash', 'password_reset_token'], 'string', 'max' => 1024],
             [['username'], 'unique'],
             [['email'], 'unique'],
-            [['about_me'], 'string'],
+            [['about_me', 'favourites'], 'string'],
             [['first_name', 'last_name', 'mobile', 'phone'], 'string', 'max' => 255],
             [['hobbies', 'image_path'], 'string', 'max' => 1024],
             [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, jpg'],
@@ -90,6 +91,7 @@ class User extends ActiveRecord implements IdentityInterface
             'expire_date' => Yii::t('app', 'Expire Date'),
             'access_token' => Yii::t('app', 'Access Token'),
             'status' => Yii::t('app', 'Status'),
+            'favourites' => Yii::t('app', 'Favourites'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
@@ -98,14 +100,6 @@ class User extends ActiveRecord implements IdentityInterface
     public static function find()
     {
         return new UserQuery(get_called_class());
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getUserProfile()
-    {
-        return $this->hasOne(UserProfile::class, ['user_id' => 'id']);
     }
 
     /**

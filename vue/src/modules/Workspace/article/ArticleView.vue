@@ -19,6 +19,7 @@
           {{ $t('Create new article') }}
         </b-dropdown-item>
       </b-dropdown>
+      <AddToFavourites :name="favouriteName"/>
     </div>
     <div class="page-content">
       <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
@@ -115,12 +116,13 @@ import {createNamespacedHelpers} from "vuex";
 import ArticleChildItem from "./ArticleChildItem";
 import ContentSpinner from "../../../core/components/ContentSpinner";
 import NoData from "../components/NoData";
+import AddToFavourites from "../components/AddToFavourites/AddToFavourites";
 
 const {mapState, mapActions} = createNamespacedHelpers('article')
 
 export default {
   name: "ArticleView",
-  components: {NoData, ContentSpinner, ArticleChildItem, BackButton},
+  components: {AddToFavourites, NoData, ContentSpinner, ArticleChildItem, BackButton},
   data() {
     return {
       visible: false,
@@ -139,7 +141,11 @@ export default {
     },
     isFolder() {
       return this.currentArticle.is_folder;
-    }
+    },
+    favouriteName() {
+      const wk = this.currentArticle.workspace || {};
+      return (wk.abbreviation || wk.name) + ' / ' + this.currentArticle.title;
+    },
   },
   watch: {
     '$route.params.id': function (id) {

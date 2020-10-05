@@ -5,6 +5,7 @@ namespace app\modules\v1\workspaces\controllers;
 
 use app\modules\v1\workspaces\resources\ArticleResource;
 use app\rest\ActiveController;
+use app\rest\ValidationException;
 use Yii;
 use yii\data\ActiveDataProvider;
 
@@ -144,5 +145,34 @@ class ArticleController extends ActiveController
         return new ActiveDataProvider([
             'query' => $query
         ]);
+    }
+
+    /**
+     * Add articles to favourites
+     *
+     * @return mixed
+     * @throws ValidationException
+     */
+    public function actionAddToFavourites()
+    {
+        $userModel = Yii::$app->user->identity;
+
+        $userModel->favourites = json_encode(Yii::$app->request->post(), true);
+        if (!$userModel->save()) {
+            throw new ValidationException(Yii::t('app', 'Unable to save favourite data'));
+        }
+        return $this->response(null, 201);
+    }
+
+    /**
+     * Read favourites data
+     *
+     * @return string
+     */
+    public function actionReadFromFavourites()
+    {
+        $userModel = Yii::$app->user->identity;
+
+        return $userModel->favourites ?: '[]';
     }
 }
