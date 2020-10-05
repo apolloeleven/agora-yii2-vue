@@ -12,7 +12,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     menuCollapsed: false,
-    menuHidden: false
+    menuHidden: false,
+    _menuItems: {},
   },
   getters: {
     menuItems: state => Object.values(state._menuItems).sort((a, b) => a.weight - b.weight),
@@ -35,6 +36,7 @@ export default new Vuex.Store({
     toggleMenuCollapse: (state, collapsed) => state.menuCollapsed = collapsed,
     toggleMenuHide: (state, hide) => state.menuHidden = hide,
     addMenuItem: (state, {name, menuItem}) => {
+      console.log(name)
       state._menuItems = {
         ...state._menuItems,
         [name]: menuItem

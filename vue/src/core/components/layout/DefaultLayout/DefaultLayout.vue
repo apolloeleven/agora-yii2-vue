@@ -21,8 +21,11 @@ import UserInvitationForm from "../../../../modules/User/Invitation/UserInvitati
 import WorkspaceForm from "../../../../modules/Workspace/workspace/WorkspaceForm";
 import ArticleForm from "../../../../modules/Workspace/article/ArticleForm";
 import {mapState, createNamespacedHelpers} from 'vuex';
+import MenuService from "../../sidebar/MenuService";
+import MenuItem from "../../sidebar/MenuItem";
 
 const {mapActions} = createNamespacedHelpers('user');
+const {mapState: mapStateWorkspace, mapActions: mapActionsWorkspace} = createNamespacedHelpers('workspace');
 
 export default {
   name: "DefaultLayout",
@@ -38,9 +41,36 @@ export default {
       'menuCollapsed',
       'menuHidden'
     ]),
+    ...mapStateWorkspace(['workspaces'])
+  },
+  watch: {
+    workspaces() {
+      const menuItems = MenuService.getItems();
+      menuItems.forEach(menuItem => {
+        if (menuItem.name.indexOf('workspace-') === 0) {
+          MenuService.removeItem(menuItem.name)
+        }
+      });
+      this.workspaces.forEach(function (w, i) {
+        MenuService.removeItem(`/workspace/${w.id}`);
+        MenuService.addItem(new MenuItem(`workspace-${w.id}`, {
+          text: w.name,
+          path: `/workspace/${w.id}`,
+          weight: 100 + i,
+          icon: 'fas fa-home',
+          linkOptions: {
+            'class': 'pl-4'
+          }
+        }))
+      })
+    },
   },
   methods: {
-    ...mapActions(['getProfile'])
+    ...mapActions(['getProfile']),
+    ...mapActionsWorkspace(['getWorkspaces']),
+  },
+  created() {
+    this.getWorkspaces();
   },
   mounted() {
     this.getProfile();
