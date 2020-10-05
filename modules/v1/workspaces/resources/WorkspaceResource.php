@@ -10,6 +10,7 @@ use app\modules\v1\workspaces\models\Workspace;
 use app\rest\ValidationException;
 use Yii;
 use yii\db\ActiveQuery;
+use yii\db\Exception;
 
 /**
  * Class WorkspaceResource
@@ -78,5 +79,26 @@ class WorkspaceResource extends Workspace
                 throw new ValidationException(Yii::t('app', 'Unable to create user workspace'));
             }
         }
+    }
+
+    /**
+     * Check workspace and delete if has no children
+     *
+     * @return bool|int
+     * @throws ValidationException
+     * @throws Exception
+     */
+    public function delete()
+    {
+        if ($this->getArticles()->count()) {
+            throw new ValidationException(Yii::t('app', 'You can\'t delete this workspace because it has folders'));
+        }
+        $dbTransaction = Yii::$app->db->beginTransaction();
+        if (!UserWorkspace::deleteAll(['workspace_id' => $this->id])) {
+            $dbTransaction->rollBack();
+            return false;
+        }
+        $dbTransaction->commit();
+        return true;
     }
 }

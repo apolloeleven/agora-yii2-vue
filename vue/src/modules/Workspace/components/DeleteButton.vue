@@ -31,10 +31,11 @@ export default {
           this.$t('This operation can not be undone'))
         if (result) {
           const res = await this.deleteWorkspace(this.model);
+          console.log(res)
           if (res.success) {
             this.$toast(this.$t(`The workspace '{name}' was successfully deleted`, {name: this.model.name}));
           } else {
-            this.$toast(this.$t(`Unable to delete workspace`), 'danger');
+            this.$toast(res.body.message, 'danger');
           }
         }
       } else {
@@ -51,7 +52,7 @@ export default {
           if (res.success) {
             this.$toast(this.$t(`The ${this.resource} '{title}' was successfully deleted`, {title: this.model.title}));
           } else {
-            this.$toast(this.$t(`Unable to delete folder`), 'danger');
+            this.$toast(res.body.message, 'danger');
           }
         }
       }
