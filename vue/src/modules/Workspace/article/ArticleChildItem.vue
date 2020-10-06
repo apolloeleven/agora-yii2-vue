@@ -8,7 +8,7 @@
           </router-link>
         </h5>
         <p class="mb-0">
-          <i class="fas fa-clock"></i>
+          <i class="far fa-clock"></i>
           {{ model.updated_at | relativeDate }}
         </p>
       </b-media>
