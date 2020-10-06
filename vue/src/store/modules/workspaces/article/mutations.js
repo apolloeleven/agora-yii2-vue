@@ -7,6 +7,8 @@ import {
   ARTICLE_DELETED,
   GET_BREAD_CRUMB,
   GET_CURRENT_ARTICLE,
+  GET_ATTACH_CONFIG,
+  GET_ARTICLES_FILES,
 } from "./mutation-types";
 
 export default {
@@ -68,4 +70,20 @@ export default {
   [GET_CURRENT_ARTICLE](state, data) {
     state.currentArticle = data || {}
   },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_ATTACH_CONFIG](state, data) {
+    state.attachConfig = data
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_ARTICLES_FILES](state, data) {
+    state.articleFiles = data
+  }
 };

@@ -4,11 +4,15 @@ namespace app\modules\v1\workspaces\models;
 
 use app\models\User;
 use app\modules\v1\workspaces\models\query\ArticleFileQuery;
+use app\rest\ValidationException;
 use Yii;
+use yii\base\Exception;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\FileHelper;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "{{%article_files}}".
@@ -126,5 +130,33 @@ class ArticleFile extends ActiveRecord
     public function getUpdatedBy()
     {
         return $this->hasOne(User::class, ['id' => 'updated_by']);
+    }
+
+    /**
+     * Upload file
+     *
+     * @param UploadedFile $file
+     * @return bool
+     * @throws Exception
+     */
+    public function uploadFile(UploadedFile $file)
+    {
+        $path = '/article-attachments/' . $this->article_id;
+        $fullPath = Yii::getAlias('@storage' . $path);
+
+        $this->name = $file->name;
+        $this->path = $path;
+        $this->mime = $file->type;
+        $this->size = $file->size;
+
+        if (!file_exists($fullPath)) if (!FileHelper::createDirectory($fullPath)) {
+            throw new ValidationException(Yii::t('app', "Directory '$fullPath' was NOT created"));
+        }
+        $this->path = $path . '/' . Yii::$app->security->generateRandomString() . '.' . $file->extension;
+
+        if (!$file->saveAs(Yii::getAlias('@storage/' . $this->path))) {
+            throw new ValidationException(Yii::t('app', "File was NOT uploaded at '$this->path'"));
+        }
+        return true;
     }
 }

@@ -14,5 +14,6 @@
   "The article '{title}' was successfully updated": "The article '{title}' was successfully updated",
   "The article '{title}' was successfully deleted": "The article '{title}' was successfully deleted",
   "Update folder '{name}'": "Update folder '{name}'",
-  "Update article '{name}'": "Update article '{name}'"
+  "Update article '{name}'": "Update article '{name}'",
+  "File '{name}' is too big for upload": "File '{name}' is too big for upload"
 }

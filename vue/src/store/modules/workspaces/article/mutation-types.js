@@ -6,3 +6,5 @@ export const STOP_LOADING = 'article/STOP_LOADING';
 export const ARTICLE_DELETED = 'article/ARTICLE_DELETED';
 export const GET_BREAD_CRUMB = 'article/GET_BREAD_CRUMB';
 export const GET_CURRENT_ARTICLE = 'article/GET_CURRENT_ARTICLE';
+export const GET_ATTACH_CONFIG = 'article/GET_ATTACH_CONFIG';
+export const GET_ARTICLES_FILES = 'article/GET_ARTICLES_FILES';

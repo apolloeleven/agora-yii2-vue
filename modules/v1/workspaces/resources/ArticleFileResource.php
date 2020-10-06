@@ -44,4 +44,9 @@ class ArticleFileResource extends ArticleFile
             'content'
         ];
     }
+
+    public function extraFields()
+    {
+        return ['updatedBy'];
+    }
 }

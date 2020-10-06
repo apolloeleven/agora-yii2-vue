@@ -7,10 +7,13 @@ import {
   ARTICLE_DELETED,
   GET_BREAD_CRUMB,
   GET_CURRENT_ARTICLE,
+  GET_ATTACH_CONFIG,
+  GET_ARTICLES_FILES,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 
 const url = '/v1/workspaces/article';
+const fileUrl = '/v1/workspaces/article-file';
 
 /**
  * Show article form's modal
@@ -131,4 +134,64 @@ export async function getArticleBreadCrumb({commit}, articleId) {
   const res = await httpService.get(`${url}/get-bread-crumb?articleId=${articleId}`);
   if (res.success) commit(GET_BREAD_CRUMB, res.body);
   return res;
+}
+
+/** Article Files Actions */
+
+/**
+ * Get attachment config data
+ *
+ * @param commit
+ * @returns {Promise<void>}
+ */
+export async function getAttachConfig({commit}) {
+  const {success, body} = await httpService.get(`${fileUrl}/get-attach-config`)
+  if (success) {
+    commit(GET_ATTACH_CONFIG, body)
+  }
+}
+
+/**
+ * Upload files
+ *
+ * @param dispatch
+ * @param data
+ * @param config
+ * @returns {Promise<unknown>}
+ */
+export async function attachFiles({dispatch}, data) {
+  const res = await httpService.post(`${fileUrl}/attach-files`, prepareFiles(data))
+  if (res.success) {
+    dispatch('getFilesByArticle', data.article_id);
+  }
+  return res;
+}
+
+export async function getFilesByArticle({commit}, articleId) {
+  const {success, body} = await httpService.get(`${fileUrl}?articleId=${articleId}&expand=updatedBy&sort=name`);
+  if (success) {
+    commit(GET_ARTICLES_FILES, body);
+  }
+}
+
+/**
+ * Prepare file to upload
+ *
+ * @param data
+ * @returns {FormData}
+ */
+export function prepareFiles(data) {
+  const tmp = new FormData();
+  for (let key in data.files) {
+    if (data.files.hasOwnProperty(key)) {
+      tmp.append('files[]', data.files[key], data.files.name);
+    }
+  }
+  for (let key in data) {
+    if (data.hasOwnProperty(key) && data[key] !== 'files') {
+      tmp.append(key, data[key]);
+    }
+  }
+  data = tmp;
+  return data;
 }

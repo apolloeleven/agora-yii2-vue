@@ -13,8 +13,8 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
         '@portalUrl' => env('PORTAL_HOST'),
-        '@storage' => dirname(__DIR__) . '/storage',
-        '@storageUrl' => Yii::getAlias('@portalUrl'),
+        '@storage' => dirname(__DIR__) . '/web/storage',
+        '@storageUrl' => env('PORTAL_HOST'),
     ],
     'components' => [
         'request' => [
@@ -72,6 +72,7 @@ $config = [
                         'v1/users/invitation',
                         'v1/workspaces/workspace',
                         'v1/workspaces/article',
+                        'v1/workspaces/article-file',
                     ]
                 ]
             ],
