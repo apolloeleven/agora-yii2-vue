@@ -56,31 +56,22 @@ class UserDepartment extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'user_id' => 'User ID',
-            'department_id' => 'Department ID',
-            'position' => 'Position',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
+            'id' => Yii::t('app', 'ID'),
+            'user_id' => Yii::t('app', 'User ID'),
+            'department_id' => Yii::t('app', 'Department ID'),
+            'position' => Yii::t('app', 'Position'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'created_by' => Yii::t('app', 'Created By'),
+            'updated_by' => Yii::t('app', 'Updated By'),
         ];
     }
 
     public function behaviors()
     {
         return [
-            [
-                'class' => TimestampBehavior::class,
-                'createdAtAttribute' => 'created_at',
-                'updatedAtAttribute' => 'updated_at',
-                'value' => new Expression('NOW()')
-            ],
-            [
-                'class' => BlameableBehavior::class,
-                'createdByAttribute' => 'created_by',
-                'updatedByAttribute' => 'updated_by',
-            ],
+            TimestampBehavior::class,
+            BlameableBehavior::class
         ];
     }
 
