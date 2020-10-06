@@ -1,5 +1,5 @@
 <template>
-  <div href="#" class="list-group-item d-flex flex-column">
+  <div class="list-group-item d-flex flex-column">
     <b-collapse v-model="visible" v-if="department.children && department.children.length > 0" class="order-2">
       <department-list-group-item v-for="department in department.children"
                                   :edit-handler="editHandler" :delete-handler="deleteHandler"
