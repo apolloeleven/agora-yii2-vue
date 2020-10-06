@@ -6,11 +6,11 @@ import MenuService from "../../../../core/components/sidebar/MenuService";
 
 class FavouritesService {
   addFavourite(name, path) {
-    this._addFavourite(name, path);
+    this.addFavouriteItem(name, path);
     this.saveFavourites();
   }
 
-  _addFavourite(name, path) {
+  addFavouriteItem(name, path) {
     MenuService.addItem(new MenuItem(path, {
       text: name,
       path: path,
@@ -29,26 +29,22 @@ class FavouritesService {
   }
 
   inFavourites(path) {
-    console.log(store.state._menuItems[path])
     return store.state._menuItems[path];
   }
 
   saveFavourites() {
-    const favourites = store.getters['favourites'];
-    return httpService.post(`/v1/workspaces/article/add-to-favourites`, favourites);
+    return httpService.post(`/v1/workspaces/article/add-to-favourites`, store.getters['favourites']);
   }
 
-  readFromStorage() {
-    const user = auth.getCurrentUser();
-    if (user) {
-      httpService.get(`/v1/workspaces/article/read-from-favourites`)
-        .then(response => {
-          this.removeAllFavourites();
-          let data = JSON.parse(response.body);
-          for (let item of data) {
-            this._addFavourite(item.text, item.path);
-          }
-        });
+  async readFromStorage() {
+    if (auth.getCurrentUser()) {
+      const {success, body} = await httpService.get(`/v1/workspaces/article/read-from-favourites`)
+      if (success) {
+        this.removeAllFavourites();
+        for (let item of JSON.parse(body)) {
+          this.addFavouriteItem(item.text, item.path);
+        }
+      }
     }
   }
 
