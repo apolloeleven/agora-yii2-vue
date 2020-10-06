@@ -3,14 +3,15 @@
     <page-header :title="$t('Invitations')">
       <b-button @click="showInvitationModal" variant="info">
         <i class="fas fa-plus-circle"></i>
-        {{$t('Invite')}}
+        {{ $t('Invite') }}
       </b-button>
     </page-header>
-    <div id="user" class="d-flex flex-column">
+    <div class="content-wrapper p-3">
       <content-spinner :show="invitations.loading" :text="$t('Loading...')" class="h-100"/>
-      <div v-if="!invitations.loading" class="p-3">
+      <div v-if="!invitations.loading">
         <b-card no-body>
-          <b-table v-if="invitations.data.rows.length" responsive small striped hover id="users-table" :items="invitations.data.rows" :fields="fields">
+          <b-table v-if="invitations.data.length" responsive small striped hover id="users-table"
+                   :items="invitations.data" :fields="fields">
             <template v-slot:table-busy>
               <div class="text-center text-danger my-2">
                 <b-spinner class="align-middle"></b-spinner>
@@ -31,7 +32,7 @@
             }">{{ data.value }}</span>
             </template>
           </b-table>
-          <no-data-available v-if="!invitations.data.rows.length" height="100"/>
+          <no-data-available v-if="!invitations.data.length" height="100"/>
         </b-card>
       </div>
     </div>

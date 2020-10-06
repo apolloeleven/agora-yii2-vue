@@ -116,7 +116,7 @@ export async function getInvitations({commit}, keyword) {
   commit(SET_INVITATIONS_LOADING);
   const res = await invitationService.get(keyword);
   commit(SET_INVITATIONS_LOADING);
-  commit(SET_INVITATIONS, {rows: res.body});
+  commit(SET_INVITATIONS, res.body);
 }
 
 export function showInvitationModal({commit}) {
