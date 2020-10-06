@@ -173,8 +173,7 @@ export default {
       Vue.delete(this.model.roles, index);
     },
     async onSubmit() {
-      let data;
-      data = clone(this.model);
+      let data = clone(this.model);
       let keyToRename = data['userDepartments'];
       delete data['userDepartments'];
       data['userDepartmentsData'] = keyToRename;
@@ -190,8 +189,6 @@ export default {
         }
       }
     }
-  },
-  mounted() {
   }
 }
 </script>
