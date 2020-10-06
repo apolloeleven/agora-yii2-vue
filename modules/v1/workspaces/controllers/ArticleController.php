@@ -89,12 +89,12 @@ class ArticleController extends ActiveController
     public function actionGetBreadCrumb($articleId)
     {
         $article = ArticleResource::find()->byId($articleId)->one();
-        $workspace = $article->workspace;
 
         if (!$article) {
-            return $this->validationError(Yii::t('app', 'This article not exist'));
+            throw new ValidationException(Yii::t('app', 'This article not exist'));
         }
 
+        $workspace = $article->workspace;
         $breadCrumb[] = [
             'text' => Yii::t('app', 'My Workspaces'),
             'to' => [

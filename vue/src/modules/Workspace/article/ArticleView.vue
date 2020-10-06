@@ -159,7 +159,8 @@ export default {
     async getBreadCrumb() {
       const res = await this.getArticleBreadCrumb(this.$route.params.id)
       if (!res.success) {
-        this.$toast(this.$t(res.body), 'danger')
+        this.$toast(this.$t(res.body.message), 'danger')
+        this.$router.push({name: 'workspace'});
       }
     },
     showModal(isArticle = false) {
