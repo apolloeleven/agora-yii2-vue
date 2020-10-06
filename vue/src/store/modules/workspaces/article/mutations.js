@@ -9,6 +9,9 @@ import {
   GET_CURRENT_ARTICLE,
   GET_ATTACH_CONFIG,
   GET_ARTICLES_FILES,
+  SHOW_EDIT_LABEL_DIALOG,
+  HIDE_EDIT_LABEL_DIALOG,
+  UPDATE_LABEL,
 } from "./mutation-types";
 
 export default {
@@ -85,5 +88,32 @@ export default {
    */
   [GET_ARTICLES_FILES](state, data) {
     state.articleFiles = data
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [SHOW_EDIT_LABEL_DIALOG](state, data) {
+    state.articleFile.showModal = true;
+    state.articleFile.file = data;
+  },
+  /**
+   *
+   * @param state
+   */
+  [HIDE_EDIT_LABEL_DIALOG](state) {
+    state.articleFile.showModal = false;
+    state.articleFile.file = null;
+  },
+  /**
+   *
+   * @param state
+   * @param id
+   * @param label
+   */
+  [UPDATE_LABEL](state, {id, label}) {
+    const file = state.articleFiles.find(a => a.id === id);
+    if (file) file.label = label;
   }
 };

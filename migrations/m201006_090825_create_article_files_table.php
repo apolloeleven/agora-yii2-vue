@@ -16,6 +16,7 @@ class m201006_090825_create_article_files_table extends Migration
             'id' => $this->primaryKey(),
             'article_id' => $this->integer(),
             'name' => $this->string(255),
+            'label' => $this->string(255),
             'path' => $this->string(512),
             'mime' => $this->string(255),
             'content' => 'longText',

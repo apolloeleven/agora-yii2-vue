@@ -126,7 +126,7 @@ import ArticleChildItem from "./ArticleChildItem";
 import ContentSpinner from "../../../core/components/ContentSpinner";
 import NoData from "../components/NoData";
 import AddToFavourites from "../components/AddToFavourites/AddToFavourites";
-import Attachments from "./Attachments";
+import Attachments from "./attachment/Attachments";
 
 const {mapState, mapActions} = createNamespacedHelpers('article')
 

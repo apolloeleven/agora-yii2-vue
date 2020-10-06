@@ -9,6 +9,9 @@ import {
   GET_CURRENT_ARTICLE,
   GET_ATTACH_CONFIG,
   GET_ARTICLES_FILES,
+  SHOW_EDIT_LABEL_DIALOG,
+  HIDE_EDIT_LABEL_DIALOG,
+  UPDATE_LABEL,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 
@@ -167,11 +170,53 @@ export async function attachFiles({dispatch}, data) {
   return res;
 }
 
+/**
+ * Get article files data by article
+ *
+ * @param commit
+ * @param articleId
+ * @returns {Promise<void>}
+ */
 export async function getFilesByArticle({commit}, articleId) {
   const {success, body} = await httpService.get(`${fileUrl}?articleId=${articleId}&expand=updatedBy&sort=name`);
   if (success) {
     commit(GET_ARTICLES_FILES, body);
   }
+}
+
+/**
+ * Show edit label dialog form
+ *
+ * @param commit
+ * @param file
+ */
+export function showEditLabelDialog({commit}, file) {
+  commit(SHOW_EDIT_LABEL_DIALOG, file);
+}
+
+/**
+ * Hide edit label dialog form
+ *
+ * @param commit
+ */
+export function hideEditLabelDialog({commit}) {
+  commit(HIDE_EDIT_LABEL_DIALOG);
+}
+
+/**
+ * Update files label
+ *
+ * @param commit
+ * @param id
+ * @param label
+ * @returns {Promise<unknown>}
+ */
+export async function updateLabel({commit}, {id, label}) {
+  const res = await httpService.post(`${fileUrl}/change-label`, {id, label})
+  if (res.success) {
+    commit(UPDATE_LABEL, {id, label})
+  }
+  return res;
 }
 
 /**

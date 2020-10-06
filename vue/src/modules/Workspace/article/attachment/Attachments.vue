@@ -30,9 +30,9 @@
             <b-popover target="columnOptions" triggers="hover" placement="bottom">
               <template v-slot:title>{{ $t('Show/Hide columns') }}</template>
               <div>
-                <!--<b-form-checkbox v-for="column in visibleColumns" v-model="column.visible">
-                  {{column.label}}
-                </b-form-checkbox>-->
+                <b-form-checkbox v-for="column in visibleColumns" v-model="column.visible">
+                  {{ column.label }}
+                </b-form-checkbox>
               </div>
             </b-popover>
             <b-button variant="outline-danger">
@@ -42,73 +42,48 @@
           </div>
         </div>
 
-        <b-table small striped hover :items="articleFiles" no-local-sorting
-                 :fields="fields">
+        <b-table small striped hover :items="articleFiles" no-local-sorting :fields="fields">
           <template v-slot:table-busy>
             <div class="text-center text-danger my-2">
               <b-spinner class="align-middle"></b-spinner>
               <strong>{{ $t('Loading...') }}</strong>
             </div>
           </template>
-          <!-- A custom formatted column -->
-          <!--<template v-slot:cell(checkbox)="articleFiles">
-            <b-form-checkbox
-              v-model="articleFiles.item.selected"
-              value="1"
-              unchecked-value="0"
-            >
+          <template v-slot:cell(checkbox)="articleFiles">
+            <b-form-checkbox :model="articleFiles.item.selected" value="1" unchecked-value="0">
             </b-form-checkbox>
           </template>
-          <template v-slot:cell(icon)="articleFiles">
-            <font-awesome-icon
-              class="attachment-icon"
-              size="2x"
-              :icon="getIcon(articleFiles.item.name)"
-            />
-          </template>
           <template v-slot:cell(name)="articleFiles">
-            &lt;!&ndash;            <a :href="articleFiles.item.path" target="_blank">{{articleFiles.item.name}}</a>&ndash;&gt;
-            <a class="attachment-name" @click="previewAttachment(articleFiles.index)">
+            <a class="attachment-name">
               {{articleFiles.item.label || articleFiles.item.name}}
             </a>
-          </template>
-          <template v-slot:cell(size)="articleFiles">
-            {{articleFiles.item.size | prettyBytes}}
-          </template>
-          <template v-slot:cell(updated_by)="{item}">
-            {{item.updatedBy.displayName}}
           </template>
           <template v-slot:cell(actions)="data">
             <b-dropdown variant="link" toggle-class="text-decoration-none p-0" no-caret right>
               <template v-slot:button-content>
-                <font-awesome-icon :icon="'ellipsis-v'"/>
+                <i class="fas fa-ellipsis-v"/>
               </template>
               <b-dropdown-item @click="showEditLabelModal(data.item)">
-                <font-awesome-icon :icon="['far', 'edit']"/>
-                {{$t('Edit Label')}}
+                <i class="far fa-edit"/>
+                {{ $t('Edit Label') }}
               </b-dropdown-item>
-
-              <DownloadAttachmentButton tag="dropdown" :file="data.item"/>
-
-              <ShareAttachmentButton tag="dropdown" :file="data.item"
-                                     :current-article="currentArticle.id"/>
-
-              <DeleteAttachmentButton tag="dropdown" :file="data.item" :current-article="currentArticle"/>
-
             </b-dropdown>
-          </template>-->
+          </template>
         </b-table>
       </b-card-body>
     </b-card>
+    <AttachmentLabel/>
   </div>
 </template>
 
 <script>
 import {createNamespacedHelpers} from "vuex";
+import AttachmentLabel from "./AttachmentLabel";
 
 const {mapState, mapActions} = createNamespacedHelpers('article');
 export default {
   name: "Attachments",
+  components: {AttachmentLabel},
   data() {
     return {
       articleFileIds: [],
@@ -130,7 +105,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getAttachConfig', 'attachFiles', 'getFilesByArticle']),
+    ...mapActions(['getAttachConfig', 'attachFiles', 'getFilesByArticle', 'showEditLabelDialog']),
     async onFileChoose(ev) {
       const filesArray = [];
       let filesName = [];
@@ -193,6 +168,9 @@ export default {
     checkFileNames(fileNames) {
       return this.articleFiles.filter(f => fileNames.includes(f.name)).map(f => f.name);
     },
+    showEditLabelModal(file) {
+      this.showEditLabelDialog(file)
+    }
   },
   mounted() {
     this.getAttachConfig();

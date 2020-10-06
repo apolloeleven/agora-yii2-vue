@@ -8,3 +8,6 @@ export const GET_BREAD_CRUMB = 'article/GET_BREAD_CRUMB';
 export const GET_CURRENT_ARTICLE = 'article/GET_CURRENT_ARTICLE';
 export const GET_ATTACH_CONFIG = 'article/GET_ATTACH_CONFIG';
 export const GET_ARTICLES_FILES = 'article/GET_ARTICLES_FILES';
+export const SHOW_EDIT_LABEL_DIALOG = 'article/SHOW_EDIT_LABEL_DIALOG';
+export const HIDE_EDIT_LABEL_DIALOG = 'article/HIDE_EDIT_LABEL_DIALOG';
+export const UPDATE_LABEL = 'article/UPDATE_LABEL';

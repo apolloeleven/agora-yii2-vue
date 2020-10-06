@@ -20,6 +20,7 @@ use yii\web\UploadedFile;
  * @property int $id
  * @property int|null $article_id
  * @property string|null $name
+ * @property string|null $label
  * @property string|null $path
  * @property string|null $mime
  * @property string|null $content
@@ -64,7 +65,7 @@ class ArticleFile extends ActiveRecord
         return [
             [['article_id', 'size', 'to_process', 'processing', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['content'], 'string'],
-            [['name', 'mime'], 'string', 'max' => 255],
+            [['name', 'label', 'mime'], 'string', 'max' => 255],
             [['path'], 'string', 'max' => 512],
             [['article_id'], 'exist', 'skipOnError' => true, 'targetClass' => Article::class, 'targetAttribute' => ['article_id' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
@@ -81,6 +82,7 @@ class ArticleFile extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'article_id' => Yii::t('app', 'Article ID'),
             'name' => Yii::t('app', 'Name'),
+            'label' => Yii::t('app', 'Label'),
             'path' => Yii::t('app', 'Path'),
             'mime' => Yii::t('app', 'Mime'),
             'content' => Yii::t('app', 'Content'),

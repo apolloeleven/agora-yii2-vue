@@ -11,6 +11,11 @@ const STATE = {
   isArticle: false,
   articleFiles: [],
   attachConfig: {},
+  articleFile: {
+    showModal: false,
+    file: null,
+  },
+
 
   visibleColumns: [
     {

@@ -115,4 +115,28 @@ class ArticleFileController extends ActiveController
 
         return $this->response($phpConfig);
     }
+
+    /**
+     * Change article file label
+     *
+     * @return ArticleFile|array
+     * @throws ValidationException
+     */
+    public function actionChangeLabel()
+    {
+        $request = Yii::$app->request;
+
+        $articleFile = ArticleFile::findOne(['id' => $request->post('id')]);
+
+        if (!$articleFile) {
+            throw new ValidationException(Yii::t('app', 'Article file not exist'));
+        }
+
+        $articleFile->label = $request->post('label');
+        if (!$articleFile->save()) {
+            throw new ValidationException(Yii::t('app', 'Unable to update label'));
+        }
+
+        return $this->response($articleFile);
+    }
 }
