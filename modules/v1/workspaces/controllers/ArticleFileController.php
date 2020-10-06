@@ -9,8 +9,11 @@ use app\modules\v1\workspaces\models\ArticleFile;
 use app\modules\v1\workspaces\resources\ArticleFileResource;
 use app\rest\ActiveController;
 use app\rest\ValidationException;
+use Throwable;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\db\Exception;
+use yii\db\StaleObjectException;
 use yii\web\UploadedFile;
 
 /**
@@ -138,5 +141,36 @@ class ArticleFileController extends ActiveController
         }
 
         return $this->response($articleFile);
+    }
+
+    /**
+     * Delete attachments
+     *
+     * @return mixed
+     * @throws ValidationException
+     * @throws Throwable
+     * @throws Exception
+     * @throws StaleObjectException
+     */
+    public function actionDeleteAttachments()
+    {
+        $request = Yii::$app->request;
+
+        $fileIds = $request->post('files');
+        $files = ArticleFile::find()->byId($fileIds)->all();
+
+        if (!$files) {
+            throw new ValidationException(Yii::t('app', 'Article files not exist'));
+        }
+
+        $dbTransaction = Yii::$app->db->beginTransaction();
+        foreach ($files as $articleFile) {
+            if ($articleFile->delete() === false) {
+                $dbTransaction->rollBack();
+                throw new ValidationException(Yii::t('app', 'Unable to delete attachments'));
+            }
+        }
+        $dbTransaction->commit();
+        return $this->response(null, 204);
     }
 }

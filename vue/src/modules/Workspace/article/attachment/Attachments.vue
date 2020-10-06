@@ -35,13 +35,9 @@
                 </b-form-checkbox>
               </div>
             </b-popover>
-            <b-button variant="outline-danger">
-              <i class="far fa-trash-alt"/>
-              {{ $t('Delete') }}
-            </b-button>
+<!--            <AttachmentDeleteButton tag="button" :file="selected" :current-article="currentArticle"/>-->
           </div>
         </div>
-
         <b-table small striped hover :items="articleFiles" no-local-sorting :fields="fields">
           <template v-slot:table-busy>
             <div class="text-center text-danger my-2">
@@ -50,12 +46,12 @@
             </div>
           </template>
           <template v-slot:cell(checkbox)="articleFiles">
-            <b-form-checkbox :model="articleFiles.item.selected" value="1" unchecked-value="0">
+            <b-form-checkbox :model="articleFiles.selected" value="1" unchecked-value="0">
             </b-form-checkbox>
           </template>
           <template v-slot:cell(name)="articleFiles">
             <a class="attachment-name">
-              {{articleFiles.item.label || articleFiles.item.name}}
+              {{ articleFiles.item.label || articleFiles.item.name }}
             </a>
           </template>
           <template v-slot:cell(actions)="data">
@@ -67,6 +63,7 @@
                 <i class="far fa-edit"/>
                 {{ $t('Edit Label') }}
               </b-dropdown-item>
+              <AttachmentDeleteButton tag="dropdown" :file="data.item" :current-article="currentArticle"/>
             </b-dropdown>
           </template>
         </b-table>
@@ -79,11 +76,12 @@
 <script>
 import {createNamespacedHelpers} from "vuex";
 import AttachmentLabel from "./AttachmentLabel";
+import AttachmentDeleteButton from "./AttachmentDeleteButton";
 
 const {mapState, mapActions} = createNamespacedHelpers('article');
 export default {
   name: "Attachments",
-  components: {AttachmentLabel},
+  components: {AttachmentDeleteButton, AttachmentLabel},
   data() {
     return {
       articleFileIds: [],
@@ -102,10 +100,13 @@ export default {
         ...this.visibleColumns.filter(c => c.visible),
         {key: 'actions', class: 'text-center'}
       ]
-    }
+    },
+    selected() {
+      return this.articleFiles.filter(a => a.selected === '1')
+    },
   },
   methods: {
-    ...mapActions(['getAttachConfig', 'attachFiles', 'getFilesByArticle', 'showEditLabelDialog']),
+    ...mapActions(['getAttachConfig', 'attachFiles', 'showEditLabelDialog']),
     async onFileChoose(ev) {
       const filesArray = [];
       let filesName = [];
@@ -174,7 +175,6 @@ export default {
   },
   mounted() {
     this.getAttachConfig();
-    this.getFilesByArticle(this.$route.params.id);
   },
 }
 </script>

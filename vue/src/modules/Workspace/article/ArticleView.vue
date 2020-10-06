@@ -165,10 +165,12 @@ export default {
       this.getCurrentArticle(id);
       this.getBreadCrumb(id);
       this.getArticlesByParent(id)
+      this.getFilesByArticle(id)
     }
   },
   methods: {
-    ...mapActions(['getArticleBreadCrumb', 'getCurrentArticle', 'showArticleModal', 'getArticlesByParent', 'destroyCurrentArticle']),
+    ...mapActions(['getArticleBreadCrumb', 'getCurrentArticle', 'showArticleModal', 'getArticlesByParent',
+      'destroyCurrentArticle', 'getFilesByArticle']),
     async getBreadCrumb() {
       const res = await this.getArticleBreadCrumb(this.$route.params.id)
       if (!res.success) {
@@ -184,6 +186,7 @@ export default {
     this.getBreadCrumb();
     this.getCurrentArticle(this.$route.params.id);
     this.getArticlesByParent(this.$route.params.id);
+    this.getFilesByArticle(this.$route.params.id)
   },
   destroyed() {
     this.destroyCurrentArticle({});

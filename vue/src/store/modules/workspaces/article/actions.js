@@ -220,6 +220,22 @@ export async function updateLabel({commit}, {id, label}) {
 }
 
 /**
+ * Delete attachments
+ *
+ * @param dispatch
+ * @param data
+ * @returns {Promise<void>}
+ */
+export async function deleteAttachments({dispatch}, data) {
+  const res = await httpService.delete(`${fileUrl}/delete-attachments`, data)
+  console.log(data)
+  if (res.success) {
+    dispatch('getFilesByArticle', data.article_id);
+  }
+  return res;
+}
+
+/**
  * Prepare file to upload
  *
  * @param data
