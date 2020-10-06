@@ -1,4 +1,4 @@
-import employeesService from "@/modules/User/Employees/employeesService";
+import employeesService from "@/modules/setup/employees/employeesService";
 import httpService from "@/core/services/httpService";
 import {SET_DATA, SET_MODAL_DROPDOWN_DATA, SHOW_EMPLOYEE_MODAL, CHANGE_LOADING, HIDE_MODAL} from "@/store/modules/employee/mutation-types";
 

@@ -13,7 +13,7 @@ import CountryList from "@/modules/setup/countries/CountryList";
 import UserInvitations from "@/modules/setup/invitations/UserInvitations";
 import User from "@/modules/User/User";
 import Profile from "@/modules/User/Profile";
-import EmployeeList from "../modules/User/Employees/EmployeeList";
+import EmployeeList from "../modules/setup/employees/EmployeeList";
 
 Vue.use(Router);
 
@@ -61,17 +61,10 @@ const router = new Router({
         {path: 'dashboard', name: 'dashboard', component: Dashboard,},
         {path: '/setup', name: 'setup', component: Setup,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
-        {path: '/setup/invitations', name: 'countries', component: UserInvitations},
+        {path: '/setup/invitations', name: 'invitations', component: UserInvitations},
+        {path: '/setup/users', name: 'users', component: EmployeeList},
         {path: '/profile', name: 'profile', component: Profile,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
-        {
-          path: '/users',
-          name: 'user',
-          component: User,
-          children: [
-            {path: '/users/employees', name: 'employees', component: EmployeeList},
-          ]
-        },
       ]
     },
     {

@@ -18,7 +18,7 @@ MenuService.addItem(new MenuItem('setup', {
     },
     {
       text: i18n.t('Users'),
-      path: '/users/employees'
+      path: '/setup/users'
     },
   ]
 }));

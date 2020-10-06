@@ -15,11 +15,10 @@
 <script>
 import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
-import UserInvitationForm from "../../../../modules/setup/invitations/UserInvitationForm";
 import {mapState, createNamespacedHelpers} from 'vuex';
 
 const {mapActions} = createNamespacedHelpers('user');
-import EmployeeFormModal from "@/modules/User/Employees/EmployeeFormModal";
+import EmployeeFormModal from "@/modules/setup/employees/EmployeeFormModal";
 
 export default {
   name: "DefaultLayout",
@@ -27,7 +26,6 @@ export default {
     EmployeeFormModal,
     Sidebar,
     Navbar,
-    UserInvitationForm,
   },
   computed: {
     ...mapState([
