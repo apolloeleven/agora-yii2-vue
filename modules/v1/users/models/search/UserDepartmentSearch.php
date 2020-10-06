@@ -14,22 +14,6 @@ use yii\data\ActiveDataProvider;
 
 class UserDepartmentSearch extends UserDepartmentResource
 {
-    public function attributes()
-    {
-        return parent::attributes();
-    }
-
-    public function rules()
-    {
-        return parent::rules();
-    }
-
-    public function scenarios()
-    {
-        // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
-    }
-
     public function search($params)
     {
         $query = UserResource::find()
