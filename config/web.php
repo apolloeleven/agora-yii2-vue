@@ -7,6 +7,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'name' => 'Agora',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
