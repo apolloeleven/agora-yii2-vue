@@ -3,7 +3,7 @@
     <b-modal
       :visible="showModal" id="workspace-form" ref="modal" size="lg"
       :title='modalWorkspace ? $t(`Update workspace "{workspace}"`,{workspace:model.name}) : $t(`Add New Workspace`)'
-      @hidden="hideWorkspaceModal" @ok.prevent="handleSubmit(onSubmit)" :ok-title="$t('Submit')"
+      @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-title="$t('Submit')"
       scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
         <b-form-group :label="$t('Upload Image')">

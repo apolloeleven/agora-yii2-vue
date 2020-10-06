@@ -27,8 +27,12 @@ class WorkspaceResource extends Workspace
             'abbreviation',
             'description',
             'folder_in_folder',
-            'created_at',
-            'updated_at',
+            'created_at' => function () {
+                return $this->created_at * 1000;
+            },
+            'updated_at' => function () {
+                return $this->updated_at * 1000;
+            },
         ];
     }
 

@@ -2,7 +2,7 @@
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal
       :visible="showModal" id="article-form" ref="modal" size="lg" :title="modalTitle"
-      @hidden="hideArticleModal" @ok.prevent="handleSubmit(onSubmit)" :ok-title="$t('Submit')" scrollable>
+      @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-title="$t('Submit')" scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
         <b-form-group :label="$t('Upload Image')">
           <input :model="model.image" type="file"/>
@@ -18,6 +18,7 @@
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import ArticleFormModel from "./ArticleFormModel";
 import {createNamespacedHelpers} from "vuex";
+import WorkspaceFormModel from "../workspace/WorkspaceFormModel";
 
 const {mapState, mapActions} = createNamespacedHelpers('article');
 const {mapState: mapWorkspaceState} = createNamespacedHelpers('workspace');
@@ -53,15 +54,8 @@ export default {
   },
   watch: {
     modalArticle() {
-      const a = this.modalArticle;
-      if (a) {
-        this.model.id = a.id;
-        this.model.workspace_id = a.workspace_id;
-        this.model.article_id = a.article_id;
-        this.model.title = a.title;
-        this.model.body = a.body || '';
-      } else {
-        this.model = new ArticleFormModel();
+      if (this.modalArticle) {
+        this.model = new ArticleFormModel(this.modalArticle);
       }
     },
   },
@@ -89,18 +83,21 @@ export default {
 
       if (this.model.article_id) {
         this.getArticlesByParent(this.model.article_id);
-      } else if(this.model.workspace_id){
+      } else if (this.model.workspace_id) {
         this.getArticlesByWorkspace(this.model.workspace_id);
       }
 
       if (res.success) {
         this.$toast(this.$t(`The ${this.resource} '{title}' was successfully ${this.action}`, {title: this.model.title}));
+        this.hideModal()
       } else {
         this.$toast(this.$t(`The ${this.resource} '{title}' was not ${this.action}`, {title: this.model.title}), 'danger');
       }
-      this.hideArticleModal()
+    },
+    hideModal() {
+      this.hideArticleModal();
       this.model = new ArticleFormModel()
-    }
+    },
   },
 }
 </script>

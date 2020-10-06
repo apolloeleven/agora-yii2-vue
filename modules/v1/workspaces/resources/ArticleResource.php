@@ -28,10 +28,10 @@ class ArticleResource extends Article
             'is_folder',
             'depth',
             'created_at' => function () {
-                return Yii::$app->formatter->asDatetime($this->created_at);
+                return $this->created_at * 1000;
             },
             'updated_at' => function () {
-                return Yii::$app->formatter->asDatetime($this->updated_at);
+                return $this->updated_at * 1000;
             },
             'short_description' => function ($model) {
                 $length = 240;
