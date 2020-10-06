@@ -9,8 +9,8 @@
     <div id="user" class="d-flex flex-column">
       <content-spinner :show="invitations.loading" :text="$t('Loading...')" class="h-100"/>
       <div v-if="!invitations.loading" class="p-3">
-        <b-card>
-          <b-table responsive small striped hover id="users-table" :items="invitations.data.rows" :fields="fields">
+        <b-card no-body>
+          <b-table v-if="invitations.data.rows.length" responsive small striped hover id="users-table" :items="invitations.data.rows" :fields="fields">
             <template v-slot:table-busy>
               <div class="text-center text-danger my-2">
                 <b-spinner class="align-middle"></b-spinner>
@@ -31,6 +31,7 @@
             }">{{ data.value }}</span>
             </template>
           </b-table>
+          <no-data-available v-if="!invitations.data.rows.length" height="100"/>
         </b-card>
       </div>
     </div>
@@ -43,12 +44,13 @@ import {createNamespacedHelpers} from 'vuex';
 import ContentSpinner from "../../../core/components/ContentSpinner";
 import PageHeader from "@/core/components/PageHeader";
 import UserInvitationForm from "@/modules/setup/invitations/UserInvitationForm";
+import NoDataAvailable from "@/core/components/NoDataAvailable";
 
 const {mapState, mapActions} = createNamespacedHelpers('setup');
 
 export default {
   name: "UserInvitations",
-  components: {UserInvitationForm, PageHeader, ContentSpinner},
+  components: {NoDataAvailable, UserInvitationForm, PageHeader, ContentSpinner},
   data() {
     return {}
   },
