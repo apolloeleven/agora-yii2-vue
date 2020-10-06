@@ -11,6 +11,7 @@
 
 <script>
 import {createNamespacedHelpers} from "vuex";
+import FavouritesService from "./AddToFavourites/FavouritesService";
 
 const {mapActions} = createNamespacedHelpers('workspace');
 const {mapActions: mapArticleActions} = createNamespacedHelpers('article');
@@ -50,6 +51,10 @@ export default {
           const res = await this.deleteArticle(this.model);
           if (res.success) {
             this.$toast(this.$t(`The ${this.resource} '{title}' was successfully deleted`, {title: this.model.title}));
+            let path = `/article/${this.model.id}`;
+            if (FavouritesService.inFavourites(path)) {
+              FavouritesService.removeFavourite(path)
+            }
           } else {
             this.$toast(res.body.message, 'danger');
           }
