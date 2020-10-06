@@ -32,7 +32,7 @@ $config = [
             'loginUrl' => null,
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'v1/setup/site/error',
         ],
         'mailer' => [
             'class' => \intermundia\mailer\SwiftMailer::class,
@@ -62,15 +62,20 @@ $config = [
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/department'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/my-user'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/users/user'],
                 [
                     'class' => UrlRule::class,
                     'pluralize' => false,
                     'controller' => [
                         'v1/users/invitation',
+                        'v1/users/employee',
+                        'v1/users/auth'
                     ]
                 ]
             ],
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
         ],
     ],
     'modules' => [

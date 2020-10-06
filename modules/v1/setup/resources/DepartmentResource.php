@@ -57,4 +57,12 @@ class DepartmentResource extends Department
         }
         return parent::beforeDelete();
     }
+
+    public function getDataForDropdown() {
+        return [
+          'id' => $this->id,
+          'name' => $this->name,
+          'country' => $this->country->name
+        ];
+    }
 }

@@ -9,6 +9,7 @@
       </div>
     </div>
     <UserInvitationForm/>
+    <employee-form-modal/>
   </div>
 </template>
 
@@ -19,10 +20,12 @@ import UserInvitationForm from "../../../../modules/User/Invitation/UserInvitati
 import {mapState, createNamespacedHelpers} from 'vuex';
 
 const {mapActions} = createNamespacedHelpers('user');
+import EmployeeFormModal from "@/modules/User/Employees/EmployeeFormModal";
 
 export default {
   name: "DefaultLayout",
   components: {
+    EmployeeFormModal,
     Sidebar,
     Navbar,
     UserInvitationForm,

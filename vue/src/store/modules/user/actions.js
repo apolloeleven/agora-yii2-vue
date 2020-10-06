@@ -8,7 +8,7 @@ import httpService from "@/core/services/httpService";
  */
 export async function getProfile({commit}) {
   commit(SET_PROFILE_LOADING, true);
-  let response = await httpService.get('/v1/setup/my-user/profile');
+  let response = await httpService.get('/v1/users/user/profile');
   if (response.success) {
     commit(SET_USER, response.body);
     commit(SET_PROFILE_LOADING, false);
@@ -26,9 +26,9 @@ export async function updateProfile({commit}, user) {
   const data = prepareData(user);
   let response;
   if (data instanceof FormData) {
-    response = await httpService.post('/v1/setup/my-user/update-profile', data)
+    response = await httpService.post('/v1/users/user/update-profile', data)
   } else {
-    response = await httpService.put('/v1/setup/my-user/update-profile', data)
+    response = await httpService.put('/v1/users/user/update-profile', data)
   }
   const {success, body} = response;
   if (success) {
@@ -41,7 +41,7 @@ export async function updateProfile({commit}, user) {
 export async function changePassword({commit}, passwordData) {
   commit(SET_PASSWORD_FORM_LOADING, true);
 
-  const response = await httpService.put('/v1/setup/my-user/change-password', passwordData)
+  const response = await httpService.put('/v1/users/user/change-password', passwordData)
 
   commit(SET_PASSWORD_FORM_LOADING, false);
   return response;

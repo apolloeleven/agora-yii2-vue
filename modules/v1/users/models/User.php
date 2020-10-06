@@ -1,8 +1,9 @@
 <?php
 
-namespace app\models;
+namespace app\modules\v1\users\models;
 
-use app\models\query\UserQuery;
+use app\modules\v1\users\models\query\UserQuery;
+use app\modules\v1\users\models\UserDepartment;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
@@ -32,6 +33,7 @@ use yii\web\IdentityInterface;
  * @property int|null    $status
  * @property int|null    $created_at
  * @property int|null    $updated_at
+ * @property UserDepartment[] $userDepartments
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -98,14 +100,6 @@ class User extends ActiveRecord implements IdentityInterface
     public static function find()
     {
         return new UserQuery(get_called_class());
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getUserProfile()
-    {
-        return $this->hasOne(UserProfile::class, ['user_id' => 'id']);
     }
 
     /**
@@ -236,7 +230,13 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getDisplayName()
     {
-        return $this->userProfile->getFullName();
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function getRoles()
+    {
+        $auth = Yii::$app->authManager;
+        return $auth->getRolesByUser($this->id);
     }
 
     /**
@@ -289,5 +289,13 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         return $check;
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUserDepartments()
+    {
+        return $this->hasMany(UserDepartment::class, ['user_id' => 'id']);
     }
 }

@@ -5,7 +5,7 @@
  * Time: 21:31
  */
 
-namespace app\models;
+namespace app\modules\v1\users\models;
 
 
 use yii\base\Model;
@@ -23,7 +23,7 @@ class ChangePassword extends Model
     public $confirm_password;
 
     /**
-     * @var \app\models\User
+     * @var User
      */
     public $user;
 

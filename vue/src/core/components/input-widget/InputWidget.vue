@@ -49,7 +49,8 @@
         <b-form-select v-if="isSelect()" ref="currentInput" :size="size" :disabled="disabled" :options="selectOptions"
                        :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
                        :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
-                       @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
+                       @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)" :value-field="valueField"
+                       :text-field="textField"
         />
 
         <datePicker v-if="isDate()" ref="currentInput" :size="size" :disabled="disabled" :config="datePickerOptions"
@@ -203,6 +204,14 @@ export default {
     selectOptions: {
       type: Array,
       default: () => []
+    },
+    valueField: {
+      type: String,
+      default: 'value'
+    },
+    textField: {
+      type: String,
+      default: 'text'
     }
   },
   data() {

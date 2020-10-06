@@ -1,10 +1,9 @@
 <?php
 
-namespace app\models;
+namespace app\modules\v1\users\models;
 
 
 use app\helpers\MailHelper;
-use app\modules\v1\users\models\Invitation;
 use app\rest\ValidationException;
 use Yii;
 use yii\base\Exception;
@@ -66,21 +65,13 @@ class SignupForm extends Model
         $user->username = $this->email;
         $user->email = $this->email;
         $user->status = User::STATUS_INACTIVE;
+        $user->first_name = $this->firstname;
+        $user->last_name = $this->lastname;
         $user->setPassword($this->password);
         if (!$user->save()) {
             $dbTransaction->rollBack();
             throw new ValidationException(Yii::t('app', "User was not saved for email $this->email"));
         };
-
-        // Save user profile
-        $userProfile = new UserProfile();
-        $userProfile->user_id = $user->id;
-        $userProfile->first_name = $this->firstname;
-        $userProfile->last_name = $this->lastname;
-        if (!$userProfile->save()) {
-            $dbTransaction->rollBack();
-            throw new ValidationException(Yii::t('app', "UserProfile was not saved for email $this->email"));
-        }
 
         // TODO Assign role to user
 
