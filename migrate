@@ -1,0 +1,4 @@
+#!/bin/bash
+php yii migrate --migrationPath=@yii/rbac/migrations
+php yii migrate
+php yii migrate --migrationPath=@vendor/intermundia/yii2-mailer/migrations
