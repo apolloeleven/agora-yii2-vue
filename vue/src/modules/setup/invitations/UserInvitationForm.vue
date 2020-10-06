@@ -1,11 +1,16 @@
 <template>
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal
-        :visible="showModal" id="user-form" ref="modal" :title='$t(`New Invitation`)' @hidden="onHideModal"
-        @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')" scrollable>
+      id="user-form"
+      :visible="invitationModal.show"
+      ref="modal"
+      :title='$t(`New Invitation`)'
+      @shown="onShown"
+      @hidden="onHideModal"
+      @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')" scrollable>
       <content-spinner :show="loading" :text="$t('Please wait...')" :fullscreen="true" class="h-100"/>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
-        <input-widget :model="model" attribute="email"/>
+        <input-widget ref="emailInput" :model="model" attribute="email"/>
       </b-form>
     </b-modal>
   </ValidationObserver>
@@ -18,7 +23,7 @@ import UserInvitationFormModel from "./UserInvitationFormModel";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import ContentSpinner from "../../../core/components/ContentSpinner";
 
-const {mapState, mapActions} = createNamespacedHelpers('invitation');
+const {mapState, mapActions} = createNamespacedHelpers('setup');
 
 export default {
   name: "UserInvitationForm",
@@ -30,16 +35,19 @@ export default {
     }
   },
   computed: {
-    ...mapState(['showModal', 'modalInvitation'])
+    ...mapState(['invitationModal'])
   },
   methods: {
-    ...mapActions(['hideModal', 'inviteUser']),
+    ...mapActions(['hideInvitationModal', 'inviteUser']),
     checkValidity: (touched, validated, valid) => {
       return (!touched && !validated) ? null : valid;
     },
+    onShown() {
+      this.$refs.emailInput.focus()
+    },
     onHideModal() {
       this.model.email = null;
-      this.hideModal();
+      this.hideInvitationModal();
     },
     async onSubmit() {
       this.model.resetErrors();
@@ -48,7 +56,7 @@ export default {
       this.loading = false;
       if (res.success) {
         this.$toast(this.$t(`Email '{email}' was successfully invited`, {email: this.model.email}));
-        this.hideModal();
+        this.hideInvitationModal();
       } else {
         this.model.setMultipleErrors([{field: 'email', message: res.body.message}]);
       }

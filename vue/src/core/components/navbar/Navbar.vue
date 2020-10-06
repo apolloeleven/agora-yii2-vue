@@ -7,22 +7,6 @@
 
     <SidebarToggle/>
 
-    <div class="navbar-items-2 d-none d-lg-flex">
-      <b-navbar-nav>
-        <b-nav-item-dropdown :text="$t('Users')">
-          <template v-slot:button-content>
-            {{ $t('Users') }}
-          </template>
-          <b-dropdown-item :to="{name: 'invitations'}">
-            {{ $t('Invitations') }}
-          </b-dropdown-item>
-          <b-dropdown-item :to="{name: 'employees'}">
-            {{ $t('Employee List') }}
-          </b-dropdown-item>
-        </b-nav-item-dropdown>
-      </b-navbar-nav>
-    </div>
-
     <b-nav-form class="navbar-search">
       <label for="search" class="sr-only">Search...</label>
       <input type="text" name="search" id="search" placeholder="Search...">

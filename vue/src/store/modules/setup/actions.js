@@ -9,8 +9,12 @@ import httpService from "@/core/services/httpService";
 import {
   HIDE_DEPARTMENT_MODAL,
   SET_DEPARTMENTS,
-  SHOW_DEPARTMENT_MODAL
+  SHOW_DEPARTMENT_MODAL,
+  SET_INVITATIONS_LOADING,
+  SET_INVITATIONS,
+  SHOW_INVITATION_MODAL, HIDE_INVITATION_MODAL
 } from "@/store/modules/setup/mutation-types";
+import invitationService from "@/modules/setup/invitations/invitationService";
 
 /**
  *
@@ -107,3 +111,35 @@ export async function deleteDepartment({dispatch}, id) {
 
   return response;
 }
+
+export async function getInvitations({commit}, keyword) {
+  commit(SET_INVITATIONS_LOADING);
+  const res = await invitationService.get(keyword);
+  commit(SET_INVITATIONS_LOADING);
+  commit(SET_INVITATIONS, {rows: res.body});
+}
+
+export function showInvitationModal({commit}) {
+  commit(SHOW_INVITATION_MODAL);
+}
+
+export function hideInvitationModal({commit}) {
+  commit(HIDE_INVITATION_MODAL);
+}
+
+export async function inviteUser({dispatch}, email) {
+  const res = await invitationService.invite(email);
+  if (res.success) {
+    dispatch('getAll');
+  }
+  return res;
+}
+
+export async function deleteInvitation({dispatch}, id) {
+  const res = await invitationService.delete(id);
+  if (res.success) {
+    dispatch('getAll');
+  }
+  return res;
+}
+

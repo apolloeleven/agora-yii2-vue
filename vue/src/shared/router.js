@@ -10,7 +10,7 @@ import RequestPasswordReset from "@/modules/Auth/PasswordReset/RequestPasswordRe
 import ResetPassword from "@/modules/Auth/PasswordReset/ResetPassword";
 import Setup from "@/modules/setup/Setup";
 import CountryList from "@/modules/setup/countries/CountryList";
-import UserInvitations from "@/modules/User/Invitation/UserInvitations";
+import UserInvitations from "@/modules/setup/invitations/UserInvitations";
 import User from "@/modules/User/User";
 import Profile from "@/modules/User/Profile";
 import EmployeeList from "../modules/User/Employees/EmployeeList";
@@ -61,6 +61,7 @@ const router = new Router({
         {path: 'dashboard', name: 'dashboard', component: Dashboard,},
         {path: '/setup', name: 'setup', component: Setup,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
+        {path: '/setup/invitations', name: 'countries', component: UserInvitations},
         {path: '/profile', name: 'profile', component: Profile,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
         {
@@ -68,7 +69,6 @@ const router = new Router({
           name: 'user',
           component: User,
           children: [
-            {path: '/users/invitations', name: 'invitations', component: UserInvitations},
             {path: '/users/employees', name: 'employees', component: EmployeeList},
           ]
         },

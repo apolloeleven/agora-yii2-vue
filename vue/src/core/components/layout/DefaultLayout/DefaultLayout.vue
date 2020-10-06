@@ -8,7 +8,6 @@
         <router-view :key="$route.fullPath"/>
       </div>
     </div>
-    <UserInvitationForm/>
     <employee-form-modal/>
   </div>
 </template>
@@ -16,7 +15,7 @@
 <script>
 import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
-import UserInvitationForm from "../../../../modules/User/Invitation/UserInvitationForm";
+import UserInvitationForm from "../../../../modules/setup/invitations/UserInvitationForm";
 import {mapState, createNamespacedHelpers} from 'vuex';
 
 const {mapActions} = createNamespacedHelpers('user');

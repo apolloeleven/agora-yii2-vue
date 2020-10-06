@@ -2,13 +2,14 @@ import {
   CREATE_COUNTRY,
   HIDE_COUNTRY_MODAL,
   SET_COUNTRIES,
-  SET_COUNTRIES_LOADING,
+  SET_COUNTRIES_LOADING, SET_INVITATIONS,
   SHOW_COUNTRY_MODAL, UPDATE_COUNTRY
 } from './mutation-types';
 import {
-  HIDE_DEPARTMENT_MODAL,
-  SET_DEPARTMENTS,
-  SHOW_DEPARTMENT_MODAL
+  HIDE_DEPARTMENT_MODAL, HIDE_INVITATION_MODAL,
+  SET_DEPARTMENTS, SET_INVITATIONS_LOADING,
+  SHOW_DEPARTMENT_MODAL,
+  SHOW_INVITATION_MODAL
 } from "@/store/modules/setup/mutation-types";
 
 export default {
@@ -31,7 +32,7 @@ export default {
     state.countryModal.data = {};
   },
   [UPDATE_COUNTRY](state, payload) {
-    const index =  state.countries.data.findIndex(c => c.id === payload.id);
+    const index = state.countries.data.findIndex(c => c.id === payload.id);
     state.countries.data[index] = {...state.countries.data[index], ...payload};
     state.countries.data[index].departmentsTree = getTree(state.countries.data[index].departments, null)
     state.countries.data = [...state.countries.data];
@@ -52,7 +53,22 @@ export default {
   [HIDE_DEPARTMENT_MODAL](state) {
     state.departmentModal.show = false;
     state.departmentModal.data = {};
-  }
+  },
+  [SET_INVITATIONS_LOADING](state, loading) {
+    state.invitations.loading = loading
+  },
+  [SET_INVITATIONS](state, invitations) {
+    state.invitations.loaded = true;
+    state.invitations.data = invitations;
+  },
+  [SHOW_INVITATION_MODAL]: (state) => {
+    state.invitationModal.show = true;
+    state.invitationModal.data = {};
+  },
+  [HIDE_INVITATION_MODAL]: (state) => {
+    state.invitationModal.show = false;
+    state.invitationModal.data = {};
+  },
 };
 
 const getTree = (departments, parentId = null) => {
