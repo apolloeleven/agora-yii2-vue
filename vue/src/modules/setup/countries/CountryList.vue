@@ -14,11 +14,13 @@
         <i class="fas fa-trash-alt"></i> {{ $t('Delete Country') }}
       </b-button>
     </page-header>
-    <div class="page-content p-3">
+    <div class="content-wrapper p-3">
       <content-spinner :show="countries.loading" :text="$t('Please wait...')" class="h-100"/>
       <div class="row page-wrapper" v-if="!countries.loading && countries.loaded">
         <div class="col-sm-3 page-sidebar">
-          <b-list-group style="min-height: 15em" class="bg-white">
+          <b-list-group class="bg-white h-100">
+            <no-data-available v-if="!countries.data.length"
+                                   :text="$t('There are no countries')" class="h-100"/>
             <b-list-group-item v-for="country of countries.data"
                                :key="country.id"
                                @click="selectCountry(country)"
@@ -30,7 +32,9 @@
         </div>
         <div class="col-sm-9">
           <div class="page-content p-2">
-            <b-tabs>
+            <no-data-available v-if="!selectedCountry"
+                                   :text="$t('Please select country to view details')" class="h-100"/>
+            <b-tabs v-if="selectedCountry">
               <b-tab :title="$t('Departments')" active>
                 <div>
                   <p class="p-2 text-right mb-0">
@@ -93,7 +97,7 @@ export default {
         if (this.selectedCountry) {
           this.selectedCountry = this.countries.data.find(c => c.id === this.selectedCountry.id);
         } else {
-          this.selectFirstCountry();
+          // this.selectFirstCountry();
         }
       }
     }
@@ -147,9 +151,10 @@ export default {
   async mounted() {
     let response = await this.getCountries();
 
-    if (response.success) {
-      this.selectFirstCountry();
-    }
+    // if (response.success) {
+    //   this.selectFirstCountry();
+    // }
+
   }
 }
 </script>
@@ -159,6 +164,7 @@ export default {
   display: flex;
   margin-left: -10px;
   margin-right: -10px;
+  min-height: 15rem;
 }
 
 .page-sidebar {
