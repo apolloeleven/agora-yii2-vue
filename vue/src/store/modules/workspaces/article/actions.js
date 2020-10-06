@@ -108,7 +108,7 @@ export async function getArticlesByWorkspace({commit}, workspaceId) {
  * Get articles by parent id for article view page
  *
  * @param commit
- * @param parentId
+ * @param { int } parentId
  * @returns {Promise<void>}
  */
 export async function getArticlesByParent({commit}, parentId) {
