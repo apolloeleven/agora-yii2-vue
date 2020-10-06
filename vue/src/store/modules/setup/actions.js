@@ -130,7 +130,7 @@ export function hideInvitationModal({commit}) {
 export async function inviteUser({dispatch}, email) {
   const res = await invitationService.invite(email);
   if (res.success) {
-    dispatch('getAll');
+    dispatch('getInvitations');
   }
   return res;
 }
@@ -138,7 +138,7 @@ export async function inviteUser({dispatch}, email) {
 export async function deleteInvitation({dispatch}, id) {
   const res = await invitationService.delete(id);
   if (res.success) {
-    dispatch('getAll');
+    dispatch('getInvitations');
   }
   return res;
 }
