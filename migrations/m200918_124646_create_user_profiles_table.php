@@ -34,6 +34,12 @@ class m200918_124646_create_user_profiles_table extends Migration
             'id',
             'CASCADE'
         );
+
+        $this->insert('{{%user_profiles}}', [
+            'user_id' => 1,
+            'first_name' => 'Apollo',
+            'last_name' => '11'
+        ]);
     }
 
     /**

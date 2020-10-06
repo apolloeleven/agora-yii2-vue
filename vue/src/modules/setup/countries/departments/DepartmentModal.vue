@@ -8,7 +8,6 @@
              @ok="onSubmit">
       <form v-on:submit.prevent="onSubmit">
         <input-widget ref="nameInputWidget" :model="model" attribute="name"/>
-        <input-widget type="select" :model="model" attribute="country_id" :select-options="countries.map(c => ({value: c.id, text: c.name}))"/>
         <input-widget type="select" :model="model" attribute="parent_id" :select-options="computedDepartments"/>
       </form>
     </b-modal>
@@ -18,7 +17,7 @@
 <script>
 
 import {createNamespacedHelpers} from 'vuex';
-import DepartmentModel from "@/modules/setup/departments/DepartmentModel";
+import DepartmentModel from "./DepartmentModel";
 import InputWidget from "@/core/components/input-widget/InputWidget";
 import i18n from "@/shared/i18n";
 
@@ -31,6 +30,9 @@ export default {
       model: new DepartmentModel()
     }
   },
+  props: {
+    country: Object
+  },
   computed: {
     ...mapState({
       countries: state => state.countries.data,
@@ -38,8 +40,12 @@ export default {
       departmentModal: state => state.departmentModal,
       department: state => state.departmentModal.data
     }),
-    computedDepartments () {
-      return [{value: null, text: `--- ${i18n.t('Select parent department')} ---`}, ...this.departments.map(c => ({value: c.id, text: c.name}))]
+    computedDepartments() {
+      const selectParent = {value: null, text: `--- ${i18n.t('Select parent department')} ---`};
+      if (this.country) {
+        return [selectParent, ...this.country.departments.map(c => ({value: c.id, text: c.name}))];
+      }
+      return [selectParent];
     }
   },
   watch: {
@@ -47,14 +53,20 @@ export default {
       if (this.department && this.department.id) {
         this.model = new DepartmentModel(this.department);
       }
+    },
+    country() {
+      if (this.country) {
+        this.model.country_id = this.country.id;
+      }
     }
   },
   methods: {
-    ...mapActions(['hideDepartmentModal', 'saveDepartment']),
+    ...mapActions(['hideDepartmentModal', 'saveDepartment', 'getCountryDepartments']),
     async onSubmit(ev) {
       ev.preventDefault()
       const {success, body} = await this.saveDepartment(this.model);
       if (success) {
+        this.getCountryDepartments(this.model.country_id);
         this.hideDepartmentModal();
       } else {
         this.model.setMultipleErrors(body)
@@ -65,8 +77,17 @@ export default {
     },
     onHidden() {
       this.model = new DepartmentModel();
+
+      if (this.country) {
+        this.model.country_id = this.country.id;
+      }
       this.hideDepartmentModal();
     },
+  },
+  mounted() {
+    if (this.country) {
+      this.model.country_id = this.country.id;
+    }
   }
 }
 </script>

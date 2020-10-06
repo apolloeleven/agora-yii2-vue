@@ -1,5 +1,5 @@
 <template>
-  <div class="list-group">
+  <div class="list-group pr-2">
     <department-list-group-item v-for="department in departments" :department="department"
                                 :edit-handler="editHandler" :delete-handler="deleteHandler"
                                 :key="`department-row-${department.id}`"/>
@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import DepartmentListGroupItem from "@/modules/setup/departments/DepartmentListGroupItem";
+  import DepartmentListGroupItem from "./DepartmentListGroupItem";
 
   export default {
     name: "DepartmentListGroup",
@@ -25,8 +25,6 @@
 
 <style scoped lang="scss">
   .list-group {
-    padding-right: 1em;
-
     /deep/ .list-group-item {
       padding-right: 0;
       border: none;
