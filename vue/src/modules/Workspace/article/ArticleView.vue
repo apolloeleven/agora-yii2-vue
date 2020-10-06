@@ -9,7 +9,7 @@
             <i class="fas fa-plus-circle fa-3x"></i>
           </b-button>
         </template>
-        <b-dropdown-item v-if="lastFolder && currentArticle.workspace.folder_in_folder"
+        <b-dropdown-item v-if="lastFolder && multipleFolders"
                          @click="showModal()">
           <i class="fas fa-plus"></i>
           {{ $t('Create new folder') }}
@@ -48,7 +48,7 @@
         </b-collapse>
       </b-card>
       <div class="p-3">
-        <div class="row" v-if="lastFolder && isFolder">
+        <div class="row" v-if="lastFolder && isFolder && multipleFolders">
           <div class="col-sm-6 col-lg-4">
             <h4 class="border-bottom pb-1 mb-3">{{ $t('Articles') }}</h4>
             <div class="article-list">
@@ -93,7 +93,7 @@
             </div>
           </div>
         </div>
-        <div class="row" v-else-if="!lastFolder">
+        <div class="row" v-else-if="!lastFolder || !multipleFolders">
           <div class="col-sm-12 col-lg-6">
             <h4 class="border-bottom pb-1 mb-3">{{ $t('Articles') }}</h4>
             <div class="article-list">
@@ -145,6 +145,9 @@ export default {
     favouriteName() {
       const wk = this.currentArticle.workspace || {};
       return (wk.abbreviation || wk.name) + ' / ' + this.currentArticle.title;
+    },
+    multipleFolders() {
+      return !!this.currentArticle.workspace.folder_in_folder
     },
   },
   watch: {
