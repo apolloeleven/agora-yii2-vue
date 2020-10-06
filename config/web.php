@@ -13,6 +13,8 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
         '@portalUrl' => env('PORTAL_HOST'),
+        '@storage' => dirname(__DIR__) . '/storage',
+        '@storageUrl' => Yii::getAlias('@portalUrl'),
     ],
     'components' => [
         'request' => [
