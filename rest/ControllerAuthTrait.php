@@ -9,6 +9,7 @@ namespace app\rest;
 
 
 use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
 use yii\filters\Cors;
 
 /**
@@ -32,7 +33,8 @@ trait ControllerAuthTrait
         ];
         $auth['except'] = ['options'];
         $auth['authMethods'] = [
-            HttpBearerAuth::class
+            HttpBearerAuth::class,
+            QueryParamAuth::class,
         ];
 
         $behaviors['authenticator'] = $auth;

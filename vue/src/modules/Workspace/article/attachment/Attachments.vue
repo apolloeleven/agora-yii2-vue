@@ -67,6 +67,7 @@
                 <i class="far fa-edit"/>
                 {{ $t('Edit Label') }}
               </b-dropdown-item>
+              <AttachmentDownloadButton tag="dropdown" :file="data.item"/>
               <AttachmentDeleteButton tag="dropdown" :fileIds="[data.item.id]" :current-article="currentArticle"/>
             </b-dropdown>
           </template>
@@ -81,11 +82,12 @@
 import {createNamespacedHelpers} from "vuex";
 import AttachmentLabel from "./AttachmentLabel";
 import AttachmentDeleteButton from "./AttachmentDeleteButton";
+import AttachmentDownloadButton from "./AttachmentDownloadButton";
 
 const {mapState, mapActions} = createNamespacedHelpers('article');
 export default {
   name: "Attachments",
-  components: {AttachmentDeleteButton, AttachmentLabel},
+  components: {AttachmentDownloadButton, AttachmentDeleteButton, AttachmentLabel},
   data() {
     return {
       articleFileIds: [],

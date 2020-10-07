@@ -11,6 +11,7 @@ use app\rest\ActiveController;
 use app\rest\ValidationException;
 use Throwable;
 use Yii;
+use yii\console\Response;
 use yii\data\ActiveDataProvider;
 use yii\db\Exception;
 use yii\db\StaleObjectException;
@@ -157,14 +158,14 @@ class ArticleFileController extends ActiveController
         $request = Yii::$app->request;
 
         $fileIds = $request->post('fileIds');
-        $files = ArticleFile::find()->byId($fileIds)->all();
+        $articleFiles = ArticleFile::find()->byId($fileIds)->all();
 
-        if (!$files) {
+        if (!$articleFiles) {
             throw new ValidationException(Yii::t('app', 'Article files not exist'));
         }
 
         $dbTransaction = Yii::$app->db->beginTransaction();
-        foreach ($files as $articleFile) {
+        foreach ($articleFiles as $articleFile) {
             if ($articleFile->delete() === false) {
                 $dbTransaction->rollBack();
                 throw new ValidationException(Yii::t('app', 'Unable to delete attachments'));
@@ -172,5 +173,30 @@ class ArticleFileController extends ActiveController
         }
         $dbTransaction->commit();
         return $this->response(null, 204);
+    }
+
+    /**
+     * Download attachment
+     *
+     * @param $id
+     * @return Response|\yii\web\Response
+     * @throws ValidationException
+     */
+    public function actionDownloadAttachment($id)
+    {
+        $articleFile = ArticleFile::findOne(['id' => $id]);
+
+        if (!$articleFile) {
+            throw new ValidationException(Yii::t('app', 'Article file not exist'));
+        }
+
+        $fullPath = Yii::getAlias('@storage' . $articleFile->path);
+        $fileName = $articleFile->name;
+
+        if ($articleFile->label) {
+            $fileName = $articleFile->label . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+        }
+
+        return Yii::$app->response->sendFile($fullPath, $fileName);
     }
 }
