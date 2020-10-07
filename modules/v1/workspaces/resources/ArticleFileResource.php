@@ -4,8 +4,10 @@
 namespace app\modules\v1\workspaces\resources;
 
 
+use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\ArticleFile;
 use Yii;
+use yii\db\ActiveQuery;
 
 /**
  * Class ArticleFileResource
@@ -47,5 +49,13 @@ class ArticleFileResource extends ArticleFile
     public function extraFields()
     {
         return ['updatedBy'];
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUpdatedBy()
+    {
+        return $this->hasOne(UserResource::class, ['id' => 'updated_by']);
     }
 }

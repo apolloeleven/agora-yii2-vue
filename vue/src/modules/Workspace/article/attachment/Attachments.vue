@@ -50,13 +50,22 @@
               <strong>{{ $t('Loading...') }}</strong>
             </div>
           </template>
-          <template v-slot:cell(checkbox)="articleFiles">
-            <b-form-checkbox v-model="articleFiles.item.selected" value="1" unchecked-value="0"/>
+          <template v-slot:cell(checkbox)="{item}">
+            <b-form-checkbox v-model="item.selected" value="1" unchecked-value="0"/>
           </template>
           <template v-slot:cell(name)="articleFiles">
             <a class="attachment-name" @click="previewAttachment(articleFiles.index)">
               {{ articleFiles.item.label || articleFiles.item.name }}
             </a>
+          </template>
+          <template v-slot:cell(size)="{item}">
+            {{item.size | prettyBytes}}
+          </template>
+          <template v-slot:cell(updated_at)="{item}">
+            {{item.updated_at | toDatetime}}
+          </template>
+          <template v-slot:cell(updated_by)="{item}">
+            {{item.updatedBy.displayName}}
           </template>
           <template v-slot:cell(actions)="data">
             <b-dropdown variant="link" toggle-class="text-decoration-none p-0" no-caret right>
