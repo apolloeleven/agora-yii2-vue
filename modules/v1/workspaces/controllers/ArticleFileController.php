@@ -156,7 +156,7 @@ class ArticleFileController extends ActiveController
     {
         $request = Yii::$app->request;
 
-        $fileIds = $request->post('files');
+        $fileIds = $request->post('fileIds');
         $files = ArticleFile::find()->byId($fileIds)->all();
 
         if (!$files) {

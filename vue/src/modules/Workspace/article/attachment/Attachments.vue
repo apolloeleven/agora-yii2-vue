@@ -4,7 +4,7 @@
       <template v-slot:header>
         <h5 class="mb-0">{{ $t('Attachments') }}</h5>
         <b-button class="p-0" variant="link" size="lg" id="attachment-technical-notes">
-          <i class="fas fa-question-circle"></i>
+          <i class="fas fa-question-circle"/>
         </b-button>
       </template>
       <b-popover target="attachment-technical-notes" triggers="hover" placement="bottom">
@@ -30,12 +30,14 @@
             <b-popover target="columnOptions" triggers="hover" placement="bottom">
               <template v-slot:title>{{ $t('Show/Hide columns') }}</template>
               <div>
-                <b-form-checkbox v-for="column in visibleColumns" :model="column.visible">
+                <b-form-checkbox v-for="column in visibleColumns" v-model="column.visible">
                   {{ column.label }}
                 </b-form-checkbox>
               </div>
             </b-popover>
-            <!--            <AttachmentDeleteButton tag="button" :file="selected" :current-article="currentArticle"/>-->
+            <AttachmentDeleteButton
+              tag="button" :disabled="selected.length === 0" :current-article="currentArticle" :fileIds="selectedIds">
+            </AttachmentDeleteButton>
           </div>
         </div>
         <div class="mb-1" v-if="progress !== 0">
@@ -44,13 +46,12 @@
         <b-table small striped hover :items="articleFiles" no-local-sorting :fields="fields">
           <template v-slot:table-busy>
             <div class="text-center text-danger my-2">
-              <b-spinner class="align-middle"></b-spinner>
+              <b-spinner class="align-middle"/>
               <strong>{{ $t('Loading...') }}</strong>
             </div>
           </template>
           <template v-slot:cell(checkbox)="articleFiles">
-            <b-form-checkbox :model="articleFiles.item.selected" value="1" unchecked-value="0">
-            </b-form-checkbox>
+            <b-form-checkbox v-model="articleFiles.item.selected" value="1" unchecked-value="0"/>
           </template>
           <template v-slot:cell(name)="articleFiles">
             <a class="attachment-name">
@@ -66,7 +67,7 @@
                 <i class="far fa-edit"/>
                 {{ $t('Edit Label') }}
               </b-dropdown-item>
-              <AttachmentDeleteButton tag="dropdown" :file="data.item" :current-article="currentArticle"/>
+              <AttachmentDeleteButton tag="dropdown" :fileIds="[data.item.id]" :current-article="currentArticle"/>
             </b-dropdown>
           </template>
         </b-table>
@@ -106,6 +107,9 @@ export default {
     },
     selected() {
       return this.articleFiles.filter(a => a.selected === '1')
+    },
+    selectedIds() {
+      return this.selected.map(a => a.id)
     },
   },
   watch: {
