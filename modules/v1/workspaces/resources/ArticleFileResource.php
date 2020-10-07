@@ -37,10 +37,10 @@ class ArticleFileResource extends ArticleFile
                 }
             },
             'created_at' => function () {
-                return Yii::$app->formatter->asDatetime($this->created_at);
+                return $this->updated_at * 1000;
             },
             'updated_at' => function () {
-                return Yii::$app->formatter->asDatetime($this->updated_at);
+                return $this->updated_at * 1000;
             },
             'content'
         ];

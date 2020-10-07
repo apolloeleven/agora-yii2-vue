@@ -15,6 +15,7 @@ import {
   SHOW_PREVIEW_MODAL,
   HIDE_PREVIEW_MODAL,
   CHANGE_CAROUSEL,
+  SORT_ATTACHMENT,
 } from "./mutation-types";
 
 export default {
@@ -144,4 +145,58 @@ export default {
   [CHANGE_CAROUSEL](state, index) {
     state.previewModal.activeFile = index;
   },
+  /**
+   *
+   * @param state
+   * @param column
+   */
+  [SORT_ATTACHMENT](state, column) {
+    state.articleFiles = state.articleFiles.sort(compareValues(column.sortBy, column.sortDesc ? 'desc' : 'asc'));
+  },
 };
+
+function compareValues(sortBy, order = 'asc') {
+  return function innerSort(nextFile, prevFile) {
+    if (sortBy !== 'updatedBy.displayName') {
+      if (!nextFile.hasOwnProperty(sortBy) || !prevFile.hasOwnProperty(sortBy)) {
+        return 0;
+      }
+      let nextFileKey = sortBy, prevFileKey = sortBy;
+
+      switch (sortBy) {
+        case 'name':
+          nextFile['label'] ? nextFileKey = 'label' : nextFileKey = sortBy;
+          prevFile['label'] ? prevFileKey = 'label' : prevFileKey = sortBy;
+          break;
+      }
+      const next = (typeof nextFile[nextFileKey] === 'string') ? nextFile[nextFileKey].toUpperCase() : nextFile[nextFileKey];
+      const prev = (typeof prevFile[prevFileKey] === 'string') ? prevFile[prevFileKey].toUpperCase() : prevFile[prevFileKey];
+      let comparison = 0;
+      if (next > prev) {
+        comparison = 1;
+      } else if (next < prev) {
+        comparison = -1;
+      }
+      return (
+        (order === 'desc') ? (comparison * -1) : comparison
+      );
+    } else {
+      let firstKey = 'updatedBy';
+      let secondKey = 'displayName'
+      if (!nextFile[firstKey].hasOwnProperty(secondKey) || !prevFile[firstKey].hasOwnProperty(secondKey)) {
+        return 0;
+      }
+
+      let nextFileKey = (typeof nextFile[firstKey][secondKey] === 'string') ? nextFile[firstKey][secondKey].toUpperCase() : nextFile[firstKey][secondKey];
+      let prevFileKey = (typeof prevFile[firstKey][secondKey] === 'string') ? prevFile[firstKey][secondKey].toUpperCase() : prevFile[firstKey][secondKey];
+
+      let comparison = 0;
+      if (nextFileKey > prevFileKey) {
+        comparison = 1;
+      } else if (nextFileKey < prevFileKey) {
+        comparison = -1;
+      }
+      return ((order === 'desc') ? (comparison * -1) : comparison);
+    }
+  };
+}

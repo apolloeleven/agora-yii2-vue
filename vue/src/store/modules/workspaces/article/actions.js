@@ -15,6 +15,7 @@ import {
   SHOW_PREVIEW_MODAL,
   HIDE_PREVIEW_MODAL,
   CHANGE_CAROUSEL,
+  SORT_ATTACHMENT,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 
@@ -266,6 +267,16 @@ export function hidePreviewModal({commit}) {
  */
 export function changeCarousel({commit}, index) {
   commit(CHANGE_CAROUSEL, index);
+}
+
+/**
+ * Sort attachment rows
+ *
+ * @param commit
+ * @param column
+ */
+export function sortAttachment({commit}, column) {
+  commit(SORT_ATTACHMENT, column);
 }
 
 /**

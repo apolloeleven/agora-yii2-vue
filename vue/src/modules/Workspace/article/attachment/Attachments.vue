@@ -43,7 +43,7 @@
         <div class="mb-1" v-if="progress !== 0">
           <b-progress height="7px" :value="progress" variant="primary"/>
         </div>
-        <b-table small striped hover :items="articleFiles" no-local-sorting :fields="fields">
+        <b-table small striped hover :items="articleFiles" no-local-sorting :fields="fields" @sort-changed="onSort">
           <template v-slot:table-busy>
             <div class="text-center text-danger my-2">
               <b-spinner class="align-middle"/>
@@ -59,13 +59,13 @@
             </a>
           </template>
           <template v-slot:cell(size)="{item}">
-            {{item.size | prettyBytes}}
+            {{ item.size | prettyBytes }}
           </template>
           <template v-slot:cell(updated_at)="{item}">
-            {{item.updated_at | toDatetime}}
+            {{ item.updated_at | toDatetime }}
           </template>
           <template v-slot:cell(updated_by)="{item}">
-            {{item.updatedBy.displayName}}
+            {{ item.updatedBy.displayName }}
           </template>
           <template v-slot:cell(actions)="data">
             <b-dropdown variant="link" toggle-class="text-decoration-none p-0" no-caret right>
@@ -135,7 +135,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getAttachConfig', 'attachFiles', 'showEditLabelDialog', 'showPreviewModal']),
+    ...mapActions(['getAttachConfig', 'attachFiles', 'showEditLabelDialog', 'showPreviewModal', 'sortAttachment']),
     async onFileChoose(ev) {
       const filesArray = [];
       let filesName = [];
@@ -211,6 +211,11 @@ export default {
     previewAttachment(index) {
       this.showPreviewModal({activeFile: index, files: this.articleFiles});
     },
+    onSort(column) {
+      this.sortBy = column.sortBy;
+      this.sortDesc = column.sortDesc;
+      this.sortAttachment({sortBy: this.sortBy, sortDesc: this.sortDesc});
+    },
   },
   mounted() {
     this.getAttachConfig();
@@ -219,7 +224,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .attachment-card {
   .card-header {
     display: flex;
@@ -258,7 +262,6 @@ export default {
   .attachment-name:hover {
     color: #3989c6 !important;
   }
-
 
   .input-file {
     font-size: 20px;
