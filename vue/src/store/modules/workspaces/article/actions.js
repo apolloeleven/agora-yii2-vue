@@ -158,12 +158,13 @@ export async function getAttachConfig({commit}) {
  * Upload files
  *
  * @param dispatch
+ * @param payload
  * @param data
  * @param config
  * @returns {Promise<unknown>}
  */
-export async function attachFiles({dispatch}, data) {
-  const res = await httpService.post(`${fileUrl}/attach-files`, prepareFiles(data))
+export async function attachFiles({dispatch}, {data, config}) {
+  const res = await httpService.post(`${fileUrl}/attach-files`, prepareFiles(data), config)
   if (res.success) {
     dispatch('getFilesByArticle', data.article_id);
   }

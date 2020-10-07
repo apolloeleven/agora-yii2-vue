@@ -10,9 +10,9 @@
       <b-popover target="attachment-technical-notes" triggers="hover" placement="bottom">
         <template v-slot:title>{{ $t('Technical note') }}</template>
         <ul class="technical-notes">
-          <!--<li v-for="(value ,key) in attachmentConfig" v-bind:key="key">
-             <b>{{$t(value.title)}}</b>: {{value.size}}
-           </li>-->
+          <li v-for="(value ,key) in attachConfig" v-bind:key="key">
+            <b>{{ $t(value.title) }}</b>: {{ value.size }}
+          </li>
         </ul>
       </b-popover>
       <b-card-body>
@@ -30,13 +30,16 @@
             <b-popover target="columnOptions" triggers="hover" placement="bottom">
               <template v-slot:title>{{ $t('Show/Hide columns') }}</template>
               <div>
-                <b-form-checkbox v-for="column in visibleColumns" v-model="column.visible">
+                <b-form-checkbox v-for="column in visibleColumns" :model="column.visible">
                   {{ column.label }}
                 </b-form-checkbox>
               </div>
             </b-popover>
-<!--            <AttachmentDeleteButton tag="button" :file="selected" :current-article="currentArticle"/>-->
+            <!--            <AttachmentDeleteButton tag="button" :file="selected" :current-article="currentArticle"/>-->
           </div>
+        </div>
+        <div class="mb-1" v-if="progress !== 0">
+          <b-progress height="7px" :value="progress" variant="primary"/>
         </div>
         <b-table small striped hover :items="articleFiles" no-local-sorting :fields="fields">
           <template v-slot:table-busy>
@@ -46,7 +49,7 @@
             </div>
           </template>
           <template v-slot:cell(checkbox)="articleFiles">
-            <b-form-checkbox :model="articleFiles.selected" value="1" unchecked-value="0">
+            <b-form-checkbox :model="articleFiles.item.selected" value="1" unchecked-value="0">
             </b-form-checkbox>
           </template>
           <template v-slot:cell(name)="articleFiles">
@@ -105,6 +108,15 @@ export default {
       return this.articleFiles.filter(a => a.selected === '1')
     },
   },
+  watch: {
+    progress() {
+      if (this.progress >= 100) {
+        setTimeout(() => {
+          this.progress = 0;
+        }, 2000);
+      }
+    }
+  },
   methods: {
     ...mapActions(['getAttachConfig', 'attachFiles', 'showEditLabelDialog']),
     async onFileChoose(ev) {
@@ -156,7 +168,14 @@ export default {
         article_id: currentArticleId,
         files: filesArray,
       };
-      const res = await this.attachFiles(filesObject);
+      const res = await this.attachFiles({
+        data: filesObject,
+        config: {
+          onUploadProgress: (progressEvent) => {
+            this.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          }
+        }
+      });
       ev.target.value = '';
 
       if (res.success) {
@@ -171,7 +190,7 @@ export default {
     },
     showEditLabelModal(file) {
       this.showEditLabelDialog(file)
-    }
+    },
   },
   mounted() {
     this.getAttachConfig();
