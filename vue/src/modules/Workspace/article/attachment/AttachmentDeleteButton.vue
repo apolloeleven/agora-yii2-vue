@@ -31,11 +31,11 @@ export default {
         this.$t('This operation can not be undone')
       );
       if (result) {
-        const filesObject = {
+        const data = {
           article_id: this.currentArticle.id,
           files: fileIds
         };
-        const res = await this.deleteAttachments(filesObject);
+        const res = await this.deleteAttachments(data);
         if (res.success) {
           this.$toast(this.$t(`{count} attachment(s) were successfully deleted`, {count: fileIds.length}));
         } else {

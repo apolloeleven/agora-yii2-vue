@@ -228,8 +228,7 @@ export async function updateLabel({commit}, {id, label}) {
  * @returns {Promise<void>}
  */
 export async function deleteAttachments({dispatch}, data) {
-  const res = await httpService.delete(`${fileUrl}/delete-attachments`, data)
-  console.log(data)
+  const res = await httpService.post(`${fileUrl}/delete-attachments`, data)
   if (res.success) {
     dispatch('getFilesByArticle', data.article_id);
   }
