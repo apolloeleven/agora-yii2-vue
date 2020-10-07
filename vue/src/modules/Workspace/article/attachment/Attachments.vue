@@ -36,7 +36,7 @@
               </div>
             </b-popover>
             <AttachmentDeleteButton
-              tag="button" :disabled="selected.length === 0" :current-article="currentArticle" :fileIds="selectedIds">
+              tag="button" :disabled="selected.length === 0" :model="currentArticle" :fileIds="selectedIds">
             </AttachmentDeleteButton>
           </div>
         </div>
