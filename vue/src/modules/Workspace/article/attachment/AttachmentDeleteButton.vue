@@ -20,7 +20,7 @@ export default {
   props: {
     fileIds: Array,
     tag: String,
-    currentArticle: Object,
+    model: Object,
   },
   methods: {
     ...mapActions(['deleteAttachments']),
@@ -31,7 +31,7 @@ export default {
       );
       if (result) {
         const data = {
-          article_id: this.currentArticle.id,
+          article_id: this.model.id,
           fileIds: this.fileIds
         };
         const res = await this.deleteAttachments(data);

@@ -12,6 +12,9 @@ import {
   SHOW_EDIT_LABEL_DIALOG,
   HIDE_EDIT_LABEL_DIALOG,
   UPDATE_LABEL,
+  SHOW_PREVIEW_MODAL,
+  HIDE_PREVIEW_MODAL,
+  CHANGE_CAROUSEL,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 
@@ -231,8 +234,38 @@ export async function deleteAttachments({dispatch}, data) {
   const res = await httpService.post(`${fileUrl}/delete-attachments`, data)
   if (res.success) {
     dispatch('getFilesByArticle', data.article_id);
+    dispatch('hidePreviewModal');
   }
   return res;
+}
+
+/**
+ * Open attachment preview modal
+ *
+ * @param commit
+ * @param data
+ */
+export function showPreviewModal({commit}, data) {
+  commit(SHOW_PREVIEW_MODAL, data)
+}
+
+/**
+ * Close attachment preview modal
+ *
+ * @param commit
+ */
+export function hidePreviewModal({commit}) {
+  commit(HIDE_PREVIEW_MODAL)
+}
+
+/**
+ * Change attachment preview
+ *
+ * @param commit
+ * @param index
+ */
+export function changeCarousel({commit}, index) {
+  commit(CHANGE_CAROUSEL, index);
 }
 
 /**

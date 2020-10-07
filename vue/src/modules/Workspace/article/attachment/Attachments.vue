@@ -54,7 +54,7 @@
             <b-form-checkbox v-model="articleFiles.item.selected" value="1" unchecked-value="0"/>
           </template>
           <template v-slot:cell(name)="articleFiles">
-            <a class="attachment-name">
+            <a class="attachment-name" @click="previewAttachment(articleFiles.index)">
               {{ articleFiles.item.label || articleFiles.item.name }}
             </a>
           </template>
@@ -68,12 +68,13 @@
                 {{ $t('Edit Label') }}
               </b-dropdown-item>
               <AttachmentDownloadButton tag="dropdown" :file="data.item"/>
-              <AttachmentDeleteButton tag="dropdown" :fileIds="[data.item.id]" :current-article="currentArticle"/>
+              <AttachmentDeleteButton tag="dropdown" :fileIds="[data.item.id]" :model="currentArticle"/>
             </b-dropdown>
           </template>
         </b-table>
       </b-card-body>
     </b-card>
+    <AttachmentPreview :model="currentArticle"/>
     <AttachmentLabel/>
   </div>
 </template>
@@ -83,11 +84,12 @@ import {createNamespacedHelpers} from "vuex";
 import AttachmentLabel from "./AttachmentLabel";
 import AttachmentDeleteButton from "./AttachmentDeleteButton";
 import AttachmentDownloadButton from "./AttachmentDownloadButton";
+import AttachmentPreview from "./AttachmentPreview";
 
 const {mapState, mapActions} = createNamespacedHelpers('article');
 export default {
   name: "Attachments",
-  components: {AttachmentDownloadButton, AttachmentDeleteButton, AttachmentLabel},
+  components: {AttachmentPreview, AttachmentDownloadButton, AttachmentDeleteButton, AttachmentLabel},
   data() {
     return {
       articleFileIds: [],
@@ -124,7 +126,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getAttachConfig', 'attachFiles', 'showEditLabelDialog']),
+    ...mapActions(['getAttachConfig', 'attachFiles', 'showEditLabelDialog', 'showPreviewModal']),
     async onFileChoose(ev) {
       const filesArray = [];
       let filesName = [];
@@ -196,6 +198,9 @@ export default {
     },
     showEditLabelModal(file) {
       this.showEditLabelDialog(file)
+    },
+    previewAttachment(index) {
+      this.showPreviewModal({activeFile: index, files: this.articleFiles});
     },
   },
   mounted() {

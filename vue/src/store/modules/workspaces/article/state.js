@@ -15,6 +15,11 @@ const STATE = {
     showModal: false,
     file: null,
   },
+  previewModal: {
+    files: [],
+    activeFile: null,
+    show: false,
+  },
 
 
   visibleColumns: [

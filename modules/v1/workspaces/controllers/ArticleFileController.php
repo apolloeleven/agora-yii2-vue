@@ -4,9 +4,8 @@
 namespace app\modules\v1\workspaces\controllers;
 
 
-use app\modules\v1\workspaces\models\Article;
-use app\modules\v1\workspaces\models\ArticleFile;
 use app\modules\v1\workspaces\resources\ArticleFileResource;
+use app\modules\v1\workspaces\resources\ArticleResource;
 use app\rest\ActiveController;
 use app\rest\ValidationException;
 use Throwable;
@@ -40,7 +39,7 @@ class ArticleFileController extends ActiveController
         $request = Yii::$app->request;
         $articleId = $request->get('articleId');
 
-        $query = ArticleFile::find()->byArticleId($articleId);
+        $query = ArticleFileResource::find()->byArticleId($articleId);
 
         return new ActiveDataProvider([
             'query' => $query,
@@ -48,10 +47,18 @@ class ArticleFileController extends ActiveController
         ]);
     }
 
+    /**
+     * Upload files
+     *
+     * @return mixed
+     * @throws Exception
+     * @throws ValidationException
+     * @throws \yii\base\Exception
+     */
     public function actionAttachFiles()
     {
         $request = Yii::$app->request;
-        $article = Article::findOne($request->post('article_id'));
+        $article = ArticleResource::findOne($request->post('article_id'));
 
         if (!$article) {
             throw new ValidationException(Yii::t('app', 'This file not exist'));
@@ -63,42 +70,34 @@ class ArticleFileController extends ActiveController
 
         $attachments = [];
 
-        if ($files) {
-            foreach ($files as $file) {
-                $articleFile = ArticleFile::find()
-                    ->byArticleId($article->id)
-                    ->byName($file->name)
-                    ->one();
+        if (!$files) {
+            throw new ValidationException(Yii::t('app', 'Unable to find files'));
+        }
+        foreach ($files as $file) {
+            $articleFile = ArticleFileResource::find()
+                ->byArticleId($article->id)
+                ->byName($file->name)
+                ->one();
 
-                // if exist same name file overwrite
-                if (!$articleFile) {
-                    $articleFile = new ArticleFile();
-                    $articleFile->article_id = $article->id;
-                }
-//                if (!$articleFile->removeFile()) {
-//                    $dbTransaction->rollBack();
-//                    throw new ValidationException(Yii::t('app', 'Unable to delete attachment'));
-//                }
-                if (!$articleFile->uploadFile($file)) {
-                    $dbTransaction->rollBack();
-                    throw new ValidationException(Yii::t('app', 'Unable to update attachment'));
-                }
-
-                // TODO non mp4 videos to be converted into mp4
-
-                if (!$articleFile->save()) {
-                    $dbTransaction->rollBack();
-                    throw new ValidationException(Yii::t('app', 'Unable to save attachment'));
-                }
-
-                // convert files to pdf
-                /*if ((!$articleFile->isDocument() || !$articleFile->indexDocument()) && !$articleFile->isVideo()) {
-                    $dbTransaction->rollBack();
-                    throw new ValidationException(Yii::t('app', 'Unable to save file'));
-                }*/
-
-                $attachments[] = $articleFile;
+            // if exist same name file overwrite
+            if (!$articleFile) {
+                $articleFile = new ArticleFileResource();
+                $articleFile->article_id = $article->id;
             }
+
+            if (!$articleFile->uploadFile($file)) {
+                $dbTransaction->rollBack();
+                throw new ValidationException(Yii::t('app', 'Unable to update attachment'));
+            }
+
+            // TODO non mp4 videos to be converted into mp4
+
+            if (!$articleFile->save()) {
+                $dbTransaction->rollBack();
+                throw new ValidationException(Yii::t('app', 'Unable to save attachment'));
+            }
+
+            $attachments[] = $articleFile;
         }
         $dbTransaction->commit();
 
@@ -123,14 +122,14 @@ class ArticleFileController extends ActiveController
     /**
      * Change article file label
      *
-     * @return ArticleFile|array
+     * @return ArticleFileResource|array
      * @throws ValidationException
      */
     public function actionChangeLabel()
     {
         $request = Yii::$app->request;
 
-        $articleFile = ArticleFile::findOne(['id' => $request->post('id')]);
+        $articleFile = ArticleFileResource::findOne(['id' => $request->post('id')]);
 
         if (!$articleFile) {
             throw new ValidationException(Yii::t('app', 'Article file not exist'));
@@ -158,7 +157,7 @@ class ArticleFileController extends ActiveController
         $request = Yii::$app->request;
 
         $fileIds = $request->post('fileIds');
-        $articleFiles = ArticleFile::find()->byId($fileIds)->all();
+        $articleFiles = ArticleFileResource::find()->byId($fileIds)->all();
 
         if (!$articleFiles) {
             throw new ValidationException(Yii::t('app', 'Article files not exist'));
@@ -184,7 +183,7 @@ class ArticleFileController extends ActiveController
      */
     public function actionDownloadAttachment($id)
     {
-        $articleFile = ArticleFile::findOne(['id' => $id]);
+        $articleFile = ArticleFileResource::findOne(['id' => $id]);
 
         if (!$articleFile) {
             throw new ValidationException(Yii::t('app', 'Article file not exist'));

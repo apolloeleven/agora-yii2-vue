@@ -11,3 +11,6 @@ export const GET_ARTICLES_FILES = 'article/GET_ARTICLES_FILES';
 export const SHOW_EDIT_LABEL_DIALOG = 'article/SHOW_EDIT_LABEL_DIALOG';
 export const HIDE_EDIT_LABEL_DIALOG = 'article/HIDE_EDIT_LABEL_DIALOG';
 export const UPDATE_LABEL = 'article/UPDATE_LABEL';
+export const SHOW_PREVIEW_MODAL = 'article/SHOW_PREVIEW_MODAL';
+export const HIDE_PREVIEW_MODAL = 'article/HIDE_PREVIEW_MODAL';
+export const CHANGE_CAROUSEL = 'article/CHANGE_CAROUSEL';

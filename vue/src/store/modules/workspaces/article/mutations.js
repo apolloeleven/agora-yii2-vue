@@ -12,6 +12,9 @@ import {
   SHOW_EDIT_LABEL_DIALOG,
   HIDE_EDIT_LABEL_DIALOG,
   UPDATE_LABEL,
+  SHOW_PREVIEW_MODAL,
+  HIDE_PREVIEW_MODAL,
+  CHANGE_CAROUSEL,
 } from "./mutation-types";
 
 export default {
@@ -115,5 +118,30 @@ export default {
   [UPDATE_LABEL](state, {id, label}) {
     const file = state.articleFiles.find(a => a.id === id);
     if (file) file.label = label;
-  }
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [SHOW_PREVIEW_MODAL](state, data) {
+    state.previewModal.show = true;
+    state.previewModal.files = data.files;
+    state.previewModal.activeFile = data.activeFile;
+  },
+  /**
+   *
+   * @param state
+   */
+  [HIDE_PREVIEW_MODAL](state) {
+    state.previewModal.show = false;
+  },
+  /**
+   *
+   * @param state
+   * @param index
+   */
+  [CHANGE_CAROUSEL](state, index) {
+    state.previewModal.activeFile = index;
+  },
 };

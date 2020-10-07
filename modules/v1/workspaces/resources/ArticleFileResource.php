@@ -27,7 +27,6 @@ class ArticleFileResource extends ArticleFile
                 $mime = explode('/', $this->mime)[0];
                 return $mime == 'video' ? $mime : $this->mime;
             },
-            'share_count',
             'path' => function () {
                 if (explode('/', $this->mime)[0] == 'video') {
                     return $this->path ? Yii::getAlias('@storageUrl' . explode('.', $this->path)[0] . '.mp4') : '';

@@ -14,7 +14,7 @@ $config = [
         '@npm' => '@vendor/npm-asset',
         '@portalUrl' => env('PORTAL_HOST'),
         '@storage' => dirname(__DIR__) . '/web/storage',
-        '@storageUrl' => env('PORTAL_HOST'),
+        '@storageUrl' => env('API_HOST') . '/storage',
     ],
     'components' => [
         'request' => [
