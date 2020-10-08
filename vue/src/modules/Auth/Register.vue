@@ -33,7 +33,7 @@
 <script>
 import InputWidget from "../../core/components/input-widget/InputWidget";
 import auth from '../../core/services/authService';
-import invitationService from "../User/Invitation/invitationService";
+import invitationService from "../setup/invitations/invitationService";
 import ContentSpinner from "../../core/components/ContentSpinner";
 import RegisterModel from "./RegisterModel";
 

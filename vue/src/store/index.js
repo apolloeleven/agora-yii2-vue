@@ -2,6 +2,7 @@ import Vuex from "vuex";
 import Vue from 'vue';
 import setup from './modules/setup';
 import user from './modules/user';
+import employee from './modules/employee'
 import workspace from './modules/workspaces/workspace';
 import article from './modules/workspaces/article';
 
@@ -49,6 +50,7 @@ export default new Vuex.Store({
   modules: {
     setup,
     user,
+    employee,
     workspace,
     article,
   }

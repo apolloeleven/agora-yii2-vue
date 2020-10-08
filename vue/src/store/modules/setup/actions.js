@@ -1,11 +1,20 @@
-import {HIDE_COUNTRY_MODAL, SET_COUNTRIES, SET_COUNTRIES_LOADING, SHOW_COUNTRY_MODAL} from './mutation-types';
+import {
+  CREATE_COUNTRY,
+  HIDE_COUNTRY_MODAL,
+  SET_COUNTRIES,
+  SET_COUNTRIES_LOADING,
+  SHOW_COUNTRY_MODAL, UPDATE_COUNTRY
+} from './mutation-types';
 import httpService from "@/core/services/httpService";
 import {
   HIDE_DEPARTMENT_MODAL,
   SET_DEPARTMENTS,
-  SET_DEPARTMENTS_LOADING,
-  SHOW_DEPARTMENT_MODAL
+  SHOW_DEPARTMENT_MODAL,
+  SET_INVITATIONS_LOADING,
+  SET_INVITATIONS,
+  SHOW_INVITATION_MODAL, HIDE_INVITATION_MODAL
 } from "@/store/modules/setup/mutation-types";
+import invitationService from "@/modules/setup/invitations/invitationService";
 
 /**
  *
@@ -14,16 +23,17 @@ import {
 export async function getCountries({commit}) {
   commit(SET_COUNTRIES_LOADING, true);
   // Make request to get countries
-  const {success, body} = await httpService.get('/v1/setup/countries', {
+  const response = await httpService.get('/v1/setup/countries', {
     params: {
-      expand: 'createdBy',
+      expand: 'createdBy,departments',
       sort: 'name'
     }
   })
-  if (success) {
-    commit(SET_COUNTRIES, {countries: body});
+  if (response.success) {
+    commit(SET_COUNTRIES, {countries: response.body});
   }
-  commit(SET_COUNTRIES_LOADING, false)
+  commit(SET_COUNTRIES_LOADING, false);
+  return response;
 }
 
 export function showCountryModal({commit}, country) {
@@ -34,47 +44,47 @@ export function hideCountryModal({commit}) {
   commit(HIDE_COUNTRY_MODAL)
 }
 
-export async function saveCountry({dispatch}, country) {
-  let response;
-  if (!country.id) {
-    response = await httpService.post(`/v1/setup/countries`, country)
-  } else {
-    response = await httpService.put(`/v1/setup/countries/${country.id}`, country)
-  }
+export async function updateCountry({commit}, country) {
+  let response = await httpService.put(`/v1/setup/countries/${country.id}`, country, {
+    params: {expand: 'createdBy,departments',}
+  })
+
   if (response.success) {
-    dispatch('getCountries')
+    commit(UPDATE_COUNTRY, response.body)
+  }
+  return response;
+}
+
+export async function createCountry({commit}, country) {
+  let response = await httpService.post(`/v1/setup/countries`, country, {
+    params: {expand: 'createdBy,departments'}
+  })
+
+  if (response.success) {
+    commit(CREATE_COUNTRY, response.body)
+  }
+  return response;
+}
+
+export async function deleteCountry({commit, state}, id) {
+  let response = await httpService.delete(`/v1/setup/countries/${id}`);
+
+  if (response.success) {
+    commit(SET_COUNTRIES, {countries: state.countries.data.filter(country => country.id !== id)});
   }
 
   return response;
 }
 
-export async function deleteCountry({dispatch}, id) {
-  let response = await httpService.delete(`/v1/setup/countries/${id}`)
-  if (response.success) {
-    dispatch('getCountries')
-  }
-
-  return response;
-}
-
-
-/**
- *
- * @param { function } commit
- */
-export async function getDepartments({commit}) {
-  commit(SET_DEPARTMENTS_LOADING, true);
-  // Make request to get departments
-  const {success, body} = await httpService.get('/v1/setup/departments', {
+export async function getCountryDepartments({commit}, countryId) {
+  const {success, body} = await httpService.get(`/v1/setup/departments?country_id=${countryId}`, {
     params: {
-      expand: 'country,createdBy,parent',
       sort: 'name'
     }
   })
   if (success) {
-    commit(SET_DEPARTMENTS, {departments: body});
+    commit(SET_DEPARTMENTS, {departments: body, countryId});
   }
-  commit(SET_DEPARTMENTS_LOADING, false)
 }
 
 export function showDepartmentModal({commit}, department) {
@@ -85,15 +95,12 @@ export function hideDepartmentModal({commit}) {
   commit(HIDE_DEPARTMENT_MODAL)
 }
 
-export async function saveDepartment({dispatch}, department) {
+export async function saveDepartment({}, department) {
   let response;
   if (!department.id) {
     response = await httpService.post(`/v1/setup/departments`, department)
   } else {
     response = await httpService.put(`/v1/setup/departments/${department.id}`, department)
-  }
-  if (response.success) {
-    dispatch('getDepartments')
   }
 
   return response;
@@ -101,9 +108,38 @@ export async function saveDepartment({dispatch}, department) {
 
 export async function deleteDepartment({dispatch}, id) {
   let response = await httpService.delete(`/v1/setup/departments/${id}`)
-  if (response.success) {
-    dispatch('getDepartments')
-  }
 
   return response;
 }
+
+export async function getInvitations({commit}, keyword) {
+  commit(SET_INVITATIONS_LOADING);
+  const res = await invitationService.get(keyword);
+  commit(SET_INVITATIONS_LOADING);
+  commit(SET_INVITATIONS, res.body);
+}
+
+export function showInvitationModal({commit}) {
+  commit(SHOW_INVITATION_MODAL);
+}
+
+export function hideInvitationModal({commit}) {
+  commit(HIDE_INVITATION_MODAL);
+}
+
+export async function inviteUser({dispatch}, email) {
+  const res = await invitationService.invite(email);
+  if (res.success) {
+    dispatch('getInvitations');
+  }
+  return res;
+}
+
+export async function deleteInvitation({dispatch}, id) {
+  const res = await invitationService.delete(id);
+  if (res.success) {
+    dispatch('getInvitations');
+  }
+  return res;
+}
+
