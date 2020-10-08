@@ -2,7 +2,7 @@ import BaseModel from "../../../core/components/input-widget/BaseModel";
 import i18n from "../../../shared/i18n";
 
 export default class RoleModel extends BaseModel {
-  role = null;
+  role = '';
   workspace = null;
 
   rules = {

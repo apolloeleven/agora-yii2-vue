@@ -30,7 +30,7 @@
           </template>
           <div class="row">
             <div class="col col-12">
-              <div class="mb-3 " v-for="(userRoleModel, index) in model.roles" :key="index">
+              <div class="mb-3 " v-for="(userRoleModel, index) in model.userWorkspaces" :key="index">
                 <div class="row">
                   <div class="col-sm-1 col-1 d-flex align-items-center">
                     <b-button v-b-tooltip :title="$t('Remove workspace')" pill v-on:click="removeRole(index)"
@@ -42,7 +42,7 @@
                     <div class="row">
                       <div class="col-sm-12 col-md-6">
                         <input-widget :model="userRoleModel" attribute="workspace" type="select"
-                                      :select-options="userWorkspaces"/>
+                                      :select-options="userWorkspaceOptions"/>
                       </div>
                       <div class="col-sm-12 col-md-6">
                         <input-widget :model="userRoleModel" attribute="role" type="select"
@@ -141,7 +141,7 @@ export default {
       dropdownData: state => state.modalDropdownData
     }),
     ...mapStateWorkspace(['workspaces']),
-    userWorkspaces() {
+    userWorkspaceOptions() {
       return this.workspaces.map(function (w) {
         return {value: w.id, text: w.name}
       });
@@ -178,10 +178,10 @@ export default {
       Vue.delete(this.model.userDepartments, index);
     },
     addNewRole: function () {
-      this.model.roles.push(new RoleModel());
+      this.model.userWorkspaces.push(new RoleModel());
     },
     removeRole: function (index) {
-      Vue.delete(this.model.roles, index);
+      Vue.delete(this.model.userWorkspaces, index);
     },
     async onSubmit() {
       let data = clone(this.model);

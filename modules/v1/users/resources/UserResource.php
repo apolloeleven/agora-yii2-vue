@@ -45,9 +45,6 @@ class UserResource extends User
             'displayName' => function () {
                 return $this->getDisplayName();
             },
-            'roles' => function () {
-                return $this->getRoles();
-            },
             'access_token',
             'email',
             'status',
@@ -56,7 +53,7 @@ class UserResource extends User
 
     public function extraFields()
     {
-        return ['userDepartments'];
+        return ['userDepartments', 'userWorkspaces'];
     }
 
     public function rules()

@@ -3,7 +3,7 @@
 namespace app\modules\v1\users\models;
 
 use app\modules\v1\users\models\query\UserQuery;
-use app\modules\v1\users\models\UserDepartment;
+use app\modules\v1\workspaces\models\UserWorkspace;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
@@ -15,26 +15,27 @@ use yii\web\IdentityInterface;
 /**
  * This is the model class for table "{{%users}}".
  *
- * @property int         $id
- * @property string      $username
- * @property string      $email
- * @property string      $password_hash
- * @property string      $first_name
- * @property string      $last_name
- * @property string      $mobile
- * @property string      $phone
- * @property string      $birthday
- * @property string      $about_me
- * @property string      $hobbies
- * @property string      $image_path
+ * @property int $id
+ * @property string $username
+ * @property string $email
+ * @property string $password_hash
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $mobile
+ * @property string $phone
+ * @property string $birthday
+ * @property string $about_me
+ * @property string $hobbies
+ * @property string $image_path
  * @property string|null $password_reset_token
- * @property int|null    $expire_date
+ * @property int|null $expire_date
  * @property string|null $access_token
- * @property int|null    $status
- * @property string      $favourites
- * @property int|null    $created_at
- * @property int|null    $updated_at
+ * @property int|null $status
+ * @property string $favourites
+ * @property int|null $created_at
+ * @property int|null $updated_at
  * @property UserDepartment[] $userDepartments
+ * @property UserWorkspace[] $userWorkspaces
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -235,12 +236,6 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->first_name . ' ' . $this->last_name;
     }
 
-    public function getRoles()
-    {
-        $auth = Yii::$app->authManager;
-        return $auth->getRolesByUser($this->id);
-    }
-
     /**
      * Generates password hash from password and sets it to the model
      *
@@ -299,5 +294,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function getUserDepartments()
     {
         return $this->hasMany(UserDepartment::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUserWorkspaces()
+    {
+        return $this->hasMany(UserWorkspace::class, ['user_id' => 'id']);
     }
 }

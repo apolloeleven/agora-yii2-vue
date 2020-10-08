@@ -8,7 +8,7 @@ export default class EmployeeModel extends BaseModel {
   first_name = null;
   last_name = null;
   email = null;
-  roles = []
+  userWorkspaces = []
   userDepartments = [];
 
   rules = {
@@ -41,16 +41,17 @@ export default class EmployeeModel extends BaseModel {
         }))
       }
     }
-    const roles = [];
-    if (data.roles) {
-      for (let role in data.roles) {
-        if (data.roles.hasOwnProperty(role)) {
-          roles.push(new RoleModel({name: role}))
-        }
+    const userWorkspaces = [];
+    if (data.userWorkspaces) {
+      for (let userWorkspace of data.userWorkspaces) {
+        userWorkspaces.push(new RoleModel({
+          role: userWorkspace.role,
+          workspace: userWorkspace.workspace_id,
+        }))
       }
     }
     data.userDepartments = userDepartments;
-    data.roles = roles;
+    data.userWorkspaces = userWorkspaces;
     Object.assign(this, {...data});
   }
 }
