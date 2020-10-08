@@ -1,8 +1,8 @@
 <template>
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal
-        :visible="showModal" id="user-form" ref="modal" :title='$t(`Edit employee`)' @hidden="onHideModal" size="lg"
-        @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')" scrollable>
+      :visible="showModal" id="user-form" ref="modal" :title='$t(`Edit employee`)' @hidden="onHideModal" size="lg"
+      @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')" scrollable>
       <content-spinner :show="loading" :text="$t('Please wait...')" :fullscreen="true" class="h-100"/>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
         <div class="row">
@@ -21,7 +21,7 @@
         <b-card header-tag="header" footer-tag="footer" class="form-cards mb-3" body-class="pb-0">
           <template v-slot:header>
             <div class="d-flex align-items-center">
-              <h5 class="mb-0">{{ $t('Roles') }}</h5>
+              <h5 class="mb-0">{{ $t('Workspace') }}</h5>
               <b-button size="sm" type="button" v-on:click="addNewRole" variant="success" class="ml-auto">
                 <i class="fa fa-plus-circle "></i>
                 {{ $t('Add New') }}
@@ -33,7 +33,7 @@
               <div class="mb-3 " v-for="(userRoleModel, index) in model.roles" :key="index">
                 <div class="row">
                   <div class="col-sm-1 col-1 d-flex align-items-center">
-                    <b-button v-b-tooltip :title="$t('Remove role')" pill v-on:click="removeRole(index)"
+                    <b-button v-b-tooltip :title="$t('Remove workspace')" pill v-on:click="removeRole(index)"
                               variant="outline-danger" size="sm">
                       <i class="fa fa-times"></i>
                     </b-button>
@@ -41,7 +41,11 @@
                   <div class="col-11">
                     <div class="row">
                       <div class="col-sm-12 col-md-6">
-                        <input-widget :model="userRoleModel" attribute="name" type="select"
+                        <input-widget :model="userRoleModel" attribute="workspace" type="select"
+                                      :select-options="userWorkspaces"/>
+                      </div>
+                      <div class="col-sm-12 col-md-6">
+                        <input-widget :model="userRoleModel" attribute="role" type="select"
                                       :select-options="dropdownData.userRoles"/>
                       </div>
                     </div>
@@ -119,6 +123,7 @@ import UserDepartmentModel from "@/modules/setup/employees/UserDepartmentModel";
 import {clone} from "lodash";
 
 const {mapState, mapActions} = createNamespacedHelpers('employee');
+const {mapState: mapStateWorkspace} = createNamespacedHelpers('workspace');
 
 export default {
   name: "EmployeeFormModal",
@@ -134,7 +139,13 @@ export default {
       showModal: state => state.modal.show,
       object: state => state.modal.object,
       dropdownData: state => state.modalDropdownData
-    })
+    }),
+    ...mapStateWorkspace(['workspaces']),
+    userWorkspaces() {
+      return this.workspaces.map(function (w) {
+        return {value: w.id, text: w.name}
+      });
+    },
   },
   watch: {
     object() {
