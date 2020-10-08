@@ -10,7 +10,7 @@ namespace app\modules\v1\setup\resources;
 
 use app\modules\v1\setup\models\Department;
 use app\modules\v1\users\resources\UserResource;
-use yii\base\InvalidCallException;
+use app\rest\ValidationException;
 
 /**
  * Class DepartmentResource
@@ -53,8 +53,16 @@ class DepartmentResource extends Department
     public function beforeDelete()
     {
         if ($this->getDepartments()->count() > 0) {
-            throw new InvalidCallException(\Yii::t('app', "You can't delete the department because it has child departments"));
+            throw new ValidationException(\Yii::t('app', "You can't delete the department because it has child departments"));
         }
         return parent::beforeDelete();
+    }
+
+    public function getDataForDropdown() {
+        return [
+          'id' => $this->id,
+          'name' => $this->name,
+          'country' => $this->country->name
+        ];
     }
 }
