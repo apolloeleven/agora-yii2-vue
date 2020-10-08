@@ -71,6 +71,7 @@ class UserResource extends User
                 $transaction->rollBack();
             }
             $this->updateRoles($this->userWorkspacesData);
+            $this->updateUserWorkspaces($this->userWorkspacesData);
             $this->updateUserDepartments($this->userDepartmentsData);
             $transaction->commit();
         } catch (\Exception $e) {
@@ -149,7 +150,6 @@ class UserResource extends User
 
     /**
      * @param $data
-     * @param $dbTransaction
      * @throws ValidationException
      */
     public function updateUserDepartments($data)
@@ -185,6 +185,48 @@ class UserResource extends User
 
             if (!$userDepartment->load($userDepartmentData, '') || !$userDepartment->save()) {
                 throw new ValidationException(Yii::t('app', 'Error while saving user department'));
+            }
+        }
+    }
+
+    /**
+     * Update user workspace data
+     *
+     * @param $data
+     * @throws ValidationException
+     */
+    public function updateUserWorkspaces($data)
+    {
+        $existedIds = ArrayHelper::getColumn($data, 'id');
+        $deletedIds = [];
+
+        foreach ($this->userWorkspaces as $userWorkspace) {
+            if (!in_array($userWorkspace->id, $existedIds)) {
+                $deletedIds[] = $userWorkspace->id;
+            }
+        }
+
+        if ($deletedIds) {
+            if (UserWorkspace::deleteAll(['id' => $deletedIds]) !== count($deletedIds)) {
+                throw new ValidationException(Yii::t('app', 'Error while deleting user workspaces'));
+            }
+        }
+
+        $indexById = ArrayHelper::index($this->userWorkspaces, 'id');
+
+        foreach ($data as $userWorkspaceData) {
+            if (in_array($userWorkspaceData['id'], $deletedIds)) {
+                continue;
+            }
+
+            $userWorkspace = new UserWorkspace();
+            $userWorkspace->user_id = $this->id;
+            if (isset($indexById[$userWorkspaceData['id']])) {
+                $userWorkspace = $indexById[$userWorkspaceData['id']];
+            }
+
+            if (!$userWorkspace->load($userWorkspaceData, '') || !$userWorkspace->save()) {
+                throw new ValidationException(Yii::t('app', 'Error while saving user workspaces'));
             }
         }
     }

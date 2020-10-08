@@ -47,7 +47,7 @@ export default class EmployeeModel extends BaseModel {
         userWorkspaces.push(new RoleModel({
           id: userWorkspace.id,
           role: userWorkspace.role,
-          workspace: userWorkspace.workspace_id,
+          workspace_id: userWorkspace.workspace_id,
         }))
       }
     }

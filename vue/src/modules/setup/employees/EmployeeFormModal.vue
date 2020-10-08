@@ -41,7 +41,7 @@
                   <div class="col-11">
                     <div class="row">
                       <div class="col-sm-12 col-md-6">
-                        <input-widget :model="userRoleModel" attribute="workspace" type="select"
+                        <input-widget :model="userRoleModel" attribute="workspace_id" type="select"
                                       :select-options="userWorkspaceOptions"/>
                       </div>
                       <div class="col-sm-12 col-md-6">

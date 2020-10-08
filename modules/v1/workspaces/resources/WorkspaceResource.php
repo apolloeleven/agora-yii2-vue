@@ -74,6 +74,7 @@ class WorkspaceResource extends Workspace
             $userWorkspace = new UserWorkspace();
             $userWorkspace->workspace_id = $this->id;
             $userWorkspace->user_id = Yii::$app->user->id;
+            $userWorkspace->role = UserResource::ROLE_ADMIN;
 
             if (!$userWorkspace->save()) {
                 throw new ValidationException(Yii::t('app', 'Unable to create user workspace'));
