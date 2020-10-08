@@ -4,3 +4,4 @@ export const GET_WORKSPACES = 'workspace/GET_WORKSPACES';
 export const WORKSPACE_DELETED = 'workspace/WORKSPACE_DELETED';
 export const GET_BREAD_CRUMB = 'workspace/GET_BREAD_CRUMB';
 export const GET_CURRENT_WORKSPACE = 'workspace/GET_CURRENT_WORKSPACE';
+export const GET_EMPLOYEES = 'workspace/GET_EMPLOYEES';

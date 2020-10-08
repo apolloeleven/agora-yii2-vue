@@ -4,6 +4,7 @@ namespace app\modules\v1\users\models\query;
 
 
 use app\modules\v1\users\models\User;
+use app\modules\v1\workspaces\models\UserWorkspace;
 
 /**
  * This is the ActiveQuery class for [[\app\models\User]].
@@ -60,5 +61,32 @@ class UserQuery extends \yii\db\ActiveQuery
     public function byId($id)
     {
         return $this->andWhere(['id' => $id]);
+    }
+
+    /**
+     * Get users by workspace id
+     *
+     * @param $workspaceId
+     * @return UserQuery
+     */
+    public function byWorkspaceId($workspaceId)
+    {
+        return $this
+            ->innerJoin(UserWorkspace::tableName() . ' uw', 'uw.user_id = ' . User::tableName() . '.id')
+            ->andWhere(['uw.workspace_id' => $workspaceId]);
+    }
+
+
+    /**
+     * Order users by name
+     *
+     * @return UserQuery
+     */
+    public function orderByName()
+    {
+        return $this->orderBy([
+            User::tableName() . '.first_name' => SORT_ASC,
+            User::tableName() . '.last_name' => SORT_ASC
+        ]);
     }
 }

@@ -10,6 +10,7 @@ namespace app\modules\v1\users\resources;
 
 use app\modules\v1\users\models\User;
 use app\modules\v1\users\models\UserDepartment;
+use app\modules\v1\workspaces\models\UserWorkspace;
 use app\rest\ValidationException;
 use Yii;
 use yii\db\ActiveQuery;

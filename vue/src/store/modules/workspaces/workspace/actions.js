@@ -4,7 +4,7 @@ import {
   GET_WORKSPACES,
   WORKSPACE_DELETED,
   GET_BREAD_CRUMB,
-  GET_CURRENT_WORKSPACE,
+  GET_CURRENT_WORKSPACE, GET_EMPLOYEES,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 
@@ -125,4 +125,18 @@ export async function getWorkspaceBreadCrumb({commit}, workspaceId) {
   const res = await httpService.get(`${url}/get-bread-crumb?workspaceId=${workspaceId}`);
   if (res.success) commit(GET_BREAD_CRUMB, res.body);
   return res;
+}
+
+/**
+ * Get Employees by workspace id
+ *
+ * @param commit
+ * @param workspaceId
+ * @returns {Promise<void>}
+ */
+export async function getEmployees({commit}, workspaceId) {
+  const {success, body} = await httpService.get(`${url}/get-employees?workspaceId=${workspaceId}`)
+  if (success) {
+    commit(GET_EMPLOYEES, body)
+  }
 }

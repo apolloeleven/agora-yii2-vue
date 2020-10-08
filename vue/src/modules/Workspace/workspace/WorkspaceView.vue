@@ -3,6 +3,7 @@
     <div class="page-header">
       <back-button/>
       <b-breadcrumb :items="breadCrumb" class="d-none d-sm-flex"></b-breadcrumb>
+      <WorkspaceUsers :model="employees"/>
       <b-button @click="showModal" variant="info">
         <i class="fas fa-plus-circle"></i>
         {{ $t('Create new folder') }}
@@ -62,30 +63,32 @@ import {createNamespacedHelpers} from "vuex";
 import ArticleItem from "../article/ArticleItem";
 import ContentSpinner from "../../../core/components/ContentSpinner";
 import NoData from "../components/NoData";
+import WorkspaceUsers from "./WorkspaceUsers";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace')
 const {mapState: mapArticleStates, mapActions: mapArticleActions} = createNamespacedHelpers('article')
 
 export default {
   name: "WorkspaceView",
-  components: {NoData, ContentSpinner, ArticleItem, BackButton},
+  components: {WorkspaceUsers, NoData, ContentSpinner, ArticleItem, BackButton},
   data() {
     return {
       visible: false,
     }
   },
   computed: {
-    ...mapState(['breadCrumb', 'currentWorkspace']),
+    ...mapState(['breadCrumb', 'currentWorkspace', 'employees']),
     ...mapArticleStates(['articles', 'loading']),
   },
   watch: {
     '$route.params.id': function (id) {
       this.getArticlesByWorkspace(id);
       this.getCurrentWorkspace(id);
+      this.getEmployees(id);
     },
   },
   methods: {
-    ...mapActions(['getWorkspaceBreadCrumb', 'getCurrentWorkspace', 'destroyCurrentWorkspace']),
+    ...mapActions(['getWorkspaceBreadCrumb', 'getCurrentWorkspace', 'destroyCurrentWorkspace', 'getEmployees']),
     ...mapArticleActions(['showArticleModal', 'getArticlesByWorkspace']),
     async getBreadCrumb() {
       const res = await this.getWorkspaceBreadCrumb(this.$route.params.id)
@@ -99,9 +102,12 @@ export default {
     },
   },
   mounted() {
+    const workspaceId = this.$route.params.id;
+
     this.getBreadCrumb();
-    this.getArticlesByWorkspace(this.$route.params.id);
-    this.getCurrentWorkspace(this.$route.params.id);
+    this.getArticlesByWorkspace(workspaceId);
+    this.getCurrentWorkspace(workspaceId);
+    this.getEmployees(workspaceId);
   },
   destroyed() {
     this.destroyCurrentWorkspace({});
