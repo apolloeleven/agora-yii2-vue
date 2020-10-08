@@ -42,6 +42,7 @@
 <script>
 import SidebarToggle from './components/SidebarToggle'
 import {createNamespacedHelpers} from "vuex";
+import authService from "@/core/services/authService";
 
 const {mapState} = createNamespacedHelpers('user');
 export default {
@@ -57,7 +58,7 @@ export default {
   },
   methods: {
     onLogoutClick() {
-      this.$router.push({name: 'auth.login'});
+      authService.logout();
     }
   }
 }
