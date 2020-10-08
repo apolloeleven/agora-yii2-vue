@@ -28,7 +28,7 @@ class UserResource extends User
     const ROLE_ADMIN = 'admin';
     const ROLE_WORKSPACE_ADMIN = 'workspaceAdmin';
 
-    public $roles, $userDepartmentsData;
+    public $userDepartmentsData, $userWorkspacesData;
 
     public function fields()
     {
@@ -59,7 +59,7 @@ class UserResource extends User
 
     public function rules()
     {
-        return ArrayHelper::merge(parent::rules(), [[['roles', 'userDepartmentsData'], 'safe']]);
+        return ArrayHelper::merge(parent::rules(), [[['userDepartmentsData', 'userWorkspacesData'], 'safe']]);
     }
 
     public function save($runValidation = true, $attributeNames = null)
@@ -70,8 +70,9 @@ class UserResource extends User
             if (!$parentSave) {
                 $transaction->rollBack();
             }
-            $this->updateRoles($this->roles);
+            $this->updateRoles($this->userWorkspacesData);
             $this->updateUserDepartments($this->userDepartmentsData);
+            $transaction->commit();
         } catch (\Exception $e) {
             $transaction->rollBack();
             $parentSave = false;
@@ -121,7 +122,7 @@ class UserResource extends User
 
         // Convert roles from post to array of strings
         foreach ($data as $role) {
-            $rolesFromPost[] = $role['name'];
+            $rolesFromPost[] = $role['role'];
         }
 
         // Check if some roles should be deleted
@@ -165,7 +166,7 @@ class UserResource extends User
         if ($idsToBeDeleted) {
             $count = UserDepartment::deleteAll(['id' => $idsToBeDeleted]);
             if ($count !== count($idsToBeDeleted)) {
-                throw new ValidationException(\Yii::t('app', 'Error while deleting user departments'));
+                throw new ValidationException(Yii::t('app', 'Error while deleting user departments'));
             }
         }
 
@@ -183,7 +184,7 @@ class UserResource extends User
             }
 
             if (!$userDepartment->load($userDepartmentData, '') || !$userDepartment->save()) {
-                throw new ValidationException(\Yii::t('app', 'Error while saving user department'));
+                throw new ValidationException(Yii::t('app', 'Error while saving user department'));
             }
         }
     }

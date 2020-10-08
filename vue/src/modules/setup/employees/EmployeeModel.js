@@ -45,6 +45,7 @@ export default class EmployeeModel extends BaseModel {
     if (data.userWorkspaces) {
       for (let userWorkspace of data.userWorkspaces) {
         userWorkspaces.push(new RoleModel({
+          id: userWorkspace.id,
           role: userWorkspace.role,
           workspace: userWorkspace.workspace_id,
         }))

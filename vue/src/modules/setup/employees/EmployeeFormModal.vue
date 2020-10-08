@@ -185,9 +185,14 @@ export default {
     },
     async onSubmit() {
       let data = clone(this.model);
-      let keyToRename = data['userDepartments'];
+      let userDepartmentsData = data['userDepartments'];
       delete data['userDepartments'];
-      data['userDepartmentsData'] = keyToRename;
+      data['userDepartmentsData'] = userDepartmentsData;
+
+      let userWorkspacesData = data['userWorkspaces'];
+      delete data['userWorkspaces'];
+      data['userWorkspacesData'] = userWorkspacesData;
+
       const {success, body} = await employeeService.updateUserData(data);
       if (success) {
         this.hideModal();
