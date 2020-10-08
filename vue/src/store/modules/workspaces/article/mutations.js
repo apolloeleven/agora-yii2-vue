@@ -151,52 +151,42 @@ export default {
    * @param column
    */
   [SORT_ATTACHMENT](state, column) {
-    state.articleFiles = state.articleFiles.sort(compareValues(column.sortBy, column.sortDesc ? 'desc' : 'asc'));
+    state.articleFiles = state.articleFiles
+      .sort((nextFile, prevFile) => {
+        let next;
+        let prev;
+        let comparison = 0;
+        let sortBy = column.sortBy;
+        let order = column.sortDesc ? 'desc' : 'asc';
+
+        if (sortBy !== 'updatedBy.displayName') {
+          if (!nextFile.hasOwnProperty(sortBy) || !prevFile.hasOwnProperty(sortBy)) {
+            return comparison;
+          }
+          let nextSortKey = sortBy, prevSortKey = sortBy;
+
+          if (sortBy === 'name') {
+            nextSortKey = nextFile['label'] ? 'label' : sortBy;
+            prevSortKey = prevFile['label'] ? 'label' : sortBy;
+          }
+          next = typeof nextFile[nextSortKey] === 'string' ? nextFile[nextSortKey].toUpperCase() : nextFile[nextSortKey];
+          prev = typeof prevFile[prevSortKey] === 'string' ? prevFile[prevSortKey].toUpperCase() : prevFile[prevSortKey];
+        } else {
+          let firstKey = 'updatedBy';
+          let secondKey = 'displayName';
+          if (!nextFile[firstKey].hasOwnProperty(secondKey) || !prevFile[firstKey].hasOwnProperty(secondKey)) {
+            return comparison;
+          }
+          next = typeof nextFile[firstKey][secondKey] === 'string' ? nextFile[firstKey][secondKey].toUpperCase() : nextFile[firstKey][secondKey];
+          prev = typeof prevFile[firstKey][secondKey] === 'string' ? prevFile[firstKey][secondKey].toUpperCase() : prevFile[firstKey][secondKey];
+        }
+
+        if (next > prev) {
+          comparison = 1;
+        } else if (next < prev) {
+          comparison = -1;
+        }
+        return order === 'desc' ? comparison * -1 : comparison;
+      });
   },
 };
-
-function compareValues(sortBy, order = 'asc') {
-  return function innerSort(nextFile, prevFile) {
-    if (sortBy !== 'updatedBy.displayName') {
-      if (!nextFile.hasOwnProperty(sortBy) || !prevFile.hasOwnProperty(sortBy)) {
-        return 0;
-      }
-      let nextFileKey = sortBy, prevFileKey = sortBy;
-
-      switch (sortBy) {
-        case 'name':
-          nextFile['label'] ? nextFileKey = 'label' : nextFileKey = sortBy;
-          prevFile['label'] ? prevFileKey = 'label' : prevFileKey = sortBy;
-          break;
-      }
-      const next = (typeof nextFile[nextFileKey] === 'string') ? nextFile[nextFileKey].toUpperCase() : nextFile[nextFileKey];
-      const prev = (typeof prevFile[prevFileKey] === 'string') ? prevFile[prevFileKey].toUpperCase() : prevFile[prevFileKey];
-      let comparison = 0;
-      if (next > prev) {
-        comparison = 1;
-      } else if (next < prev) {
-        comparison = -1;
-      }
-      return (
-        (order === 'desc') ? (comparison * -1) : comparison
-      );
-    } else {
-      let firstKey = 'updatedBy';
-      let secondKey = 'displayName'
-      if (!nextFile[firstKey].hasOwnProperty(secondKey) || !prevFile[firstKey].hasOwnProperty(secondKey)) {
-        return 0;
-      }
-
-      let nextFileKey = (typeof nextFile[firstKey][secondKey] === 'string') ? nextFile[firstKey][secondKey].toUpperCase() : nextFile[firstKey][secondKey];
-      let prevFileKey = (typeof prevFile[firstKey][secondKey] === 'string') ? prevFile[firstKey][secondKey].toUpperCase() : prevFile[firstKey][secondKey];
-
-      let comparison = 0;
-      if (nextFileKey > prevFileKey) {
-        comparison = 1;
-      } else if (nextFileKey < prevFileKey) {
-        comparison = -1;
-      }
-      return ((order === 'desc') ? (comparison * -1) : comparison);
-    }
-  };
-}
