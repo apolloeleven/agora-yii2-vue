@@ -105,7 +105,7 @@ class InvitationResource extends Invitation
      * Find invitation by valid token
      *
      * @param $token
-     * @return array|ActiveRecord|null
+     * @return \app\modules\v1\users\resources\InvitationResource|array|ActiveRecord|null
      */
     public static function findByToken($token)
     {

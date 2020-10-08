@@ -38,6 +38,7 @@ class InvitationController extends ActiveController
                 ]
             ]
         ];
+        $behaviors['authenticator']['except'][] = 'get-email';
 
         return $behaviors;
     }
