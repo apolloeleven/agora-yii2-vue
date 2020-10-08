@@ -8,7 +8,7 @@
 namespace app\modules\v1\setup\resources;
 
 
-use app\models\User;
+use app\modules\v1\users\models\User;
 
 /**
  * Class UserResource
@@ -23,7 +23,7 @@ class UserResource extends User
         return [
             'id', 'email', 'username', 'first_name', 'last_name', 'mobile', 'phone', 'birthday', 'about_me', 'hobbies',
             'image_url' => function () {
-                return env('API_HOST') . $this->image_path;
+                return $this->image_path ? env('API_HOST') . $this->image_path : null;
             },
             'display_name' => function () {
                 return $this->first_name . ' ' . $this->last_name;

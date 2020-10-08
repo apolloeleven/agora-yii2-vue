@@ -7,6 +7,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'name' => 'Agora',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -34,7 +35,7 @@ $config = [
             'loginUrl' => null,
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'v1/setup/site/error',
         ],
         'mailer' => [
             'class' => \intermundia\mailer\SwiftMailer::class,
@@ -68,7 +69,7 @@ $config = [
                 ],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/department'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/my-user'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/users/user'],
                 [
                     'class' => UrlRule::class,
                     'pluralize' => false,
@@ -77,9 +78,14 @@ $config = [
                         'v1/workspaces/workspace',
                         'v1/workspaces/article',
                         'v1/workspaces/article-file',
+                        'v1/users/employee',
+                        'v1/users/auth'
                     ]
                 ]
             ],
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
         ],
     ],
     'modules' => [

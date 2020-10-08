@@ -10,13 +10,13 @@ import RequestPasswordReset from "@/modules/Auth/PasswordReset/RequestPasswordRe
 import ResetPassword from "@/modules/Auth/PasswordReset/ResetPassword";
 import Setup from "@/modules/setup/Setup";
 import CountryList from "@/modules/setup/countries/CountryList";
-import UserInvitations from "@/modules/User/Invitation/UserInvitations";
+import UserInvitations from "@/modules/setup/invitations/UserInvitations";
 import User from "@/modules/User/User";
-import DepartmentList from "@/modules/setup/departments/DepartmentList";
 import Profile from "@/modules/User/Profile";
 import Workspace from "@/modules/Workspace/workspace/Workspace";
 import WorkspaceView from "@/modules/Workspace/workspace/WorkspaceView";
 import ArticleView from "@/modules/Workspace/article/ArticleView";
+import EmployeeList from "../modules/setup/employees/EmployeeList";
 
 Vue.use(Router);
 
@@ -64,15 +64,10 @@ const router = new Router({
         {path: 'dashboard', name: 'dashboard', component: Dashboard,},
         {path: '/setup', name: 'setup', component: Setup,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
-        {path: '/setup/departments', name: 'departments', component: DepartmentList},
+        {path: '/setup/invitations', name: 'invitations', component: UserInvitations},
+        {path: '/setup/users', name: 'users', component: EmployeeList},
         {path: '/profile', name: 'profile', component: Profile,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
-        {
-          path: '/users', name: 'user', component: User,
-          children: [
-            {path: '/users/invitations', name: 'invitations', component: UserInvitations},
-          ]
-        },
         {path: '/workspace', name: 'workspace', component: Workspace},
         {path: '/workspace/:id', name: 'workspace.view', component: WorkspaceView},
         {path: '/article/:id', name: 'article.view', component: ArticleView},

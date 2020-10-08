@@ -7,19 +7,6 @@
 
     <SidebarToggle/>
 
-    <div class="navbar-items-2 d-none d-lg-flex">
-      <b-navbar-nav>
-        <b-nav-item-dropdown :text="$t('Users')">
-          <template v-slot:button-content>
-            {{ $t('Users') }}
-          </template>
-          <b-dropdown-item :to="{name: 'invitations'}">
-            {{ $t('Invitations') }}
-          </b-dropdown-item>
-        </b-nav-item-dropdown>
-      </b-navbar-nav>
-    </div>
-
     <b-nav-form class="navbar-search">
       <label for="search" class="sr-only">Search...</label>
       <input type="text" name="search" id="search" placeholder="Search...">
@@ -40,7 +27,7 @@
         <b-nav-item-dropdown right>
           <!-- Using 'button-content' slot -->
           <template v-slot:button-content>
-            <b-img class="user-avatar mr-2" :src="currentUser.data.image_url" rounded="circle" alt="..."/>
+            <b-img class="user-avatar mr-2" :src="currentUser.data.image_url || '/assets/img/avatar.svg'" rounded="circle" alt="..."/>
             {{ currentUser.data.display_name }}
             <b class="caret"></b>
           </template>
