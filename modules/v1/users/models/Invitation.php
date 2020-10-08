@@ -14,18 +14,18 @@ use yii\db\ActiveRecord;
 /**
  * This is the model class for table "{{%invitations}}".
  *
- * @property int $id
- * @property int|null $user_id
+ * @property int         $id
+ * @property int|null    $user_id
  * @property string|null $email
- * @property int|null $status
+ * @property int|null    $status
  * @property string|null $token
- * @property int|null $expire_date
- * @property int|null $use_date
- * @property int|null $created_at
- * @property int|null $created_by
+ * @property int|null    $expire_date
+ * @property int|null    $use_date
+ * @property int|null    $created_at
+ * @property int|null    $created_by
  *
- * @property User $createdBy
- * @property User $user
+ * @property User        $createdBy
+ * @property User        $user
  */
 class Invitation extends ActiveRecord
 {
@@ -71,6 +71,9 @@ class Invitation extends ActiveRecord
         return [
             [['email',], 'required'],
             [['status', 'created_at', 'expire_date', 'use_date', 'created_by', 'user_id'], 'integer'],
+            ['status', 'default', 'value' => self::STATUS_PENDING],
+            ['token', 'default', 'value' => Yii::$app->security->generateRandomString(256)],
+            ['expire_date', 'default', 'value' => time() + self::TOKEN_LIFETIME],
             [['email'], 'string', 'max' => 255],
             [['token'], 'string', 'max' => 1024],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
