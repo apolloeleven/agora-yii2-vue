@@ -3,7 +3,7 @@ import httpService from "../../../core/services/httpService";
 const invitationService = {
   url: 'v1/users/invitation',
   get() {
-    return httpService.get(this.url + `?expand=createdBy,user&sort=-created_at`);
+    return httpService.get(this.url + `?expand=createdBy,user&sort=status`);
   },
   invite(email) {
     return httpService.post(this.url + "?expand=createdBy", {email});

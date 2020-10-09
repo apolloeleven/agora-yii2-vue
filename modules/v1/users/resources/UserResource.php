@@ -8,6 +8,7 @@
 namespace app\modules\v1\users\resources;
 
 
+use app\modules\v1\users\models\Invitation;
 use app\modules\v1\users\models\User;
 use app\modules\v1\users\models\UserDepartment;
 use app\rest\ValidationException;
@@ -74,6 +75,7 @@ class UserResource extends User
             }
             $this->updateRoles($this->roles);
             $this->updateUserDepartments($this->userDepartmentsData);
+            $transaction->commit();
         } catch (\Exception $e) {
             $transaction->rollBack();
             $parentSave = false;
@@ -188,5 +190,28 @@ class UserResource extends User
                 throw new ValidationException(\Yii::t('app', 'Error while saving user department'));
             }
         }
+    }
+
+    /**
+     * Before save change invitation status from register to complete
+     *
+     * @param $insert
+     * @return bool|void
+     * @throws ValidationException
+     * @throws \Exception
+     */
+    public function beforeSave($insert)
+    {
+        $oldStatus = ArrayHelper::getValue($this->oldAttributes, 'status');
+
+        if ($oldStatus == self::STATUS_INACTIVE && $this->status == self::STATUS_ACTIVE && $this->invitation) {
+            if ($this->invitation->status == Invitation::STATUS_REGISTERED) {
+                $this->invitation->status = Invitation::STATUS_COMPLETED;
+                if (!$this->invitation->save()) {
+                    throw new ValidationException(Yii::t('app', "Unable to update Invitation. Token: {$this->invitation->token}"));
+                }
+            }
+        }
+        return parent::beforeSave($insert);
     }
 }
