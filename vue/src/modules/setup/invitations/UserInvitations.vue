@@ -87,12 +87,11 @@ export default {
   },
   methods: {
     ...mapActions(['getInvitations', 'showInvitationModal', 'deleteInvitation']),
-    ...mapEmployeeActions(['showEmployeeModal']),
+    ...mapEmployeeActions(['showEmployeeModal', 'getModalDropdownData']),
     editUser(invitation) {
       this.showEmployeeModal(invitation.user);
     },
     async deleteUser(invitation) {
-      console.log(invitation)
       const result = await this.$confirm(this.$t('Are you sure you want to delete this user?'),
         this.$t('This operation can not be undone'))
       if (result) {
@@ -106,6 +105,7 @@ export default {
     },
   },
   mounted() {
+    this.getModalDropdownData();
     this.getInvitations();
   }
 }

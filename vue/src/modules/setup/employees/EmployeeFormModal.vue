@@ -1,7 +1,7 @@
 <template>
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal
-        :visible="showModal" id="user-form" ref="modal" :title='$t(`Edit employee`)' @hidden="onHideModal" size="lg"
+        :visible="showModal" id="user-form" ref="modal" :title='$t(`Edit employee "{user}"`, {user: object.email})' @hidden="onHideModal" size="lg"
         @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')" scrollable>
       <content-spinner :show="loading" :text="$t('Please wait...')" :fullscreen="true" class="h-100"/>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
@@ -22,7 +22,6 @@
             <input-widget :model="model" attribute="last_name"/>
           </div>
         </div>
-
 
         <b-card header-tag="header" footer-tag="footer" class="form-cards mb-3" body-class="pb-0">
           <template v-slot:header>
@@ -125,6 +124,7 @@ import UserDepartmentModel from "@/modules/setup/employees/UserDepartmentModel";
 import {clone} from "lodash";
 
 const {mapState, mapActions} = createNamespacedHelpers('employee');
+const {mapActions: mapInvitationActions} = createNamespacedHelpers('setup');
 
 export default {
   name: "EmployeeFormModal",
@@ -149,6 +149,7 @@ export default {
   },
   methods: {
     ...mapActions(['hideModal', 'getData']),
+    ...mapInvitationActions(['getInvitations']),
     getDepartments(userDepartmentModel) {
       if (!userDepartmentModel.country_id) {
         return [];
@@ -188,6 +189,7 @@ export default {
       if (success) {
         this.hideModal();
         await this.getData();
+        await this.getInvitations();
       } else {
         if (body.message) {
           this.$alert(body.message);
