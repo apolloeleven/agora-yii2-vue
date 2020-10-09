@@ -43,3 +43,7 @@ export async function deleteEmployee({commit}, data) {
   }
   return res;
 }
+
+export async function updateUserStatus({commit}, data) {
+  return httpService.put(`/v1/users/employee/${data.id}`, {status: data.status ? 2 : 1});
+}

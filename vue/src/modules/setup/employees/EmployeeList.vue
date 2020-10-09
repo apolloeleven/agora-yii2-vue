@@ -41,6 +41,10 @@
                 </li>
               </ul>
             </template>
+            <template v-slot:cell(verified)="data">
+              <b-form-checkbox v-model="data.item.status" name="check-button" switch size="lg"
+                               @change="verifiedUser(data.item)"/>
+            </template>
             <template v-slot:cell(actions)="data">
               <b-dropdown variant="transparent text-dark p-0" right no-caret>
                 <template slot="button-content">
@@ -87,12 +91,13 @@ export default {
         {key: 'departments', label: this.$t('Departments')},
         {key: 'country', label: this.$t('Country')},
         {key: 'position', label: this.$t('Position')},
+        {key: 'verified', label: this.$t('Verified')},
         {key: 'actions', label: this.$t('Actions')},
       ]
     }
   },
   methods: {
-    ...mapActions(['getData', 'showEmployeeModal', 'getModalDropdownData', 'deleteEmployee']),
+    ...mapActions(['getData', 'showEmployeeModal', 'getModalDropdownData', 'deleteEmployee', 'updateUserStatus']),
     editUser(employee) {
       this.showEmployeeModal(employee);
     },
@@ -106,6 +111,14 @@ export default {
         } else {
           this.$toast(body.message, 'danger');
         }
+      }
+    },
+    async verifiedUser(employee) {
+      const {success, body} = await this.updateUserStatus(employee);
+      if (success) {
+        this.$toast(this.$t(`Status was successfully changed`));
+      } else {
+        this.$toast(body.message, 'danger');
       }
     },
   },

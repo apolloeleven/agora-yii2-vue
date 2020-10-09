@@ -50,7 +50,6 @@ export default class EmployeeModel extends BaseModel {
         }
       }
     }
-    data.status = data.status === 1;
     data.userDepartments = userDepartments;
     data.roles = roles;
     Object.assign(this, {...data});

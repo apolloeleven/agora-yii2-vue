@@ -31,6 +31,21 @@
               'badge-success': data.item.status === 3,
             }">{{ data.value }}</span>
             </template>
+            <template v-slot:cell(actions)="data">
+              <b-dropdown variant="transparent text-dark p-0" right no-caret>
+                <template slot="button-content">
+                  <i class="fas fa-ellipsis-v"></i>
+                </template>
+                <b-dropdown-item @click="editUser(data.item)" v-if="data.item.status !== 2">
+                  <i class="fas fa-pencil-alt"></i>
+                  {{ $t('Edit') }}
+                </b-dropdown-item>
+                <b-dropdown-item @click="deleteUser(data.item)">
+                  <i class="far fa-trash-alt"></i>
+                  {{ $t('Delete') }}
+                </b-dropdown-item>
+              </b-dropdown>
+            </template>
           </b-table>
           <no-data-available v-if="!invitations.data.length" height="100"/>
         </b-card>
@@ -48,6 +63,7 @@ import UserInvitationForm from "@/modules/setup/invitations/UserInvitationForm";
 import NoDataAvailable from "@/core/components/NoDataAvailable";
 
 const {mapState, mapActions} = createNamespacedHelpers('setup');
+const {mapActions: mapEmployeeActions} = createNamespacedHelpers('employee');
 
 export default {
   name: "UserInvitations",
@@ -71,6 +87,22 @@ export default {
   },
   methods: {
     ...mapActions(['getInvitations', 'showInvitationModal']),
+    ...mapEmployeeActions(['showEmployeeModal', 'deleteEmployee']),
+    editUser(employee) {
+      this.showEmployeeModal(employee);
+    },
+    async deleteUser(employee) {
+      const result = await this.$confirm(this.$t('Are you sure you want to delete this user?'),
+        this.$t('This operation can not be undone'))
+      if (result) {
+        const {success, body} = await this.deleteEmployee(employee);
+        if (success) {
+          this.$toast(this.$t(`User was successfully deleted`));
+        } else {
+          this.$toast(body.message, 'danger');
+        }
+      }
+    },
   },
   mounted() {
     this.getInvitations();

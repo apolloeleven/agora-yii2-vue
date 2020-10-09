@@ -51,7 +51,9 @@ class UserResource extends User
             },
             'access_token',
             'email',
-            'status',
+            'status' => function () {
+                return $this->status === 1;
+            },
         ];
     }
 
@@ -73,8 +75,12 @@ class UserResource extends User
             if (!$parentSave) {
                 $transaction->rollBack();
             }
-            $this->updateRoles($this->roles);
-            $this->updateUserDepartments($this->userDepartmentsData);
+            if ($this->roles) {
+                $this->updateRoles($this->roles);
+            }
+            if ($this->userDepartmentsData) {
+                $this->updateUserDepartments($this->userDepartmentsData);
+            }
             $transaction->commit();
         } catch (\Exception $e) {
             $transaction->rollBack();
