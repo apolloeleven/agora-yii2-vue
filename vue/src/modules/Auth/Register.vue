@@ -33,9 +33,9 @@
 <script>
 import InputWidget from "../../core/components/input-widget/InputWidget";
 import auth from '../../core/services/authService';
-import invitationService from "../setup/invitations/invitationService";
 import ContentSpinner from "../../core/components/ContentSpinner";
 import RegisterModel from "./RegisterModel";
+import httpService from "../../core/services/httpService";
 
 export default {
   name: "Register",
@@ -59,13 +59,15 @@ export default {
         this.$router.push({name: 'auth.login'});
       }
     },
-  },
-  async mounted() {
-    this.model.token = this.$route.params.token;
-    const res = await invitationService.getEmailByToken(this.model.token);
-    if (res.success) {
-      this.model.email = res.body;
+    async getEmail() {
+      const res = await httpService.get(`/v1/users/invitation/get-email?token=${this.$route.params.token}`);
+      if (res.success) {
+        this.model.email = res.body;
+      }
     }
+  },
+  mounted() {
+    this.getEmail()
   },
 }
 </script>

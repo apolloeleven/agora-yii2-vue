@@ -86,16 +86,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getInvitations', 'showInvitationModal']),
-    ...mapEmployeeActions(['showEmployeeModal', 'deleteEmployee']),
-    editUser(employee) {
-      this.showEmployeeModal(employee);
+    ...mapActions(['getInvitations', 'showInvitationModal', 'deleteInvitation']),
+    ...mapEmployeeActions(['showEmployeeModal']),
+    editUser(invitation) {
+      this.showEmployeeModal(invitation.user);
     },
-    async deleteUser(employee) {
+    async deleteUser(invitation) {
+      console.log(invitation)
       const result = await this.$confirm(this.$t('Are you sure you want to delete this user?'),
         this.$t('This operation can not be undone'))
       if (result) {
-        const {success, body} = await this.deleteEmployee(employee);
+        const {success, body} = await this.deleteInvitation(invitation);
         if (success) {
           this.$toast(this.$t(`User was successfully deleted`));
         } else {
