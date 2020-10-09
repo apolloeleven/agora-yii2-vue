@@ -214,4 +214,12 @@ class UserResource extends User
         }
         return parent::beforeSave($insert);
     }
+
+    // TODO after workspace will be ready change delete action
+    public function beforeDelete()
+    {
+        UserDepartment::deleteAll(['user_id' => $this->id]);
+
+        return parent::beforeDelete();
+    }
 }
