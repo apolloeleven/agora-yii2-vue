@@ -5,6 +5,12 @@
         @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')" scrollable>
       <content-spinner :show="loading" :text="$t('Please wait...')" :fullscreen="true" class="h-100"/>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
+        <b-card header-tag="header" class="form-cards mb-2" body-class="pb-0">
+          <input-widget v-if="model.status" style="color: green" size="lg" type="checkbox"
+                        :model="model" attribute="status" :is-switch="true"/>
+          <input-widget v-else style="color: red" size="lg" type="checkbox"
+                        :model="model" attribute="status" :is-switch="true"/>
+        </b-card>
         <div class="row">
           <div class="col-md-12">
             <input-widget :model="model" attribute="email"/>
@@ -134,7 +140,7 @@ export default {
       showModal: state => state.modal.show,
       object: state => state.modal.object,
       dropdownData: state => state.modalDropdownData
-    })
+    }),
   },
   watch: {
     object() {
@@ -177,6 +183,7 @@ export default {
       let keyToRename = data['userDepartments'];
       delete data['userDepartments'];
       data['userDepartmentsData'] = keyToRename;
+      data.status = data.status ? 1 : 2;
       const {success, body} = await employeeService.updateUserData(data);
       if (success) {
         this.hideModal();
@@ -193,6 +200,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 
 </style>

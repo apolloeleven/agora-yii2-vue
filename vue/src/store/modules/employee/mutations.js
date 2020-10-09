@@ -21,6 +21,7 @@ export default {
       last_name: payload.last_name,
       roles: payload.roles,
       userDepartments: payload.userDepartments,
+      status: payload.status,
     }
   },
 

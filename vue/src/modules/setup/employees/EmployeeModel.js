@@ -8,6 +8,7 @@ export default class EmployeeModel extends BaseModel {
   first_name = null;
   last_name = null;
   email = null;
+  status = false;
   roles = []
   userDepartments = [];
 
@@ -24,11 +25,11 @@ export default class EmployeeModel extends BaseModel {
     email: i18n.t('Email'),
     first_name: i18n.t('First Name'),
     last_name: i18n.t('Last Name'),
+    status: i18n.t('Activate User'),
   };
 
   constructor(data = {}) {
     super();
-
     const userDepartments = [];
 
     if (data.userDepartments) {
@@ -49,6 +50,7 @@ export default class EmployeeModel extends BaseModel {
         }
       }
     }
+    data.status = data.status === 1;
     data.userDepartments = userDepartments;
     data.roles = roles;
     Object.assign(this, {...data});
