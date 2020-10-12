@@ -2,10 +2,16 @@
 
 namespace app\modules\v1\workspaces\models;
 
-use app\models\User;
+use app\modules\v1\users\models\query\UserQuery;
+use app\modules\v1\users\models\User;
+use app\modules\v1\workspaces\models\query\TimelinePostQuery;
+use app\modules\v1\workspaces\models\query\WorkspaceQuery;
+use app\modules\v1\workspaces\models\query\WorkspaceTimelinePostQuery;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%workspace_timeline_posts}}".
@@ -23,7 +29,7 @@ use yii\behaviors\TimestampBehavior;
  * @property User $updatedBy
  * @property Workspace $workspace
  */
-class WorkspaceTimelinePost extends \yii\db\ActiveRecord
+class WorkspaceTimelinePost extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -31,6 +37,17 @@ class WorkspaceTimelinePost extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%workspace_timeline_posts}}';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return array_merge(parent::behaviors(), [
+            TimestampBehavior::class,
+            BlameableBehavior::class,
+        ]);
     }
 
     /**
@@ -53,28 +70,20 @@ class WorkspaceTimelinePost extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'workspace_id' => 'Workspace ID',
-            'timeline_post_id' => 'Timeline Post ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
+            'id' => Yii::t('app', 'ID'),
+            'workspace_id' => Yii::t('app', 'Workspace ID'),
+            'timeline_post_id' => Yii::t('app', 'Timeline Post ID'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'created_by' => Yii::t('app', 'Created By'),
+            'updated_by' => Yii::t('app', 'Updated By'),
         ];
-    }
-
-    public function behaviors()
-    {
-        return array_merge(parent::behaviors(), [
-            TimestampBehavior::class,
-            BlameableBehavior::class,
-        ]);
     }
 
     /**
      * Gets query for [[CreatedBy]].
      *
-     * @return \yii\db\ActiveQuery|\app\models\query\UserQuery
+     * @return ActiveQuery|UserQuery
      */
     public function getCreatedBy()
     {
@@ -84,7 +93,7 @@ class WorkspaceTimelinePost extends \yii\db\ActiveRecord
     /**
      * Gets query for [[TimelinePost]].
      *
-     * @return \yii\db\ActiveQuery|\app\modules\v1\workspaces\models\query\TimelinePostQuery
+     * @return ActiveQuery|TimelinePostQuery
      */
     public function getTimelinePost()
     {
@@ -94,7 +103,7 @@ class WorkspaceTimelinePost extends \yii\db\ActiveRecord
     /**
      * Gets query for [[UpdatedBy]].
      *
-     * @return \yii\db\ActiveQuery|\app\models\query\UserQuery
+     * @return ActiveQuery|UserQuery
      */
     public function getUpdatedBy()
     {
@@ -104,7 +113,7 @@ class WorkspaceTimelinePost extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Workspace]].
      *
-     * @return \yii\db\ActiveQuery|\app\modules\v1\workspaces\models\query\WorkspaceQuery
+     * @return ActiveQuery|WorkspaceQuery
      */
     public function getWorkspace()
     {
@@ -113,10 +122,10 @@ class WorkspaceTimelinePost extends \yii\db\ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return \app\modules\v1\workspaces\models\query\WorkspaceTimelinePostQuery the active query used by this AR class.
+     * @return WorkspaceTimelinePostQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \app\modules\v1\workspaces\models\query\WorkspaceTimelinePostQuery(get_called_class());
+        return new WorkspaceTimelinePostQuery(get_called_class());
     }
 }

@@ -8,10 +8,10 @@
 namespace app\modules\v1\workspaces\controllers;
 
 
-use app\modules\v1\workspaces\models\search\TimelinePostSearch;
 use app\modules\v1\workspaces\resources\TimelinePostResource;
 use app\rest\ActiveController;
-use yii\db\ActiveQuery;
+use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 
 class TimelineController extends ActiveController
@@ -47,7 +47,10 @@ class TimelineController extends ActiveController
 
     public function prepareDataProvider()
     {
-        $query = new TimelinePostSearch();
-        return $query->search(\Yii::$app->request->get());
+        $query = TimelinePostResource::find()->byWorkspaceId(Yii::$app->request->get('workspace_id'));
+
+        return new ActiveDataProvider([
+            'query' => $query,
+        ]);
     }
 }

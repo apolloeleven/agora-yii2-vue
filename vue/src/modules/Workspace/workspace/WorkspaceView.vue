@@ -17,7 +17,7 @@
           <h4 class="border-bottom pb-1 mb-3">{{ $t('Timeline') }}
             <b-button class="float-right" @click="showTimelineModal" size="sm" variant="outline-primary">
               <i class="fas fa-plus-circle"/>
-              {{$t('Write on timeline')}}
+              {{ $t('Write on timeline') }}
             </b-button>
           </h4>
         </div>
@@ -39,9 +39,15 @@ export default {
   computed: {
     ...mapState(['breadCrumb']),
   },
+  watch: {
+    '$route.params.id': function (id) {
+      this.getBreadCrumb();
+      this.getTimelinePosts(id);
+    }
+  },
   methods: {
     ...mapActions(['getWorkspaceBreadCrumb']),
-    ...mapTimelineActions(['showTimelineModal']),
+    ...mapTimelineActions(['showTimelineModal', 'getTimelinePosts']),
     async getBreadCrumb() {
       const res = await this.getWorkspaceBreadCrumb(this.$route.params.id)
       if (!res.success) {
@@ -51,7 +57,8 @@ export default {
     }
   },
   mounted() {
-    this.getBreadCrumb()
+    this.getBreadCrumb();
+    this.getTimelinePosts(this.$route.params.id);
   }
 }
 </script>

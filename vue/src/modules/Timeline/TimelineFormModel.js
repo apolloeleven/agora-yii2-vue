@@ -18,7 +18,7 @@ export default class TimelineFormModel extends BaseModel {
     description: i18n.t('Description'),
   }
 
-  constructor() {
+  constructor(data = {}) {
     super();
     Object.assign(this, {...data});
   }
