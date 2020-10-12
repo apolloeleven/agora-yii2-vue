@@ -12,28 +12,19 @@
         <router-link :to="{name: 'workspace.view', params: {id: workspace.id}}">{{ workspace.name }}</router-link>
       </b-card-title>
     </b-card-body>
-    <b-dropdown class="actions-button" variant="link" no-caret right>
-      <template v-slot:button-content>
-        <b-button size="sm" pill variant="light">
-          <i class="fas fa-ellipsis-v"></i>
-        </b-button>
-      </template>
-      <edit-button :model="workspace" type="workspace"/>
-      <delete-button :model="workspace" type="workspace"/>
-    </b-dropdown>
+    <dropdown-button :model="workspace" type="workspace"/>
   </b-card>
 </template>
 
 <script>
 import {createNamespacedHelpers} from "vuex";
-import EditButton from "../components/EditButton";
-import DeleteButton from "../components/DeleteButton";
+import DropdownButton from "../components/DropdownButton";
 
 const {mapActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "WorkspaceItem",
-  components: {DeleteButton, EditButton},
+  components: {DropdownButton},
   props: {
     index: Number,
     workspace: Object
@@ -63,11 +54,5 @@ export default {
       }
     }
   }
-}
-
-.actions-button {
-  position: absolute;
-  right: 0;
-  top: 0;
 }
 </style>

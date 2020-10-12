@@ -15,6 +15,7 @@ import FavouritesService from "./AddToFavourites/FavouritesService";
 
 const {mapActions} = createNamespacedHelpers('workspace');
 const {mapActions: mapArticleActions} = createNamespacedHelpers('article');
+const {mapActions: mapTimelineActions} = createNamespacedHelpers('timeline');
 
 export default {
   name: "DeleteButton",
@@ -26,6 +27,7 @@ export default {
   methods: {
     ...mapActions(['deleteWorkspace']),
     ...mapArticleActions(['deleteArticle']),
+    ...mapTimelineActions(['deleteTimelinePost']),
     async onDeleteClick() {
       if (this.type === 'workspace') {
         const result = await this.$confirm(this.$t('All users and timeline records will be removed from this workspace. Are you sure you want to continue?'),
@@ -34,6 +36,17 @@ export default {
           const res = await this.deleteWorkspace(this.model);
           if (res.success) {
             this.$toast(this.$t(`The workspace '{name}' was successfully deleted`, {name: this.model.name}));
+          } else {
+            this.$toast(res.body.message, 'danger');
+          }
+        }
+      } else if (this.type === 'timeline') {
+        const result = await this.$confirm(this.$t('All timeline records and attachments will be deleted from this timeline. Are you sure you want to continue?'),
+          this.$t('This operation can not be undone'))
+        if (result) {
+          const res = await this.deleteTimelinePost(this.model);
+          if (res.success) {
+            this.$toast(this.$t(`The timeline item was successfully deleted`));
           } else {
             this.$toast(res.body.message, 'danger');
           }

@@ -16,29 +16,19 @@
         <div class="article-description mb-0" v-html="model.short_description"></div>
       </b-media>
     </b-card-body>
-
-    <b-dropdown class="actions-button" variant="link" no-caret right>
-      <template v-slot:button-content>
-        <b-button size="sm" pill variant="light">
-          <i class="fas fa-ellipsis-v fa-lg"></i>
-        </b-button>
-      </template>
-      <edit-button :model="model" :type="modalType"/>
-      <delete-button :model="model" :type="modalType"/>
-    </b-dropdown>
+    <dropdown-button :model="model" :type="modalType"/>
   </b-card>
 </template>
 
 <script>
 import {createNamespacedHelpers} from "vuex";
-import EditButton from "../components/EditButton";
-import DeleteButton from "../components/DeleteButton";
+import DropdownButton from "../components/DropdownButton";
 
 const {mapState, mapActions} = createNamespacedHelpers('article')
 
 export default {
   name: "ArticleChildItem",
-  components: {DeleteButton, EditButton},
+  components: {DropdownButton},
   props: {
     model: Object,
     index: Number
@@ -52,12 +42,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.actions-button {
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-
 .article-item {
   .media-body {
     display: flex;

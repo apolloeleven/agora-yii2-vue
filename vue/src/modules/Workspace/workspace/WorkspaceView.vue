@@ -50,11 +50,17 @@
           </div>
           <div class="col-sm-12 col-lg-6 col-xl-5 order-lg-2 mb-4 col-timeline">
             <h4 class="border-bottom pb-1 mb-3">{{ $t('Timeline') }}
-              <b-button class="float-right" @click="showTimelineModal" size="sm" variant="outline-primary">
+              <b-button class="float-right" @click="showTimelineForm" size="sm" variant="outline-primary">
                 <i class="fas fa-plus-circle"/>
                 {{ $t('Write on timeline') }}
               </b-button>
             </h4>
+            <div class="timeline-records">
+              <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
+              <no-data :model="timelineData" :loading="loading" :text="$t('Nothing is shared on timeline')"></no-data>
+              <TimelineItem v-for="(timeline, index) in timelineData" :timeline="timeline"
+                            :index="index" :key="timeline.id"/>
+            </div>
           </div>
         </div>
       </div>
@@ -69,14 +75,15 @@ import ArticleItem from "../article/ArticleItem";
 import ContentSpinner from "../../../core/components/ContentSpinner";
 import NoData from "../components/NoData";
 import WorkspaceUsers from "./WorkspaceUsers";
+import TimelineItem from "../../Timeline/TimelineItem";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace')
 const {mapState: mapArticleStates, mapActions: mapArticleActions} = createNamespacedHelpers('article')
-const {mapActions: mapTimelineActions} = createNamespacedHelpers('timeline');
+const {mapActions: mapTimelineActions, mapState:mapTimelineState} = createNamespacedHelpers('timeline');
 
 export default {
   name: "WorkspaceView",
-  components: {WorkspaceUsers, NoData, ContentSpinner, ArticleItem, BackButton},
+  components: {TimelineItem, WorkspaceUsers, NoData, ContentSpinner, ArticleItem, BackButton},
   data() {
     return {
       visible: false,
@@ -85,6 +92,7 @@ export default {
   computed: {
     ...mapState(['breadCrumb', 'currentWorkspace', 'employees']),
     ...mapArticleStates(['articles', 'loading']),
+    ...mapTimelineState(['timelineData']),
   },
   watch: {
     '$route.params.id': function (id) {
@@ -107,6 +115,9 @@ export default {
     },
     showModal() {
       this.showArticleModal({isArticle: false, article: null})
+    },
+    showTimelineForm() {
+      this.showTimelineModal(null);
     },
   },
   mounted() {

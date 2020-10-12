@@ -10,26 +10,17 @@
           <div v-html="article.short_description"></div>
         </b-media>
       </router-link>
-      <b-dropdown class="actions-button" variant="link" no-caret right>
-        <template v-slot:button-content>
-          <b-button size="sm" pill variant="light">
-            <i class="fas fa-ellipsis-v"></i>
-          </b-button>
-        </template>
-        <edit-button :model="article" type="folder"/>
-        <delete-button :model="article" type="folder"/>
-      </b-dropdown>
+      <dropdown-button :model="article" type="folder"/>
     </b-card>
   </div>
 </template>
 
 <script>
-import EditButton from "../components/EditButton";
-import DeleteButton from "../components/DeleteButton";
+import DropdownButton from "../components/DropdownButton";
 
 export default {
   name: "ArticleItem",
-  components: {DeleteButton, EditButton},
+  components: {DropdownButton},
   props: {
     article: Object,
     index: Number
@@ -38,9 +29,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.actions-button {
-  position: absolute;
-  right: 0;
-  top: 0;
-}
 </style>
