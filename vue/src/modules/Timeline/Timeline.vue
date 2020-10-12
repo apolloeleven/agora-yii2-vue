@@ -13,10 +13,7 @@ export default {
     ...mapState(['loading', 'data'])
   },
   methods: {
-    ...mapActions(['showTimelineModal', 'getData']),
-    showModal() {
-      this.showTimelineModal();
-    },
+    ...mapActions(['getData']),
   },
   created() {
     this.getData();

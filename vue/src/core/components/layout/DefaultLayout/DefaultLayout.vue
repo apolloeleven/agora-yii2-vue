@@ -10,21 +10,24 @@
     </div>
     <employee-form-modal/>
     <WorkspaceForm/>
+    <TimelineForm/>
   </div>
 </template>
 
 <script>
 import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
-import WorkspaceForm from "../../../../modules/Workspace/workspace/WorkspaceForm";
+import WorkspaceForm from "@/modules/Workspace/workspace/WorkspaceForm";
 import {mapState, createNamespacedHelpers} from 'vuex';
 
 const {mapActions} = createNamespacedHelpers('user');
 import EmployeeFormModal from "@/modules/setup/employees/EmployeeFormModal";
+import TimelineForm from "@/modules/Timeline/TimelineForm";
 
 export default {
   name: "DefaultLayout",
   components: {
+    TimelineForm,
     EmployeeFormModal,
     Sidebar,
     Navbar,

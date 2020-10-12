@@ -11,6 +11,10 @@ export function showTimelineModal({commit}) {
   commit(SHOW_TIMELINE_MODAL)
 }
 
+export function hideTimelineModal({commit}) {
+  commit(HIDE_TIMELINE_MODAL)
+}
+
 export async function getData({commit}) {
   commit(SET_TIMELINE_LOADING, true);
   const {success, body} = await httpService.get('/v1/workspaces/timeline?expand=timelinePost&sort=-created_at');

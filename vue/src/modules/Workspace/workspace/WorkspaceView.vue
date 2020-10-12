@@ -14,7 +14,12 @@
           <h4 class="border-bottom pb-1 mb-3">{{ $t('Folders') }}</h4>
         </div>
         <div class="col-sm-12 col-lg-6 col-xl-5 order-lg-2 mb-4 col-timeline">
-          <h4 class="border-bottom pb-1 mb-3">{{ $t('Timeline') }}</h4>
+          <h4 class="border-bottom pb-1 mb-3">{{ $t('Timeline') }}
+            <b-button class="float-right" @click="showTimelineModal" size="sm" variant="outline-primary">
+              <i class="fas fa-plus-circle"/>
+              {{$t('Write on timeline')}}
+            </b-button>
+          </h4>
         </div>
       </div>
     </div>
@@ -26,6 +31,7 @@ import BackButton from "../components/BackButton";
 import {createNamespacedHelpers} from "vuex";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace')
+const {mapActions: mapTimelineActions} = createNamespacedHelpers('timeline');
 
 export default {
   name: "WorkspaceView",
@@ -35,6 +41,7 @@ export default {
   },
   methods: {
     ...mapActions(['getWorkspaceBreadCrumb']),
+    ...mapTimelineActions(['showTimelineModal']),
     async getBreadCrumb() {
       const res = await this.getWorkspaceBreadCrumb(this.$route.params.id)
       if (!res.success) {
