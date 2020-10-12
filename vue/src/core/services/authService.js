@@ -62,7 +62,7 @@ export default {
    * @param data
    */
   async login(data) {
-    let res = await httpService.post('/user/login', data);
+    let res = await httpService.post('v1/users/auth/login', data);
 
     if (res.success) {
       this.setToken(res.body.access_token);
@@ -77,7 +77,7 @@ export default {
    * @returns {Promise<any>}
    */
   async register(data) {
-    return await httpService.post('/user/signup', data);
+    return await httpService.post('v1/users/auth/signup', data);
   },
 
   /**
@@ -85,7 +85,7 @@ export default {
    * @returns {Promise<any>}
    */
   async resetPasswordLink(email) {
-    return await httpService.post('/user/send-password-reset-link', email);
+    return await httpService.post('v1/users/auth/send-password-reset-link', email);
   },
 
   /**
@@ -93,7 +93,7 @@ export default {
    * @param data
    */
   async passwordReset(data) {
-    return await httpService.post('/user/password-reset', data);
+    return await httpService.post('v1/users/auth/password-reset', data);
   },
 
   /**
@@ -101,6 +101,6 @@ export default {
    * @returns {Promise<unknown>}
    */
   async checkToken(token) {
-    return await httpService.get('/user/check-token-validity?token=' + token);
+    return await httpService.get('v1/users/auth/check-token-validity?token=' + token);
   },
 }

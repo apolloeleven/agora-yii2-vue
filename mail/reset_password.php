@@ -1,9 +1,10 @@
 <?php
 
+use app\modules\v1\users\models\User;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-/* @var $user app\models\User */
+/* @var $user User */
 ?>
 
 <p><?php echo Yii::t('app', 'Hello') ?> <?= $user->username ?>,</p>

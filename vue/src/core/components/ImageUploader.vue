@@ -77,7 +77,6 @@ export default {
       });
     },
     onFileChoose(ev) {
-      debugger;
       this.imageSrc = '';
       this.hasImage = true;
       this.imageRemoved = false;

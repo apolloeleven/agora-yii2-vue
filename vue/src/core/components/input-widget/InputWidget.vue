@@ -1,6 +1,7 @@
 <template>
   <ValidationProvider :name="`${attribute}-${uuid}`" :rules="model.getRules(attribute, rules || null)"
-                      :customMessages="model.getMessages(attribute, rules || null)" v-slot="v" tag="div" :vid="vid">
+                      :customMessages="model.getMessages(attribute, rules || null)" v-slot="v"
+                      tag="div" :vid="vid || attribute">
     <b-form-group v-if="isInput() || isTextarea()">
       <label v-if="computedLabel">
         {{ computedLabel }}
@@ -49,7 +50,8 @@
         <b-form-select v-if="isSelect()" ref="currentInput" :size="size" :disabled="disabled" :options="selectOptions"
                        :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
                        :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
-                       @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
+                       @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)" :value-field="valueField"
+                       :text-field="textField"
         />
 
         <datePicker v-if="isDate()" ref="currentInput" :size="size" :disabled="disabled" :config="datePickerOptions"
@@ -104,10 +106,10 @@
           </b-input-group-text>
         </template>
         <b-form-tags ref="currentInput" :size="size" :disabled="disabled"
-                      :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
-                      :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
-                      @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
-                      :placeholder="computedPlaceholder" :min="min"/>
+                     :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
+                     :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
+                     @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
+                     :placeholder="computedPlaceholder" :min="min"/>
       </b-input-group>
     </b-form-group>
     <b-form-group v-if="isCheckbox()">
@@ -223,6 +225,14 @@ export default {
       type: Boolean,
       default: false
     },
+    valueField: {
+      type: String,
+      default: 'value'
+    },
+    textField: {
+      type: String,
+      default: 'text'
+    }
   },
   data() {
     return {

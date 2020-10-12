@@ -18,6 +18,15 @@ const STATE = {
     loading: false,
     show: false,
     data: {}
+  },
+  invitations: {
+    loading: false,
+    data: {}
+  },
+  invitationModal: {
+    loading: false,
+    show: false,
+    data: {}
   }
 };
 
