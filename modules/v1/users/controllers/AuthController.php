@@ -8,6 +8,7 @@ use app\modules\v1\users\models\SignupForm;
 use app\modules\v1\users\models\User;
 use app\modules\v1\users\resources\InvitationResource;
 use app\rest\Controller;
+use app\rest\ValidationException;
 use Yii;
 use yii\base\Exception;
 
@@ -18,15 +19,19 @@ use yii\base\Exception;
  */
 class AuthController extends Controller
 {
+    /**
+     * @return array
+     * @throws ValidationException
+     */
     public function actionLogin()
     {
         $request = Yii::$app->request;
         $model = new LoginForm();
 
-        if (!$model->load($request->post(), '') || !$model->validate() || !$model->login()) {
+        if (!$model->load($request->post(), '') || $model->isNotActiveUser($request->post('username')) || !$model->validate() || !$model->login()) {
             return $this->validationError($model->getFirstErrors());
         }
-        return $model->getUser()->getApiData();
+        return $model->getActiveUser()->getApiData();
     }
 
     /**

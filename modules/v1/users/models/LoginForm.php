@@ -62,10 +62,10 @@ class LoginForm extends Model
     public function validatePassword(string $attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $user = $this->getUser();
+            $user = $this->getActiveUser();
 
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+                $this->addError($attribute, Yii::t('app', 'Incorrect username or password.'));
             }
         }
     }
@@ -79,7 +79,7 @@ class LoginForm extends Model
         if (!$this->validate()) {
             return false;
         }
-        $isLogin = Yii::$app->user->login($this->getUser(), $this->rememberMe ? self::REMEMBER_ME_DURATION_TIME : 0);
+        $isLogin = Yii::$app->user->login($this->getActiveUser(), $this->rememberMe ? self::REMEMBER_ME_DURATION_TIME : 0);
         if (!$isLogin) {
             return false;
         }
@@ -90,19 +90,15 @@ class LoginForm extends Model
     }
 
     /**
-     * Finds user by [[username]] or [[email]]
+     * Finds active user by [[username]] or [[email]]
      *
      * @return User|null
      */
-    public function getUser()
+    public function getActiveUser()
     {
         if ($this->_user === false) {
             $this->_user = User::find()
-                ->andWhere([
-                    'OR',
-                    ['username' => $this->username],
-                    ['email' => $this->username]
-                ])
+                ->byEmailOrUsername($this->username)
                 ->active()
                 ->one();
         }
@@ -116,19 +112,12 @@ class LoginForm extends Model
      * @param $username
      * @return User|array|false|ActiveRecord
      */
-    public function getUserByUsername($username)
+    public function isNotActiveUser($username)
     {
-        $user = User::find()
-            ->andWhere([
-                'OR',
-                ['username' => $username],
-                ['email' => $username]
-            ])
-            ->active()
-            ->one();
-        if (!$user) {
-            return false;
+        if (User::find()->byEmailOrUsername($username)->notActive()->one()) {
+            $this->addError('password', Yii::t('app', 'Your account must be activated by admin'));
+            return true;
         }
-        return $user;
+        return false;
     }
 }
