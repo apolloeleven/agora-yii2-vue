@@ -8,7 +8,6 @@ use app\modules\v1\users\models\SignupForm;
 use app\modules\v1\users\models\User;
 use app\modules\v1\users\resources\InvitationResource;
 use app\rest\Controller;
-use app\rest\ValidationException;
 use Yii;
 use yii\base\Exception;
 
@@ -19,10 +18,6 @@ use yii\base\Exception;
  */
 class AuthController extends Controller
 {
-    /**
-     * @return array
-     * @throws ValidationException
-     */
     public function actionLogin()
     {
         $request = Yii::$app->request;
