@@ -72,6 +72,7 @@ $config = [
                         'v1/users/employee',
                         'v1/users/auth',
                         'v1/workspaces/workspace',
+                        'v1/workspaces/article',
                         'v1/workspaces/timeline'
                     ]
                 ]

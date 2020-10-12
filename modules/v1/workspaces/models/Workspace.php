@@ -24,9 +24,10 @@ use yii\db\ActiveRecord;
  * @property int|null $created_by
  * @property int|null $updated_by
  *
+ * @property Article[] $articles
  * @property User $createdBy
  * @property User $updatedBy
- * @property Workspace $userWorkspaces
+ * @property Workspace[] $userWorkspaces
  */
 class Workspace extends ActiveRecord
 {
@@ -122,5 +123,13 @@ class Workspace extends ActiveRecord
     public function getUserWorkspaces()
     {
         return $this->hasMany(UserWorkspace::class, ['workspace_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getArticles()
+    {
+        return $this->hasMany(Article::class, ['workspace_id' => 'id']);
     }
 }

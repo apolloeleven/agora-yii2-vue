@@ -12,6 +12,19 @@
   background-color: $menu-bg;
   @include transition(all $menu-toggle-transition-duration);
 
+  .menu-items-header {
+    padding: 12px 10px;
+    font-size: 15px;
+    font-weight: bold;
+    opacity: 0.8;
+    color: $info;
+
+    .menu-item-icon {
+      margin-right: 10px;
+      color: $info;
+    }
+  }
+
   .menu-heading {
     border-radius: 0;
     border: none;

@@ -11,7 +11,10 @@ import './plugins';
 import store from './store';
 import './index.scss';
 
-Vue.use(require('vue-moment'));
+import VueMoment from 'vue-moment';
+import moment from 'moment-timezone'
+
+Vue.use(VueMoment, {moment});
 Vue.config.productionTip = false;
 
 new Vue({

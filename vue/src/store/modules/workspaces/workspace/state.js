@@ -3,9 +3,10 @@ const STATE = {
   loading: false,
   showModal: false,
   workspaces: [],
-  userWorkspaces: [],
   modalWorkspace: null,
   breadCrumb: [],
+  currentWorkspace: {},
+  employees: [],
 };
 
 export default STATE;

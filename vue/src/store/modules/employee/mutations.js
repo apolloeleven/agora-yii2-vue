@@ -19,7 +19,7 @@ export default {
       email: payload.email,
       first_name: payload.first_name,
       last_name: payload.last_name,
-      roles: payload.roles,
+      userWorkspaces: payload.userWorkspaces,
       userDepartments: payload.userDepartments,
     }
   },

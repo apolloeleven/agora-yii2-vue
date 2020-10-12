@@ -20,7 +20,9 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "vlucas/phpdotenv": "^5.1@dev",
-        "intermundia/yii2-mailer": "*"
+        "intermundia/yii2-mailer": "*",
+        "creocoder/yii2-nested-sets": "^0.9.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
