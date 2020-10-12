@@ -22,6 +22,7 @@ import {createNamespacedHelpers} from "vuex";
 import UserInvitationFormModel from "./UserInvitationFormModel";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import ContentSpinner from "../../../core/components/ContentSpinner";
+import i18n from "@/shared/i18n";
 
 const {mapState, mapActions} = createNamespacedHelpers('setup');
 
@@ -58,7 +59,11 @@ export default {
         this.$toast(this.$t(`Email '{email}' was successfully invited`, {email: this.model.email}));
         this.hideInvitationModal();
       } else {
-        this.model.setMultipleErrors([{field: 'email', message: res.body.message}]);
+        if (res.status === 422) {
+          this.model.setMultipleErrors(res.body);
+        } else {
+          this.$alert(res.body.message || i18n.t('There was a problem... Try again later...'))
+        }
       }
     },
   },

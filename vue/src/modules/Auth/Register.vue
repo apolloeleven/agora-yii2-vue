@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-md-4">
-      <div class="auth-left">
+      <div class="auth-left mb-3">
         <img src="/assets/img/apollo11-white.png" alt="" style="width: 80px"/>
         <h3>{{ $t('Welcome') }}</h3>
         <p>You are 30 seconds away from entering in <b>Agora!</b></p>

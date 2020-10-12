@@ -1,5 +1,6 @@
 import httpService from "./httpService";
 import {AUTH_TOKEN, CURRENT_USER, REDIRECT_TO} from "../../constants";
+import router from "@/shared/router";
 
 export default {
 
@@ -17,6 +18,7 @@ export default {
 
   logout() {
     localStorage.removeItem(AUTH_TOKEN);
+    router.push({name: 'auth.login'});
   },
 
   /**
