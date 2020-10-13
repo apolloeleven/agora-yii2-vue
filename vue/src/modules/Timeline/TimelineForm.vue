@@ -10,9 +10,9 @@
           <b-form-select v-model="model.workspace_id" :options="userWorkspaceOptions"/>
         </b-form-group>
 
-        <b-form-group v-if="!model.id" :label="$t('Select Image or Video File')">
-          <b-form-file v-model="model.file"/>
-        </b-form-group>
+        <input-widget
+          :model="model" attribute="file" type="file" :placeholder="$t('Choose a file or drop it here...')">
+        </input-widget>
 
         <input-widget :model="model" attribute="description" type="richtext"/>
       </b-form>
@@ -82,7 +82,7 @@ export default {
         }
         this.hideModal()
       } else {
-        this.$toast(res.body.message, 'danger');
+        this.model.setMultipleErrors(res.body);
       }
     },
     hideModal() {

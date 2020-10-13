@@ -14,6 +14,7 @@ export default class TimelineFormModel extends BaseModel {
   }
 
   attributeLabels = {
+    file: i18n.t('Select Image or Video File'),
     description: i18n.t('Description'),
   }
 
