@@ -14,20 +14,19 @@ const url = '/v1/workspaces/workspace'
  * Show workspace form's modal
  *
  * @param { function } commit
- * @param { bool } showModal
+ * @param { Object } data
  */
-export function showWorkspaceModal({commit}, showModal) {
-  commit(SHOW_WORKSPACE_MODAL, showModal);
+export function showWorkspaceModal({commit}, data) {
+  commit(SHOW_WORKSPACE_MODAL, data);
 }
 
 /**
  * Hide workspace form's modal
  *
  * @param { function } commit
- * @param { bool } hideModal
  */
-export function hideWorkspaceModal({commit}, hideModal) {
-  commit(HIDE_WORKSPACE_MODAL, hideModal);
+export function hideWorkspaceModal({commit}) {
+  commit(HIDE_WORKSPACE_MODAL);
 }
 
 /**

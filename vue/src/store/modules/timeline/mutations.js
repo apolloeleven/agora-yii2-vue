@@ -1,29 +1,33 @@
 import {
   SHOW_TIMELINE_MODAL,
-  SET_TIMELINE_DATA,
-  SET_TIMELINE_LOADING,
+  GET_TIMELINE_DATA,
   HIDE_TIMELINE_MODAL,
-  SET_DROPDOWN_DATA
+  CHANGE_LOADING,
+  DELETED_TIMELINE_POST,
 } from './mutation-types'
 
 export default {
-  [SHOW_TIMELINE_MODAL](state) {
+  [SHOW_TIMELINE_MODAL](state, data) {
     state.showModal = true;
+    state.modalTimeline = data;
   },
 
   [HIDE_TIMELINE_MODAL](state) {
     state.showModal = false;
+    state.modalTimeline = null;
   },
 
-  [SET_TIMELINE_LOADING](state, loading) {
-    state.loading = loading;
+  [GET_TIMELINE_DATA](state, data) {
+    state.loading = false;
+    state.timelineData = data;
   },
 
-  [SET_TIMELINE_DATA](state, data) {
-    state.data = data;
+  [CHANGE_LOADING](state) {
+    state.loading = !state.loading;
   },
 
-  [SET_DROPDOWN_DATA](state, data) {
-    state.dropdownData['userWorkspaces'] = data
-  }
+  [DELETED_TIMELINE_POST](state, id) {
+    state.timelineData = state.timelineData.filter(t => t.id !== id)
+  },
+
 }

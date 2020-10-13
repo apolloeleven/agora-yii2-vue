@@ -24,7 +24,14 @@ class TimelinePostResource extends TimelinePost
 
     public function fields()
     {
-        return parent::fields();
+        return array_merge(parent::fields(), [
+            'created_at' => function () {
+                return $this->created_at * 1000;
+            },
+            'updated_at' => function () {
+                return $this->updated_at * 1000;
+            },
+        ]);
     }
 
     public function attributes()
@@ -115,11 +122,11 @@ class TimelinePostResource extends TimelinePost
     }
 
     /**
-     * Delete Workspace Timeline Posts after Timeline Post is deleted
+     * Delete Workspace Timeline Posts before Timeline Post is deleted
      */
-    public function afterDelete()
+    public function beforeDelete()
     {
-        parent::afterDelete();
         WorkspaceTimelinePostResource::deleteAll(['timeline_post_id' => $this->id]);
+        return parent::beforeDelete();
     }
 }

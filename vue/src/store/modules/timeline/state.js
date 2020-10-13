@@ -1,8 +1,8 @@
 const STATE = {
   loading: false,
   showModal: false,
-  dropdownData: {},
-  data: []
+  timelineData: [],
+  modalTimeline: null,
 }
 
 export default STATE;

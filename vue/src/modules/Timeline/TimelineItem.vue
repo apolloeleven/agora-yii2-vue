@@ -20,8 +20,6 @@
 </template>
 
 <script>
-import EditButton from "../Workspace/components/EditButton";
-import DeleteButton from "../Workspace/components/DeleteButton";
 import DropdownButton from "../Workspace/components/DropdownButton";
 
 export default {
@@ -35,9 +33,5 @@ export default {
 </script>
 
 <style scoped>
-.actions-button {
-  position: absolute;
-  right: 0;
-  top: 0;
-}
+
 </style>
