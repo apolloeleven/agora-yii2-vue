@@ -85,6 +85,7 @@ class ArticleController extends ActiveController
      *
      * @param $articleId
      * @return array
+     * @throws ValidationException
      */
     public function actionGetBreadCrumb($articleId)
     {

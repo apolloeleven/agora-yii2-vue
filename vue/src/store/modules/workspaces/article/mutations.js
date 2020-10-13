@@ -7,6 +7,15 @@ import {
   ARTICLE_DELETED,
   GET_BREAD_CRUMB,
   GET_CURRENT_ARTICLE,
+  GET_ATTACH_CONFIG,
+  GET_ARTICLES_FILES,
+  SHOW_EDIT_LABEL_DIALOG,
+  HIDE_EDIT_LABEL_DIALOG,
+  UPDATE_LABEL,
+  SHOW_PREVIEW_MODAL,
+  HIDE_PREVIEW_MODAL,
+  CHANGE_CAROUSEL,
+  SORT_ATTACHMENT,
 } from "./mutation-types";
 
 export default {
@@ -67,5 +76,117 @@ export default {
    */
   [GET_CURRENT_ARTICLE](state, data) {
     state.currentArticle = data || {}
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_ATTACH_CONFIG](state, data) {
+    state.attachConfig = data
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_ARTICLES_FILES](state, data) {
+    state.articleFiles = data
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [SHOW_EDIT_LABEL_DIALOG](state, data) {
+    state.articleFile.showModal = true;
+    state.articleFile.file = data;
+  },
+  /**
+   *
+   * @param state
+   */
+  [HIDE_EDIT_LABEL_DIALOG](state) {
+    state.articleFile.showModal = false;
+    state.articleFile.file = null;
+  },
+  /**
+   *
+   * @param state
+   * @param id
+   * @param label
+   */
+  [UPDATE_LABEL](state, {id, label}) {
+    const file = state.articleFiles.find(a => a.id === id);
+    if (file) file.label = label;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [SHOW_PREVIEW_MODAL](state, data) {
+    state.previewModal.show = true;
+    state.previewModal.files = data.files;
+    state.previewModal.activeFile = data.activeFile;
+  },
+  /**
+   *
+   * @param state
+   */
+  [HIDE_PREVIEW_MODAL](state) {
+    state.previewModal.show = false;
+  },
+  /**
+   *
+   * @param state
+   * @param index
+   */
+  [CHANGE_CAROUSEL](state, index) {
+    state.previewModal.activeFile = index;
+  },
+  /**
+   *
+   * @param state
+   * @param column
+   */
+  [SORT_ATTACHMENT](state, column) {
+    state.articleFiles = state.articleFiles
+      .sort((nextFile, prevFile) => {
+        let next;
+        let prev;
+        let comparison = 0;
+        let sortBy = column.sortBy;
+        let order = column.sortDesc ? 'desc' : 'asc';
+
+        if (sortBy !== 'updatedBy.displayName') {
+          if (!nextFile.hasOwnProperty(sortBy) || !prevFile.hasOwnProperty(sortBy)) {
+            return comparison;
+          }
+          let nextSortKey = sortBy, prevSortKey = sortBy;
+
+          if (sortBy === 'name') {
+            nextSortKey = nextFile['label'] ? 'label' : sortBy;
+            prevSortKey = prevFile['label'] ? 'label' : sortBy;
+          }
+          next = typeof nextFile[nextSortKey] === 'string' ? nextFile[nextSortKey].toUpperCase() : nextFile[nextSortKey];
+          prev = typeof prevFile[prevSortKey] === 'string' ? prevFile[prevSortKey].toUpperCase() : prevFile[prevSortKey];
+        } else {
+          let firstKey = 'updatedBy';
+          let secondKey = 'displayName';
+          if (!nextFile[firstKey].hasOwnProperty(secondKey) || !prevFile[firstKey].hasOwnProperty(secondKey)) {
+            return comparison;
+          }
+          next = typeof nextFile[firstKey][secondKey] === 'string' ? nextFile[firstKey][secondKey].toUpperCase() : nextFile[firstKey][secondKey];
+          prev = typeof prevFile[firstKey][secondKey] === 'string' ? prevFile[firstKey][secondKey].toUpperCase() : prevFile[firstKey][secondKey];
+        }
+
+        if (next > prev) {
+          comparison = 1;
+        } else if (next < prev) {
+          comparison = -1;
+        }
+        return order === 'desc' ? comparison * -1 : comparison;
+      });
   },
 };
