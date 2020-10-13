@@ -28,6 +28,7 @@ class TimelinePostResource extends TimelinePost
     {
         return [
             'id',
+            'action',
             'description',
             'file_url' => function () {
                 return $this->getFileUrl();
@@ -53,7 +54,7 @@ class TimelinePostResource extends TimelinePost
 
     public function extraFields()
     {
-        return ['workspace', 'workspaceTimelinePosts', 'workspace_id', 'createdBy'];
+        return ['workspaceTimelinePosts', 'createdBy', 'article'];
     }
 
     /**

@@ -41,7 +41,7 @@ class WorkspaceResource extends Workspace
      */
     public function extraFields()
     {
-        return ['createdBy', 'updatedBy'];
+        return ['createdBy', 'updatedBy', 'articles'];
     }
 
     /**

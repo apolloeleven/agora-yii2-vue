@@ -12,7 +12,8 @@ class m201013_125848_add_action_column_to_timeline_posts_table extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('{{%timeline_posts}}', 'action', $this->string(255)->after('id'));
+        $this->addColumn('{{%timeline_posts}}', 'article_id', $this->integer()->after('id'));
+        $this->addColumn('{{%timeline_posts}}', 'action', $this->string(255)->after('article_id'));
     }
 
     /**
@@ -20,6 +21,7 @@ class m201013_125848_add_action_column_to_timeline_posts_table extends Migration
      */
     public function safeDown()
     {
+        $this->dropColumn('{{%timeline_posts}}', 'article_id');
         $this->dropColumn('{{%timeline_posts}}', 'action');
     }
 }

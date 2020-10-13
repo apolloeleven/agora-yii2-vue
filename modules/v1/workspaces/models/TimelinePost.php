@@ -17,6 +17,7 @@ use yii\web\UploadedFile;
  * This is the model class for table "{{%timeline_posts}}".
  *
  * @property int $id
+ * @property int $article_id
  * @property string|null $action
  * @property string|null $description
  * @property string|null $file_path
@@ -25,6 +26,7 @@ use yii\web\UploadedFile;
  * @property int|null $created_by
  * @property int|null $updated_by
  *
+ * @property Article $article
  * @property User $createdBy
  * @property User $updatedBy
  * @property WorkspaceTimelinePost[] $workspaceTimelinePosts
@@ -62,7 +64,7 @@ class TimelinePost extends ActiveRecord
     {
         return [
             [['description'], 'string'],
-            [['created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['article_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['file_path'], 'string', 'max' => 1024],
             [['action'], 'string', 'max' => 255],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
@@ -78,6 +80,7 @@ class TimelinePost extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'article_id' => Yii::t('app', 'Article ID'),
             'action' => Yii::t('app', 'Action'),
             'description' => Yii::t('app', 'Description'),
             'file_path' => Yii::t('app', 'File Path'),
@@ -107,6 +110,14 @@ class TimelinePost extends ActiveRecord
     public function getUpdatedBy()
     {
         return $this->hasOne(User::class, ['id' => 'updated_by']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getArticle()
+    {
+        return $this->hasOne(Article::class, ['id' => 'article_id']);
     }
 
     /**
