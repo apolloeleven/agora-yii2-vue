@@ -10,7 +10,7 @@
           <b-form-select v-model="model.workspace_id" :options="userWorkspaceOptions"/>
         </b-form-group>
 
-        <input-widget
+        <input-widget v-if="!model.id"
           :model="model" attribute="file" type="file" :placeholder="$t('Choose a file or drop it here...')">
         </input-widget>
 

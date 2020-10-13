@@ -21,10 +21,10 @@
       <video v-else-if="fileService.isVideo(timeline.file_url)" controls class="video-preview">
         <source :src="timeline.file_url">
       </video>
-      <div class="row">
-        <div class="col">
-          <div class="p-3 description" v-html="timeline.description"></div>
-        </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="p-3 description" v-html="timeline.description"></div>
       </div>
     </div>
     <dropdown-button :model="timeline" type="timeline"/>
