@@ -25,6 +25,7 @@ export default {
       show: false,
       edit: false,
       selectedIds: [],
+      title: '',
       model: new TimelineFormModel(),
     }
   },
@@ -59,7 +60,7 @@ export default {
         const {success, body} = await this.shareToTimeline(this.model);
         if (success) {
           if (body.action === SHARE_ARTICLE) {
-            this.$toast(this.$t(`The article '{title}' was successfully shared on timeline`, {title: body.article.title}))
+            this.$toast(this.$t(`The article '{title}' was successfully shared on timeline`, {title: this.title}))
           } else if (body.action === SHARE_FILE) {
             this.$toast(this.$t(`{number} attachment(s) were successfully shared on timeline`, {number: this.selectedIds.length}))
           }
@@ -82,6 +83,7 @@ export default {
       this.model.article_id = articleModel.id;
       this.model.workspace_id = articleModel.workspace_id;
       this.selectedIds = selectedIds;
+      this.title = articleModel.title;
     });
     eventBus.$on(EDIT_TIMELINE, ({model}) => {
       this.show = true;

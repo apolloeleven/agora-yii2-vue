@@ -79,7 +79,9 @@
           <div class="col-sm-12 col-lg-6">
             <b-card class="article-item mb-3" no-body>
               <template v-slot:header>
-                <h5 class="mb-0">{{ currentArticle.title }}</h5>
+                <h5 class="mb-0">{{ currentArticle.title }}
+                  <AttachmentShareButton :model="currentArticle" :tag="'button'" modalType="article"/>
+                </h5>
               </template>
               <b-card-body>
                 <div class="article-content">
@@ -127,12 +129,21 @@ import ContentSpinner from "../../../core/components/ContentSpinner";
 import NoData from "../components/NoData";
 import AddToFavourites from "../components/AddToFavourites/AddToFavourites";
 import Attachments from "./attachment/Attachments";
+import AttachmentShareButton from "./attachment/AttachmentShareButton";
 
 const {mapState, mapActions} = createNamespacedHelpers('article')
 
 export default {
   name: "ArticleView",
-  components: {Attachments, AddToFavourites, NoData, ContentSpinner, ArticleChildItem, BackButton},
+  components: {
+    AttachmentShareButton,
+    Attachments,
+    AddToFavourites,
+    NoData,
+    ContentSpinner,
+    ArticleChildItem,
+    BackButton
+  },
   data() {
     return {
       visible: false,

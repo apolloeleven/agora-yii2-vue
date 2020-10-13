@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {eventBus, SHARE_TO_TIMELINE, SHARE_FILE} from "../../../../core/services/event-bus";
+import {eventBus, SHARE_TO_TIMELINE, SHARE_FILE, SHARE_ARTICLE} from "../../../../core/services/event-bus";
 
 export default {
   name: "AttachmentShareButton",
@@ -24,11 +24,21 @@ export default {
     fileIds: Array,
     tag: String,
     model: Object,
+    modalType: String,
+  },
+  computed: {
+    shareType() {
+      if (this.modalType === 'article') {
+        return SHARE_ARTICLE
+      } else {
+        return SHARE_FILE
+      }
+    }
   },
   methods: {
     onShareClick() {
       eventBus.$emit(SHARE_TO_TIMELINE, {
-        type: SHARE_FILE,
+        type: this.shareType,
         articleModel: this.model,
         selectedIds: this.fileIds,
       });
