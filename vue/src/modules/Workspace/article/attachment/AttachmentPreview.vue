@@ -69,7 +69,7 @@
 import AttachmentDownloadButton from "./AttachmentDownloadButton";
 import AttachmentDeleteButton from "./AttachmentDeleteButton";
 import {createNamespacedHelpers} from "vuex";
-import fileService from "./AttachmentFileService";
+import fileService from "../../../../core/services/fileService";
 
 const {mapState, mapActions} = createNamespacedHelpers('article');
 
