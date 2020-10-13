@@ -19,5 +19,7 @@
   "Change label for '{attachmentName}'": "Change label for '{attachmentName}'",
   "Are you sure you want to delete {count} attachment(s)?": "Are you sure you want to delete {count} attachment(s)?",
   "{count} attachment(s) were successfully deleted": "{count} attachment(s) were successfully deleted",
-  "{count} attachment(s) were not deleted": "{count} attachment(s) were not deleted"
+  "{count} attachment(s) were not deleted": "{count} attachment(s) were not deleted",
+  "{number} attachment(s) were successfully shared on timeline": "{number} attachment(s) were successfully shared on timeline",
+  "The article '{title}' was successfully shared on timeline": "The article '{title}' was successfully shared on timeline"
 }

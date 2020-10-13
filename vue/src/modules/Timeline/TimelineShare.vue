@@ -24,6 +24,7 @@ export default {
     return {
       show: false,
       edit: false,
+      selectedIds: [],
       model: new TimelineFormModel(),
     }
   },
@@ -55,13 +56,14 @@ export default {
           this.$toast(body.message, 'danger')
         }
       } else {
-        const {success, body} = await this.shareToTimeline();
+        const {success, body} = await this.shareToTimeline(this.model);
         if (success) {
           if (body.action === SHARE_ARTICLE) {
-            this.$toast(this.$t(`The article '{title}' was successfully shared on timeline`, {title: body.title}))
+            this.$toast(this.$t(`The article '{title}' was successfully shared on timeline`, {title: body.article.title}))
           } else if (body.action === SHARE_FILE) {
-            this.$toast(this.$t(`{number} attachment(s) were successfully shared on timeline`, {number: body.articleFiles.length}))
+            this.$toast(this.$t(`{number} attachment(s) were successfully shared on timeline`, {number: this.selectedIds.length}))
           }
+          this.hideModal();
         } else {
           this.$toast(body.message, 'danger')
         }
@@ -74,9 +76,12 @@ export default {
     }
   },
   mounted() {
-    eventBus.$on(SHARE_TO_TIMELINE, ({type}) => {
+    eventBus.$on(SHARE_TO_TIMELINE, ({type, articleModel, selectedIds}) => {
       this.show = true;
       this.model.action = type;
+      this.model.article_id = articleModel.id;
+      this.model.workspace_id = articleModel.workspace_id;
+      this.selectedIds = selectedIds;
     });
     eventBus.$on(EDIT_TIMELINE, ({model}) => {
       this.show = true;

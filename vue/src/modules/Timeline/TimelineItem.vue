@@ -10,13 +10,13 @@
 
           <span v-if="timeline.action === SHARE_ARTICLE">
             {{ $t('created article') }}
-            <router-link :to="{name: 'article.view', params: {id: timeline.id}}">
+            <router-link :to="{name: 'article.view', params: {id: timeline.article.id}}">
               {{ timeline.article.title }}
             </router-link>
           </span>
           <span v-else-if="timeline.action === SHARE_FILE">
                 {{ $t('uploaded attachment(s) to article') }}
-            <router-link :to="{name: 'article.view', params: {id: timeline.id}}">
+            <router-link :to="{name: 'article.view', params: {id: timeline.article.id}}">
               {{ timeline.article.title }}
             </router-link>
           </span>

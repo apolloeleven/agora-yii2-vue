@@ -30,7 +30,7 @@ export default {
       eventBus.$emit(SHARE_TO_TIMELINE, {
         type: SHARE_FILE,
         articleModel: this.model,
-        data: this.fileIds
+        selectedIds: this.fileIds,
       });
     }
   },
