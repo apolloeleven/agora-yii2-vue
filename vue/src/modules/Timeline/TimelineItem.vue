@@ -27,13 +27,16 @@
         <div class="p-3 description" v-html="timeline.description"></div>
       </div>
     </div>
-    <dropdown-button :model="timeline" type="timeline"/>
+    <dropdown-button :model="timeline" type="timeline" :permissionForEdit="isAllowed"/>
   </b-card>
 </template>
 
 <script>
 import DropdownButton from "../Workspace/components/DropdownButton";
 import fileService from '../../core/services/fileService';
+import {createNamespacedHelpers} from "vuex";
+
+const {mapState} = createNamespacedHelpers('user');
 
 export default {
   name: "TimelineItem",
@@ -46,6 +49,14 @@ export default {
     return {
       fileService: fileService,
     }
+  },
+  computed: {
+    ...mapState({
+      user: state => state.currentUser.data
+    }),
+    isAllowed() {
+      return this.user.id !== this.timeline.createdBy.id;
+    },
   },
 }
 </script>

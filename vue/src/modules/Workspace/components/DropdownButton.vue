@@ -1,12 +1,12 @@
 <template>
-  <b-dropdown class="actions-button" variant="link" no-caret right>
+  <b-dropdown v-if="permission" class="actions-button" variant="link" no-caret right>
     <template v-slot:button-content>
       <b-button size="sm" pill variant="light">
         <i class="fas fa-ellipsis-v fa-lg"/>
       </b-button>
     </template>
-    <edit-button :model="model" :type="type"/>
-    <delete-button :model="model" :type="type"/>
+    <edit-button v-if="permissionForEdit" :model="model" :type="type"/>
+    <delete-button v-if="permissionForDelete" :model="model" :type="type"/>
   </b-dropdown>
 </template>
 
@@ -19,6 +19,18 @@ export default {
   props: {
     model: Object,
     type: String,
+    permission: {
+      type: Boolean,
+      default: true,
+    },
+    permissionForEdit: {
+      type: Boolean,
+      default: true,
+    },
+    permissionForDelete: {
+      type: Boolean,
+      default: true,
+    }
   },
   components: {DeleteButton, EditButton}
 }
