@@ -17,6 +17,7 @@ use yii\web\UploadedFile;
  * This is the model class for table "{{%timeline_posts}}".
  *
  * @property int $id
+ * @property string|null $action
  * @property string|null $description
  * @property string|null $file_path
  * @property int|null $created_at
@@ -63,6 +64,7 @@ class TimelinePost extends ActiveRecord
             [['description'], 'string'],
             [['created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['file_path'], 'string', 'max' => 1024],
+            [['action'], 'string', 'max' => 255],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
             [['file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, gif, jpg, avi, flv, wmv, mov, mp4, ogg']
@@ -76,6 +78,7 @@ class TimelinePost extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'action' => Yii::t('app', 'Action'),
             'description' => Yii::t('app', 'Description'),
             'file_path' => Yii::t('app', 'File Path'),
             'created_at' => Yii::t('app', 'Created At'),
