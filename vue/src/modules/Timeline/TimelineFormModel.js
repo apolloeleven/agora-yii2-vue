@@ -6,6 +6,7 @@ export default class TimelineFormModel extends BaseModel {
   file = null;
   file_url = '';
   description = '';
+  action = null;
 
   rules = {
     workspace: [

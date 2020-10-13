@@ -35,6 +35,9 @@
                 </b-form-checkbox>
               </div>
             </b-popover>
+            <AttachmentShareButton
+              tag="button" :disabled="selected.length === 0" :model="currentArticle" :fileIds="selectedIds">
+            </AttachmentShareButton>
             <AttachmentDeleteButton
               tag="button" :disabled="selected.length === 0" :model="currentArticle" :fileIds="selectedIds">
             </AttachmentDeleteButton>
@@ -77,6 +80,7 @@
                 {{ $t('Edit Label') }}
               </b-dropdown-item>
               <AttachmentDownloadButton tag="dropdown" :file="data.item"/>
+              <AttachmentShareButton tag="dropdown" :fileIds="[data.item.id]" :model="currentArticle"/>
               <AttachmentDeleteButton tag="dropdown" :fileIds="[data.item.id]" :model="currentArticle"/>
             </b-dropdown>
           </template>
@@ -94,11 +98,15 @@ import AttachmentLabel from "./AttachmentLabel";
 import AttachmentDeleteButton from "./AttachmentDeleteButton";
 import AttachmentDownloadButton from "./AttachmentDownloadButton";
 import AttachmentPreview from "./AttachmentPreview";
+import AttachmentShareButton from "./AttachmentShareButton";
 
 const {mapState, mapActions} = createNamespacedHelpers('article');
 export default {
   name: "Attachments",
-  components: {AttachmentPreview, AttachmentDownloadButton, AttachmentDeleteButton, AttachmentLabel},
+  components: {
+    AttachmentShareButton,
+    AttachmentPreview, AttachmentDownloadButton, AttachmentDeleteButton, AttachmentLabel
+  },
   data() {
     return {
       articleFileIds: [],

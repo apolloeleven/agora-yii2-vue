@@ -7,6 +7,19 @@
         </template>
         <h5 class="mt-0">
           {{ timeline.createdBy.display_name }}
+
+          <span v-if="timeline.action === SHARE_ARTICLE">
+            {{ $t('created article') }}
+            <router-link :to="{name: 'article.view', params: {id: timeline.id}}">
+              {{ timeline.article.title }}
+            </router-link>
+          </span>
+          <span v-else-if="timeline.action === SHARE_FILE">
+                {{ $t('uploaded attachment(s) to article') }}
+            <router-link :to="{name: 'article.view', params: {id: timeline.id}}">
+              {{ timeline.article.title }}
+            </router-link>
+          </span>
         </h5>
         <p class="mb-0">
           <i class="far fa-clock"/>
@@ -35,6 +48,7 @@
 import DropdownButton from "../Workspace/components/DropdownButton";
 import fileService from '../../core/services/fileService';
 import {createNamespacedHelpers} from "vuex";
+import {SHARE_ARTICLE, SHARE_FILE} from "../../core/services/event-bus";
 
 const {mapState} = createNamespacedHelpers('user');
 
@@ -48,6 +62,8 @@ export default {
   data() {
     return {
       fileService: fileService,
+      SHARE_ARTICLE: SHARE_ARTICLE,
+      SHARE_FILE: SHARE_FILE,
     }
   },
   computed: {
@@ -55,7 +71,7 @@ export default {
       user: state => state.currentUser.data
     }),
     isAllowed() {
-      return this.user.id !== this.timeline.createdBy.id;
+      return this.user.id === this.timeline.createdBy.id;
     },
   },
 }
