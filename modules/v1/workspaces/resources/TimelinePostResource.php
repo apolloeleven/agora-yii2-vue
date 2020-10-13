@@ -8,45 +8,52 @@
 namespace app\modules\v1\workspaces\resources;
 
 
+use app\modules\v1\setup\resources\UserResource;
+use app\modules\v1\users\models\query\UserQuery;
 use app\modules\v1\workspaces\models\query\WorkspaceTimelinePostQuery;
 use app\modules\v1\workspaces\models\TimelinePost;
 use app\rest\ValidationException;
 use Yii;
-use yii\base\ErrorException;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
+use yii\web\UploadedFile;
 
 class TimelinePostResource extends TimelinePost
 {
-    public $workspaceId;
+    public $workspace_id;
 
     public function fields()
     {
-        return array_merge(parent::fields(), [
+        return [
+            'id',
+            'description',
+            'file_url' => function () {
+                return $this->getFileUrl();
+            },
             'created_at' => function () {
                 return $this->created_at * 1000;
             },
             'updated_at' => function () {
                 return $this->updated_at * 1000;
             },
-        ]);
+        ];
     }
 
     public function attributes()
     {
-        return ArrayHelper::merge(array_keys(parent::attributeLabels()), ['workspaceId']);
+        return ArrayHelper::merge(array_keys(parent::attributeLabels()), ['workspace_id']);
     }
 
     public function rules()
     {
-        return array_merge(parent::rules(), [[['workspaceId'], 'integer']]);
+        return array_merge(parent::rules(), [[['workspace_id'], 'integer']]);
     }
 
     public function extraFields()
     {
-        return ['workspace', 'workspaceTimelinePosts', 'workspaceId'];
+        return ['workspace', 'workspaceTimelinePosts', 'workspace_id', 'createdBy'];
     }
 
     /**
@@ -67,41 +74,6 @@ class TimelinePostResource extends TimelinePost
     }
 
     /**
-     * @param bool $runValidation
-     * @param null $attributeNames
-     * @return bool
-     * @throws ErrorException
-     * @throws Exception
-     */
-    public function save($runValidation = true, $attributeNames = null)
-    {
-        $oldImage = $this->image_path;
-        if ($this->image) {
-            $this->image_path = "/storage/timeline/" . Yii::$app->security->generateRandomString(25) . '/' . $this->image->name;
-        }
-        $parentSave = parent::save($runValidation, $attributeNames);
-        if (!$parentSave) {
-            return $parentSave;
-        }
-        if ($this->image) {
-            // Delete old image if it exists
-            if ($oldImage) {
-                $oldPath = Yii::getAlias("@webroot" . $oldImage);
-                if (file_exists($oldPath)) {
-                    FileHelper::removeDirectory(dirname($oldPath));
-                }
-            }
-
-            $path = Yii::getAlias("@webroot") . $this->image_path;
-            if (!is_dir(dirname($path))) {
-                FileHelper::createDirectory(dirname($path));
-            }
-            $this->image->saveAs($path);
-        }
-        return $parentSave;
-    }
-
-    /**
      * After save Timeline Post create new Workspace Timeline Post
      *
      * @param $insert
@@ -113,7 +85,7 @@ class TimelinePostResource extends TimelinePost
         parent::afterSave($insert, $changedAttributes);
         if ($insert) {
             $workspaceTimelinePosts = new WorkspaceTimelinePostResource();
-            $workspaceTimelinePosts->workspace_id = $this->workspaceId;
+            $workspaceTimelinePosts->workspace_id = $this->workspace_id;
             $workspaceTimelinePosts->timeline_post_id = $this->id;
             if (!$workspaceTimelinePosts->save()) {
                 throw new ValidationException(\Yii::t('app', 'Unable to create Workspace Timeline Post'));
@@ -128,5 +100,44 @@ class TimelinePostResource extends TimelinePost
     {
         WorkspaceTimelinePostResource::deleteAll(['timeline_post_id' => $this->id]);
         return parent::beforeDelete();
+    }
+
+    public function load($data, $formName = null)
+    {
+        $this->file = UploadedFile::getInstanceByName('file');
+
+        return parent::load($data, $formName);
+    }
+
+    /**
+     * @param bool $runValidation
+     * @param null $attributeNames
+     * @return bool
+     * @throws Exception
+     */
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if (!$this->file) {
+            return parent::save($runValidation, $attributeNames);
+        }
+        $dirPath = '/timelinePosts/' . $this->workspace_id;
+        $this->file_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '.' . $this->file->extension;
+
+        $parentSave = parent::save($runValidation, $attributeNames);
+        if (!$parentSave) return $parentSave;
+
+        $fullPath = Yii::getAlias('@storage' . $this->file_path);
+        if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
+        $this->file->saveAs($fullPath);
+
+        return $parentSave;
+    }
+
+    /**
+     * @return UserQuery|ActiveQuery
+     */
+    public function getCreatedBy()
+    {
+        return $this->hasOne(UserResource::class, ['id' => 'created_by']);
     }
 }

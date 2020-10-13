@@ -19,7 +19,7 @@ export function hideTimelineModal({commit}) {
 
 export async function getTimelinePosts({commit}, workspaceId) {
   commit(CHANGE_LOADING)
-  const res = await httpService.get(`${url}?workspace_id=${workspaceId}&expand=workspaceTimelinePosts&sort=-created_at`);
+  const res = await httpService.get(`${url}?workspace_id=${workspaceId}&expand=workspaceTimelinePosts,createdBy&sort=-created_at`);
   if (res.success) {
     commit(CHANGE_LOADING)
     commit(GET_TIMELINE_DATA, res.body);
@@ -38,7 +38,7 @@ export async function deleteTimelinePost({commit}, data) {
 export async function updateTimelinePost({commit, dispatch}, data) {
   const res = await httpService.put(`${url}/${data.id}`, data);
   if (res.success) {
-    dispatch('getTimelinePosts', data.workspaceId);
+    dispatch('getTimelinePosts', data.workspace_id);
   }
   return res;
 }
@@ -46,7 +46,7 @@ export async function updateTimelinePost({commit, dispatch}, data) {
 export async function postOnTimeline({dispatch}, {data, config}) {
   const res = await httpService.post(`${url}?expand=workspace`, prepareData(data), config);
   if (res.success) {
-    dispatch('getTimelinePosts', data.workspaceId);
+    dispatch('getTimelinePosts', data.workspace_id);
   }
   return res;
 }

@@ -4,6 +4,7 @@ import i18n from "@/shared/i18n";
 export default class TimelineFormModel extends BaseModel {
   workspace_id = null;
   file = null;
+  file_url = '';
   description = '';
 
   rules = {
@@ -13,8 +14,6 @@ export default class TimelineFormModel extends BaseModel {
   }
 
   attributeLabels = {
-    workspace: i18n.t('Workspace'),
-    file: i18n.t('Image or Video'),
     description: i18n.t('Description'),
   }
 

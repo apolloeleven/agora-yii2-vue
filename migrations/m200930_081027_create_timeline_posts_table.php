@@ -15,7 +15,7 @@ class m200930_081027_create_timeline_posts_table extends Migration
         $this->createTable('{{%timeline_posts}}', [
             'id' => $this->primaryKey(),
             'description' => $this->text(),
-            'image_path' => $this->string(1024),
+            'file_path' => $this->string(1024),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
             'created_by' => $this->integer(),

@@ -2,12 +2,16 @@
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal :visible="showModal" id="timeline-form" ref="modal" size="lg"
              :title="$t('Write Something on Timeline')" @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)"
-             :ok-disabled="loading" :ok-title="$t('Submit')" scrollable>
+             :ok-disabled="loading || !model.description && !model.file" :ok-title="$t('Submit')" scrollable>
       <content-spinner :show="loading" :text="`${progress}% ${$t('Uploaded...')}`" class="h-100" :fullscreen="true"/>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
 
         <b-form-group :disabled="!!model.id" v-if="model.id">
           <b-form-select v-model="model.workspace_id" :options="userWorkspaceOptions"/>
+        </b-form-group>
+
+        <b-form-group v-if="!model.id" :label="$t('Select Image or Video File')">
+          <b-form-file v-model="model.file"/>
         </b-form-group>
 
         <input-widget :model="model" attribute="description" type="richtext"/>
@@ -53,7 +57,7 @@ export default {
   methods: {
     ...mapActions(['hideTimelineModal', 'postOnTimeline', 'updateTimelinePost']),
     async onSubmit() {
-      this.model.workspaceId = this.$route.params.id;
+      this.model.workspace_id = this.$route.params.id;
 
       let res;
       if (this.model.id) {
@@ -71,6 +75,7 @@ export default {
 
       if (res.success) {
         if (this.model.id) {
+          delete this.model.file;
           this.$toast(this.$t(`Your timeline record was updated`));
         } else {
           this.$toast(this.$t(`Thanks for posting on timeline`));

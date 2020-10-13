@@ -18,7 +18,7 @@ use yii\web\UploadedFile;
  *
  * @property int $id
  * @property string|null $description
- * @property string|null $image_path
+ * @property string|null $file_path
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $created_by
@@ -33,7 +33,7 @@ class TimelinePost extends ActiveRecord
     /**
      * @var UploadedFile
      */
-    public $image;
+    public $file = null;
 
     /**
      * {@inheritdoc}
@@ -62,10 +62,10 @@ class TimelinePost extends ActiveRecord
         return [
             [['description'], 'string'],
             [['created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
-            [['image_path'], 'string', 'max' => 1024],
+            [['file_path'], 'string', 'max' => 1024],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
-            [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, jpg'],
+            [['file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, gif, jpg, avi, flv, wmv, mov, mp4, ogg']
         ];
     }
 
@@ -77,7 +77,7 @@ class TimelinePost extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'description' => Yii::t('app', 'Description'),
-            'image_path' => Yii::t('app', 'Image Path'),
+            'file_path' => Yii::t('app', 'File Path'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'created_by' => Yii::t('app', 'Created By'),
@@ -123,5 +123,15 @@ class TimelinePost extends ActiveRecord
     public static function find()
     {
         return new TimelinePostQuery(get_called_class());
+    }
+
+    /**
+     * Get timeline post file path
+     *
+     * @return bool|string
+     */
+    public function getFileUrl()
+    {
+        return $this->file_path ? Yii::getAlias('@storageUrl' . $this->file_path) : '';
     }
 }
