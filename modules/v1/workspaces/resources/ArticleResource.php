@@ -19,6 +19,8 @@ use yii\helpers\StringHelper;
  */
 class ArticleResource extends Article
 {
+    public $share_count;
+
     public function fields()
     {
         return [
@@ -30,6 +32,9 @@ class ArticleResource extends Article
             'is_folder',
             'depth',
             'image_path',
+            'share_count' => function () {
+                return $this->getShareCount();
+            },
             'created_at' => function () {
                 return $this->created_at * 1000;
             },
@@ -81,5 +86,18 @@ class ArticleResource extends Article
         }
         $dbTransaction->commit();
         return true;
+    }
+
+    /**
+     * Get share article count
+     *
+     * @return bool|int|string|null
+     */
+    public function getShareCount()
+    {
+        return $this::find()
+            ->byId($this->id)
+            ->innerJoin(TimelinePostResource::tableName() . ' t', 't.article_id = ' . $this::tableName() . '.id AND t.action =\'SHARE_ARTICLE\'')
+            ->count();
     }
 }

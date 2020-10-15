@@ -2,20 +2,25 @@
   <b-button v-if="tag === 'button'" variant="outline-dark" @click="onShareClick">
     <i class="fas fa-share"/>
     {{ $t('Share') }}
+    <b-badge class="ml-2" pill variant="secondary">
+      {{ model.share_count}}
+    </b-badge>
     <b-badge class="ml-2" pill variant="secondary"/>
   </b-button>
   <b-dropdown-item v-else-if="tag === 'dropdown'" @click="onShareClick">
     <i class="fas fa-share"/>
     {{ $t('Share') }}
-    <b-badge class="ml-2" pill variant="secondary"/>
+    <b-badge class="ml-2" pill variant="secondary">
+      {{ model.share_count}}
+    </b-badge>
   </b-dropdown-item>
   <b-button v-else-if="tag === 'smallIcon'" size="sm" pill variant="light" @click="onShareClick">
     <i class="fas fa-share fa-lg"/>
-    <!--<b-badge class="ml-2" pill variant="secondary">
-      {{article.share_count}}
-    </b-badge>-->
+    <b-badge class="ml-2" pill variant="secondary">
+      {{ model.share_count}}
+    </b-badge>
   </b-button>
-  <b-button v-else  @click="onShareClick">
+  <b-button v-else @click="onShareClick">
     <i class="fas fa-share"/>
     {{ $t('Share') }}
   </b-button>

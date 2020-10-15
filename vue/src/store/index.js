@@ -6,6 +6,7 @@ import timeline from './modules/timeline';
 import employee from './modules/employee'
 import workspace from './modules/workspaces/workspace';
 import article from './modules/workspaces/article';
+import httpService from "../core/services/httpService";
 
 // Load vuex
 Vue.use(Vuex);
@@ -33,7 +34,17 @@ export default new Vuex.Store({
     },
     toggleMenuHide({commit, state}) {
       commit('toggleMenuHide', !state.menuHidden);
-    }
+    },
+    async shareToTimeline({commit, state}, data) {
+      const res = await httpService.post(`/v1/workspaces/timeline?expand=workspace`, data);
+      if (res.success) {
+        const currentArticle = state.article.currentArticle;
+        if (currentArticle.id === data.article_id && data.action === 'SHARE_ARTICLE') {
+          currentArticle.share_count++;
+        }
+      }
+      return res;
+    },
   },
   mutations: {
     toggleMenuCollapse: (state, collapsed) => state.menuCollapsed = collapsed,

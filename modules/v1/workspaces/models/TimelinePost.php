@@ -18,6 +18,7 @@ use yii\web\UploadedFile;
  *
  * @property int $id
  * @property int $article_id
+ * @property string|null $attachment_ids
  * @property string|null $action
  * @property string|null $description
  * @property string|null $file_path
@@ -63,7 +64,7 @@ class TimelinePost extends ActiveRecord
     public function rules()
     {
         return [
-            [['description'], 'string'],
+            [['description', 'attachment_ids'], 'string'],
             [['article_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['file_path'], 'string', 'max' => 1024],
             [['action'], 'string', 'max' => 255],
@@ -81,6 +82,7 @@ class TimelinePost extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'article_id' => Yii::t('app', 'Article ID'),
+            'attachment_ids' => Yii::t('app', 'Attachment IDs'),
             'action' => Yii::t('app', 'Action'),
             'description' => Yii::t('app', 'Description'),
             'file_path' => Yii::t('app', 'File Path'),

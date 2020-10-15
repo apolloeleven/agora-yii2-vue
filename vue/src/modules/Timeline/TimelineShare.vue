@@ -12,10 +12,10 @@
 <script>
 import InputWidget from "../../core/components/input-widget/InputWidget";
 import TimelineFormModel from "./TimelineFormModel";
-import {createNamespacedHelpers} from "vuex";
+import {mapActions, createNamespacedHelpers} from 'vuex';
 import {EDIT_TIMELINE, eventBus, SHARE_ARTICLE, SHARE_FILE, SHARE_TO_TIMELINE} from "../../core/services/event-bus";
 
-const {mapState, mapActions} = createNamespacedHelpers('timeline');
+const {mapState, mapActions: mapTimelineActions} = createNamespacedHelpers('timeline');
 
 export default {
   name: "TimelineShare",
@@ -38,15 +38,9 @@ export default {
       return this.$t('Do you want to share this on workspace timeline?')
     }
   },
-  watch: {
-    timelineData() {
-      if (this.timelineData) {
-        this.model = new TimelineFormModel(this.timelineData)
-      }
-    },
-  },
   methods: {
-    ...mapActions(['shareToTimeline', 'updateTimelinePost']),
+    ...mapTimelineActions(['updateTimelinePost']),
+    ...mapActions(['shareToTimeline']),
     async onSubmit() {
       if (this.edit) {
         const {success, body} = await this.updateTimelinePost(this.model);
@@ -75,6 +69,13 @@ export default {
       this.edit = false;
       this.model = new TimelineFormModel()
     }
+  },
+  watch: {
+    timelineData() {
+      if (this.timelineData) {
+        this.model = new TimelineFormModel(this.timelineData)
+      }
+    },
   },
   mounted() {
     eventBus.$on(SHARE_TO_TIMELINE, ({type, articleModel, selectedIds}) => {

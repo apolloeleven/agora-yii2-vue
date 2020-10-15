@@ -51,14 +51,6 @@ export async function postOnTimeline({dispatch}, {data, config}) {
   return res;
 }
 
-export async function shareToTimeline({dispatch}, data) {
-  const res = await httpService.post(`${url}?expand=workspace`, data);
-  if (res.success) {
-    dispatch('getTimelinePosts', data.workspace_id);
-  }
-  return res;
-}
-
 export function prepareData(data) {
   if (data.file && data.file instanceof File) {
     const tmp = new FormData();
