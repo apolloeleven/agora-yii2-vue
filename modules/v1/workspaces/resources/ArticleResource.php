@@ -4,9 +4,11 @@
 namespace app\modules\v1\workspaces\resources;
 
 
+use app\modules\v1\users\resources\UserResource;
 use app\rest\ValidationException;
 use Yii;
 use app\modules\v1\workspaces\models\Article;
+use yii\db\ActiveQuery;
 use yii\db\Exception;
 use yii\helpers\StringHelper;
 
@@ -27,6 +29,7 @@ class ArticleResource extends Article
             'body',
             'is_folder',
             'depth',
+            'image_path',
             'created_at' => function () {
                 return $this->created_at * 1000;
             },
@@ -47,6 +50,16 @@ class ArticleResource extends Article
     public function extraFields()
     {
         return ['children', 'workspace', 'createdBy', 'updatedBy'];
+    }
+
+    /**
+     * Gets query for [[CreatedBy]].
+     *
+     * @return ActiveQuery
+     */
+    public function getCreatedBy()
+    {
+        return $this->hasOne(UserResource::class, ['id' => 'created_by']);
     }
 
     /**

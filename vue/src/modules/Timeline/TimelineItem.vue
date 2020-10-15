@@ -6,15 +6,15 @@
           <b-img rounded="0" :src="timeline.createdBy.image_url  || '/assets/logo.png'" width="48" height="48"/>
         </template>
         <h5 class="mt-0">
-          {{ timeline.createdBy.display_name }}
+          {{ timeline.createdBy.displayName }}
 
-          <span v-if="timeline.action === SHARE_ARTICLE">
+          <span v-if="timeline.action === SHARE_ARTICLE && timeline.article">
             {{ $t('created article') }}
             <router-link :to="{name: 'article.view', params: {id: timeline.article.id}}">
               {{ timeline.article.title }}
             </router-link>
           </span>
-          <span v-else-if="timeline.action === SHARE_FILE">
+          <span v-else-if="timeline.action === SHARE_FILE && timeline.article">
                 {{ $t('uploaded attachment(s) to article') }}
             <router-link :to="{name: 'article.view', params: {id: timeline.article.id}}">
               {{ timeline.article.title }}
@@ -26,6 +26,16 @@
           {{ timeline.updated_at | relativeDate }}
         </p>
       </b-media>
+    </b-card-body>
+    <b-card-body v-if="timeline.action === this.SHARE_ARTICLE && timeline.article">
+      <div class="row">
+        <div class="col">
+          <b-card-img :src="timeline.article.image_path || ''" class="rounded-0"/>
+        </div>
+        <div class="col border-left">
+          <b-card-text text-tag="div" class="short-description" v-html="timeline.article.short_description"/>
+        </div>
+      </div>
     </b-card-body>
     <div v-if="timeline.file_url" class="timeline-preview">
       <div v-if="fileService.isImage(timeline.file_url)" class="image-preview">

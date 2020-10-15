@@ -82,7 +82,7 @@ export async function deleteArticle({commit}, data) {
  * @returns {Promise<void>}
  */
 export async function getCurrentArticle({commit}, articleId) {
-  const {success, body} = await httpService.get(`${url}/${articleId}?expand=workspace`)
+  const {success, body} = await httpService.get(`${url}/${articleId}?expand=workspace,createdBy`)
   if (success) {
     commit(GET_CURRENT_ARTICLE, body);
   }

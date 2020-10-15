@@ -8,6 +8,12 @@
     {{ $t('Share') }}
     <b-badge class="ml-2" pill variant="secondary"/>
   </b-dropdown-item>
+  <b-button v-else-if="tag === 'smallIcon'" size="sm" pill variant="light" @click="onShareClick">
+    <i class="fas fa-share fa-lg"/>
+    <!--<b-badge class="ml-2" pill variant="secondary">
+      {{article.share_count}}
+    </b-badge>-->
+  </b-button>
   <b-button v-else variant="outline-dark" @click="onShareClick">
     <i class="fas fa-share"/>
     {{ $t('Share') }}

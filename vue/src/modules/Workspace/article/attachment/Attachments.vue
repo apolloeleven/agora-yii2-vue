@@ -207,7 +207,7 @@ export default {
         this.$toast(this.$t(`{count} attachment(s) were successfully uploaded`, {count: filesObject.files.length}));
         this.articleFileIds = res.body.map((file) => file.id);
       } else {
-        this.$toast(this.$t(`{count} attachment(s) were not uploaded`, {count: filesObject.files.length}), 'danger');
+        this.$toast(res.body.message, 'danger');
       }
     },
     checkFileNames(fileNames) {

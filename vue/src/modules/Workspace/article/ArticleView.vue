@@ -79,9 +79,7 @@
           <div class="col-sm-12 col-lg-6">
             <b-card class="article-item mb-3" no-body>
               <template v-slot:header>
-                <h5 class="mb-0">{{ currentArticle.title }}
-                  <AttachmentShareButton :model="currentArticle" :tag="'button'" modalType="article"/>
-                </h5>
+                <h5 class="mb-0">{{ currentArticle.title }}</h5>
               </template>
               <b-card-body>
                 <div class="article-content">
@@ -91,6 +89,13 @@
                   </no-data>
                 </div>
               </b-card-body>
+              <b-card-footer>
+                <span class="float-right" v-if="currentArticle.createdBy">
+                    <i class="far fa-user-circle"/>
+                    {{ currentArticle.createdBy.displayName }}
+                <AttachmentShareButton :model="currentArticle" :tag="'smallIcon'" modalType="article"/>
+              </span>
+              </b-card-footer>
             </b-card>
             <div class="article-list">
               <ArticleChildItem
