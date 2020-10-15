@@ -5,6 +5,7 @@
     <div class="bg-light text-right bg-secondary shadow-sm py-2 px-3">
       <div class="attachment-toolbar mb-3">
         <AttachmentDownloadButton tag="button" :file="fileIndex" class="attachment-button"/>
+        <AttachmentShareButton tag="button" :fileIds="[fileIndex.id]" :model="model" class="attachment-button"/>
         <AttachmentDeleteButton tag="button" :fileIds="[fileIndex.id]" :model="model" class="attachment-button"/>
       </div>
 
@@ -70,12 +71,13 @@ import AttachmentDownloadButton from "./AttachmentDownloadButton";
 import AttachmentDeleteButton from "./AttachmentDeleteButton";
 import {createNamespacedHelpers} from "vuex";
 import fileService from "../../../../core/services/fileService";
+import AttachmentShareButton from "./AttachmentShareButton";
 
 const {mapState, mapActions} = createNamespacedHelpers('article');
 
 export default {
   name: "AttachmentPreview",
-  components: {AttachmentDeleteButton, AttachmentDownloadButton},
+  components: {AttachmentShareButton, AttachmentDeleteButton, AttachmentDownloadButton},
   props: {
     model: Object,
   },

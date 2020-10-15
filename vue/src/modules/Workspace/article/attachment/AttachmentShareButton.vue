@@ -1,7 +1,8 @@
 <template>
-  <b-button v-if="tag === 'button'" @click="onShareClick">
+  <b-button v-if="tag === 'button'" variant="outline-dark" @click="onShareClick">
     <i class="fas fa-share"/>
     {{ $t('Share') }}
+    <b-badge class="ml-2" pill variant="secondary"/>
   </b-button>
   <b-dropdown-item v-else-if="tag === 'dropdown'" @click="onShareClick">
     <i class="fas fa-share"/>
@@ -14,10 +15,9 @@
       {{article.share_count}}
     </b-badge>-->
   </b-button>
-  <b-button v-else variant="outline-dark" @click="onShareClick">
+  <b-button v-else  @click="onShareClick">
     <i class="fas fa-share"/>
     {{ $t('Share') }}
-    <b-badge class="ml-2" pill variant="secondary"/>
   </b-button>
 </template>
 

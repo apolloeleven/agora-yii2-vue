@@ -35,9 +35,7 @@
                 </b-form-checkbox>
               </div>
             </b-popover>
-            <AttachmentShareButton
-              tag="button" :disabled="selected.length === 0" :model="currentArticle" :fileIds="selectedIds">
-            </AttachmentShareButton>
+            <AttachmentShareButton :disabled="selected.length === 0" :model="currentArticle" :fileIds="selectedIds"/>
             <AttachmentDeleteButton
               tag="button" :disabled="selected.length === 0" :model="currentArticle" :fileIds="selectedIds">
             </AttachmentDeleteButton>
