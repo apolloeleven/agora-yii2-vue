@@ -44,7 +44,7 @@ export async function updateTimelinePost({commit, dispatch}, data) {
 }
 
 export async function postOnTimeline({dispatch}, {data, config}) {
-  const res = await httpService.post(`${url}?expand=workspace`, prepareData(data), config);
+  const res = await httpService.post(`${url}?expand=workspaceTimelinePosts`, prepareData(data), config);
   if (res.success) {
     dispatch('getTimelinePosts', data.workspace_id);
   }

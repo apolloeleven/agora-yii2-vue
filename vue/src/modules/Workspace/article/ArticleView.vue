@@ -93,7 +93,9 @@
                 <span class="float-right" v-if="currentArticle.createdBy">
                     <i class="far fa-user-circle"/>
                     {{ currentArticle.createdBy.displayName }}
-                <AttachmentShareButton :model="currentArticle" :tag="'smallIcon'" modalType="article"/>
+                <AttachmentShareButton
+                  :file="currentArticle" :model="currentArticle" :tag="'smallIcon'" modalType="article">
+                </AttachmentShareButton>
               </span>
               </b-card-footer>
             </b-card>

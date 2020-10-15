@@ -54,7 +54,7 @@ class ArticleResource extends Article
      */
     public function extraFields()
     {
-        return ['children', 'workspace', 'createdBy', 'updatedBy'];
+        return ['children', 'workspace', 'createdBy', 'updatedBy', 'articleFiles'];
     }
 
     /**

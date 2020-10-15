@@ -28,6 +28,7 @@ use yii\web\UploadedFile;
  * @property int|null $updated_by
  *
  * @property Article $article
+ * @property ArticleFile[] $articleFiles
  * @property User $createdBy
  * @property User $updatedBy
  * @property WorkspaceTimelinePost[] $workspaceTimelinePosts
@@ -123,6 +124,16 @@ class TimelinePost extends ActiveRecord
     }
 
     /**
+     * Gets query for [[ArticleFiles]].
+     *
+     * @return ActiveQuery
+     */
+    public function getArticleFiles()
+    {
+        return $this->hasMany(ArticleFile::class, ['article_id' => 'article_id']);
+    }
+
+    /**
      * Gets query for [[WorkspaceTimelinePosts]].
      *
      * @return ActiveQuery|WorkspaceTimelinePostQuery
@@ -149,5 +160,17 @@ class TimelinePost extends ActiveRecord
     public function getFileUrl()
     {
         return $this->file_path ? Yii::getAlias('@storageUrl' . $this->file_path) : '';
+    }
+
+    /**
+     * Before check validate encode shared attachments id
+     *
+     * @return bool
+     */
+    public function beforeValidate()
+    {
+        $this->attachment_ids = json_encode($this->attachment_ids);
+
+        return parent::beforeValidate();
     }
 }

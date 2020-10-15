@@ -54,7 +54,7 @@ class TimelinePostResource extends TimelinePost
 
     public function extraFields()
     {
-        return ['workspaceTimelinePosts', 'createdBy', 'article'];
+        return ['workspaceTimelinePosts', 'createdBy', 'article', 'articleFiles'];
     }
 
     /**

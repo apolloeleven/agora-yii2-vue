@@ -36,11 +36,13 @@ export default new Vuex.Store({
       commit('toggleMenuHide', !state.menuHidden);
     },
     async shareToTimeline({commit, state}, data) {
-      const res = await httpService.post(`/v1/workspaces/timeline?expand=workspace`, data);
+      const res = await httpService.post(`/v1/workspaces/timeline`, data);
       if (res.success) {
         const currentArticle = state.article.currentArticle;
         if (currentArticle.id === data.article_id && data.action === 'SHARE_ARTICLE') {
           currentArticle.share_count++;
+        } else if (data.action === 'SHARE_FILE') {
+          state.article.articleFiles.filter(a => data.attachment_ids.includes(a.id)).forEach(item => item.share_count++);
         }
       }
       return res;

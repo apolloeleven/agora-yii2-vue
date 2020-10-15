@@ -3,7 +3,7 @@
     <i class="fas fa-share"/>
     {{ $t('Share') }}
     <b-badge class="ml-2" pill variant="secondary">
-      {{ model.share_count}}
+      {{ file.share_count}}
     </b-badge>
     <b-badge class="ml-2" pill variant="secondary"/>
   </b-button>
@@ -11,13 +11,13 @@
     <i class="fas fa-share"/>
     {{ $t('Share') }}
     <b-badge class="ml-2" pill variant="secondary">
-      {{ model.share_count}}
+      {{ file.share_count}}
     </b-badge>
   </b-dropdown-item>
   <b-button v-else-if="tag === 'smallIcon'" size="sm" pill variant="light" @click="onShareClick">
     <i class="fas fa-share fa-lg"/>
     <b-badge class="ml-2" pill variant="secondary">
-      {{ model.share_count}}
+      {{ file.share_count}}
     </b-badge>
   </b-button>
   <b-button v-else @click="onShareClick">
@@ -32,6 +32,7 @@ import {eventBus, SHARE_TO_TIMELINE, SHARE_FILE, SHARE_ARTICLE} from "../../../.
 export default {
   name: "AttachmentShareButton",
   props: {
+    file: Object,
     fileIds: Array,
     tag: String,
     model: Object,
@@ -51,7 +52,7 @@ export default {
       eventBus.$emit(SHARE_TO_TIMELINE, {
         type: this.shareType,
         articleModel: this.model,
-        selectedIds: this.fileIds,
+        selectedIds: this.fileIds || [],
       });
     }
   },

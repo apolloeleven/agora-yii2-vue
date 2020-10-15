@@ -35,7 +35,7 @@
                 </b-form-checkbox>
               </div>
             </b-popover>
-            <AttachmentShareButton :disabled="selected.length === 0" :model="articleFiles" :fileIds="selectedIds"/>
+            <AttachmentShareButton :disabled="selected.length === 0" :model="currentArticle" :fileIds="selectedIds"/>
             <AttachmentDeleteButton
               tag="button" :disabled="selected.length === 0" :model="currentArticle" :fileIds="selectedIds">
             </AttachmentDeleteButton>
@@ -78,7 +78,9 @@
                 {{ $t('Edit Label') }}
               </b-dropdown-item>
               <AttachmentDownloadButton tag="dropdown" :file="data.item"/>
-              <AttachmentShareButton tag="dropdown" :fileIds="[data.item.id]" :model="articleFiles"/>
+              <AttachmentShareButton
+                tag="dropdown" :file="data.item" :fileIds="[data.item.id]" :model="currentArticle">
+              </AttachmentShareButton>
               <AttachmentDeleteButton tag="dropdown" :fileIds="[data.item.id]" :model="currentArticle"/>
             </b-dropdown>
           </template>

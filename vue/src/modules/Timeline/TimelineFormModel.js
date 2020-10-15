@@ -4,6 +4,7 @@ import i18n from "@/shared/i18n";
 export default class TimelineFormModel extends BaseModel {
   workspace_id = null;
   article_id = null;
+  attachment_ids = [] || null;
   file = null;
   file_url = '';
   description = '';

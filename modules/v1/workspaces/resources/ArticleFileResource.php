@@ -16,6 +16,8 @@ use yii\db\ActiveQuery;
  */
 class ArticleFileResource extends ArticleFile
 {
+    public $share_count;
+
     public function fields()
     {
         return [
@@ -25,6 +27,9 @@ class ArticleFileResource extends ArticleFile
             'size',
             'to_process',
             'processing',
+            'share_count' => function () {
+                return $this->getShareCount();
+            },
             'mime' => function () {
                 $mime = explode('/', $this->mime)[0];
                 return $mime == 'video' ? $mime : $this->mime;
@@ -57,5 +62,20 @@ class ArticleFileResource extends ArticleFile
     public function getUpdatedBy()
     {
         return $this->hasOne(UserResource::class, ['id' => 'updated_by']);
+    }
+
+    /**
+     * Get share article file count
+     *
+     * @return bool|int|string|null
+     */
+    public function getShareCount()
+    {
+        return $this::find()
+            ->byId($this->id)
+            ->innerJoin(TimelinePostResource::tableName() . ' t', 't.article_id = ' . $this::tableName()
+                . '.article_id AND t.action =\'SHARE_FILE\'
+                AND FIND_IN_SET(' . $this::tableName() . '.id,SUBSTR(t.attachment_ids,2,LENGTH(t.attachment_ids)-2)) > 0')
+            ->count();
     }
 }
