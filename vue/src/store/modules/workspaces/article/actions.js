@@ -16,7 +16,8 @@ import {
   HIDE_PREVIEW_MODAL,
   CHANGE_CAROUSEL,
   SORT_ATTACHMENT,
-  SAVE_COMMENT,
+  ADD_COMMENT,
+  DELETE_COMMENT,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 
@@ -83,7 +84,7 @@ export async function deleteArticle({commit}, data) {
  * @returns {Promise<void>}
  */
 export async function getCurrentArticle({commit}, articleId) {
-  const {success, body} = await httpService.get(`${url}/${articleId}?expand=workspace,createdBy,articleComments`)
+  const {success, body} = await httpService.get(`${url}/${articleId}?expand=workspace,createdBy,articleComments.createdBy`)
   if (success) {
     commit(GET_CURRENT_ARTICLE, body);
   }
@@ -285,10 +286,23 @@ export function sortAttachment({commit}, column) {
  * @param data
  * @returns {Promise<unknown>}
  */
-export async function saveComment({commit}, data) {
-  const res = await httpService.post(`/v1/workspaces/user-comment`, data);
+export async function addComment({commit}, data) {
+  const res = await httpService.post(`/v1/workspaces/user-comment?expand=createdBy`, data);
   if (res.success) {
-    commit(SAVE_COMMENT, res.body);
+    commit(ADD_COMMENT, res.body);
+  }
+  return res;
+}
+
+/**
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function deleteComment({commit}, data) {
+  const res = await httpService.delete(`/v1/workspaces/user-comment/${data.id}`);
+  if (res.success) {
+    commit(DELETE_COMMENT, data);
   }
   return res;
 }

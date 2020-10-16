@@ -8,7 +8,7 @@
       <b-input-group>
         <b-form-input v-model="model.comment" :placeholder="$t('Leave comment')"/>
         <b-input-group-append>
-          <b-button @click="addComment" variant="info">{{ $t('Comment') }}</b-button>
+          <b-button @click="onAdd" variant="info">{{ $t('Comment') }}</b-button>
         </b-input-group-append>
       </b-input-group>
     </b-media>
@@ -35,13 +35,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['saveComment']),
-    async addComment() {
+    ...mapActions(['addComment']),
+    async onAdd() {
       if (this.model.comment) {
         this.model.article_id = this.article_id;
         this.model.timeline_post_id = this.timeline_id;
 
-        const {success} = await this.saveComment(this.model);
+        const {success} = await this.addComment(this.model);
         if (!success) {
           this.$toast(this.$t(`This comment not saved`), 'danger');
         }
