@@ -17,9 +17,7 @@
       <i class="far fa-clock"/>
       {{ comment.updated_at | relativeDate }}
     </p>
-    <b-button @click="onDelete" class="delete-comment" variant="link">
-      <i class="far fa-trash-alt"/>
-    </b-button>
+    <DeleteComment :comment="comment"/>
     <AddComment :parent_id="comment.id" v-if="showComments"/>
     <b-card-body v-if="showComments">
       <ChildCommentItem v-for="(com, index) in comment.childrenComments" :comment="com" :index="index" :key="index"/>
@@ -28,15 +26,13 @@
 </template>
 
 <script>
-import {createNamespacedHelpers} from "vuex";
 import AddComment from "./AddComment";
 import ChildCommentItem from "./ChildCommentItem";
-
-const {mapActions} = createNamespacedHelpers('article')
+import DeleteComment from "./DeleteComment";
 
 export default {
   name: "CommentItem",
-  components: {ChildCommentItem, AddComment},
+  components: {DeleteComment, ChildCommentItem, AddComment},
   props: {
     comment: Object,
     index: Number
@@ -45,15 +41,6 @@ export default {
     return {
       showComments: false
     }
-  },
-  methods: {
-    ...mapActions(['deleteComment']),
-    async onDelete() {
-      const {success} = await this.deleteComment(this.comment);
-      if (!success) {
-        this.$toast(this.$t(`Unable to delete comment`), 'danger');
-      }
-    },
   },
 }
 </script>
@@ -66,13 +53,6 @@ export default {
   &:last-child {
     border-bottom: none;
   }
-}
-
-.delete-comment {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  color: #495057;
 }
 
 .comment-wrapper {

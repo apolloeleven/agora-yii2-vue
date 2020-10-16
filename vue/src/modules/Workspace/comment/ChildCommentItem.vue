@@ -11,32 +11,20 @@
       <i class="far fa-clock"/>
       {{ comment.updated_at | relativeDate }}
     </p>
-    <b-button @click="onDelete" class="delete-comment" variant="link">
-      <i class="far fa-trash-alt"/>
-    </b-button>
+    <DeleteComment :comment="comment"/>
   </b-media>
 </template>
 
 <script>
-import {createNamespacedHelpers} from "vuex";
-
-const {mapActions} = createNamespacedHelpers('article')
+import DeleteComment from "./DeleteComment";
 
 export default {
   name: "ChildCommentItem",
+  components: {DeleteComment},
   props: {
     comment: Object,
     index: Number
   },
-  methods: {
-    ...mapActions(['deleteComment']),
-    async onDelete() {
-      const {success} = await this.deleteComment(this.comment);
-      if (!success) {
-        this.$toast(this.$t(`Unable to delete comment`), 'danger');
-      }
-    },
-  }
 }
 </script>
 
@@ -48,13 +36,6 @@ export default {
   &:last-child {
     border-bottom: none;
   }
-}
-
-.delete-comment {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  color: #495057;
 }
 
 .comment-wrapper {
