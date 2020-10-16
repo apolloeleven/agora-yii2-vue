@@ -5,13 +5,7 @@
     </template>
     <h6 class="mt-0 mb-0">
       <span style="color: #008BCA">{{ comment.createdBy.displayName }}</span>
-      &nbsp;<span class="comment-wrapper" v-html="comment.comment"/>&nbsp;
-      <b-button size="sm" pill variant="light" :pressed.sync="showComments">
-        <i class="fas fa-reply fa-lg"/>
-        <b-badge class="ml-2" pill variant="secondary">
-          {{ comment.childrenComments.length }}
-        </b-badge>
-      </b-button>
+      &nbsp;<span class="comment-wrapper" v-html="comment.comment"/>
     </h6>
     <p class="mb-0">
       <i class="far fa-clock"/>
@@ -20,31 +14,19 @@
     <b-button @click="onDelete" class="delete-comment" variant="link">
       <i class="far fa-trash-alt"/>
     </b-button>
-    <AddComment :parent_id="comment.id" v-if="showComments"/>
-    <b-card-body v-if="showComments">
-      <ChildCommentItem v-for="(com, index) in comment.childrenComments" :comment="com" :index="index" :key="index"/>
-    </b-card-body>
   </b-media>
 </template>
 
 <script>
 import {createNamespacedHelpers} from "vuex";
-import AddComment from "./AddComment";
-import ChildCommentItem from "./ChildCommentItem";
 
 const {mapActions} = createNamespacedHelpers('article')
 
 export default {
-  name: "CommentItem",
-  components: {ChildCommentItem, AddComment},
+  name: "ChildCommentItem",
   props: {
     comment: Object,
     index: Number
-  },
-  data() {
-    return {
-      showComments: false
-    }
   },
   methods: {
     ...mapActions(['deleteComment']),
@@ -54,7 +36,7 @@ export default {
         this.$toast(this.$t(`Unable to delete comment`), 'danger');
       }
     },
-  },
+  }
 }
 </script>
 

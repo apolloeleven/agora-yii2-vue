@@ -20,6 +20,7 @@ class UserCommentResource extends UserComment
             'id',
             'comment',
             'article_id',
+            'parent_id',
             'timeline_post_id',
             'created_at' => function () {
                 return $this->created_at * 1000;
@@ -32,7 +33,7 @@ class UserCommentResource extends UserComment
 
     public function extraFields()
     {
-        return ['createdBy', 'updatedBy'];
+        return ['createdBy', 'updatedBy', 'childrenComments', 'parent'];
     }
 
     /**
@@ -49,5 +50,15 @@ class UserCommentResource extends UserComment
     public function getUpdatedBy()
     {
         return $this->hasOne(UserResource::class, ['id' => 'updated_by']);
+    }
+
+    /**
+     * Gets query for [[ChildrenComments]].
+     *
+     * @return ActiveQuery
+     */
+    public function getChildrenComments()
+    {
+        return $this->hasMany(UserCommentResource::class, ['parent_id' => 'id'])->orderBy('created_at DESC');
     }
 }

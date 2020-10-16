@@ -16,8 +16,10 @@ import {
   HIDE_PREVIEW_MODAL,
   CHANGE_CAROUSEL,
   SORT_ATTACHMENT,
-  DELETE_COMMENT,
-  ADD_ARTICLE_COMMENT,
+  ADD_CHILD_COMMENT,
+  DELETE_ARTICLE_COMMENT,
+  DELETE_CHILD_COMMENT,
+  ADD_COMMENT,
 } from "./mutation-types";
 
 export default {
@@ -196,7 +198,7 @@ export default {
    * @param state
    * @param data
    */
-  [ADD_ARTICLE_COMMENT](state, data) {
+  [ADD_COMMENT](state, data) {
     state.currentArticle.articleComments.unshift(data);
   },
   /**
@@ -204,7 +206,23 @@ export default {
    * @param state
    * @param data
    */
-  [DELETE_COMMENT](state, data) {
+  [ADD_CHILD_COMMENT](state, data) {
+    state.currentArticle.articleComments.filter(a => a.id === data.parent_id).forEach(a => a.childrenComments.unshift(data));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [DELETE_ARTICLE_COMMENT](state, data) {
     state.currentArticle.articleComments = state.currentArticle.articleComments.filter(a => a.id !== data.id);
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [DELETE_CHILD_COMMENT](state, data) {
+    state.currentArticle.articleComments.forEach(a => a.childrenComments = a.childrenComments.filter(c => c.id !== data.id))
   },
 };

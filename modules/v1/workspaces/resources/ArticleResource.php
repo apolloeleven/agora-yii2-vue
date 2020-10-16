@@ -74,7 +74,7 @@ class ArticleResource extends Article
      */
     public function getArticleComments()
     {
-        return $this->hasMany(UserCommentResource::class, ['article_id' => 'id']);
+        return $this->hasMany(UserCommentResource::class, ['article_id' => 'id'])->orderBy('created_at DESC');
     }
 
     /**

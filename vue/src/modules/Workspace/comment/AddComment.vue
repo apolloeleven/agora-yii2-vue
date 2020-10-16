@@ -2,11 +2,10 @@
   <b-card-body class="bg-light">
     <b-media>
       <template v-slot:aside>
-        <b-img rounded="0" :src="'/assets/logo.png'" height="32"
-               width="32"></b-img>
+        <b-img rounded="0" :src="'/assets/logo.png'" height="32" width="32"/>
       </template>
       <b-input-group>
-        <b-form-input v-model="model.comment" :placeholder="$t('Leave comment')"/>
+        <b-form-input v-model="model.comment" :placeholder="parent_id ? $t('Write a replay') : $t('Leave comment')"/>
         <b-input-group-append>
           <b-button @click="onAdd" variant="info">{{ $t('Comment') }}</b-button>
         </b-input-group-append>
@@ -28,6 +27,7 @@ export default {
   props: {
     article_id: Number,
     timeline_id: Number,
+    parent_id: Number,
   },
   data() {
     return {
@@ -39,6 +39,7 @@ export default {
     async onAdd() {
       if (this.model.comment) {
         this.model.article_id = this.article_id;
+        this.model.parent_id = this.parent_id;
         this.model.timeline_post_id = this.timeline_id;
 
         const {success} = await this.addComment(this.model);

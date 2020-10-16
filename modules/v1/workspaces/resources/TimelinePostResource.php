@@ -73,7 +73,7 @@ class TimelinePostResource extends TimelinePost
      */
     public function getTimelineComments()
     {
-        return $this->hasMany(UserCommentResource::class, ['timeline_post_id' => 'id']);
+        return $this->hasMany(UserCommentResource::class, ['timeline_post_id' => 'id'])->orderBy('created_at DESC');
     }
 
     /**
