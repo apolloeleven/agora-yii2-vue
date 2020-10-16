@@ -4,6 +4,8 @@ import {
   HIDE_TIMELINE_MODAL,
   CHANGE_LOADING,
   DELETED_TIMELINE_POST,
+  ADD_TIMELINE_COMMENT,
+  DELETE_TIMELINE_COMMENT,
 } from './mutation-types'
 
 export default {
@@ -28,6 +30,14 @@ export default {
 
   [DELETED_TIMELINE_POST](state, id) {
     state.timelineData = state.timelineData.filter(t => t.id !== id)
+  },
+
+  [ADD_TIMELINE_COMMENT](state, data) {
+    state.timelineData.forEach(t => t.timelineComments.unshift(data));
+  },
+
+  [DELETE_TIMELINE_COMMENT](state, data) {
+    state.timelineData.forEach(t => t.timelineComments = t.timelineComments.filter(c => c.id !== data.id))
   },
 
 }

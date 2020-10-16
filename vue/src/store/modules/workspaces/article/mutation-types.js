@@ -15,5 +15,5 @@ export const SHOW_PREVIEW_MODAL = 'article/SHOW_PREVIEW_MODAL';
 export const HIDE_PREVIEW_MODAL = 'article/HIDE_PREVIEW_MODAL';
 export const CHANGE_CAROUSEL = 'article/CHANGE_CAROUSEL';
 export const SORT_ATTACHMENT = 'article/SORT_ATTACHMENT';
-export const ADD_COMMENT = 'article/ADD_COMMENT';
+export const ADD_ARTICLE_COMMENT = 'article/ADD_ARTICLE_COMMENT';
 export const DELETE_COMMENT = 'article/DELETE_COMMENT';

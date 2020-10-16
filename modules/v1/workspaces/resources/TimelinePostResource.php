@@ -54,7 +54,7 @@ class TimelinePostResource extends TimelinePost
 
     public function extraFields()
     {
-        return ['workspaceTimelinePosts', 'createdBy', 'article', 'articleFiles'];
+        return ['workspaceTimelinePosts', 'createdBy', 'article', 'articleFiles', 'timelineComments'];
     }
 
     /**
@@ -64,6 +64,16 @@ class TimelinePostResource extends TimelinePost
     {
         return $this->hasOne(WorkspaceResource::class, ['id' => 'timeline_post_id'])
             ->via('workspaceTimelinePosts');
+    }
+
+    /**
+     * Gets query for [[TimelineComments]].
+     *
+     * @return ActiveQuery
+     */
+    public function getTimelineComments()
+    {
+        return $this->hasMany(UserCommentResource::class, ['timeline_post_id' => 'id']);
     }
 
     /**

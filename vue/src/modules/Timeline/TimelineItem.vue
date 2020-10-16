@@ -50,6 +50,20 @@
         <div class="p-3 description" v-html="timeline.description"></div>
       </div>
     </div>
+    <b-card-footer>
+      <b-button size="sm" pill variant="light" :pressed.sync="showComments">
+        <i class="far fa-comments fa-lg"/>
+        <b-badge v-if="timeline.timelineComments" class="ml-2" pill variant="secondary">
+          {{ timeline.timelineComments.length }}
+        </b-badge>
+      </b-button>
+    </b-card-footer>
+    <AddComment :timeline_id="timeline.id" v-if="showComments"/>
+    <b-card-body v-if="showComments && timeline.timelineComments && timeline.timelineComments.length">
+      <CommentItem
+        v-for="(comment, index) in timeline.timelineComments" :comment="comment" :index="index" :key="index">
+      </CommentItem>
+    </b-card-body>
     <dropdown-button :model="timeline" type="timeline" :permissionForEdit="isAllowed"/>
   </b-card>
 </template>
@@ -59,12 +73,14 @@ import DropdownButton from "../Workspace/components/DropdownButton";
 import fileService from '../../core/services/fileService';
 import {createNamespacedHelpers} from "vuex";
 import {SHARE_ARTICLE, SHARE_FILE} from "../../core/services/event-bus";
+import CommentItem from "../Workspace/comment/CommentItem";
+import AddComment from "../Workspace/comment/AddComment";
 
 const {mapState} = createNamespacedHelpers('user');
 
 export default {
   name: "TimelineItem",
-  components: {DropdownButton},
+  components: {AddComment, CommentItem, DropdownButton},
   props: {
     index: Number,
     timeline: Object
@@ -74,6 +90,7 @@ export default {
       fileService: fileService,
       SHARE_ARTICLE: SHARE_ARTICLE,
       SHARE_FILE: SHARE_FILE,
+      showComments: true,
     }
   },
   computed: {

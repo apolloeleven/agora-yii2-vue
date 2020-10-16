@@ -19,7 +19,7 @@ export function hideTimelineModal({commit}) {
 
 export async function getTimelinePosts({commit}, workspaceId) {
   commit(CHANGE_LOADING)
-  const res = await httpService.get(`${url}?workspace_id=${workspaceId}&expand=workspaceTimelinePosts,article,createdBy&sort=-created_at`);
+  const res = await httpService.get(`${url}?workspace_id=${workspaceId}&expand=workspaceTimelinePosts,article,createdBy,timelineComments.createdBy&sort=-created_at`);
   if (res.success) {
     commit(CHANGE_LOADING)
     commit(GET_TIMELINE_DATA, res.body);

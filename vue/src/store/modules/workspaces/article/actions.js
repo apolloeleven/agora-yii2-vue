@@ -16,10 +16,11 @@ import {
   HIDE_PREVIEW_MODAL,
   CHANGE_CAROUSEL,
   SORT_ATTACHMENT,
-  ADD_COMMENT,
+  ADD_ARTICLE_COMMENT,
   DELETE_COMMENT,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
+import store from "../../../index";
 
 const url = '/v1/workspaces/article';
 const fileUrl = '/v1/workspaces/article-file';
@@ -289,7 +290,11 @@ export function sortAttachment({commit}, column) {
 export async function addComment({commit}, data) {
   const res = await httpService.post(`/v1/workspaces/user-comment?expand=createdBy`, data);
   if (res.success) {
-    commit(ADD_COMMENT, res.body);
+    if (data.article_id) {
+      commit(ADD_ARTICLE_COMMENT, res.body);
+    } else {
+      store.commit('timeline/timeline/ADD_TIMELINE_COMMENT', res.body)
+    }
   }
   return res;
 }
@@ -302,7 +307,11 @@ export async function addComment({commit}, data) {
 export async function deleteComment({commit}, data) {
   const res = await httpService.delete(`/v1/workspaces/user-comment/${data.id}`);
   if (res.success) {
-    commit(DELETE_COMMENT, data);
+    if (data.article_id) {
+      commit(DELETE_COMMENT, data);
+    } else {
+      store.commit('timeline/timeline/DELETE_TIMELINE_COMMENT', data)
+    }
   }
   return res;
 }

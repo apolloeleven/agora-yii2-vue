@@ -58,8 +58,9 @@
             <div class="timeline-records">
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
               <no-data :model="timelineData" :loading="loading" :text="$t('Nothing is shared on timeline')"></no-data>
-              <TimelineItem v-for="(timeline, index) in timelineData" :timeline="timeline"
-                            :index="index" :key="timeline.id"/>
+              <TimelineItem
+                v-for="(timeline, index) in timelineData" :timeline="timeline" :index="index" :key="timeline.id">
+              </TimelineItem>
             </div>
           </div>
         </div>
@@ -79,7 +80,7 @@ import TimelineItem from "../../Timeline/TimelineItem";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace')
 const {mapState: mapArticleStates, mapActions: mapArticleActions} = createNamespacedHelpers('article')
-const {mapActions: mapTimelineActions, mapState:mapTimelineState} = createNamespacedHelpers('timeline');
+const {mapActions: mapTimelineActions, mapState: mapTimelineState} = createNamespacedHelpers('timeline');
 
 export default {
   name: "WorkspaceView",

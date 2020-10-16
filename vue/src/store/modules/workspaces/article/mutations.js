@@ -16,8 +16,8 @@ import {
   HIDE_PREVIEW_MODAL,
   CHANGE_CAROUSEL,
   SORT_ATTACHMENT,
-  ADD_COMMENT,
   DELETE_COMMENT,
+  ADD_ARTICLE_COMMENT,
 } from "./mutation-types";
 
 export default {
@@ -196,19 +196,15 @@ export default {
    * @param state
    * @param data
    */
-  async [ADD_COMMENT](state, data) {
-    if (state.currentArticle && state.currentArticle.id === data.article_id) {
-      state.currentArticle.articleComments.unshift(data);
-    }
+  [ADD_ARTICLE_COMMENT](state, data) {
+    state.currentArticle.articleComments.unshift(data);
   },
   /**
    *
    * @param state
    * @param data
    */
-  async [DELETE_COMMENT](state, data) {
-    if (data.article_id) {
-      state.currentArticle.articleComments = state.currentArticle.articleComments.filter(a => a.id !== data.id);
-    }
+  [DELETE_COMMENT](state, data) {
+    state.currentArticle.articleComments = state.currentArticle.articleComments.filter(a => a.id !== data.id);
   },
 };
