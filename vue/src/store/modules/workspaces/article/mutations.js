@@ -16,6 +16,7 @@ import {
   HIDE_PREVIEW_MODAL,
   CHANGE_CAROUSEL,
   SORT_ATTACHMENT,
+  SAVE_COMMENT,
 } from "./mutation-types";
 
 export default {
@@ -188,5 +189,15 @@ export default {
         }
         return order === 'desc' ? comparison * -1 : comparison;
       });
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  async [SAVE_COMMENT](state, data) {
+    if (state.currentArticle && state.currentArticle.id === data.article_id) {
+      state.currentArticle.articleComments.unshift(data);
+    }
   },
 };

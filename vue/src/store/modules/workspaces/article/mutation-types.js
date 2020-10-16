@@ -15,3 +15,4 @@ export const SHOW_PREVIEW_MODAL = 'article/SHOW_PREVIEW_MODAL';
 export const HIDE_PREVIEW_MODAL = 'article/HIDE_PREVIEW_MODAL';
 export const CHANGE_CAROUSEL = 'article/CHANGE_CAROUSEL';
 export const SORT_ATTACHMENT = 'article/SORT_ATTACHMENT';
+export const SAVE_COMMENT = 'article/SAVE_COMMENT';

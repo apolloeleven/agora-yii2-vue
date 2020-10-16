@@ -16,6 +16,7 @@ import {
   HIDE_PREVIEW_MODAL,
   CHANGE_CAROUSEL,
   SORT_ATTACHMENT,
+  SAVE_COMMENT,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 
@@ -82,7 +83,7 @@ export async function deleteArticle({commit}, data) {
  * @returns {Promise<void>}
  */
 export async function getCurrentArticle({commit}, articleId) {
-  const {success, body} = await httpService.get(`${url}/${articleId}?expand=workspace,createdBy`)
+  const {success, body} = await httpService.get(`${url}/${articleId}?expand=workspace,createdBy,articleComments`)
   if (success) {
     commit(GET_CURRENT_ARTICLE, body);
   }
@@ -277,6 +278,19 @@ export function changeCarousel({commit}, index) {
  */
 export function sortAttachment({commit}, column) {
   commit(SORT_ATTACHMENT, column);
+}
+
+/**
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function saveComment({commit}, data) {
+  const res = await httpService.post(`/v1/workspaces/user-comment`, data);
+  if (res.success) {
+    commit(SAVE_COMMENT, res.body);
+  }
+  return res;
 }
 
 /**

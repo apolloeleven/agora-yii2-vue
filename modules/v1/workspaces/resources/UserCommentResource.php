@@ -20,7 +20,7 @@ class UserCommentResource extends UserComment
             'id',
             'comment',
             'article_id',
-            'timeline_object_id',
+            'timeline_post_id',
             'created_at' => function () {
                 return $this->created_at * 1000;
             },

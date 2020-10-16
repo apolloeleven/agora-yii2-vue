@@ -90,6 +90,12 @@
                 </div>
               </b-card-body>
               <b-card-footer>
+                <b-button size="sm" pill variant="light" :pressed.sync="showComments">
+                  <i class="far fa-comments fa-lg"/>
+                  <b-badge v-if="currentArticle.articleComments" class="ml-2" pill variant="secondary">
+                    {{ currentArticle.articleComments.length }}
+                  </b-badge>
+                </b-button>
                 <span class="float-right" v-if="currentArticle.createdBy">
                     <i class="far fa-user-circle"/>
                     {{ currentArticle.createdBy.displayName }}
@@ -98,6 +104,7 @@
                 </AttachmentShareButton>
               </span>
               </b-card-footer>
+              <AddComment :article_id="currentArticle.id" v-if="showComments"/>
             </b-card>
             <div class="article-list">
               <ArticleChildItem
@@ -137,12 +144,14 @@ import NoData from "../components/NoData";
 import AddToFavourites from "../components/AddToFavourites/AddToFavourites";
 import Attachments from "./attachment/Attachments";
 import AttachmentShareButton from "./attachment/AttachmentShareButton";
+import AddComment from "../comment/AddComment";
 
 const {mapState, mapActions} = createNamespacedHelpers('article')
 
 export default {
   name: "ArticleView",
   components: {
+    AddComment,
     AttachmentShareButton,
     Attachments,
     AddToFavourites,
@@ -154,6 +163,7 @@ export default {
   data() {
     return {
       visible: false,
+      showComments: true,
     }
   },
   computed: {
