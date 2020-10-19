@@ -5,7 +5,9 @@
     <div class="bg-light text-right bg-secondary shadow-sm py-2 px-3">
       <div class="attachment-toolbar mb-3">
         <AttachmentDownloadButton tag="button" :file="fileIndex" class="attachment-button"/>
-        <AttachmentShareButton tag="button" :fileIds="[fileIndex.id]" :model="model" class="attachment-button"/>
+        <AttachmentShareButton
+          tag="button" :fileIds="[fileIndex.id]" :file="fileIndex" :model="model" class="attachment-button">
+        </AttachmentShareButton>
         <AttachmentDeleteButton tag="button" :fileIds="[fileIndex.id]" :model="model" class="attachment-button"/>
       </div>
 
