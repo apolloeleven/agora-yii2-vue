@@ -2,7 +2,7 @@
   <b-card-body class="bg-light">
     <b-media>
       <template v-slot:aside>
-        <b-img rounded="0" :src="'/assets/logo.png'" height="32" width="32"/>
+        <b-img rounded="0" :src="'/assets/img/avatar.svg'" height="32" width="32"/>
       </template>
       <b-input-group>
         <b-form-input v-model="model.comment" :placeholder="parent_id ? $t('Write a replay') : $t('Leave comment')"/>
