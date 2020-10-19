@@ -10,6 +10,8 @@ use app\modules\v1\workspaces\models\Workspace;
 use app\rest\ValidationException;
 use Yii;
 use yii\db\ActiveQuery;
+use yii\helpers\FileHelper;
+use yii\web\UploadedFile;
 
 /**
  * Class WorkspaceResource
@@ -28,6 +30,9 @@ class WorkspaceResource extends Workspace
             'folder_in_folder',
             'created_at',
             'updated_at',
+            'image_url' => function () {
+                return $this->image_path ? Yii::getAlias('@storageUrl' . $this->image_path) : '';
+            },
         ];
     }
 
@@ -74,5 +79,45 @@ class WorkspaceResource extends Workspace
                 throw new ValidationException(Yii::t('app', 'Unable to create user workspace'));
             }
         }
+    }
+
+    /**
+     * Load for image upload
+     *
+     * @param array $data
+     * @param null $formName
+     * @return bool
+     */
+    public function load($data, $formName = null)
+    {
+        $this->image = UploadedFile::getInstanceByName('image');
+
+        return parent::load($data, $formName);
+    }
+
+    /**
+     * Upload image
+     *
+     * @param bool $runValidation
+     * @param null $attributeNames
+     * @return bool
+     * @throws \yii\base\Exception
+     */
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if (!$this->image) {
+            return parent::save($runValidation, $attributeNames);
+        }
+        $dirPath = '/workspace' . $this->id;
+        $this->image_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
+
+        $parentSave = parent::save($runValidation, $attributeNames);
+        if (!$parentSave) return $parentSave;
+
+        $fullPath = Yii::getAlias('@storage' . $this->image_path);
+        if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
+        $this->image->saveAs($fullPath);
+
+        return $parentSave;
     }
 }

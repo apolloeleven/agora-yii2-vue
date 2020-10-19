@@ -14,6 +14,8 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
         '@portalUrl' => env('PORTAL_HOST'),
+        '@storage' => dirname(__DIR__) . '/web/storage',
+        '@storageUrl' => env('API_HOST') . '/storage',
     ],
     'components' => [
         'request' => [

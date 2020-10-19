@@ -35,7 +35,7 @@ export function hideWorkspaceModal({commit}, hideModal) {
  * @returns {Promise<unknown>}
  */
 export async function createWorkspace({dispatch}, data) {
-  const res = await httpService.post(`/v1/workspaces/workspace?expand=updatedBy`, data);
+  const res = await httpService.post(`/v1/workspaces/workspace?expand=updatedBy`, prepareData(data));
   if (res.success) {
     dispatch('getUserWorkspaces');
   }
@@ -50,7 +50,7 @@ export async function createWorkspace({dispatch}, data) {
  * @returns {Promise<unknown>}
  */
 export async function updateWorkspace({dispatch}, data) {
-  const res = await httpService.put(`/v1/workspaces/workspace/${data.id}`, data);
+  const res = await httpService.put(`/v1/workspaces/workspace/${data.id}`, prepareData(data));
   if (res.success) {
     dispatch('getUserWorkspaces');
   }
@@ -98,4 +98,23 @@ export async function getWorkspaceBreadCrumb({commit}, workspaceId) {
   const res = await httpService.get(`/v1/workspaces/workspace/get-bread-crumb?workspaceId=${workspaceId}`);
   if (res.success) commit(GET_BREAD_CRUMB, res.body);
   return res;
+}
+
+/**
+ * Prepare data for upload
+ *
+ * @param data
+ * @returns {*}
+ */
+export function prepareData(data) {
+  if (data.image && data.image instanceof File) {
+    const tmp = new FormData();
+    for (let key in data) {
+      if (data.hasOwnProperty(key)) {
+        tmp.append(key, data[key] || '');
+      }
+    }
+    data = tmp;
+  }
+  return data;
 }

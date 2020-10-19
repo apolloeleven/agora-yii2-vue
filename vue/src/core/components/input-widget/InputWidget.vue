@@ -127,6 +127,16 @@
         {{ computedHint }}
       </b-form-text>
     </b-form-group>
+    <b-form-group v-if="isFileUpload()">
+      <label v-if="computedLabel">
+        {{ computedLabel }}
+        <span v-if="v.required" class="text-danger">*</span>
+      </label>
+      <b-form-file v-model="model[attribute]" :type="type" :placeholder="computedPlaceholder" :state="getState(v)"/>
+      <b-form-invalid-feedback :state="getState(v)">
+        {{ getError(v.errors) }}
+      </b-form-invalid-feedback>
+    </b-form-group>
   </ValidationProvider>
 </template>
 
@@ -302,6 +312,9 @@ export default {
     },
     isCheckbox() {
       return this.type === 'checkbox';
+    },
+    isFileUpload() {
+      return this.type === 'file';
     },
     onChange(val) {
       if (this.type === 'number' && val === '') {
