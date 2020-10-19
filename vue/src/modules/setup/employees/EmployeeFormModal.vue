@@ -1,15 +1,15 @@
 <template>
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal
-        :visible="showModal" id="user-form" ref="modal" :title='$t(`Edit employee "{user}"`, {user: object.email})' @hidden="onHideModal" size="lg"
-        @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')" scrollable>
+      :visible="showModal" id="user-form" ref="modal" :title='$t(`Edit employee "{user}"`, {user: object.email})'
+      @hidden="onHideModal" size="lg"
+      @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')" scrollable>
       <content-spinner :show="loading" :text="$t('Please wait...')" :fullscreen="true" class="h-100"/>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
         <b-card header-tag="header" class="form-cards mb-2" body-class="pb-0">
-          <input-widget v-if="model.status" style="color: green" size="lg" type="checkbox"
-                        :model="model" attribute="status" :is-switch="true"/>
-          <input-widget v-else style="color: red" size="lg" type="checkbox"
-                        :model="model" attribute="status" :is-switch="true"/>
+          <input-widget
+            :class="textColor" size="lg" type="checkbox" :model="model" attribute="status" :is-switch="true">
+          </input-widget>
         </b-card>
         <div class="row">
           <div class="col-md-12">
@@ -122,6 +122,7 @@ import RoleModel from "@/modules/setup/employees/RoleModel";
 import employeeService from "@/modules/setup/employees/employeesService";
 import UserDepartmentModel from "@/modules/setup/employees/UserDepartmentModel";
 import {clone} from "lodash";
+import {ACTIVE_USER, INACTIVE_USER} from "../../../constants";
 
 const {mapState, mapActions} = createNamespacedHelpers('employee');
 const {mapActions: mapInvitationActions} = createNamespacedHelpers('setup');
@@ -141,6 +142,12 @@ export default {
       object: state => state.modal.object,
       dropdownData: state => state.modalDropdownData
     }),
+    textColor() {
+      if (this.model.status) {
+        return 'text-success'
+      }
+      return 'text-danger'
+    },
   },
   watch: {
     object() {
@@ -184,7 +191,7 @@ export default {
       let keyToRename = data['userDepartments'];
       delete data['userDepartments'];
       data['userDepartmentsData'] = keyToRename;
-      data.status = data.status ? 1 : 2;
+      data.status = data.status ? ACTIVE_USER : INACTIVE_USER;
       const {success, body} = await employeeService.updateUserData(data);
       if (success) {
         this.hideModal();

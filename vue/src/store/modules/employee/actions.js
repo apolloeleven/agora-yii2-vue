@@ -8,6 +8,7 @@ import {
   HIDE_MODAL,
   DELETED_USER,
 } from "@/store/modules/employee/mutation-types";
+import {ACTIVE_USER, INACTIVE_USER} from "../../../constants";
 
 export function showEmployeeModal({commit}, payload) {
   commit(SHOW_EMPLOYEE_MODAL, payload);
@@ -45,5 +46,5 @@ export async function deleteEmployee({commit}, data) {
 }
 
 export async function updateUserStatus({commit}, data) {
-  return httpService.put(`/v1/users/employee/${data.id}`, {status: data.status ? 2 : 1});
+  return httpService.put(`/v1/users/employee/${data.id}`, {status: data.status ? INACTIVE_USER : ACTIVE_USER});
 }

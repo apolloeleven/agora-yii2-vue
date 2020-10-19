@@ -36,7 +36,7 @@
                 <template slot="button-content">
                   <i class="fas fa-ellipsis-v"></i>
                 </template>
-                <b-dropdown-item @click="editUser(data.item)" v-if="data.item.status !== 2">
+                <b-dropdown-item @click="editUser(data.item)" v-if="data.item.status !== PENDING_STATUS">
                   <i class="fas fa-pencil-alt"></i>
                   {{ $t('Edit') }}
                 </b-dropdown-item>
@@ -61,6 +61,7 @@ import ContentSpinner from "../../../core/components/ContentSpinner";
 import PageHeader from "@/core/components/PageHeader";
 import UserInvitationForm from "@/modules/setup/invitations/UserInvitationForm";
 import NoDataAvailable from "@/core/components/NoDataAvailable";
+import {PENDING_STATUS} from "../../../constants";
 
 const {mapState, mapActions} = createNamespacedHelpers('setup');
 const {mapActions: mapEmployeeActions} = createNamespacedHelpers('employee');
@@ -69,7 +70,9 @@ export default {
   name: "UserInvitations",
   components: {NoDataAvailable, UserInvitationForm, PageHeader, ContentSpinner},
   data() {
-    return {}
+    return {
+      PENDING_STATUS: PENDING_STATUS
+    }
   },
   computed: {
     ...mapState(['invitations']),

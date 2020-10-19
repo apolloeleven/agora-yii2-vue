@@ -210,12 +210,10 @@ class UserResource extends User
     {
         $oldStatus = ArrayHelper::getValue($this->oldAttributes, 'status');
 
-        if ($oldStatus == self::STATUS_INACTIVE && $this->status == self::STATUS_ACTIVE && $this->invitation) {
-            if ($this->invitation->status == Invitation::STATUS_REGISTERED) {
-                $this->invitation->status = Invitation::STATUS_COMPLETED;
-                if (!$this->invitation->save()) {
-                    throw new ValidationException(Yii::t('app', "Unable to update Invitation. Token: {$this->invitation->token}"));
-                }
+        if ($oldStatus == self::STATUS_INACTIVE && $this->status == self::STATUS_ACTIVE && $this->invitation && $this->invitation->status == Invitation::STATUS_REGISTERED) {
+            $this->invitation->status = Invitation::STATUS_COMPLETED;
+            if (!$this->invitation->save()) {
+                throw new ValidationException(Yii::t('app', "Unable to update Invitation. Token: {$this->invitation->token}"));
             }
         }
         return parent::beforeSave($insert);
