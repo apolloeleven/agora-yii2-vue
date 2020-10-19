@@ -29,6 +29,9 @@ use yii\web\UploadedFile;
  *
  * @property Article $article
  * @property ArticleFile[] $articleFiles
+ * @property UserLike[] $myLikes
+ * @property UserComment[] $userComments
+ * @property UserLike[] $userLikes
  * @property User $createdBy
  * @property User $updatedBy
  * @property WorkspaceTimelinePost[] $workspaceTimelinePosts
@@ -131,6 +134,26 @@ class TimelinePost extends ActiveRecord
     public function getArticleFiles()
     {
         return $this->hasMany(ArticleFile::class, ['article_id' => 'article_id']);
+    }
+
+    /**
+     * Gets query for [[UserComments]].
+     *
+     * @return ActiveQuery
+     */
+    public function getUserComments()
+    {
+        return $this->hasMany(UserComment::class, ['article_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[UserLikes]].
+     *
+     * @return ActiveQuery
+     */
+    public function getUserLikes()
+    {
+        return $this->hasMany(UserLike::class, ['article_id' => 'id']);
     }
 
     /**

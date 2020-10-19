@@ -35,6 +35,8 @@ use yii\db\ActiveRecord;
  * @property Article[] $children
  * @property ArticleFile[] $articleFiles
  * @property UserComment[] $userComments
+ * @property UserLike[] $userLikes
+ * @property UserLike[] $myLikes
  * @property User $updatedBy
  * @property Workspace $workspace
  */
@@ -133,6 +135,16 @@ class Article extends ActiveRecord
     public function getUserComments()
     {
         return $this->hasMany(UserComment::class, ['article_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[UserLikes]].
+     *
+     * @return ActiveQuery
+     */
+    public function getUserLikes()
+    {
+        return $this->hasMany(UserLike::class, ['article_id' => 'id']);
     }
 
     /**

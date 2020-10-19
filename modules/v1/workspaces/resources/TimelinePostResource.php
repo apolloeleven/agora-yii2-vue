@@ -54,7 +54,17 @@ class TimelinePostResource extends TimelinePost
 
     public function extraFields()
     {
-        return ['workspaceTimelinePosts', 'createdBy', 'article', 'articleFiles', 'timelineComments'];
+        return [
+            'workspaceTimelinePosts',
+            'createdBy',
+            'article',
+            'articleFiles',
+            'timelineComments',
+            'userLikes',
+            'like' => function () {
+                return !!$this->myLikes;
+            },
+        ];
     }
 
     /**
@@ -74,6 +84,16 @@ class TimelinePostResource extends TimelinePost
     public function getTimelineComments()
     {
         return $this->hasMany(UserCommentResource::class, ['timeline_post_id' => 'id'])->orderBy('created_at DESC');
+    }
+
+    /**
+     * Gets query for [[UserLikes]].
+     *
+     * @return ActiveQuery
+     */
+    public function getUserLikes()
+    {
+        return $this->hasMany(UserLikeResource::class, ['article_id' => 'id']);
     }
 
     /**
@@ -158,5 +178,14 @@ class TimelinePostResource extends TimelinePost
     public function getArticle()
     {
         return $this->hasOne(ArticleResource::class, ['id' => 'article_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getMyLikes()
+    {
+        return $this->hasMany(UserLikeResource::class, ['article_id' => 'id'])
+            ->andWhere(['created_by' => Yii::$app->user->id]);
     }
 }
