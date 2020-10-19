@@ -90,6 +90,7 @@
                 </div>
               </b-card-body>
               <b-card-footer>
+                <LikeUnlikeButton class="mr-2" :model="currentArticle" type="article"/>
                 <b-button size="sm" pill variant="light" :pressed.sync="showComments">
                   <i class="far fa-comments fa-lg"/>
                   <b-badge v-if="comments" class="ml-2" pill variant="secondary">
@@ -149,12 +150,14 @@ import Attachments from "./attachment/Attachments";
 import AttachmentShareButton from "./attachment/AttachmentShareButton";
 import AddComment from "../comment/AddComment";
 import CommentItem from "../comment/CommentItem";
+import LikeUnlikeButton from "../components/LikeUnlikeButton";
 
 const {mapState, mapActions} = createNamespacedHelpers('article')
 
 export default {
   name: "ArticleView",
   components: {
+    LikeUnlikeButton,
     CommentItem,
     AddComment,
     AttachmentShareButton,

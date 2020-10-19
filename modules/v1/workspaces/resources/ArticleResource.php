@@ -62,9 +62,7 @@ class ArticleResource extends Article
             'articleFiles',
             'articleComments',
             'userLikes',
-            'like' => function () {
-                return !!$this->myLikes;
-            },
+            'myLikes',
         ];
     }
 
