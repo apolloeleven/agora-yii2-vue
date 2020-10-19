@@ -91,7 +91,7 @@ export async function deleteArticle({commit}, data) {
 export async function getCurrentArticle({commit}, articleId) {
   const {success, body} = await httpService.get(`${url}/${articleId}?expand=workspace,createdBy,
     articleComments.createdBy,articleComments.childrenComments.createdBy,articleComments.childrenComments.parent,
-    userLikes, myLikes`)
+    userLikes,myLikes`)
   if (success) {
     commit(GET_CURRENT_ARTICLE, body);
   }
@@ -344,7 +344,11 @@ export async function deleteComment({commit}, data) {
 export async function like({commit}, data) {
   const {success, body} = await httpService.post(`/v1/workspaces/user-like`, data)
   if (success) {
-    commit(LIKE, body)
+    if (data.article_id) {
+      commit(LIKE, body)
+    } else {
+      store.commit('timeline/timeline/TIMELINE_LIKE', body)
+    }
   }
 }
 
@@ -358,7 +362,11 @@ export async function like({commit}, data) {
 export async function unlike({commit}, data) {
   const {success} = await httpService.delete(`/v1/workspaces/user-like/${data.id}`)
   if (success) {
-    commit(UNLIKE, data)
+    if (data.article_id) {
+      commit(UNLIKE, data)
+    } else {
+      store.commit('timeline/timeline/TIMELINE_UNLIKE', data)
+    }
   }
 }
 

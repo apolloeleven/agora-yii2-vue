@@ -51,6 +51,7 @@
       </div>
     </div>
     <b-card-footer>
+      <LikeUnlikeButton class="mr-2" :model="timeline" type="timeline"/>
       <b-button size="sm" pill variant="light" :pressed.sync="showComments">
         <i class="far fa-comments fa-lg"/>
         <b-badge v-if="timeline.timelineComments" class="ml-2" pill variant="secondary">
@@ -75,12 +76,13 @@ import {createNamespacedHelpers} from "vuex";
 import {SHARE_ARTICLE, SHARE_FILE} from "../../core/services/event-bus";
 import CommentItem from "../Workspace/comment/CommentItem";
 import AddComment from "../Workspace/comment/AddComment";
+import LikeUnlikeButton from "../Workspace/components/LikeUnlikeButton";
 
 const {mapState} = createNamespacedHelpers('user');
 
 export default {
   name: "TimelineItem",
-  components: {AddComment, CommentItem, DropdownButton},
+  components: {LikeUnlikeButton, AddComment, CommentItem, DropdownButton},
   props: {
     index: Number,
     timeline: Object

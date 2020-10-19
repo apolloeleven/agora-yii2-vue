@@ -61,9 +61,7 @@ class TimelinePostResource extends TimelinePost
             'articleFiles',
             'timelineComments',
             'userLikes',
-            'like' => function () {
-                return !!$this->myLikes;
-            },
+            'myLikes',
         ];
     }
 
@@ -93,7 +91,7 @@ class TimelinePostResource extends TimelinePost
      */
     public function getUserLikes()
     {
-        return $this->hasMany(UserLikeResource::class, ['article_id' => 'id']);
+        return $this->hasMany(UserLikeResource::class, ['timeline_post_id' => 'id']);
     }
 
     /**
@@ -185,7 +183,7 @@ class TimelinePostResource extends TimelinePost
      */
     public function getMyLikes()
     {
-        return $this->hasMany(UserLikeResource::class, ['article_id' => 'id'])
+        return $this->hasMany(UserLikeResource::class, ['timeline_post_id' => 'id'])
             ->andWhere(['created_by' => Yii::$app->user->id]);
     }
 }

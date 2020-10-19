@@ -29,7 +29,7 @@ export default {
     async onLike() {
       const params = {}
       if (this.type === 'timeline') {
-        params.timeline_object_id = this.model.id;
+        params.timeline_post_id = this.model.id;
       } else {
         params.article_id = this.model.id;
       }

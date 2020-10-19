@@ -233,8 +233,8 @@ export default {
    * @param data
    */
   [LIKE](state, data) {
-    state.currentArticle.userLikes.unshift(data)
-    state.currentArticle.myLikes.unshift(data)
+    state.currentArticle.userLikes.unshift(data);
+    state.currentArticle.myLikes.unshift(data);
   },
   /**
    *
@@ -243,6 +243,6 @@ export default {
    */
   [UNLIKE](state, data) {
     state.currentArticle.myLikes = [];
-    state.currentArticle.userLikes = state.currentArticle.userLikes.filter(c => c.id !== data.id);
+    state.currentArticle.userLikes = state.currentArticle.userLikes.filter(l => l.id !== data.id);
   },
 };
