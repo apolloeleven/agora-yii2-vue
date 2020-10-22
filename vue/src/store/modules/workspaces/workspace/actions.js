@@ -4,7 +4,8 @@ import {
   GET_WORKSPACES,
   WORKSPACE_DELETED,
   GET_BREAD_CRUMB,
-  GET_CURRENT_WORKSPACE, GET_EMPLOYEES,
+  GET_CURRENT_WORKSPACE,
+  GET_EMPLOYEES,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 
@@ -38,7 +39,7 @@ export function hideWorkspaceModal({commit}, hideModal) {
  * @returns {Promise<unknown>}
  */
 export async function createWorkspace({dispatch}, data) {
-  const res = await httpService.post(`${url}?expand=updatedBy`, data);
+  const res = await httpService.post(`${url}?expand=updatedBy`, prepareData(data));
   if (res.success) {
     dispatch('getWorkspaces');
   }
@@ -53,7 +54,15 @@ export async function createWorkspace({dispatch}, data) {
  * @returns {Promise<unknown>}
  */
 export async function updateWorkspace({dispatch}, data) {
-  const res = await httpService.put(`${url}/${data.id}`, data);
+  const id = data.id;
+  data = prepareData(data);
+  let res;
+  if (data instanceof FormData) {
+    data.append('_method', 'PUT');
+    res = await httpService.post(`${url}/${id}`, data);
+  } else {
+    res = await httpService.put(`${url}/${id}`, data);
+  }
   if (res.success) {
     dispatch('getWorkspaces');
   }
@@ -139,4 +148,23 @@ export async function getEmployees({commit}, workspaceId) {
   if (success) {
     commit(GET_EMPLOYEES, body)
   }
+}
+
+/**
+ * Prepare data for upload
+ *
+ * @param data
+ * @returns {*}
+ */
+export function prepareData(data) {
+  if (data.image && data.image instanceof File) {
+    const tmp = new FormData();
+    for (let key in data) {
+      if (data.hasOwnProperty(key)) {
+        tmp.append(key, data[key] || '');
+      }
+    }
+    data = tmp;
+  }
+  return data;
 }

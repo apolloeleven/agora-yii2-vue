@@ -9,6 +9,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\FileHelper;
 
 /**
  * This is the model class for table "{{%workspaces}}".
@@ -131,5 +132,21 @@ class Workspace extends ActiveRecord
     public function getArticles()
     {
         return $this->hasMany(Article::class, ['workspace_id' => 'id']);
+    }
+
+    /**
+     * Delete image
+     *
+     * @return bool
+     * @throws \yii\base\ErrorException
+     */
+    public function deleteImage()
+    {
+        if ($this->image_path) {
+            $dir = dirname($this->image_path);
+            FileHelper::removeDirectory(Yii::getAlias("@storage/$dir"));
+        }
+
+        return true;
     }
 }
