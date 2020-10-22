@@ -50,7 +50,17 @@ export async function createWorkspace({dispatch}, data) {
  * @returns {Promise<unknown>}
  */
 export async function updateWorkspace({dispatch}, data) {
-  const res = await httpService.put(`/v1/workspaces/workspace/${data.id}`, prepareData(data));
+  const id = data.id;
+  data = prepareData(data);
+  let res;
+
+  if (data instanceof FormData) {
+    data.append('_method', 'PUT');
+    res = await httpService.post(`/v1/workspaces/workspace/${id}`, data)
+  } else {
+    res = await httpService.put(`/v1/workspaces/workspace/${id}`, data)
+  }
+
   if (res.success) {
     dispatch('getUserWorkspaces');
   }
