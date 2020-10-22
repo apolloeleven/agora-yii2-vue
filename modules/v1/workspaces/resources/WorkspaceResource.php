@@ -102,13 +102,15 @@ class WorkspaceResource extends Workspace
      * @param null $attributeNames
      * @return bool
      * @throws \yii\base\Exception
+     * @throws \yii\base\ErrorException
      */
     public function save($runValidation = true, $attributeNames = null)
     {
         if (!$this->image) {
             return parent::save($runValidation, $attributeNames);
         }
-        $dirPath = '/workspace' . $this->id;
+        $this->deleteImage();
+        $dirPath = '/workspace/' . $this->id;
         $this->image_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
 
         $parentSave = parent::save($runValidation, $attributeNames);
