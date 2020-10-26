@@ -27,7 +27,6 @@ export default class WorkspaceFormModel extends BaseModel {
 
   constructor(data = {}) {
     super();
-    data.folder_in_folder = !!data.folder_in_folder;
     Object.assign(this, {...data});
   }
 }

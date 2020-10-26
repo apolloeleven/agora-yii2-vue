@@ -121,7 +121,7 @@ export function prepareData(data) {
     const tmp = new FormData();
     for (let key in data) {
       if (data.hasOwnProperty(key)) {
-        tmp.append(key, data[key] || '');
+        tmp.append(key, data[key]);
       }
     }
     data = tmp;
