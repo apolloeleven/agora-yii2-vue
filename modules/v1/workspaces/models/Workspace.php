@@ -149,4 +149,14 @@ class Workspace extends ActiveRecord
 
         return true;
     }
+
+    /**
+     * Check uploaded file is image
+     *
+     * @return bool
+     */
+    public function isImage()
+    {
+        return in_array($this->image->extension, ['png', 'jpeg', 'svg', 'gif', 'jpg']);
+    }
 }

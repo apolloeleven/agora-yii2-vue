@@ -46,22 +46,20 @@ export default {
   methods: {
     ...mapActions(['hideWorkspaceModal', 'createWorkspace', 'updateWorkspace']),
     async onSubmit() {
-      this.model.folder_in_folder = this.model.folder_in_folder ? 1 : 0;
-
       let action
       let res
       if (this.model.id) {
         action = 'updated';
-        res = await this.updateWorkspace(this.model);
+        res = await this.updateWorkspace({...this.model.toJSON()});
       } else {
         action = 'created';
-        res = await this.createWorkspace(this.model);
+        res = await this.createWorkspace({...this.model.toJSON()});
       }
       if (res.success) {
         this.$toast(this.$t(`The workspace '{name}' was successfully ${action}`, {name: this.model.name}));
         this.hideModal()
       } else {
-        this.$toast(this.$t(`The workspace '{name}' was not ${action}`, {name: this.model.name}), 'danger');
+        this.model.setMultipleErrors(res.body);
       }
     },
     hideModal() {

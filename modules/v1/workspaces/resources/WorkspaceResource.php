@@ -28,7 +28,9 @@ class WorkspaceResource extends Workspace
             'name',
             'abbreviation',
             'description',
-            'folder_in_folder',
+            'folder_in_folder' => function () {
+                return !!$this->folder_in_folder;
+            },
             'created_at' => function () {
                 return $this->created_at * 1000;
             },
@@ -112,10 +114,14 @@ class WorkspaceResource extends Workspace
      */
     public function save($runValidation = true, $attributeNames = null)
     {
+        $this->folder_in_folder = $this->folder_in_folder ? 1 : 0;
+
         if (!$this->image) {
             return parent::save($runValidation, $attributeNames);
         }
-        $this->deleteImage();
+        if ($this->isImage()) {
+            $this->deleteImage();
+        }
         $dirPath = '/workspace/' . $this->id;
         $this->image_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
 
