@@ -49,14 +49,14 @@ export default {
   methods: {
     async onSubmit() {
       this.loading = true;
-      const response = await auth.register(this.model);
+      this.model.token = this.$route.params.token;
+      const response = await auth.register({...this.model.toJSON()});
       this.loading = false;
       if (response.success) {
         this.$toast(this.$t(`Your account will be reviewed by admin and you will receive login instructions`));
         this.$router.push({name: 'auth.login'});
       } else {
-        this.$toast(this.$t(`Unable to register user`));
-        this.$router.push({name: 'auth.login'});
+        this.$toast(this.$t(`Unable to register user`), 'danger');
       }
     },
     async getEmail() {
