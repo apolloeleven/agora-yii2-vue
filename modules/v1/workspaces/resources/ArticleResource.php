@@ -8,7 +8,9 @@ use app\rest\ValidationException;
 use Yii;
 use app\modules\v1\workspaces\models\Article;
 use yii\db\Exception;
+use yii\helpers\FileHelper;
 use yii\helpers\StringHelper;
+use yii\web\UploadedFile;
 
 /**
  * Class ArticleResource
@@ -37,6 +39,9 @@ class ArticleResource extends Article
                 $length = 240;
                 $model->depth == 0 ?: $length = 80;
                 return StringHelper::truncate(strip_tags($model->body), $length);
+            },
+            'image_url' => function () {
+                return $this->image_path ? Yii::getAlias('@storageUrl' . $this->image_path) : '';
             },
         ];
     }
@@ -68,5 +73,47 @@ class ArticleResource extends Article
         }
         $dbTransaction->commit();
         return true;
+    }
+
+    /**
+     * Load for image upload
+     *
+     * @param array $data
+     * @param null $formName
+     * @return bool
+     */
+    public function load($data, $formName = null)
+    {
+        $this->image = UploadedFile::getInstanceByName('image');
+
+        return parent::load($data, $formName);
+    }
+
+    /**
+     * Upload image
+     *
+     * @param bool $runValidation
+     * @param null $attributeNames
+     * @return bool
+     * @throws \yii\base\Exception
+     * @throws \yii\base\ErrorException
+     */
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if (!$this->image) {
+            return parent::save($runValidation, $attributeNames);
+        }
+        $this->deleteImage();
+        $dirPath = '/articles/' . $this->workspace_id;
+        $this->image_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
+
+        $parentSave = parent::save($runValidation, $attributeNames);
+        if (!$parentSave) return $parentSave;
+
+        $fullPath = Yii::getAlias('@storage' . $this->image_path);
+        if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
+        $this->image->saveAs($fullPath);
+
+        return $parentSave;
     }
 }

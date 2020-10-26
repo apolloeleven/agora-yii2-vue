@@ -57,6 +57,7 @@ export async function updateWorkspace({dispatch}, data) {
   const id = data.id;
   data = prepareData(data);
   let res;
+
   if (data instanceof FormData) {
     data.append('_method', 'PUT');
     res = await httpService.post(`${url}/${id}`, data);

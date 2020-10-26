@@ -34,7 +34,8 @@
             <div class="row">
               <div class="col-md-4 col-sm-12">
                 <b-media class="article-header align-items-center">
-                  <i class="fas fa-folder-open fa-4x"></i>
+                  <b-img v-if="currentArticle.image_url" class="article-image" :src="currentArticle.image_url"/>
+                  <i v-else class="fas fa-folder-open fa-4x"/>
                 </b-media>
               </div>
               <div class="col-md-8 col-sm-12">
@@ -187,6 +188,11 @@ export default {
     display: flex;
     align-items: start;
   }
+}
+
+.article-image {
+  width: 160px;
+  min-width: 160px;
 }
 
 .article-description {

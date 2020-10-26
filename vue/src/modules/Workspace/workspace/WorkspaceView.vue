@@ -21,7 +21,8 @@
             <div class="row">
               <div class="col-md-4 col-sm-12">
                 <b-media class="article-header align-items-center">
-                  <i class="fas fa-folder-open fa-4x"></i>
+                  <b-img v-if="currentWorkspace.image_url" class="workspace-image" :src="currentWorkspace.image_url"/>
+                  <i v-else class="fas fa-folder-open fa-4x"/>
                 </b-media>
               </div>
               <div class="col-md-8 col-sm-12">
@@ -115,6 +116,9 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.workspace-image {
+  width: 160px;
+  min-width: 160px;
+}
 </style>
