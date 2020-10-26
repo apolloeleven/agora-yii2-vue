@@ -46,6 +46,7 @@ export default {
   methods: {
     ...mapActions(['hideWorkspaceModal', 'createWorkspace', 'updateWorkspace']),
     async onSubmit() {
+      this.model.folder_in_folder = this.model.folder_in_folder ? 1 : 0
       let action
       let res
       if (this.model.id) {
@@ -59,6 +60,7 @@ export default {
         this.$toast(this.$t(`The workspace '{name}' was successfully ${action}`, {name: this.model.name}));
         this.hideModal()
       } else {
+        this.model.folder_in_folder = !!this.model.folder_in_folder;
         this.model.setMultipleErrors(res.body);
       }
     },

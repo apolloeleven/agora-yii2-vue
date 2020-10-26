@@ -108,8 +108,6 @@ class WorkspaceResource extends Workspace
      */
     public function save($runValidation = true, $attributeNames = null)
     {
-        $this->folder_in_folder = $this->folder_in_folder ? 1 : 0;
-
         if (!$this->image) {
             return parent::save($runValidation, $attributeNames);
         }
@@ -124,7 +122,9 @@ class WorkspaceResource extends Workspace
 
         $fullPath = Yii::getAlias('@storage' . $this->image_path);
         if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
-        $this->image->saveAs($fullPath);
+        if (!$this->image->saveAs($fullPath)) {
+            throw new ValidationException(Yii::t('app', 'File not uploaded'));
+        }
 
         return $parentSave;
     }
