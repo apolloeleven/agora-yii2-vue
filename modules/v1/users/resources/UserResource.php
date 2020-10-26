@@ -8,6 +8,7 @@
 namespace app\modules\v1\users\resources;
 
 
+use app\modules\v1\users\models\Invitation;
 use app\modules\v1\users\models\User;
 use app\modules\v1\users\models\UserDepartment;
 use app\rest\ValidationException;
@@ -50,7 +51,9 @@ class UserResource extends User
             },
             'access_token',
             'email',
-            'status',
+            'status' => function () {
+                return $this->status === 1;
+            },
         ];
     }
 
@@ -72,8 +75,13 @@ class UserResource extends User
             if (!$parentSave) {
                 $transaction->rollBack();
             }
-            $this->updateRoles($this->roles);
-            $this->updateUserDepartments($this->userDepartmentsData);
+            if ($this->roles) {
+                $this->updateRoles($this->roles);
+            }
+            if ($this->userDepartmentsData) {
+                $this->updateUserDepartments($this->userDepartmentsData);
+            }
+            $transaction->commit();
         } catch (\Exception $e) {
             $transaction->rollBack();
             $parentSave = false;
@@ -188,5 +196,34 @@ class UserResource extends User
                 throw new ValidationException(\Yii::t('app', 'Error while saving user department'));
             }
         }
+    }
+
+    /**
+     * Before save change invitation status from register to complete
+     *
+     * @param $insert
+     * @return bool|void
+     * @throws ValidationException
+     * @throws \Exception
+     */
+    public function beforeSave($insert)
+    {
+        $oldStatus = ArrayHelper::getValue($this->oldAttributes, 'status');
+
+        if ($oldStatus == self::STATUS_INACTIVE && $this->status == self::STATUS_ACTIVE && $this->invitation && $this->invitation->status == Invitation::STATUS_REGISTERED) {
+            $this->invitation->status = Invitation::STATUS_COMPLETED;
+            if (!$this->invitation->save()) {
+                throw new ValidationException(Yii::t('app', "Unable to update Invitation. Token: {$this->invitation->token}"));
+            }
+        }
+        return parent::beforeSave($insert);
+    }
+
+    // TODO after workspace will be ready change delete action
+    public function beforeDelete()
+    {
+        UserDepartment::deleteAll(['user_id' => $this->id]);
+
+        return parent::beforeDelete();
     }
 }

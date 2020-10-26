@@ -137,6 +137,21 @@
         {{ getError(v.errors) }}
       </b-form-invalid-feedback>
     </b-form-group>
+    <b-form-group v-if="isCheckbox()">
+      <b-form-checkbox ref="currentInput" :disabled="disabled" :name="`${attribute}-${uuid}`" @change="onChange"
+                       :key="`${attribute}-${uuid}`" v-model="model[attribute]" :switch="isSwitch" :size="size"
+                       :state="getState(v)">
+        <span v-if="computedLabel">
+          {{ computedLabel }}
+          <span v-if="v.required" class="text-danger">*</span>
+        </span>
+      </b-form-checkbox>
+      <b-form-invalid-feedback :state="getState(v)">{{ getError(v.errors) }}
+      </b-form-invalid-feedback>
+      <b-form-text v-if="computedHint">
+        {{ computedHint }}
+      </b-form-text>
+    </b-form-group>
   </ValidationProvider>
 </template>
 
@@ -181,6 +196,10 @@ export default {
       default: false
     },
     readonly: {
+      type: Boolean,
+      default: false
+    },
+    isSwitch: {
       type: Boolean,
       default: false
     },
