@@ -41,13 +41,22 @@
                 </li>
               </ul>
             </template>
+            <template v-slot:cell(verified)="data">
+              <b-form-checkbox v-model="data.item.status" name="check-button" switch size="lg"
+                               @change="verifiedUser(data.item)"/>
+            </template>
             <template v-slot:cell(actions)="data">
               <b-dropdown variant="transparent text-dark p-0" right no-caret>
                 <template slot="button-content">
                   <i class="fas fa-ellipsis-v"></i>
                 </template>
-                <b-dropdown-item @click="editUser(data.item)" variant="text-dark"><i class="icon-eye"></i>
-                  Edit
+                <b-dropdown-item @click="editUser(data.item)">
+                  <i class="fas fa-pencil-alt"></i>
+                  {{ $t('Edit') }}
+                </b-dropdown-item>
+                <b-dropdown-item @click="deleteUser(data.item)">
+                  <i class="far fa-trash-alt"></i>
+                  {{ $t('Delete') }}
                 </b-dropdown-item>
               </b-dropdown>
             </template>
@@ -82,15 +91,36 @@ export default {
         {key: 'departments', label: this.$t('Departments')},
         {key: 'country', label: this.$t('Country')},
         {key: 'position', label: this.$t('Position')},
+        {key: 'verified', label: this.$t('Verified')},
         {key: 'actions', label: this.$t('Actions')},
       ]
     }
   },
   methods: {
-    ...mapActions(['getData', 'showEmployeeModal', 'getModalDropdownData']),
+    ...mapActions(['getData', 'showEmployeeModal', 'getModalDropdownData', 'deleteEmployee', 'updateUserStatus']),
     editUser(employee) {
       this.showEmployeeModal(employee);
-    }
+    },
+    async deleteUser(employee) {
+      const result = await this.$confirm(this.$t('Are you sure you want to delete this user?'),
+        this.$t('This operation can not be undone'))
+      if (result) {
+        const {success, body} = await this.deleteEmployee(employee);
+        if (success) {
+          this.$toast(this.$t(`User was successfully deleted`));
+        } else {
+          this.$toast(body.message, 'danger');
+        }
+      }
+    },
+    async verifiedUser(employee) {
+      const {success, body} = await this.updateUserStatus(employee);
+      if (success) {
+        this.$toast(this.$t(`Status was successfully changed`));
+      } else {
+        this.$toast(body.message, 'danger');
+      }
+    },
   },
   mounted() {
     this.getModalDropdownData();

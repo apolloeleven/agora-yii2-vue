@@ -1,4 +1,5 @@
 {
   "Email '{email}' was successfully invited": "Email '{email}' was successfully invited",
-  "The field must be {val} or more": "The field must be {val} or more"
+  "The field must be {val} or more": "The field must be {val} or more",
+  "Edit employee \"{user}\"": "Edit employee \"{user}\""
 }
