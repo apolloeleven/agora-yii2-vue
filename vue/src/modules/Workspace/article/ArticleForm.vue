@@ -18,7 +18,6 @@
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import ArticleFormModel from "./ArticleFormModel";
 import {createNamespacedHelpers} from "vuex";
-import WorkspaceFormModel from "../workspace/WorkspaceFormModel";
 
 const {mapState, mapActions} = createNamespacedHelpers('article');
 const {mapState: mapWorkspaceState} = createNamespacedHelpers('workspace');
@@ -63,7 +62,9 @@ export default {
     ...mapActions(['hideArticleModal', 'createArticle', 'updateArticle', 'getArticlesByParent', 'getArticlesByWorkspace']),
     async onSubmit() {
       this.resource = 'folder';
-      this.model.workspace_id = this.currentWorkspace.id;
+      if (this.currentWorkspace.id) {
+        this.model.workspace_id = this.currentWorkspace.id;
+      }
       this.model.article_id = this.currentArticle.id;
       this.model.isArticle = this.isArticle;
 
@@ -75,10 +76,10 @@ export default {
       let res
       if (this.model.id) {
         this.action = 'updated';
-        res = await this.updateArticle(this.model);
+        res = await this.updateArticle({...this.model.toJSON()});
       } else {
         this.action = 'created';
-        res = await this.createArticle(this.model);
+        res = await this.createArticle({...this.model.toJSON()});
       }
 
       if (this.model.article_id) {

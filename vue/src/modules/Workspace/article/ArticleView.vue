@@ -82,6 +82,7 @@
               <b-card-body>
                 <div class="article-content">
                   <div v-if="currentArticle.body" class="article-body" v-html="currentArticle.body"></div>
+                  <b-img v-if="currentArticle.image_url" class="article-image" :src="currentArticle.image_url"/>
                   <no-data v-else :model="currentArticle" :loading="loading"
                            :text="$t('There is no description')">
                   </no-data>

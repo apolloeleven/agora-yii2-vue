@@ -4,9 +4,9 @@
 namespace app\modules\v1\workspaces\resources;
 
 
+use app\modules\v1\workspaces\models\Article;
 use app\rest\ValidationException;
 use Yii;
-use app\modules\v1\workspaces\models\Article;
 use yii\db\Exception;
 use yii\helpers\FileHelper;
 use yii\helpers\StringHelper;
@@ -103,7 +103,9 @@ class ArticleResource extends Article
         if (!$this->image) {
             return parent::save($runValidation, $attributeNames);
         }
-        $this->deleteImage();
+        if ($this->isImage()) {
+            $this->deleteImage();
+        }
         $dirPath = '/articles/' . $this->workspace_id;
         $this->image_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
 
