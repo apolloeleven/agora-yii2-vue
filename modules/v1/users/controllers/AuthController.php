@@ -23,7 +23,7 @@ class AuthController extends Controller
         $request = Yii::$app->request;
         $model = new LoginForm();
 
-        if (!$model->load($request->post(), '') || $model->isNotActiveUser($request->post('username')) || !$model->validate() || !$model->login()) {
+        if (!$model->load($request->post(), '') || !$model->validate() || !$model->login()) {
             return $this->validationError($model->getFirstErrors());
         }
         return $model->getActiveUser()->getApiData();

@@ -64,6 +64,10 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getActiveUser();
 
+            if (User::find()->byEmailOrUsername($this->username)->notActive()->one()) {
+                $this->addError('password', Yii::t('app', 'Your account must be activated by admin'));
+            }
+
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, Yii::t('app', 'Incorrect username or password.'));
             }
@@ -104,20 +108,5 @@ class LoginForm extends Model
         }
 
         return $this->_user;
-    }
-
-    /**
-     * Get user by username or email
-     *
-     * @param $username
-     * @return User|array|false|ActiveRecord
-     */
-    public function isNotActiveUser($username)
-    {
-        if (User::find()->byEmailOrUsername($username)->notActive()->one()) {
-            $this->addError('password', Yii::t('app', 'Your account must be activated by admin'));
-            return true;
-        }
-        return false;
     }
 }
