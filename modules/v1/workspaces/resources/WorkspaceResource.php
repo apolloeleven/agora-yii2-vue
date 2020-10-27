@@ -118,10 +118,9 @@ class WorkspaceResource extends Workspace
 
         $fullPath = Yii::getAlias('@storage' . $this->image_path);
         if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
-        if (!$this->image->saveAs($fullPath)) {
+        if (!$this->image->saveAs($fullPath, false)) {
             throw new ValidationException(Yii::t('app', 'File not uploaded'));
         }
-        $this->image = null;
 
         return parent::save($runValidation, $attributeNames);
     }
