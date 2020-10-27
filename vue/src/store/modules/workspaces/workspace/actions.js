@@ -162,7 +162,11 @@ export function prepareData(data) {
     const tmp = new FormData();
     for (let key in data) {
       if (data.hasOwnProperty(key)) {
-        tmp.append(key, data[key]);
+        if (key === 'folder_in_folder') {
+          tmp.append(key, data[key]);
+        } else {
+          tmp.append(key, data[key] || '');
+        }
       }
     }
     data = tmp;
