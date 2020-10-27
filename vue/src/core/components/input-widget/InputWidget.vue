@@ -1,6 +1,7 @@
 <template>
   <ValidationProvider :name="`${attribute}-${uuid}`" :rules="model.getRules(attribute, rules || null)"
-                      :customMessages="model.getMessages(attribute, rules || null)" v-slot="v" tag="div" :vid="vid || attribute">
+                      :customMessages="model.getMessages(attribute, rules || null)" v-slot="v"
+                      tag="div" :vid="vid || attribute">
     <b-form-group v-if="isInput() || isTextarea()">
       <label v-if="computedLabel">
         {{ computedLabel }}
@@ -105,10 +106,10 @@
           </b-input-group-text>
         </template>
         <b-form-tags ref="currentInput" :size="size" :disabled="disabled"
-                      :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
-                      :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
-                      @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
-                      :placeholder="computedPlaceholder" :min="min"/>
+                     :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
+                     :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
+                     @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
+                     :placeholder="computedPlaceholder" :min="min"/>
       </b-input-group>
     </b-form-group>
     <b-form-group v-if="isCheckbox()">
@@ -125,6 +126,16 @@
       <b-form-text v-if="computedHint">
         {{ computedHint }}
       </b-form-text>
+    </b-form-group>
+    <b-form-group v-if="isFileUpload()">
+      <label v-if="computedLabel">
+        {{ computedLabel }}
+        <span v-if="v.required" class="text-danger">*</span>
+      </label>
+      <b-form-file v-model="model[attribute]" :type="type" :placeholder="computedPlaceholder" :state="getState(v)"/>
+      <b-form-invalid-feedback :state="getState(v)">
+        {{ getError(v.errors) }}
+      </b-form-invalid-feedback>
     </b-form-group>
   </ValidationProvider>
 </template>
@@ -170,10 +181,6 @@ export default {
       default: false
     },
     readonly: {
-      type: Boolean,
-      default: false
-    },
-    isSwitch: {
       type: Boolean,
       default: false
     },
@@ -223,6 +230,10 @@ export default {
     selectOptions: {
       type: Array,
       default: () => []
+    },
+    isSwitch: {
+      type: Boolean,
+      default: false
     },
     valueField: {
       type: String,
@@ -302,6 +313,9 @@ export default {
     isCheckbox() {
       return this.type === 'checkbox';
     },
+    isFileUpload() {
+      return this.type === 'file';
+    },
     onChange(val) {
       if (this.type === 'number' && val === '') {
         this.model[this.attribute] = null;
@@ -353,5 +367,7 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style lang="scss">
-
+.ck.ck-reset.ck-editor.ck-rounded-corners {
+  width: 100%;
+}
 </style>

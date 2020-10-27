@@ -9,12 +9,14 @@
       </div>
     </div>
     <employee-form-modal/>
+    <WorkspaceForm/>
   </div>
 </template>
 
 <script>
 import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
+import WorkspaceForm from "../../../../modules/Workspace/workspace/WorkspaceForm";
 import {mapState, createNamespacedHelpers} from 'vuex';
 
 const {mapActions} = createNamespacedHelpers('user');
@@ -26,6 +28,7 @@ export default {
     EmployeeFormModal,
     Sidebar,
     Navbar,
+    WorkspaceForm,
   },
   computed: {
     ...mapState([

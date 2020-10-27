@@ -14,6 +14,8 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
         '@portalUrl' => env('PORTAL_HOST'),
+        '@storage' => dirname(__DIR__) . '/web/storage',
+        '@storageUrl' => env('API_HOST') . '/storage',
     ],
     'components' => [
         'request' => [
@@ -70,7 +72,8 @@ $config = [
                     'controller' => [
                         'v1/users/invitation',
                         'v1/users/employee',
-                        'v1/users/auth'
+                        'v1/users/auth',
+                        'v1/workspaces/workspace',
                     ]
                 ]
             ],
@@ -88,6 +91,9 @@ $config = [
                 ],
                 'users' => [
                     'class' => \app\modules\v1\users\UserModule::class
+                ],
+                'workspaces' => [
+                    'class' => \app\modules\v1\workspaces\WorkspaceModule::class
                 ]
             ]
         ]
