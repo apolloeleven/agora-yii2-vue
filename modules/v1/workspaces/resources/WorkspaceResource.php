@@ -114,25 +114,21 @@ class WorkspaceResource extends Workspace
      */
     public function save($runValidation = true, $attributeNames = null)
     {
-        $this->folder_in_folder = $this->folder_in_folder ? 1 : 0;
-
         if (!$this->image) {
             return parent::save($runValidation, $attributeNames);
         }
         if ($this->isImage()) {
             $this->deleteImage();
         }
-        $dirPath = '/workspace/' . $this->id;
-        $this->image_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
-
-        $parentSave = parent::save($runValidation, $attributeNames);
-        if (!$parentSave) return $parentSave;
+        $this->image_path = '/workspace/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
 
         $fullPath = Yii::getAlias('@storage' . $this->image_path);
         if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
-        $this->image->saveAs($fullPath);
+        if (!$this->image->saveAs($fullPath, false)) {
+            throw new ValidationException(Yii::t('app', 'File not uploaded'));
+        }
 
-        return $parentSave;
+        return parent::save($runValidation, $attributeNames);
     }
 
     /**

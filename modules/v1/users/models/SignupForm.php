@@ -8,6 +8,7 @@ use app\rest\ValidationException;
 use Yii;
 use yii\base\Exception;
 use yii\base\Model;
+use yii\helpers\VarDumper;
 
 /**
  * Class SignupForm
@@ -81,7 +82,8 @@ class SignupForm extends Model
         $invitation->status = Invitation::STATUS_REGISTERED;
         if (!$invitation->save()) {
             $dbTransaction->rollBack();
-            throw new ValidationException(Yii::t('app', "Invitation was not updated. Token: $invitation->token"));
+            Yii::error("Invitation [id=$invitation->id] was not saved. Errors: ".VarDumper::dumpAsString($invitation->errors));
+            throw new ValidationException(Yii::t('app', VarDumper::dumpAsString($invitation->errors)." Invitation was not updated. Token: $invitation->token"));
         }
 
         if (!MailHelper::acceptInvitation($invitation, $user)) {

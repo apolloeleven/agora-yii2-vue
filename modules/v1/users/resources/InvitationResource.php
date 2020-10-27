@@ -6,6 +6,7 @@ namespace app\modules\v1\users\resources;
 
 use app\helpers\MailHelper;
 use app\modules\v1\users\models\Invitation;
+use app\modules\v1\users\models\User;
 use app\rest\ValidationException;
 use Yii;
 use yii\base\Exception;
@@ -49,6 +50,20 @@ class InvitationResource extends Invitation
         return ['createdBy', 'user'];
     }
 
+    public function rules()
+    {
+        return array_merge(parent::rules(), [
+            [
+                'email', 'unique', 'targetClass' => User::class,
+                'when' => function($model) {
+                    /** @var $model self */
+                    return $model->isNewRecord;
+                },
+                'message' => Yii::t('app', 'User with this email already exists')
+            ],
+        ]);
+    }
+
     /**
      * @return ActiveQuery
      */
@@ -66,46 +81,10 @@ class InvitationResource extends Invitation
     }
 
     /**
-     * @param bool $insert
-     * @return bool
-     * @throws Exception
-     */
-    public function beforeSave($insert)
-    {
-        if ($insert) {
-            $this->status = self::STATUS_PENDING;
-            $this->token = Yii::$app->security->generateRandomString(256);
-            $this->expire_date = time() + self::TOKEN_LIFETIME;
-
-            if (InvitationResource::find()->byEmail($this->email)->count()) {
-                throw new ValidationException((Yii::t('app', 'Invitation already sent')));
-            }
-            if (UserResource::find()->byEmail($this->email)->active()->count()) {
-                throw new ValidationException((Yii::t('app', 'User already exists')));
-            }
-        }
-
-        return parent::beforeSave($insert);
-    }
-
-    /**
-     * After save send invitation email to user
-     *
-     * @param bool $insert
-     * @param array $changedAttributes
-     */
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-
-        if ($insert) MailHelper::sendInvitation($this);
-    }
-
-    /**
      * Find invitation by valid token
      *
      * @param $token
-     * @return array|ActiveRecord|null
+     * @return \app\modules\v1\users\resources\InvitationResource|array|ActiveRecord|null
      */
     public static function findByToken($token)
     {

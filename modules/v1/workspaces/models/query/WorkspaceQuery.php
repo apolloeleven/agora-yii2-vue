@@ -49,6 +49,6 @@ class WorkspaceQuery extends ActiveQuery
     public function byUserId($userId)
     {
         return $this->innerJoin(UserWorkspace::tableName() . ' uw', 'uw.workspace_id = ' . Workspace::tableName() . '.id')
-            ->andWhere(['user_id' => $userId]);
+            ->andWhere(['uw.user_id' => $userId]);
     }
 }

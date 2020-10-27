@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-md-4">
-      <div class="auth-left">
+      <div class="auth-left mb-3">
         <img src="/assets/img/apollo11-white.png" alt="" style="width: 80px"/>
         <h3>{{ $t('Welcome') }}</h3>
         <p>You are 30 seconds away from entering in <b>Agora!</b></p>
@@ -33,9 +33,9 @@
 <script>
 import InputWidget from "../../core/components/input-widget/InputWidget";
 import auth from '../../core/services/authService';
-import invitationService from "../setup/invitations/invitationService";
 import ContentSpinner from "../../core/components/ContentSpinner";
 import RegisterModel from "./RegisterModel";
+import httpService from "../../core/services/httpService";
 
 export default {
   name: "Register",
@@ -49,23 +49,25 @@ export default {
   methods: {
     async onSubmit() {
       this.loading = true;
-      const response = await auth.register(this.model);
+      this.model.token = this.$route.params.token;
+      const response = await auth.register({...this.model.toJSON()});
       this.loading = false;
       if (response.success) {
         this.$toast(this.$t(`Your account will be reviewed by admin and you will receive login instructions`));
         this.$router.push({name: 'auth.login'});
       } else {
-        this.$toast(this.$t(`Unable to register user`));
-        this.$router.push({name: 'auth.login'});
+        this.$toast(this.$t(`Unable to register user`), 'danger');
       }
     },
-  },
-  async mounted() {
-    this.model.token = this.$route.params.token;
-    const res = await invitationService.getEmailByToken(this.model.token);
-    if (res.success) {
-      this.model.email = res.body;
+    async getEmail() {
+      const res = await httpService.get(`/v1/users/invitation/get-email?token=${this.$route.params.token}`);
+      if (res.success) {
+        this.model.email = res.body;
+      }
     }
+  },
+  mounted() {
+    this.getEmail()
   },
 }
 </script>

@@ -1,4 +1,11 @@
-import {SET_DATA, SET_MODAL_DROPDOWN_DATA, SHOW_EMPLOYEE_MODAL, CHANGE_LOADING, HIDE_MODAL} from "@/store/modules/employee/mutation-types";
+import {
+  SET_DATA,
+  SET_MODAL_DROPDOWN_DATA,
+  SHOW_EMPLOYEE_MODAL,
+  CHANGE_LOADING,
+  HIDE_MODAL,
+  DELETED_USER,
+} from "@/store/modules/employee/mutation-types";
 
 export default {
   [SET_DATA]: (state, {rows}) => {
@@ -21,6 +28,7 @@ export default {
       last_name: payload.last_name,
       userWorkspaces: payload.userWorkspaces,
       userDepartments: payload.userDepartments,
+      status: payload.status,
     }
   },
 
@@ -29,5 +37,9 @@ export default {
   [HIDE_MODAL]: (state) => {
     state.modal.show = false;
     state.modal.object = {};
-  }
+  },
+
+  [DELETED_USER](state, id) {
+    state.data.rows = state.data.rows.filter(a => a.id !== id)
+  },
 }

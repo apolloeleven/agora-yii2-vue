@@ -109,13 +109,12 @@ class ArticleResource extends Article
         $dirPath = '/articles/' . $this->workspace_id;
         $this->image_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
 
-        $parentSave = parent::save($runValidation, $attributeNames);
-        if (!$parentSave) return $parentSave;
-
         $fullPath = Yii::getAlias('@storage' . $this->image_path);
         if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
-        $this->image->saveAs($fullPath);
+        if (!$this->image->saveAs($fullPath, false)) {
+            throw new ValidationException(Yii::t('app', 'File not uploaded'));
+        }
 
-        return $parentSave;
+        return parent::save($runValidation, $attributeNames);
     }
 }
