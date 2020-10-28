@@ -28,8 +28,6 @@ export default {
   data() {
     return {
       model: new ArticleFormModel(),
-      action: '',
-      resource: '',
     }
   },
   computed: {
@@ -39,15 +37,13 @@ export default {
       if (this.isArticle) {
         if (this.modalArticle) {
           return this.$t(`Update article '{name}'`, {name: this.modalArticle.title});
-        } else {
-          return this.$t(`Create new article`);
         }
+        return this.$t(`Create new article`);
       } else {
         if (this.modalArticle) {
           return this.$t(`Update folder '{name}'`, {name: this.modalArticle.title});
-        } else {
-          return this.$t(`Create new folder`);
         }
+        return this.$t(`Create new folder`);
       }
     }
   },
@@ -61,7 +57,10 @@ export default {
   methods: {
     ...mapActions(['hideArticleModal', 'createArticle', 'updateArticle', 'getArticlesByParent', 'getArticlesByWorkspace']),
     async onSubmit() {
-      this.resource = 'folder';
+      let action;
+      let resource
+
+      resource = 'folder';
       if (this.currentWorkspace.id) {
         this.model.workspace_id = this.currentWorkspace.id;
       }
@@ -69,16 +68,16 @@ export default {
       this.model.isArticle = this.isArticle;
 
       if (this.isArticle) {
-        this.resource = 'article';
+        resource = 'article';
       } else {
-        this.resource = 'folder';
+        resource = 'folder';
       }
       let res
       if (this.model.id) {
-        this.action = 'updated';
+        action = 'updated';
         res = await this.updateArticle({...this.model.toJSON()});
       } else {
-        this.action = 'created';
+        action = 'created';
         res = await this.createArticle({...this.model.toJSON()});
       }
 
@@ -89,10 +88,10 @@ export default {
       }
 
       if (res.success) {
-        this.$toast(this.$t(`The ${this.resource} '{title}' was successfully ${this.action}`, {title: this.model.title}));
+        this.$toast(this.$t(`The ${resource} '{title}' was successfully ${action}`, {title: this.model.title}));
         this.hideModal()
       } else {
-        this.$toast(this.$t(`The ${this.resource} '{title}' was not ${this.action}`, {title: this.model.title}), 'danger');
+        this.$toast(this.$t(`The ${resource} '{title}' was not ${action}`, {title: this.model.title}), 'danger');
       }
     },
     hideModal() {
