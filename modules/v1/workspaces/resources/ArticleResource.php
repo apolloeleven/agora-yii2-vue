@@ -8,7 +8,6 @@ use app\helpers\ModelHelper;
 use app\modules\v1\workspaces\models\Article;
 use app\rest\ValidationException;
 use Yii;
-use yii\db\Exception;
 use yii\helpers\FileHelper;
 use yii\helpers\StringHelper;
 use yii\web\UploadedFile;
@@ -60,19 +59,14 @@ class ArticleResource extends Article
      *
      * @return bool|int
      * @throws ValidationException
-     * @throws Exception
      */
     public function delete()
     {
         if ($this->getChildren()->count()) {
             throw new ValidationException(Yii::t('app', 'You can\'t delete this article because it has sub-articles'));
         }
-        $dbTransaction = Yii::$app->db->beginTransaction();
-        if (!$this->deleteWithChildren()) {
-            $dbTransaction->rollBack();
-            return false;
-        }
-        $dbTransaction->commit();
+        $this->deleteWithChildren();
+
         return true;
     }
 
