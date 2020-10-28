@@ -35,7 +35,7 @@
           </template>
           <div class="row">
             <div class="col col-12">
-              <div class="mb-3 " v-for="(userRoleModel, index) in model.userWorkspaces" :key="index">
+              <div class="mb-3 " v-for="(userRoleModel, index) in model.userWorkspaces" :key="`user-role-${index}`">
                 <div class="row">
                   <div class="col-sm-1 col-1 d-flex align-items-center">
                     <b-button v-b-tooltip :title="$t('Remove workspace')" pill v-on:click="removeRole(index)"
