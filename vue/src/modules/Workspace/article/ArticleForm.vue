@@ -91,7 +91,7 @@ export default {
         this.$toast(this.$t(`The ${resource} '{title}' was successfully ${action}`, {title: this.model.title}));
         this.hideModal()
       } else {
-        this.$toast(this.$t(`The ${resource} '{title}' was not ${action}`, {title: this.model.title}), 'danger');
+        this.model.setMultipleErrors(res.body);
       }
     },
     hideModal() {

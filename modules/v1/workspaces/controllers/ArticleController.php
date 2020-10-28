@@ -8,6 +8,7 @@ use app\rest\ActiveController;
 use app\rest\ValidationException;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\helpers\Json;
 
 /**
  * Class ArticleController
@@ -50,7 +51,7 @@ class ArticleController extends ActiveController
         if ($articleId) {
             $parentFolder = ArticleResource::findOne($articleId);
             if (!$parentFolder) {
-                return $this->validationError($parentFolder->getFirstErrors());
+                return $this->validationError(Yii::t('app', 'Unable to find parent folder'));
             }
             $workspaceId = $parentFolder->workspace_id;
         }
@@ -158,7 +159,7 @@ class ArticleController extends ActiveController
     {
         $userModel = Yii::$app->user->identity;
 
-        $userModel->favourites = json_encode(Yii::$app->request->post(), true);
+        $userModel->favourites = Json::encode(Yii::$app->request->post(), true);
         if (!$userModel->save()) {
             throw new ValidationException(Yii::t('app', 'Unable to save favourite data'));
         }

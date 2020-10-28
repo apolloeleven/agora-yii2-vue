@@ -4,6 +4,7 @@
 namespace app\modules\v1\workspaces\resources;
 
 
+use app\helpers\ModelHelper;
 use app\modules\v1\workspaces\models\Article;
 use app\rest\ValidationException;
 use Yii;
@@ -103,16 +104,17 @@ class ArticleResource extends Article
         if (!$this->image) {
             return parent::save($runValidation, $attributeNames);
         }
-        if ($this->isImage()) {
-            $this->deleteImage();
-        }
-        $dirPath = '/articles/' . $this->workspace_id;
-        $this->image_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
+        if (ModelHelper::isImage($this->image->extension)) {
+            ModelHelper::deleteImage($this->image_path);
 
-        $fullPath = Yii::getAlias('@storage' . $this->image_path);
-        if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
-        if (!$this->image->saveAs($fullPath, false)) {
-            throw new ValidationException(Yii::t('app', 'File not uploaded'));
+            $dirPath = '/articles/' . $this->workspace_id;
+            $this->image_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
+
+            $fullPath = Yii::getAlias('@storage' . $this->image_path);
+            if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
+            if (!$this->image->saveAs($fullPath, false)) {
+                throw new ValidationException(Yii::t('app', 'File not uploaded'));
+            }
         }
 
         return parent::save($runValidation, $attributeNames);

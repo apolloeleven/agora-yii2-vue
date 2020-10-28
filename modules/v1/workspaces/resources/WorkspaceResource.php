@@ -4,13 +4,13 @@
 namespace app\modules\v1\workspaces\resources;
 
 
+use app\helpers\ModelHelper;
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\UserWorkspace;
 use app\modules\v1\workspaces\models\Workspace;
 use app\rest\ValidationException;
 use Yii;
 use yii\db\ActiveQuery;
-use yii\db\Exception;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
@@ -117,15 +117,16 @@ class WorkspaceResource extends Workspace
         if (!$this->image) {
             return parent::save($runValidation, $attributeNames);
         }
-        if ($this->isImage()) {
-            $this->deleteImage();
-        }
-        $this->image_path = '/workspace/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
+        if (ModelHelper::isImage($this->image->extension)) {
+            ModelHelper::deleteImage($this->image_path);
 
-        $fullPath = Yii::getAlias('@storage' . $this->image_path);
-        if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
-        if (!$this->image->saveAs($fullPath, false)) {
-            throw new ValidationException(Yii::t('app', 'File not uploaded'));
+            $this->image_path = '/workspace/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
+
+            $fullPath = Yii::getAlias('@storage' . $this->image_path);
+            if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
+            if (!$this->image->saveAs($fullPath, false)) {
+                throw new ValidationException(Yii::t('app', 'File not uploaded'));
+            }
         }
 
         return parent::save($runValidation, $attributeNames);
@@ -136,19 +137,14 @@ class WorkspaceResource extends Workspace
      *
      * @return bool|int
      * @throws ValidationException
-     * @throws Exception
      */
     public function delete()
     {
         if ($this->getArticles()->count()) {
             throw new ValidationException(Yii::t('app', 'You can\'t delete this workspace because it has folders'));
         }
-        $dbTransaction = Yii::$app->db->beginTransaction();
-        if (!UserWorkspace::deleteAll(['workspace_id' => $this->id])) {
-            $dbTransaction->rollBack();
-            return false;
-        }
-        $dbTransaction->commit();
+        UserWorkspace::deleteAll(['workspace_id' => $this->id]);
+
         return true;
     }
 }

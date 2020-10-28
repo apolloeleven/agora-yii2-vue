@@ -133,30 +133,4 @@ class Workspace extends ActiveRecord
     {
         return $this->hasMany(Article::class, ['workspace_id' => 'id']);
     }
-
-    /**
-     * Delete image
-     *
-     * @return bool
-     * @throws \yii\base\ErrorException
-     */
-    public function deleteImage()
-    {
-        if ($this->image_path) {
-            $dir = dirname($this->image_path);
-            FileHelper::removeDirectory(Yii::getAlias("@storage/$dir"));
-        }
-
-        return true;
-    }
-
-    /**
-     * Check uploaded file is image
-     *
-     * @return bool
-     */
-    public function isImage()
-    {
-        return in_array($this->image->extension, ['png', 'jpeg', 'svg', 'gif', 'jpg']);
-    }
 }
