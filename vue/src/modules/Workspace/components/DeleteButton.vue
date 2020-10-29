@@ -1,10 +1,10 @@
 <template>
   <b-button v-if="tag === 'button'" size="sm" variant="outline-danger" @click="onDeleteClick">
-    <i class="fas fa-trash-alt"></i>
+    <i class="far fa-trash-alt"></i>
     {{ $t('Delete') }}
   </b-button>
   <b-dropdown-item v-else @click="onDeleteClick">
-    <i class="fas fa-trash-alt"></i>
+    <i class="far fa-trash-alt"></i>
     {{ $t('Delete') }}
   </b-dropdown-item>
 </template>

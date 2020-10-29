@@ -15,8 +15,8 @@ import User from "@/modules/User/User";
 import Profile from "@/modules/User/Profile";
 import Workspace from "@/modules/Workspace/workspace/Workspace";
 import WorkspaceView from "@/modules/Workspace/workspace/WorkspaceView";
-import EmployeeList from "../modules/setup/employees/EmployeeList";
 import ArticleView from "@/modules/Workspace/article/ArticleView";
+import EmployeeList from "../modules/setup/employees/EmployeeList";
 
 Vue.use(Router);
 
