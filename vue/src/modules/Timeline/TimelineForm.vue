@@ -53,11 +53,6 @@ export default {
         this.model = new TimelineFormModel(this.modalTimeline);
       }
     },
-    progress() {
-      if (this.progress >= 100) {
-        this.progress = 0;
-      }
-    },
   },
   methods: {
     ...mapActions(['hideTimelineModal', 'postOnTimeline', 'updateTimelinePost']),
@@ -73,6 +68,9 @@ export default {
           config: {
             onUploadProgress: (progressEvent) => {
               this.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+              if (this.progress >= 100) {
+                this.progress = 0;
+              }
             }
           }
         });
