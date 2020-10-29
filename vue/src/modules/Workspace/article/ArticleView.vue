@@ -18,7 +18,7 @@
           {{ $t('Create new article') }}
         </b-dropdown-item>
       </b-dropdown>
-      <AddToFavourites :name="favouriteName"/>
+      <AddToFavourites :name="favouriteName" :is-folder="isFolder"/>
     </div>
     <div class="page-content">
       <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
@@ -143,7 +143,7 @@ export default {
       return this.currentArticle.depth < 3;
     },
     isFolder() {
-      return this.currentArticle.is_folder;
+      return !!this.currentArticle.is_folder;
     },
     favouriteName() {
       const wk = this.currentArticle.workspace || {};

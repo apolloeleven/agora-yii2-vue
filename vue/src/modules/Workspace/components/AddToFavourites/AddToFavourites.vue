@@ -13,6 +13,7 @@ export default {
   name: "AddToFavourites",
   props: {
     name: String,
+    isFolder: Boolean,
   },
   computed: {
     inFavourites() {
@@ -24,7 +25,13 @@ export default {
       if (FavouritesService.inFavourites(this.$route.path)) {
         FavouritesService.removeFavourite(this.$route.path)
       } else {
-        FavouritesService.addFavourite(this.name, this.$route.path)
+        let icon
+        if (this.isFolder) {
+          icon = 'fas fa-folder-open'
+        } else {
+          icon = 'fas fa-link'
+        }
+        FavouritesService.addFavourite(this.name, this.$route.path, icon)
       }
     }
   }
