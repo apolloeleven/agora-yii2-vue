@@ -25,12 +25,7 @@ export default {
       if (FavouritesService.inFavourites(this.$route.path)) {
         FavouritesService.removeFavourite(this.$route.path)
       } else {
-        let icon
-        if (this.isFolder) {
-          icon = 'fas fa-folder-open'
-        } else {
-          icon = 'fas fa-link'
-        }
+        let icon = FavouritesService.getIcon(this.isFolder);
         FavouritesService.addFavourite(this.name, this.$route.path, icon)
       }
     }

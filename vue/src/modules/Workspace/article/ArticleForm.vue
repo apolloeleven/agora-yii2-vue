@@ -18,6 +18,7 @@
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import ArticleFormModel from "./ArticleFormModel";
 import {createNamespacedHelpers} from "vuex";
+import FavouritesService from "../components/AddToFavourites/FavouritesService";
 
 const {mapState, mapActions} = createNamespacedHelpers('article');
 const {mapState: mapWorkspaceState} = createNamespacedHelpers('workspace');
@@ -45,7 +46,10 @@ export default {
         }
         return this.$t(`Create new folder`);
       }
-    }
+    },
+    isFolder() {
+      return !!this.model.is_folder;
+    },
   },
   watch: {
     modalArticle() {
@@ -60,7 +64,6 @@ export default {
       let action;
       let resource
 
-      resource = 'folder';
       if (this.currentWorkspace.id) {
         this.model.workspace_id = this.currentWorkspace.id;
       }
@@ -88,6 +91,9 @@ export default {
       }
 
       if (res.success) {
+        if (action === 'updated') {
+          this.updateFavourites()
+        }
         this.$toast(this.$t(`The ${resource} '{title}' was successfully ${action}`, {title: this.model.title}));
         this.hideModal()
       } else {
@@ -98,6 +104,21 @@ export default {
       this.hideArticleModal();
       this.model = new ArticleFormModel()
     },
+    updateFavourites() {
+      let path = `/article/${this.model.id}`;
+      if (FavouritesService.inFavourites(path)) {
+        FavouritesService.removeFavourite(path)
+        let wk;
+        if (this.currentWorkspace.id) {
+          wk = this.currentWorkspace;
+        } else {
+          wk = this.currentArticle.workspace || {};
+        }
+        let name = (wk.abbreviation || wk.name) + ' / ' + this.model.title;
+        let icon = FavouritesService.getIcon(this.isFolder);
+        FavouritesService.addFavourite(name, path, icon);
+      }
+    }
   },
 }
 </script>

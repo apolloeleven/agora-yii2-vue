@@ -89,6 +89,13 @@ class FavouritesService {
       this.removeFavourite(fav.path);
     })
   }
+
+  getIcon(isFolder) {
+    if (isFolder) {
+      return 'fas fa-folder-open'
+    }
+    return 'fas fa-link'
+  }
 }
 
 const favouritesService = new FavouritesService();
