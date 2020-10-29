@@ -10,7 +10,7 @@
       <b-popover target="attachment-technical-notes" triggers="hover" placement="bottom">
         <template v-slot:title>{{ $t('Technical note') }}</template>
         <ul class="technical-notes">
-          <li v-for="(value ,key) in attachConfig" v-bind:key="key">
+          <li v-for="(value ,key) in attachConfig" v-bind:key="`tech-note-${key}`">
             <b>{{ $t(value.title) }}</b>: {{ value.size }}
           </li>
         </ul>
@@ -128,9 +128,7 @@ export default {
   watch: {
     progress() {
       if (this.progress >= 100) {
-        setTimeout(() => {
-          this.progress = 0;
-        }, 2000);
+        this.progress = 0;
       }
     }
   },
@@ -170,7 +168,8 @@ export default {
         let checkFiles = this.checkFileNames(filesName);
 
         if (checkFiles[0]) {
-          const result = await this.$confirm(this.$t(`${checkFiles.join(',')} file already exist. Are you sure that you want to overwrite them?`),
+          const result = await this.$confirm(
+            this.$t(`{file_names} file already exist. Are you sure that you want to overwrite them?`, {file_names: `${checkFiles.join(',')}`}),
             this.$t('Filename conflicts'))
           if (result) {
             this.filesAttach(ev, this.currentArticle.id, filesArray)

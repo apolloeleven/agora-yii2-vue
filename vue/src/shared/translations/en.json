@@ -21,5 +21,6 @@
   "Are you sure you want to delete {count} attachment(s)?": "Are you sure you want to delete {count} attachment(s)?",
   "{count} attachment(s) were successfully deleted": "{count} attachment(s) were successfully deleted",
   "{count} attachment(s) were successfully uploaded": "{count} attachment(s) were successfully uploaded",
-  "{count} attachment(s) were not deleted": "{count} attachment(s) were not deleted"
+  "{count} attachment(s) were not deleted": "{count} attachment(s) were not deleted",
+  "{file_names} file already exist. Are you sure that you want to overwrite them?": "{file_names} file already exist. Are you sure that you want to overwrite them?"
 }

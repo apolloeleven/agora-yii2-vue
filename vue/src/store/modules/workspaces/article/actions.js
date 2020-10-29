@@ -214,7 +214,13 @@ export async function attachFiles({dispatch}, {data, config}) {
  * @returns {Promise<void>}
  */
 export async function getFilesByArticle({commit}, articleId) {
-  const {success, body} = await httpService.get(`${fileUrl}?articleId=${articleId}&expand=updatedBy&sort=name`);
+  const {success, body} = await httpService.get(fileUrl, {
+    params: {
+      articleId,
+      expand: 'updatedBy',
+      sort: 'name'
+    }
+  });
   if (success) {
     commit(GET_ARTICLES_FILES, body);
   }
