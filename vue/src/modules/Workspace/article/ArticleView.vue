@@ -49,7 +49,7 @@
       </b-card>
       <div class="p-3">
         <div class="row" v-if="lastFolder && isFolder && multipleFolders">
-          <div class="col-sm-6 col-lg-4">
+          <div class="col-md-12 col-lg-4">
             <h4 class="border-bottom pb-1 mb-3">{{ $t('Articles') }}</h4>
             <div class="article-list">
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
@@ -61,7 +61,7 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-6 col-lg-4">
+          <div class="col-md-12 col-lg-4">
             <h4 class="border-bottom pb-1 mb-3">{{ $t('Folders') }}</h4>
             <div class="article-list">
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
@@ -72,6 +72,9 @@
                 </ArticleChildItem>
               </div>
             </div>
+          </div>
+          <div class="col-md-12 col-lg-4">
+            <Attachments/>
           </div>
         </div>
         <div class="row" v-else-if="!isFolder">
@@ -94,6 +97,9 @@
               </ArticleChildItem>
             </div>
           </div>
+          <div class="col-sm-12 col-lg-6">
+            <Attachments/>
+          </div>
         </div>
         <div class="row" v-else-if="!lastFolder || !multipleFolders">
           <div class="col-sm-12 col-lg-6">
@@ -106,6 +112,9 @@
                 </ArticleChildItem>
               </div>
             </div>
+          </div>
+          <div class="col-sm-12 col-lg-6">
+            <Attachments/>
           </div>
         </div>
       </div>
@@ -120,12 +129,13 @@ import ArticleChildItem from "./ArticleChildItem";
 import ContentSpinner from "../../../core/components/ContentSpinner";
 import NoData from "../components/NoData";
 import AddToFavourites from "../components/AddToFavourites/AddToFavourites";
+import Attachments from "./attachment/Attachments";
 
 const {mapState, mapActions} = createNamespacedHelpers('article')
 
 export default {
   name: "ArticleView",
-  components: {AddToFavourites, NoData, ContentSpinner, ArticleChildItem, BackButton},
+  components: {Attachments, AddToFavourites, NoData, ContentSpinner, ArticleChildItem, BackButton},
   data() {
     return {
       visible: false,
@@ -158,10 +168,12 @@ export default {
       this.getCurrentArticle(id);
       this.getBreadCrumb(id);
       this.getArticlesByParent(id)
+      this.getFilesByArticle(id)
     }
   },
   methods: {
-    ...mapActions(['getArticleBreadCrumb', 'getCurrentArticle', 'showArticleModal', 'getArticlesByParent', 'destroyCurrentArticle']),
+    ...mapActions(['getArticleBreadCrumb', 'getCurrentArticle', 'showArticleModal', 'getArticlesByParent',
+      'destroyCurrentArticle', 'getFilesByArticle']),
     async getBreadCrumb() {
       const res = await this.getArticleBreadCrumb(this.$route.params.id)
       if (!res.success) {
@@ -177,6 +189,7 @@ export default {
     this.getBreadCrumb();
     this.getCurrentArticle(this.$route.params.id);
     this.getArticlesByParent(this.$route.params.id);
+    this.getFilesByArticle(this.$route.params.id)
   },
   destroyed() {
     this.destroyCurrentArticle({});

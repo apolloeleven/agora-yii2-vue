@@ -63,6 +63,10 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                [
+                    'pattern' => 'v1/workspaces/article-file/download-attachment/<id:\d+>',
+                    'route' => 'v1/workspaces/article-file/download-attachment'
+                ],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/department'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/users/user'],
@@ -75,6 +79,7 @@ $config = [
                         'v1/users/auth',
                         'v1/workspaces/workspace',
                         'v1/workspaces/article',
+                        'v1/workspaces/article-file',
                     ]
                 ]
             ],
