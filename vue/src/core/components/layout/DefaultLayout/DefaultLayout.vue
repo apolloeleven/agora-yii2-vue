@@ -8,9 +8,9 @@
         <router-view :key="$route.fullPath"/>
       </div>
     </div>
+    <employee-form-modal/>
     <WorkspaceForm/>
     <ArticleForm/>
-    <employee-form-modal/>
   </div>
 </template>
 
@@ -22,9 +22,9 @@ import ArticleForm from "../../../../modules/Workspace/article/ArticleForm";
 import {mapState, createNamespacedHelpers} from 'vuex';
 import MenuService from "../../sidebar/MenuService";
 import MenuItem from "../../sidebar/MenuItem";
+import EmployeeFormModal from "@/modules/setup/employees/EmployeeFormModal";
 
 const {mapActions} = createNamespacedHelpers('user');
-import EmployeeFormModal from "@/modules/setup/employees/EmployeeFormModal";
 const {mapState: mapStateWorkspace, mapActions: mapActionsWorkspace} = createNamespacedHelpers('workspace');
 
 export default {

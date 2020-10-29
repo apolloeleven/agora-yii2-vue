@@ -13,6 +13,7 @@
         </p>
       </b-media>
       <b-media class="article-item mt-3">
+        <b-img v-if="model.image_url" class="article-image mr-2" :src="model.image_url"/>
         <div class="article-description mb-0" v-html="model.short_description"></div>
       </b-media>
     </b-card-body>
@@ -67,5 +68,9 @@ export default {
 
 .article-description {
   word-break: break-word;
+}
+
+.article-image {
+  width: 120px;
 }
 </style>

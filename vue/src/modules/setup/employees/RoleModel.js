@@ -2,16 +2,25 @@ import BaseModel from "../../../core/components/input-widget/BaseModel";
 import i18n from "../../../shared/i18n";
 
 export default class RoleModel extends BaseModel {
-  name = null;
+  id = null;
+  role = '';
+  workspace_id = null;
 
   rules = {
-    name: [
-      {rule:'required'}
+    id: [
+      {rule: 'required'}
+    ],
+    role: [
+      {rule: 'required'}
+    ],
+    workspace_id: [
+      {rule: 'required'}
     ]
   }
 
   attributeLabels = {
-    name: ' '
+    role: i18n.t('Role'),
+    workspace_id: i18n.t('Workspace'),
   };
 
   constructor(data) {

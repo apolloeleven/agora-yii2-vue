@@ -49,7 +49,7 @@ export function hideArticleModal({commit}, hideModal) {
  * @param { Object } data
  */
 export async function createArticle({dispatch}, data) {
-  return await httpService.post(url, data);
+  return await httpService.post(url, prepareData(data));
 }
 
 /**
@@ -58,7 +58,15 @@ export async function createArticle({dispatch}, data) {
  * @returns {Promise<unknown>}
  */
 export async function updateArticle({dispatch}, data) {
-  return await httpService.put(`${url}/${data.id}`, data);
+  const id = data.id;
+  data = prepareData(data);
+
+  if (data instanceof FormData) {
+    data.append('_method', 'PUT');
+    return await httpService.post(`${url}/${id}`, data);
+  } else {
+    return await httpService.put(`${url}/${id}`, data);
+  }
 }
 
 /**
@@ -141,6 +149,29 @@ export async function getArticleBreadCrumb({commit}, articleId) {
   const res = await httpService.get(`${url}/get-bread-crumb?articleId=${articleId}`);
   if (res.success) commit(GET_BREAD_CRUMB, res.body);
   return res;
+}
+
+/**
+ * Prepare data for upload
+ *
+ * @param data
+ * @returns {*}
+ */
+export function prepareData(data) {
+  if (data.image && data.image instanceof File) {
+    const tmp = new FormData();
+    for (let key in data) {
+      if (data.hasOwnProperty(key)) {
+        if (key === 'depth' || key === 'is_folder') {
+          tmp.append(key, data[key]);
+        } else {
+          tmp.append(key, data[key] || '');
+        }
+      }
+    }
+    data = tmp;
+  }
+  return data;
 }
 
 /** Article Files Actions */

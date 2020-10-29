@@ -18,7 +18,7 @@ class MailHelper
      */
     private static function sendMail(MessageInterface $message)
     {
-        $message->setFrom(env('EMAIL_FROM'));
+        $message->setFrom([env('EMAIL_FROM') => Yii::$app->name]);
         if (env('EMAIL_CC')) {
             $message->setCc(env('EMAIL_CC'));
         }

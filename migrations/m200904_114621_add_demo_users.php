@@ -15,7 +15,7 @@ class m200904_114621_add_demo_users extends Migration
         $this->insert('{{%users}}', [
             'id' => 1,
             'username' => 'admin',
-            'email' => 'admin@example.com',
+            'email' => 'admin@agoraintra.net',
             'password_hash' => Yii::$app->security->generatePasswordHash('admin'),
             'password_reset_token' => null,
             'access_token' => null,

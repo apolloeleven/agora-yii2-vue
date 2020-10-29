@@ -4,13 +4,15 @@
 namespace app\modules\v1\workspaces\resources;
 
 
+use app\helpers\ModelHelper;
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\UserWorkspace;
 use app\modules\v1\workspaces\models\Workspace;
 use app\rest\ValidationException;
 use Yii;
 use yii\db\ActiveQuery;
-use yii\db\Exception;
+use yii\helpers\FileHelper;
+use yii\web\UploadedFile;
 
 /**
  * Class WorkspaceResource
@@ -26,12 +28,17 @@ class WorkspaceResource extends Workspace
             'name',
             'abbreviation',
             'description',
-            'folder_in_folder',
+            'folder_in_folder' => function () {
+                return !!$this->folder_in_folder;
+            },
             'created_at' => function () {
                 return $this->created_at * 1000;
             },
             'updated_at' => function () {
                 return $this->updated_at * 1000;
+            },
+            'image_url' => function () {
+                return $this->image_path ? Yii::getAlias('@storageUrl' . $this->image_path) : '';
             },
         ];
     }
@@ -74,6 +81,7 @@ class WorkspaceResource extends Workspace
             $userWorkspace = new UserWorkspace();
             $userWorkspace->workspace_id = $this->id;
             $userWorkspace->user_id = Yii::$app->user->id;
+            $userWorkspace->role = UserResource::ROLE_ADMIN;
 
             if (!$userWorkspace->save()) {
                 throw new ValidationException(Yii::t('app', 'Unable to create user workspace'));
@@ -82,23 +90,61 @@ class WorkspaceResource extends Workspace
     }
 
     /**
+     * Load for image upload
+     *
+     * @param array $data
+     * @param null $formName
+     * @return bool
+     */
+    public function load($data, $formName = null)
+    {
+        $this->image = UploadedFile::getInstanceByName('image');
+
+        return parent::load($data, $formName);
+    }
+
+    /**
+     * Upload image
+     *
+     * @param bool $runValidation
+     * @param null $attributeNames
+     * @return bool
+     * @throws \yii\base\Exception
+     * @throws \yii\base\ErrorException
+     */
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if (!$this->image) {
+            return parent::save($runValidation, $attributeNames);
+        }
+        if (ModelHelper::isImage($this->image->extension)) {
+            ModelHelper::deleteImage($this->image_path);
+
+            $this->image_path = '/workspace/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
+
+            $fullPath = Yii::getAlias('@storage' . $this->image_path);
+            if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
+            if (!$this->image->saveAs($fullPath, false)) {
+                throw new ValidationException(Yii::t('app', 'File not uploaded'));
+            }
+        }
+
+        return parent::save($runValidation, $attributeNames);
+    }
+
+    /**
      * Check workspace and delete if has no children
      *
      * @return bool|int
      * @throws ValidationException
-     * @throws Exception
      */
     public function delete()
     {
         if ($this->getArticles()->count()) {
             throw new ValidationException(Yii::t('app', 'You can\'t delete this workspace because it has folders'));
         }
-        $dbTransaction = Yii::$app->db->beginTransaction();
-        if (!UserWorkspace::deleteAll(['workspace_id' => $this->id])) {
-            $dbTransaction->rollBack();
-            return false;
-        }
-        $dbTransaction->commit();
+        UserWorkspace::deleteAll(['workspace_id' => $this->id]);
+
         return true;
     }
 }

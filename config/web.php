@@ -75,11 +75,11 @@ $config = [
                     'pluralize' => false,
                     'controller' => [
                         'v1/users/invitation',
+                        'v1/users/employee',
+                        'v1/users/auth',
                         'v1/workspaces/workspace',
                         'v1/workspaces/article',
                         'v1/workspaces/article-file',
-                        'v1/users/employee',
-                        'v1/users/auth'
                     ]
                 ]
             ],

@@ -50,8 +50,8 @@ export default new Vuex.Store({
   modules: {
     setup,
     user,
+    employee,
     workspace,
     article,
-    employee,
   }
 });

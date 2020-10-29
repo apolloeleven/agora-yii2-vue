@@ -6,9 +6,9 @@
       @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-title="$t('Submit')"
       scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
-        <b-form-group :label="$t('Upload Image')">
-          <input :model="model.image" type="file"/>
-        </b-form-group>
+        <input-widget
+          :model="model" attribute="image" type="file" :placeholder="$t('Choose a image or drop it here...')">
+        </input-widget>
         <input-widget :model="model" attribute="folder_in_folder" type="checkbox"></input-widget>
         <input-widget :model="model" attribute="name"></input-widget>
         <input-widget :model="model" attribute="abbreviation"></input-widget>
@@ -31,7 +31,6 @@ export default {
   data() {
     return {
       model: new WorkspaceFormModel(),
-      image: null,
     }
   },
   computed: {
@@ -47,23 +46,22 @@ export default {
   methods: {
     ...mapActions(['hideWorkspaceModal', 'createWorkspace', 'updateWorkspace']),
     async onSubmit() {
-      this.model.folder_in_folder = this.model.folder_in_folder ? 1 : 0;
-      this.model.image = this.image;
-
+      this.model.folder_in_folder = this.model.folder_in_folder ? 1 : 0
       let action
       let res
       if (this.model.id) {
         action = 'updated';
-        res = await this.updateWorkspace(this.model);
+        res = await this.updateWorkspace({...this.model.toJSON()});
       } else {
         action = 'created';
-        res = await this.createWorkspace(this.model);
+        res = await this.createWorkspace({...this.model.toJSON()});
       }
       if (res.success) {
         this.$toast(this.$t(`The workspace '{name}' was successfully ${action}`, {name: this.model.name}));
         this.hideModal()
       } else {
-        this.$toast(this.$t(`The workspace '{name}' was not ${action}`, {name: this.model.name}), 'danger');
+        this.model.folder_in_folder = !!this.model.folder_in_folder;
+        this.model.setMultipleErrors(res.body);
       }
     },
     hideModal() {

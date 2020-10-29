@@ -5,6 +5,7 @@ import {
   WORKSPACE_DELETED,
   GET_BREAD_CRUMB,
   GET_CURRENT_WORKSPACE,
+  GET_EMPLOYEES,
 } from './mutation-types';
 
 export default {
@@ -50,5 +51,13 @@ export default {
    */
   [GET_CURRENT_WORKSPACE](state, data) {
     state.currentWorkspace = data || {}
-  }
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_EMPLOYEES](state, data) {
+    state.employees = data;
+  },
 };

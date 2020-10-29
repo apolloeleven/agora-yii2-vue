@@ -3,7 +3,7 @@
 namespace app\modules\v1\users\models;
 
 use app\modules\v1\users\models\query\UserQuery;
-use app\modules\v1\users\models\UserDepartment;
+use app\modules\v1\workspaces\models\UserWorkspace;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
@@ -15,31 +15,37 @@ use yii\web\IdentityInterface;
 /**
  * This is the model class for table "{{%users}}".
  *
- * @property int         $id
- * @property string      $username
- * @property string      $email
- * @property string      $password_hash
- * @property string      $first_name
- * @property string      $last_name
- * @property string      $mobile
- * @property string      $phone
- * @property string      $birthday
- * @property string      $about_me
- * @property string      $hobbies
- * @property string      $image_path
- * @property string|null $password_reset_token
- * @property int|null    $expire_date
- * @property string|null $access_token
- * @property int|null    $status
- * @property string      $favourites
- * @property int|null    $created_at
- * @property int|null    $updated_at
+ * @property int              $id
+ * @property string           $username
+ * @property string           $email
+ * @property string           $password_hash
+ * @property string           $first_name
+ * @property string           $last_name
+ * @property string           $mobile
+ * @property string           $phone
+ * @property string           $birthday
+ * @property string           $about_me
+ * @property string           $hobbies
+ * @property string           $image_path
+ * @property string|null      $password_reset_token
+ * @property int|null         $expire_date
+ * @property string|null      $access_token
+ * @property int|null         $access_token_expire_date
+ * @property int|null         $status
+ * @property string           $favourites
+ * @property int|null         $created_at
+ * @property int|null         $updated_at
+ *
  * @property UserDepartment[] $userDepartments
+ * @property UserWorkspace[] $userWorkspaces
+ * @property Invitation $invitation
  */
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 2;
+
+    const ACCESS_TOKEN_LIFETIME = 60 * 60 * 24; // 1 day
 
     /**
      * Password reset link is valid 48 hours
@@ -60,7 +66,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['username', 'email', 'password_hash'], 'required'],
-            [['status', 'created_at', 'updated_at', 'expire_date'], 'integer'],
+            [['status', 'access_token_expire_date', 'created_at', 'updated_at', 'expire_date'], 'integer'],
             [['username'], 'string', 'max' => 255],
             [['email', 'access_token'], 'string', 'max' => 512],
             [['password_hash', 'password_reset_token'], 'string', 'max' => 1024],
@@ -175,7 +181,10 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function generateAccessToken()
     {
-        $this->access_token = Yii::$app->security->generateRandomString(256);
+        if (!$this->access_token || $this->access_token_expire_date < time()) {
+            $this->access_token = Yii::$app->security->generateRandomString(256);
+            $this->access_token_expire_date = time() + self::ACCESS_TOKEN_LIFETIME;
+        }
     }
 
     /**
@@ -233,12 +242,6 @@ class User extends ActiveRecord implements IdentityInterface
     public function getDisplayName()
     {
         return $this->first_name . ' ' . $this->last_name;
-    }
-
-    public function getRoles()
-    {
-        $auth = Yii::$app->authManager;
-        return $auth->getRolesByUser($this->id);
     }
 
     /**
@@ -299,5 +302,21 @@ class User extends ActiveRecord implements IdentityInterface
     public function getUserDepartments()
     {
         return $this->hasMany(UserDepartment::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUserWorkspaces()
+    {
+        return $this->hasMany(UserWorkspace::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getInvitation()
+    {
+        return $this->hasOne(Invitation::class, ['user_id' => 'id']);
     }
 }
