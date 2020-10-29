@@ -26,7 +26,7 @@ class AuthController extends Controller
         if (!$model->load($request->post(), '') || !$model->validate() || !$model->login()) {
             return $this->validationError($model->getFirstErrors());
         }
-        return $model->getUser()->getApiData();
+        return $model->getActiveUser()->getApiData();
     }
 
     /**

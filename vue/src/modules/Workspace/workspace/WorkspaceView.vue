@@ -5,7 +5,7 @@
       <b-breadcrumb :items="breadCrumb" class="d-none d-sm-flex"></b-breadcrumb>
       <WorkspaceUsers :model="employees"/>
       <b-button @click="showModal" variant="info">
-        <i class="fas fa-plus-circle"></i>
+        <i class="fas fa-plus-circle"/>
         {{ $t('Create new folder') }}
       </b-button>
     </div>
@@ -13,22 +13,23 @@
       <b-card no-body class="mb-1">
         <b-card-header header-tag="header" class="p-1" aria-controls="collapse"
                        :aria-expanded="visible ? 'true' : 'false'" @click="visible = !visible">
-          <i v-if="!visible" class="fas fa-angle-double-down fa-2x"></i>
-          <i v-else class="fas fa-angle-double-up fa-2x"></i>
+          <i v-if="!visible" class="fas fa-angle-double-down fa-2x"/>
+          <i v-else class="fas fa-angle-double-up fa-2x"/>
         </b-card-header>
         <b-collapse id="collapse" v-model="visible">
           <b-card-body>
             <div class="row">
               <div class="col-md-4 col-sm-12">
                 <b-media class="article-header align-items-center">
-                  <i class="fas fa-folder-open fa-4x"></i>
+                  <b-img v-if="currentWorkspace.image_url" class="workspace-image" :src="currentWorkspace.image_url"/>
+                  <i v-else class="fas fa-folder-open fa-4x"/>
                 </b-media>
               </div>
               <div class="col-md-8 col-sm-12">
                 <div>
                   <h3 class="mt-0">{{ currentWorkspace.name }}</h3>
                 </div>
-                <div v-html="currentWorkspace.description"></div>
+                <div v-html="currentWorkspace.description"/>
               </div>
             </div>
           </b-card-body>
@@ -40,11 +41,11 @@
             <h4 class="border-bottom pb-1 mb-3">{{ $t('Folders') }}</h4>
             <div class="folder-list">
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
-              <no-data :model="articles" :loading="loading" :text="$t('There are no folders')"></no-data>
+              <no-data :model="articles" :loading="loading" :text="$t('There are no folders')"/>
               <div v-if="articles" class="folder-wrapper row">
-                <ArticleItem
-                  class="mb-2 col-md-12 col-xl-6" v-for="(article, index) in articles"
-                  :article="article" :index="index" :key="article.id"/>
+                <ArticleItem class="mb-2 col-md-12 col-xl-6" v-for="(article, index) in articles"
+                             :article="article" :index="index" :key="`article-item-${article.id}`">
+                </ArticleItem>
               </div>
             </div>
           </div>
@@ -135,6 +136,9 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.workspace-image {
+  width: 160px;
+  min-width: 160px;
+}
 </style>

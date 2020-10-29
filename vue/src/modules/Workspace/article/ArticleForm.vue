@@ -4,9 +4,9 @@
       :visible="showModal" id="article-form" ref="modal" size="lg" :title="modalTitle"
       @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-title="$t('Submit')" scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
-        <b-form-group :label="$t('Upload Image')">
-          <input :model="model.image" type="file"/>
-        </b-form-group>
+        <input-widget
+          :model="model" attribute="image" type="file" :placeholder="$t('Choose a image or drop it here...')">
+        </input-widget>
         <input-widget :model="model" attribute="title"></input-widget>
         <input-widget :model="model" attribute="body" type="richtext"></input-widget>
       </b-form>
@@ -18,7 +18,7 @@
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import ArticleFormModel from "./ArticleFormModel";
 import {createNamespacedHelpers} from "vuex";
-import WorkspaceFormModel from "../workspace/WorkspaceFormModel";
+import FavouritesService from "../components/AddToFavourites/FavouritesService";
 
 const {mapState, mapActions} = createNamespacedHelpers('article');
 const {mapState: mapWorkspaceState} = createNamespacedHelpers('workspace');
@@ -29,8 +29,6 @@ export default {
   data() {
     return {
       model: new ArticleFormModel(),
-      action: '',
-      resource: '',
     }
   },
   computed: {
@@ -40,17 +38,18 @@ export default {
       if (this.isArticle) {
         if (this.modalArticle) {
           return this.$t(`Update article '{name}'`, {name: this.modalArticle.title});
-        } else {
-          return this.$t(`Create new article`);
         }
+        return this.$t(`Create new article`);
       } else {
         if (this.modalArticle) {
           return this.$t(`Update folder '{name}'`, {name: this.modalArticle.title});
-        } else {
-          return this.$t(`Create new folder`);
         }
+        return this.$t(`Create new folder`);
       }
-    }
+    },
+    isFolder() {
+      return !!this.model.is_folder;
+    },
   },
   watch: {
     modalArticle() {
@@ -62,23 +61,27 @@ export default {
   methods: {
     ...mapActions(['hideArticleModal', 'createArticle', 'updateArticle', 'getArticlesByParent', 'getArticlesByWorkspace']),
     async onSubmit() {
-      this.resource = 'folder';
-      this.model.workspace_id = this.currentWorkspace.id;
+      let action;
+      let resource
+
+      if (this.currentWorkspace.id) {
+        this.model.workspace_id = this.currentWorkspace.id;
+      }
       this.model.article_id = this.currentArticle.id;
       this.model.isArticle = this.isArticle;
 
       if (this.isArticle) {
-        this.resource = 'article';
+        resource = 'article';
       } else {
-        this.resource = 'folder';
+        resource = 'folder';
       }
       let res
       if (this.model.id) {
-        this.action = 'updated';
-        res = await this.updateArticle(this.model);
+        action = 'updated';
+        res = await this.updateArticle({...this.model.toJSON()});
       } else {
-        this.action = 'created';
-        res = await this.createArticle(this.model);
+        action = 'created';
+        res = await this.createArticle({...this.model.toJSON()});
       }
 
       if (this.model.article_id) {
@@ -88,16 +91,34 @@ export default {
       }
 
       if (res.success) {
-        this.$toast(this.$t(`The ${this.resource} '{title}' was successfully ${this.action}`, {title: this.model.title}));
+        if (action === 'updated') {
+          this.updateFavourites()
+        }
+        this.$toast(this.$t(`The ${resource} '{title}' was successfully ${action}`, {title: this.model.title}));
         this.hideModal()
       } else {
-        this.$toast(this.$t(`The ${this.resource} '{title}' was not ${this.action}`, {title: this.model.title}), 'danger');
+        this.model.setMultipleErrors(res.body);
       }
     },
     hideModal() {
       this.hideArticleModal();
       this.model = new ArticleFormModel()
     },
+    updateFavourites() {
+      let path = `/article/${this.model.id}`;
+      if (FavouritesService.inFavourites(path)) {
+        FavouritesService.removeFavourite(path)
+        let wk;
+        if (this.currentWorkspace.id) {
+          wk = this.currentWorkspace;
+        } else {
+          wk = this.currentArticle.workspace || {};
+        }
+        let name = (wk.abbreviation || wk.name) + ' / ' + this.model.title;
+        let icon = FavouritesService.getIcon(this.isFolder);
+        FavouritesService.addFavourite(name, path, icon);
+      }
+    }
   },
 }
 </script>
