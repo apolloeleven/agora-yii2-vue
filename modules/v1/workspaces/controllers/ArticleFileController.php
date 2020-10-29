@@ -133,7 +133,7 @@ class ArticleFileController extends ActiveController
             throw new ValidationException(Yii::t('app', 'Article file not exist'));
         }
 
-        if (!$articleFile->load($request->post(), '') && !$articleFile->save()) {
+        if (!$articleFile->load($request->post(), '') || !$articleFile->save()) {
             throw new ValidationException(Yii::t('app', 'Unable to update label'));
         }
 

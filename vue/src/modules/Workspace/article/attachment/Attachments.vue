@@ -125,13 +125,6 @@ export default {
       return this.selected.map(a => a.id)
     },
   },
-  watch: {
-    progress() {
-      if (this.progress >= 100) {
-        this.progress = 0;
-      }
-    }
-  },
   methods: {
     ...mapActions(['getAttachConfig', 'attachFiles', 'showEditLabelDialog', 'showPreviewModal', 'sortAttachment']),
     async onFileChoose(ev) {
@@ -189,6 +182,9 @@ export default {
         config: {
           onUploadProgress: (progressEvent) => {
             this.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            if (this.progress >= 100) {
+              this.progress = 0;
+            }
           }
         }
       });
