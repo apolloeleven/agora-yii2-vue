@@ -1,14 +1,15 @@
 import {
   SHOW_WORKSPACE_MODAL,
   HIDE_WORKSPACE_MODAL,
-  GET_USER_WORKSPACES,
+  GET_WORKSPACES,
   WORKSPACE_DELETED,
-  GET_BREAD_CRUMB
+  GET_BREAD_CRUMB,
+  GET_CURRENT_WORKSPACE,
+  GET_EMPLOYEES,
 } from './mutation-types';
 
 export default {
   /**
-   *
    * @param state
    * @param workspace
    */
@@ -17,7 +18,6 @@ export default {
     state.modalWorkspace = workspace;
   },
   /**
-   *
    * @param state
    */
   [HIDE_WORKSPACE_MODAL](state) {
@@ -25,28 +25,39 @@ export default {
     state.modalWorkspace = null;
   },
   /**
-   *
    * @param state
    * @param data
    */
-  [GET_USER_WORKSPACES](state, data) {
-    state.userWorkspaces = data;
+  [GET_WORKSPACES](state, data) {
     state.workspaces = data;
   },
   /**
-   *
    * @param state
    * @param id
    */
   [WORKSPACE_DELETED](state, id) {
-    state.workspaces = state.workspaces.filter(workspace => workspace.id !== id)
+    state.workspaces = state.workspaces.filter(w => w.id !== id)
   },
   /**
-   *
    * @param state
    * @param data
    */
   [GET_BREAD_CRUMB](state, data) {
     state.breadCrumb = data
+  },
+  /**
+   * @param state
+   * @param data
+   */
+  [GET_CURRENT_WORKSPACE](state, data) {
+    state.currentWorkspace = data || {}
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_EMPLOYEES](state, data) {
+    state.employees = data;
   },
 };

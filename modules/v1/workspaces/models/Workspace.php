@@ -25,9 +25,10 @@ use yii\helpers\FileHelper;
  * @property int|null $created_by
  * @property int|null $updated_by
  *
+ * @property Article[] $articles
  * @property User $createdBy
  * @property User $updatedBy
- * @property Workspace $userWorkspaces
+ * @property Workspace[] $userWorkspaces
  */
 class Workspace extends ActiveRecord
 {
@@ -126,28 +127,10 @@ class Workspace extends ActiveRecord
     }
 
     /**
-     * Delete image
-     *
-     * @return bool
-     * @throws \yii\base\ErrorException
+     * @return ActiveQuery
      */
-    public function deleteImage()
+    public function getArticles()
     {
-        if ($this->image_path) {
-            $dir = dirname($this->image_path);
-            FileHelper::removeDirectory(Yii::getAlias("@storage/$dir"));
-        }
-
-        return true;
-    }
-
-    /**
-     * Check uploaded file is image
-     *
-     * @return bool
-     */
-    public function isImage()
-    {
-        return in_array($this->image->extension, ['png', 'jpeg', 'svg', 'gif', 'jpg']);
+        return $this->hasMany(Article::class, ['workspace_id' => 'id']);
     }
 }

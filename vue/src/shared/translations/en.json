@@ -7,5 +7,13 @@
   "The workspace '{name}' was successfully updated": "The workspace '{name}' was successfully updated",
   "The workspace '{name}' was not created": "The workspace '{name}' was not created",
   "The workspace '{name}' was not updated": "The workspace '{name}' was not updated",
-  "The workspace '{name}' was successfully deleted": "The workspace '{name}' was successfully deleted"
+  "The workspace '{name}' was successfully deleted": "The workspace '{name}' was successfully deleted",
+  "The folder '{title}' was successfully created": "The folder '{title}' was successfully created",
+  "The folder '{title}' was successfully updated": "The folder '{title}' was successfully updated",
+  "The folder '{title}' was successfully deleted": "The folder '{title}' was successfully deleted",
+  "The article '{title}' was successfully created": "The article '{title}' was successfully created",
+  "The article '{title}' was successfully updated": "The article '{title}' was successfully updated",
+  "The article '{title}' was successfully deleted": "The article '{title}' was successfully deleted",
+  "Update folder '{name}'": "Update folder '{name}'",
+  "Update article '{name}'": "Update article '{name}'"
 }

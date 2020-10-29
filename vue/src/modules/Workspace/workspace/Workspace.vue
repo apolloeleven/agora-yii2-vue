@@ -1,6 +1,6 @@
 <template>
   <div id="workspace" class="page">
-    <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
+    <content-spinner :show="loading" :text="$t('Loading...')" :fullscreen="true" class="h-100"/>
     <div class="page-header">
       <b-breadcrumb :items="breadCrumb" class="d-none d-sm-flex"></b-breadcrumb>
       <b-button @click="showModal" variant="info">
@@ -12,7 +12,7 @@
     <div class="page-content p-3">
       <div class="workspace-list">
         <div class="row">
-          <div v-for="(workspace, index) in userWorkspaces" :key="`workspace-wrapper-${workspace.id}`" class="col-lg-2 col-sm-6 mb-3">
+          <div v-for="(workspace, index) in workspaces" :key="`workspace-wrapper-${workspace.id}`" class="col-lg-2 col-sm-6 mb-3">
             <WorkspaceItem :workspace="workspace" :index="index" />
           </div>
         </div>
@@ -24,7 +24,7 @@
 <script>
 import {createNamespacedHelpers} from "vuex";
 import ContentSpinner from "../../../core/components/ContentSpinner";
-import WorkspaceItem from "../components/WorkspaceItem";
+import WorkspaceItem from "./WorkspaceItem";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace');
 
@@ -41,16 +41,16 @@ export default {
     }
   },
   computed: {
-    ...mapState(['loading', 'userWorkspaces'])
+    ...mapState(['loading', 'workspaces'])
   },
   methods: {
-    ...mapActions(['showWorkspaceModal', 'getUserWorkspaces']),
+    ...mapActions(['showWorkspaceModal', 'getWorkspaces']),
     showModal() {
       this.showWorkspaceModal()
     },
   },
   created() {
-    this.getUserWorkspaces();
+    this.getWorkspaces();
   },
 }
 </script>

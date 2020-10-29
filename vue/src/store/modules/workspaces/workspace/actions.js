@@ -1,11 +1,15 @@
 import {
   SHOW_WORKSPACE_MODAL,
   HIDE_WORKSPACE_MODAL,
-  GET_USER_WORKSPACES,
+  GET_WORKSPACES,
   WORKSPACE_DELETED,
-  GET_BREAD_CRUMB
+  GET_BREAD_CRUMB,
+  GET_CURRENT_WORKSPACE,
+  GET_EMPLOYEES,
 } from './mutation-types';
-import httpService from "../../../core/services/httpService";
+import httpService from "../../../../core/services/httpService";
+
+const url = '/v1/workspaces/workspace'
 
 /**
  * Show workspace form's modal
@@ -35,9 +39,9 @@ export function hideWorkspaceModal({commit}, hideModal) {
  * @returns {Promise<unknown>}
  */
 export async function createWorkspace({dispatch}, data) {
-  const res = await httpService.post(`/v1/workspaces/workspace?expand=updatedBy`, prepareData(data));
+  const res = await httpService.post(`${url}?expand=updatedBy`, prepareData(data));
   if (res.success) {
-    dispatch('getUserWorkspaces');
+    dispatch('getWorkspaces');
   }
   return res
 }
@@ -56,13 +60,12 @@ export async function updateWorkspace({dispatch}, data) {
 
   if (data instanceof FormData) {
     data.append('_method', 'PUT');
-    res = await httpService.post(`/v1/workspaces/workspace/${id}`, data)
+    res = await httpService.post(`${url}/${id}`, data);
   } else {
-    res = await httpService.put(`/v1/workspaces/workspace/${id}`, data)
+    res = await httpService.put(`${url}/${id}`, data);
   }
-
   if (res.success) {
-    dispatch('getUserWorkspaces');
+    dispatch('getWorkspaces');
   }
   return res;
 }
@@ -76,12 +79,36 @@ export async function updateWorkspace({dispatch}, data) {
  * @returns {Promise<unknown>}
  */
 export async function deleteWorkspace({commit, dispatch}, data) {
-  const res = await httpService.delete(`/v1/workspaces/workspace/${data.id}`);
+  const res = await httpService.delete(`${url}/${data.id}`);
   if (res.success) {
     commit(WORKSPACE_DELETED, data.id);
-    dispatch('getUserWorkspaces');
+    dispatch('getWorkspaces');
   }
   return res;
+}
+
+/**
+ * Get current workspace
+ *
+ * @param commit
+ * @param { int } workspaceId
+ * @returns {Promise<void>}
+ */
+export async function getCurrentWorkspace({commit}, workspaceId) {
+  const {success, body} = await httpService.get(`${url}/${workspaceId}`)
+  if (success) {
+    commit(GET_CURRENT_WORKSPACE, body);
+  }
+}
+
+/**
+ *
+ * @param commit
+ * @param { Object }workspace
+ * @returns {Promise<void>}
+ */
+export async function destroyCurrentWorkspace({commit}, workspace) {
+  commit(GET_CURRENT_WORKSPACE, workspace)
 }
 
 /**
@@ -90,10 +117,10 @@ export async function deleteWorkspace({commit, dispatch}, data) {
  * @param commit
  * @returns {Promise<void>}
  */
-export async function getUserWorkspaces({commit}) {
-  const {success, body} = await httpService.get(`/v1/workspaces/workspace/get-user-workspaces?expand=updatedBy&sort=name`);
+export async function getWorkspaces({commit}) {
+  const {success, body} = await httpService.get(`${url}/get-workspaces?expand=updatedBy&sort=name`);
   if (success) {
-    commit(GET_USER_WORKSPACES, body);
+    commit(GET_WORKSPACES, body);
   }
 }
 
@@ -105,9 +132,23 @@ export async function getUserWorkspaces({commit}) {
  * @returns {Promise<void>}
  */
 export async function getWorkspaceBreadCrumb({commit}, workspaceId) {
-  const res = await httpService.get(`/v1/workspaces/workspace/get-bread-crumb?workspaceId=${workspaceId}`);
+  const res = await httpService.get(`${url}/get-bread-crumb?workspaceId=${workspaceId}`);
   if (res.success) commit(GET_BREAD_CRUMB, res.body);
   return res;
+}
+
+/**
+ * Get Employees by workspace id
+ *
+ * @param commit
+ * @param workspaceId
+ * @returns {Promise<void>}
+ */
+export async function getEmployees({commit}, workspaceId) {
+  const {success, body} = await httpService.get(`${url}/get-employees?workspaceId=${workspaceId}`)
+  if (success) {
+    commit(GET_EMPLOYEES, body)
+  }
 }
 
 /**
@@ -121,7 +162,11 @@ export function prepareData(data) {
     const tmp = new FormData();
     for (let key in data) {
       if (data.hasOwnProperty(key)) {
-        tmp.append(key, data[key]);
+        if (key === 'folder_in_folder') {
+          tmp.append(key, data[key]);
+        } else {
+          tmp.append(key, data[key] || '');
+        }
       }
     }
     data = tmp;

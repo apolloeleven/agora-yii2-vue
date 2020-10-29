@@ -34,9 +34,7 @@
 <script>
 import SidebarItemContent from './SidebarItemContent'
 
-import {createNamespacedHelpers} from 'vuex';
-
-const {mapActions} = createNamespacedHelpers('app');
+import {mapActions} from 'vuex';
 
 export default {
   name: "SidebarItem",

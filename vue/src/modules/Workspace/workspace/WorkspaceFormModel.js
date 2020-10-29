@@ -2,7 +2,6 @@ import BaseModel from "../../../core/components/input-widget/BaseModel";
 import i18n from "../../../shared/i18n";
 
 export default class WorkspaceFormModel extends BaseModel {
-  id = null;
   name = '';
   abbreviation = '';
   description = '';
@@ -27,6 +26,8 @@ export default class WorkspaceFormModel extends BaseModel {
 
   constructor(data = {}) {
     super();
+    data.created_at = data.created_at / 1000;
+    data.updated_at = data.updated_at / 1000;
     Object.assign(this, {...data});
   }
 }

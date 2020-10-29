@@ -3,7 +3,7 @@
     <b-modal
       :visible="showModal" id="workspace-form" ref="modal" size="lg"
       :title='modalWorkspace ? $t(`Update workspace "{workspace}"`,{workspace:model.name}) : $t(`Add New Workspace`)'
-      @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-disabled="loading" :ok-title="$t('Submit')"
+      @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-title="$t('Submit')"
       scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
         <input-widget
@@ -34,7 +34,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['loading', 'showModal', 'modalWorkspace']),
+    ...mapState(['showModal', 'modalWorkspace']),
   },
   watch: {
     modalWorkspace() {

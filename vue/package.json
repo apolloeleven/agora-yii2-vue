@@ -23,6 +23,7 @@
     "elliptic": ">=6.5.3",
     "lodash": "^4.17.20",
     "moment": "2.24.0",
+    "moment-timezone": "^0.5.28",
     "serialize-javascript": "^5.0.1",
     "vee-validate": "3.2.0",
     "vue": "^2.6.12",

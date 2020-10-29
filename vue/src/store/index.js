@@ -2,8 +2,9 @@ import Vuex from "vuex";
 import Vue from 'vue';
 import setup from './modules/setup';
 import user from './modules/user';
-import workspace from './modules/workspace';
 import employee from './modules/employee'
+import workspace from './modules/workspaces/workspace';
+import article from './modules/workspaces/article';
 
 // Load vuex
 Vue.use(Vuex);
@@ -12,10 +13,12 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     menuCollapsed: false,
-    menuHidden: false
+    menuHidden: false,
+    _menuItems: {},
   },
   getters: {
     menuItems: state => Object.values(state._menuItems).sort((a, b) => a.weight - b.weight),
+    favourites: state => Object.values(state._menuItems).filter(item => item.favourite).sort((a, b) => a.weight - b.weight),
   },
   actions: {
     addMenuItem({commit}, {name, menuItem}) {
@@ -49,5 +52,6 @@ export default new Vuex.Store({
     user,
     employee,
     workspace,
+    article,
   }
 });

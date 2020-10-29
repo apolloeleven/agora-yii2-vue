@@ -3,8 +3,8 @@
     <div class="image-wrapper d-flex align-items-center justify-content-center">
       <router-link :to="{name: 'workspace.view', params: {id: workspace.id}}">
         <b-card-img
-            :src="workspace.image_url || '/assets/logo.png'"
-            class="rounded-0"/>
+          :src="workspace.image_url || '/assets/logo.png'"
+          class="rounded-0"/>
       </router-link>
     </div>
     <b-card-body>
@@ -18,47 +18,25 @@
           <i class="fas fa-ellipsis-v"></i>
         </b-button>
       </template>
-      <b-dropdown-item @click="onEditClick">
-        <i class="fas fa-pencil-alt"></i>
-        {{ $t('Edit') }}
-      </b-dropdown-item>
-      <b-dropdown-item @click="onDeleteClick">
-        <i class="fas fa-trash-alt"></i>
-        {{ $t('Delete') }}
-      </b-dropdown-item>
+      <edit-button :model="workspace" type="workspace"/>
+      <delete-button :model="workspace" type="workspace"/>
     </b-dropdown>
   </b-card>
 </template>
 
 <script>
 import {createNamespacedHelpers} from "vuex";
+import EditButton from "../components/EditButton";
+import DeleteButton from "../components/DeleteButton";
 
 const {mapActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "WorkspaceItem",
+  components: {DeleteButton, EditButton},
   props: {
     index: Number,
     workspace: Object
-  },
-  methods: {
-    ...mapActions(['showWorkspaceModal', 'deleteWorkspace']),
-    onEditClick() {
-      this.showWorkspaceModal(this.workspace)
-    },
-    async onDeleteClick() {
-      const result = await this.$confirm(this.$t('All users and timeline records will be removed from this workspace. Are you sure you want to continue?'),
-          this.$t('This operation can not be undone'))
-      if (result) {
-        let workspaceName = this.workspace.name;
-        const res = await this.deleteWorkspace(this.workspace);
-        if (res.success) {
-          this.$toast(this.$t(`The workspace '{name}' was successfully deleted`, {name: workspaceName}));
-        } else {
-          this.$toast(this.$t(`Unable to delete workspace`), 'danger');
-        }
-      }
-    },
   },
 }
 </script>

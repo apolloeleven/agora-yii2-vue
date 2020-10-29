@@ -13,7 +13,6 @@ class MenuService {
     });
   }
 
-
   removeItem(name) {
     store.dispatch('removeMenuItem', name);
   }
