@@ -22,7 +22,7 @@
     </div>
     <div class="page-content">
       <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
-      <b-card no-body class="mb-1" v-if="isFolder">
+      <b-card no-body v-if="isFolder">
         <b-card-header header-tag="header" class="p-1" aria-controls="collapse"
                        :aria-expanded="visible ? 'true' : 'false'" @click="visible = !visible">
           <i v-if="!visible" class="fas fa-angle-double-down fa-2x"/>

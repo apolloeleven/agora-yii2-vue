@@ -10,7 +10,7 @@
       </b-button>
     </div>
     <div class="page-content">
-      <b-card no-body class="mb-1">
+      <b-card no-body>
         <b-card-header header-tag="header" class="p-1" aria-controls="collapse"
                        :aria-expanded="visible ? 'true' : 'false'" @click="visible = !visible">
           <i v-if="!visible" class="fas fa-angle-double-down fa-2x"/>
