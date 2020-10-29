@@ -46,7 +46,7 @@ export default {
   methods: {
     ...mapActions(['showWorkspaceModal', 'getWorkspaces']),
     showModal() {
-      this.showWorkspaceModal()
+      this.showWorkspaceModal(null)
     },
   },
   created() {

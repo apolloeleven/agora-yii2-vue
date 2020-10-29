@@ -9,10 +9,10 @@
         <input-widget
           :model="model" attribute="image" type="file" :placeholder="$t('Choose a image or drop it here...')">
         </input-widget>
-        <input-widget :model="model" attribute="folder_in_folder" type="checkbox"></input-widget>
-        <input-widget :model="model" attribute="name"></input-widget>
-        <input-widget :model="model" attribute="abbreviation"></input-widget>
-        <input-widget :model="model" attribute="description" type="richtext"></input-widget>
+        <input-widget :model="model" attribute="folder_in_folder" type="checkbox"/>
+        <input-widget :model="model" attribute="name"/>
+        <input-widget :model="model" attribute="abbreviation"/>
+        <input-widget :model="model" attribute="description" type="richtext"/>
       </b-form>
     </b-modal>
   </ValidationObserver>

@@ -14,6 +14,7 @@ import {createNamespacedHelpers} from "vuex";
 
 const {mapActions} = createNamespacedHelpers('workspace');
 const {mapActions: mapArticleActions} = createNamespacedHelpers('article');
+const {mapActions: mapTimelineActions} = createNamespacedHelpers('timeline');
 
 export default {
   name: "EditButton",
@@ -25,13 +26,16 @@ export default {
   methods: {
     ...mapActions(['showWorkspaceModal']),
     ...mapArticleActions(['showArticleModal']),
+    ...mapTimelineActions(['showTimelineModal']),
     onEditClick() {
       if (this.type === 'workspace') {
         this.showWorkspaceModal(this.model)
       } else if (this.type === 'folder') {
         this.showArticleModal({isArticle: false, article: this.model})
-      } else {
+      } else if (this.type === 'article') {
         this.showArticleModal({isArticle: true, article: this.model})
+      } else if (this.type === 'timeline') {
+        this.showTimelineModal(this.model)
       }
     }
   },
