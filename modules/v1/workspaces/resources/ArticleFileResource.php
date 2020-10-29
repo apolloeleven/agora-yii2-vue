@@ -16,6 +16,8 @@ use yii\db\ActiveQuery;
  */
 class ArticleFileResource extends ArticleFile
 {
+    const VIDEO = 'video';
+
     public function fields()
     {
         return [
@@ -27,14 +29,10 @@ class ArticleFileResource extends ArticleFile
             'processing',
             'mime' => function () {
                 $mime = explode('/', $this->mime)[0];
-                return $mime == 'video' ? $mime : $this->mime;
+                return $mime == self::VIDEO ? $mime : $this->mime;
             },
             'path' => function () {
-                if (explode('/', $this->mime)[0] == 'video') {
-                    return $this->path ? Yii::getAlias('@storageUrl' . explode('.', $this->path)[0] . '.mp4') : '';
-                } else {
-                    return $this->path ? Yii::getAlias('@storageUrl' . $this->path) : '';
-                }
+                return $this->getPublicUrl();
             },
             'created_at' => function () {
                 return $this->updated_at * 1000;
@@ -57,5 +55,19 @@ class ArticleFileResource extends ArticleFile
     public function getUpdatedBy()
     {
         return $this->hasOne(UserResource::class, ['id' => 'updated_by']);
+    }
+
+    /**
+     * Get public url
+     *
+     * @return bool|string
+     */
+    public function getPublicUrl()
+    {
+        if (explode('/', $this->mime)[0] == self::VIDEO) {
+            return $this->path ? Yii::getAlias('@storageUrl' . explode('.', $this->path)[0] . '.mp4') : '';
+        } else {
+            return $this->path ? Yii::getAlias('@storageUrl' . $this->path) : '';
+        }
     }
 }

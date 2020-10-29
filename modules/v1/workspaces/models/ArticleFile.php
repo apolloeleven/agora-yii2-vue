@@ -151,8 +151,8 @@ class ArticleFile extends ActiveRecord
         $this->mime = $file->type;
         $this->size = $file->size;
 
-        if (!file_exists($fullPath)) if (!FileHelper::createDirectory($fullPath)) {
-            throw new ValidationException(Yii::t('app', "Directory '$fullPath' was NOT created"));
+        if (!file_exists($fullPath) && !FileHelper::createDirectory($fullPath)) {
+            throw new ValidationException(Yii::t('app', 'Unable to upload file'));
         }
         $this->path = $path . '/' . Yii::$app->security->generateRandomString() . '.' . $file->extension;
 
@@ -160,5 +160,30 @@ class ArticleFile extends ActiveRecord
             throw new ValidationException(Yii::t('app', "File was NOT uploaded at '$this->path'"));
         }
         return true;
+    }
+
+    /**
+     * Get file name
+     *
+     * @return string
+     */
+    public function getFileName()
+    {
+        $fileName = $this->name;
+
+        if ($this->label) {
+            $fileName = $this->label . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+        }
+        return $fileName;
+    }
+
+    /**
+     * Get full path
+     *
+     * @return bool|string
+     */
+    public function getFullPath()
+    {
+        return Yii::getAlias('@storage' . $this->path);
     }
 }
