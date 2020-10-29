@@ -2,21 +2,20 @@
 
 namespace app\modules\v1\workspaces\models\query;
 
-/**
- * This is the ActiveQuery class for [[\app\modules\v1\workspaces\models\WorkspaceTimelinePost]].
- *
- * @see \app\modules\v1\workspaces\models\WorkspaceTimelinePost
- */
-class WorkspaceTimelinePostQuery extends \yii\db\ActiveQuery
-{
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
+use app\modules\v1\workspaces\models\WorkspaceTimelinePost;
+use yii\db\ActiveQuery;
 
+/**
+ * Class WorkspaceTimelinePostQuery
+ *
+ * @package app\modules\v1\workspaces\models\query
+ */
+class WorkspaceTimelinePostQuery extends ActiveQuery
+{
     /**
      * {@inheritdoc}
-     * @return \app\modules\v1\workspaces\models\WorkspaceTimelinePost[]|array
+     *
+     * @return WorkspaceTimelinePost[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +24,8 @@ class WorkspaceTimelinePostQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\modules\v1\workspaces\models\WorkspaceTimelinePost|array|null
+     *
+     * @return WorkspaceTimelinePost|array|null
      */
     public function one($db = null)
     {
@@ -38,14 +38,15 @@ class WorkspaceTimelinePostQuery extends \yii\db\ActiveQuery
      */
     public function byWorkspaceId($id)
     {
-        return $this->andWhere(['workspace_id' => $id]);
+        return $this->andWhere([WorkspaceTimelinePost::tableName() . '.workspace_id' => $id]);
     }
 
     /**
      * @param $id
      * @return WorkspaceTimelinePostQuery
      */
-    public function byTimelinePostId($id) {
-        return $this->andWhere(['timeline_post_id' => $id]);
+    public function byTimelinePostId($id)
+    {
+        return $this->andWhere([WorkspaceTimelinePost::tableName() . '.timeline_post_id' => $id]);
     }
 }

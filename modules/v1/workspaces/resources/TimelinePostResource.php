@@ -124,14 +124,13 @@ class TimelinePostResource extends TimelinePost
         $dirPath = '/timelinePosts/' . $this->workspace_id;
         $this->file_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '.' . $this->file->extension;
 
-        $parentSave = parent::save($runValidation, $attributeNames);
-        if (!$parentSave) return $parentSave;
-
         $fullPath = Yii::getAlias('@storage' . $this->file_path);
         if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
-        $this->file->saveAs($fullPath);
+        if (!$this->file->saveAs($fullPath, false)) {
+            throw new ValidationException(Yii::t('app', 'File not uploaded'));
+        }
 
-        return $parentSave;
+        return parent::save($runValidation, $attributeNames);
     }
 
     /**

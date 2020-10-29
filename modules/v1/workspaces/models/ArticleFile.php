@@ -146,8 +146,8 @@ class ArticleFile extends ActiveRecord
         $path = '/article-attachments/' . $this->article_id;
         $fullPath = Yii::getAlias('@storage' . $path);
 
-        if (!file_exists($fullPath)) if (!FileHelper::createDirectory($fullPath)) {
-            throw new ValidationException(Yii::t('app', "Directory '$fullPath' was NOT created"));
+        if (!file_exists($fullPath) && !FileHelper::createDirectory($fullPath)) {
+            throw new ValidationException(Yii::t('app', 'Unable to upload file'));
         }
 
         $this->name = $file->name;
@@ -159,5 +159,30 @@ class ArticleFile extends ActiveRecord
             throw new ValidationException(Yii::t('app', "File was NOT uploaded at '$this->path'"));
         }
         return true;
+    }
+
+    /**
+     * Get file name
+     *
+     * @return string
+     */
+    public function getFileName()
+    {
+        $fileName = $this->name;
+
+        if ($this->label) {
+            $fileName = $this->label . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+        }
+        return $fileName;
+    }
+
+    /**
+     * Get full path
+     *
+     * @return bool|string
+     */
+    public function getFullPath()
+    {
+        return Yii::getAlias('@storage' . $this->path);
     }
 }
