@@ -50,7 +50,7 @@
       <div class="p-3">
         <div class="row" v-if="lastFolder && isFolder && multipleFolders">
           <div class="col-md-12 col-lg-4">
-            <h4 class="border-bottom pb-1 mb-3">{{ $t('Articles') }}</h4>
+            <h4 class="border-bottom pb-1 mb-3 pb-2">{{ $t('Articles') }}</h4>
             <div class="article-list">
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
               <no-data :model="filteredArticles" :loading="loading" :text="$t('There are no articles')"/>
@@ -62,7 +62,7 @@
             </div>
           </div>
           <div class="col-md-12 col-lg-4">
-            <h4 class="border-bottom pb-1 mb-3">{{ $t('Folders') }}</h4>
+            <h4 class="border-bottom pb-1 mb-3 pb-2">{{ $t('Folders') }}</h4>
             <div class="article-list">
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
               <no-data :model="filteredFolders" :loading="loading" :text="$t('There are no folders')"/>
@@ -103,7 +103,7 @@
         </div>
         <div class="row" v-else-if="!lastFolder || !multipleFolders">
           <div class="col-sm-12 col-lg-6">
-            <h4 class="border-bottom pb-1 mb-3">{{ $t('Articles') }}</h4>
+            <h4 class="border-bottom pb-1 mb-3 pb-2">{{ $t('Articles') }}</h4>
             <div class="article-list">
               <no-data :model="filteredArticles" :loading="loading" :text="$t('There are no articles')"/>
               <div v-if="filteredArticles" class="article-list">
