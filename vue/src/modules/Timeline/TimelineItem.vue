@@ -53,7 +53,7 @@ export default {
       user: state => state.currentUser.data
     }),
     isAllowed() {
-      return this.user.id !== this.timeline.createdBy.id;
+      return this.user.id === this.timeline.createdBy.id;
     },
   },
   methods: {
