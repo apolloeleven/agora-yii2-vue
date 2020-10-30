@@ -15,26 +15,26 @@ use yii\web\IdentityInterface;
 /**
  * This is the model class for table "{{%users}}".
  *
- * @property int              $id
- * @property string           $username
- * @property string           $email
- * @property string           $password_hash
- * @property string           $first_name
- * @property string           $last_name
- * @property string           $mobile
- * @property string           $phone
- * @property string           $birthday
- * @property string           $about_me
- * @property string           $hobbies
- * @property string           $image_path
- * @property string|null      $password_reset_token
- * @property int|null         $expire_date
- * @property string|null      $access_token
- * @property int|null         $access_token_expire_date
- * @property int|null         $status
- * @property string           $favourites
- * @property int|null         $created_at
- * @property int|null         $updated_at
+ * @property int $id
+ * @property string $username
+ * @property string $email
+ * @property string $password_hash
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $mobile
+ * @property string $phone
+ * @property string $birthday
+ * @property string $about_me
+ * @property string $hobbies
+ * @property string $image_path
+ * @property string|null $password_reset_token
+ * @property int|null $expire_date
+ * @property string|null $access_token
+ * @property int|null $access_token_expire_date
+ * @property int|null $status
+ * @property string $favourites
+ * @property int|null $created_at
+ * @property int|null $updated_at
  *
  * @property UserDepartment[] $userDepartments
  * @property UserWorkspace[] $userWorkspaces
@@ -56,6 +56,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @var \yii\web\UploadedFile
      */
     public $image;
+    public $imageRemoved;
 
     public static function tableName()
     {
@@ -66,6 +67,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['username', 'email', 'password_hash'], 'required'],
+            ['imageRemoved', 'boolean'],
             [['status', 'access_token_expire_date', 'created_at', 'updated_at', 'expire_date'], 'integer'],
             [['username'], 'string', 'max' => 255],
             [['email', 'access_token'], 'string', 'max' => 512],
@@ -262,22 +264,23 @@ class User extends ActiveRecord implements IdentityInterface
         $this->birthday = $this->birthday ? date("d-m-Y", $this->birthday) : null; // @todo must be reviewed
     }
 
+    /**
+     * @param bool $runValidation
+     * @param null $attributeNames
+     * @return bool
+     * @throws Exception
+     * @throws \yii\base\ErrorException
+     * @author Saiat Kalbiev <kalbievich11@gmail.com>
+     */
     public function save($runValidation = true, $attributeNames = null)
     {
         $this->hobbies = $this->hobbies ? Json::encode($this->hobbies) : null;
         $this->birthday = $this->birthday ? strtotime($this->birthday) : null; //@Todo format might be dynamic
         $oldPath = $this->image_path;
-        if ($this->image) {
-            $this->image_path = "/storage/user/" . Yii::$app->security->generateRandomString(25) . '/' . $this->image->name;
-        }
-        $check = parent::save($runValidation, $attributeNames);
-        $this->hobbies = $this->hobbies ? Json::decode($this->hobbies) : [];
-        $this->birthday = $this->birthday ? date("d-m-Y", $this->birthday) : null; // @todo must be reviewed
-        if (!$check) {
-            return $check;
-        }
 
         if ($this->image) {
+            $this->image_path = "/storage/user/" . Yii::$app->security->generateRandomString(25) . '/' . $this->image->name;
+
             // Delete old image if it exists
             if ($oldPath) {
                 $oldPath = Yii::getAlias("@webroot" . $oldPath);
@@ -290,10 +293,29 @@ class User extends ActiveRecord implements IdentityInterface
             if (!is_dir(dirname($path))) {
                 FileHelper::createDirectory(dirname($path));
             }
-            $this->image->saveAs($path);
+            $this->image->saveAs($path, false);
+        } else if ($this->imageRemoved && $oldPath) {
+            $oldPath = Yii::getAlias("@webroot" . $oldPath);
+            if (file_exists($oldPath)) {
+                FileHelper::removeDirectory(dirname($oldPath));
+            }
+            $this->image_path = null;
         }
 
-        return $check;
+        return parent::save($runValidation, $attributeNames);
+    }
+
+    /**
+     * @param bool $insert
+     * @param array $changedAttributes
+     * @author Saiat Kalbiev <kalbievich11@gmail.com>
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        $this->hobbies = $this->hobbies ? Json::decode($this->hobbies) : [];
+        $this->birthday = $this->birthday ? date("d-m-Y", $this->birthday) : null; // @todo must be reviewed
+
+        parent::afterSave($insert, $changedAttributes); // TODO: Change the autogenerated stub
     }
 
     /**
