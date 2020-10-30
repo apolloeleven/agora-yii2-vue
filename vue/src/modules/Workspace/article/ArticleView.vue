@@ -91,6 +91,12 @@
                 </div>
               </b-card-body>
               <b-card-footer>
+                <b-button size="sm" pill variant="light" :pressed.sync="showComments">
+                  <i class="far fa-comments fa-lg"/>
+                  <b-badge v-if="comments" class="ml-2" pill variant="secondary">
+                    {{ comments.length }}
+                  </b-badge>
+                </b-button>
                 <span class="float-right" v-if="currentArticle.createdBy">
                     <i class="far fa-user-circle"/>
                     {{ currentArticle.createdBy.displayName }}
@@ -99,6 +105,11 @@
                 </AttachmentShareButton>
               </span>
               </b-card-footer>
+              <AddComment :article_id="currentArticle.id" v-if="showComments"/>
+              <b-card-body v-if="showComments && comments && comments.length">
+                <CommentItem v-for="(comment, index) in comments" :comment="comment" :index="index"
+                             :key="`article-view-comment-${index}`"/>
+              </b-card-body>
             </b-card>
             <div class="article-list">
               <ArticleChildItem v-for="(article, index) in filteredArticles" :index="index"
@@ -140,12 +151,16 @@ import NoData from "../components/NoData";
 import AddToFavourites from "../components/AddToFavourites/AddToFavourites";
 import Attachments from "./attachment/Attachments";
 import AttachmentShareButton from "./attachment/AttachmentShareButton";
+import AddComment from "../comment/AddComment";
+import CommentItem from "../comment/CommentItem";
 
 const {mapState, mapActions} = createNamespacedHelpers('article')
 
 export default {
   name: "ArticleView",
   components: {
+    CommentItem,
+    AddComment,
     AttachmentShareButton,
     Attachments,
     AddToFavourites,
@@ -157,10 +172,14 @@ export default {
   data() {
     return {
       visible: false,
+      showComments: true,
     }
   },
   computed: {
     ...mapState(['breadCrumb', 'currentArticle', 'articles', 'loading']),
+    ...mapState({
+      comments: state => state.currentArticle.articleComments,
+    }),
     filteredArticles() {
       return this.articles.filter(a => a.is_folder === 0)
     },

@@ -7,7 +7,9 @@ const STATE = {
   modalArticle: null,
   articles: [],
   breadCrumb: [],
-  currentArticle: {},
+  currentArticle: {
+    articleComments: [],
+  },
   isArticle: false,
   articleFiles: [],
   attachConfig: {},

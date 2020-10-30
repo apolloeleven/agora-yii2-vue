@@ -57,7 +57,7 @@ class ArticleResource extends Article
      */
     public function extraFields()
     {
-        return ['children', 'workspace', 'createdBy', 'updatedBy', 'articleFiles'];
+        return ['children', 'workspace', 'createdBy', 'updatedBy', 'articleFiles', 'articleComments'];
     }
 
     /**
@@ -68,6 +68,16 @@ class ArticleResource extends Article
     public function getCreatedBy()
     {
         return $this->hasOne(UserResource::class, ['id' => 'created_by']);
+    }
+
+    /**
+     * Gets query for [[ArticleComments]].
+     *
+     * @return ActiveQuery
+     */
+    public function getArticleComments()
+    {
+        return $this->hasMany(UserCommentResource::class, ['article_id' => 'id'])->orderBy('created_at DESC');
     }
 
     /**

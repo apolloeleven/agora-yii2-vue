@@ -35,6 +35,7 @@ use yii\helpers\FileHelper;
  * @property Article $parent
  * @property Article[] $children
  * @property ArticleFile[] $articleFiles
+ * @property UserComment[] $userComments
  * @property User $updatedBy
  * @property Workspace $workspace
  */
@@ -123,6 +124,16 @@ class Article extends ActiveRecord
     public function getArticleFiles()
     {
         return $this->hasMany(ArticleFile::class, ['article_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[UserComments]].
+     *
+     * @return ActiveQuery
+     */
+    public function getUserComments()
+    {
+        return $this->hasMany(UserComment::class, ['article_id' => 'id']);
     }
 
     /**

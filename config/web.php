@@ -81,6 +81,7 @@ $config = [
                         'v1/workspaces/article',
                         'v1/workspaces/timeline',
                         'v1/workspaces/article-file',
+                        'v1/workspaces/user-comment',
                     ]
                 ]
             ],

@@ -16,8 +16,13 @@ import {
   HIDE_PREVIEW_MODAL,
   CHANGE_CAROUSEL,
   SORT_ATTACHMENT,
+  ADD_CHILD_COMMENT,
+  DELETE_ARTICLE_COMMENT,
+  DELETE_CHILD_COMMENT,
+  ADD_COMMENT,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
+import store from "../../../index";
 
 const url = '/v1/workspaces/article';
 const fileUrl = '/v1/workspaces/article-file';
@@ -90,7 +95,8 @@ export async function deleteArticle({commit}, data) {
  * @returns {Promise<void>}
  */
 export async function getCurrentArticle({commit}, articleId) {
-  const {success, body} = await httpService.get(`${url}/${articleId}?expand=workspace,createdBy`)
+  const {success, body} = await httpService.get(`${url}/${articleId}?expand=workspace,createdBy,
+    articleComments.createdBy,articleComments.childrenComments.createdBy,articleComments.childrenComments.parent`)
   if (success) {
     commit(GET_CURRENT_ARTICLE, body);
   }
@@ -314,6 +320,52 @@ export function changeCarousel({commit}, index) {
  */
 export function sortAttachment({commit}, column) {
   commit(SORT_ATTACHMENT, column);
+}
+
+/**
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function addComment({commit}, data) {
+  const res = await httpService.post(`/v1/workspaces/user-comment?expand=createdBy,childrenComments,parent`, data);
+  if (res.success) {
+    if (data.article_id) {
+      commit(ADD_COMMENT, res.body);
+    } else if (data.parent_id) {
+      if (res.body.parent.article_id) {
+        commit(ADD_CHILD_COMMENT, res.body)
+      } else {
+        store.commit('timeline/timeline/ADD_TIMELINE_CHILD_COMMENT', res.body)
+      }
+    } else {
+      store.commit('timeline/timeline/ADD_TIMELINE_COMMENT', res.body)
+    }
+  }
+  return res;
+}
+
+/**
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function deleteComment({commit}, data) {
+  const res = await httpService.delete(`/v1/workspaces/user-comment/${data.id}`);
+  if (res.success) {
+    if (data.article_id) {
+      commit(DELETE_ARTICLE_COMMENT, data);
+    } else if (data.parent_id) {
+      if (data.parent.article_id) {
+        commit(DELETE_CHILD_COMMENT, data)
+      } else {
+        store.commit('timeline/timeline/DELETE_TIMELINE_CHILD_COMMENT', data)
+      }
+    } else {
+      store.commit('timeline/timeline/DELETE_TIMELINE_COMMENT', data)
+    }
+  }
+  return res;
 }
 
 /**
