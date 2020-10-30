@@ -38,10 +38,10 @@
       </div>
     </b-card-body>
     <div v-if="timeline.file_url" class="timeline-preview">
-      <div v-if="fileService.isImage(timeline.file_url)" class="image-preview">
+      <div v-if="isImage(timeline.file_url)" class="image-preview">
         <b-img :src="timeline.file_url" class="img-fluid" style="cursor: pointer"/>
       </div>
-      <video v-else-if="fileService.isVideo(timeline.file_url)" controls class="video-preview">
+      <video v-else-if="isVideo(timeline.file_url)" controls class="video-preview">
         <source :src="timeline.file_url">
       </video>
     </div>
@@ -87,7 +87,6 @@ export default {
   },
   data() {
     return {
-      fileService: fileService,
       SHARE_ARTICLE: SHARE_ARTICLE,
       SHARE_FILE: SHARE_FILE,
       showComments: true,
@@ -99,6 +98,14 @@ export default {
     }),
     isAllowed() {
       return this.user.id === this.timeline.createdBy.id;
+    },
+  },
+  methods: {
+    isImage(url) {
+      return fileService.isImage(url)
+    },
+    isVideo(url) {
+      return fileService.isVideo(url)
     },
   },
 }

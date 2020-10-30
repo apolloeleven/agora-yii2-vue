@@ -11,6 +11,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\Json;
 use yii\web\UploadedFile;
 
 /**
@@ -35,6 +36,9 @@ use yii\web\UploadedFile;
  */
 class TimelinePost extends ActiveRecord
 {
+    const ACTION_SHARE_FILE = "SHARE_FILE";
+    const ACTION_SHARE_ARTICLE = "SHARE_ARTICLE";
+
     /**
      * @var UploadedFile
      */
@@ -169,7 +173,7 @@ class TimelinePost extends ActiveRecord
      */
     public function beforeValidate()
     {
-        $this->attachment_ids = json_encode($this->attachment_ids);
+        $this->attachment_ids = Json::encode($this->attachment_ids);
 
         return parent::beforeValidate();
     }

@@ -8,12 +8,10 @@ use app\modules\v1\workspaces\resources\ArticleFileResource;
 use app\modules\v1\workspaces\resources\ArticleResource;
 use app\rest\ActiveController;
 use app\rest\ValidationException;
-use Throwable;
 use Yii;
 use yii\console\Response;
 use yii\data\ActiveDataProvider;
 use yii\db\Exception;
-use yii\db\StaleObjectException;
 use yii\web\UploadedFile;
 
 /**
@@ -61,18 +59,18 @@ class ArticleFileController extends ActiveController
         $article = ArticleResource::findOne($request->post('article_id'));
 
         if (!$article) {
-            throw new ValidationException(Yii::t('app', 'This file not exist'));
+            throw new ValidationException(Yii::t('app', 'Article not found'));
         }
 
         $files = UploadedFile::getInstancesByName('files');
+        if (!$files) {
+            throw new ValidationException(Yii::t('app', 'Unable to find files'));
+        }
 
         $dbTransaction = Yii::$app->db->beginTransaction();
 
         $attachments = [];
 
-        if (!$files) {
-            throw new ValidationException(Yii::t('app', 'Unable to find files'));
-        }
         foreach ($files as $file) {
             $articleFile = ArticleFileResource::find()
                 ->byArticleId($article->id)
@@ -87,7 +85,7 @@ class ArticleFileController extends ActiveController
 
             if (!$articleFile->uploadFile($file)) {
                 $dbTransaction->rollBack();
-                throw new ValidationException(Yii::t('app', 'Unable to update attachment'));
+                throw new ValidationException(Yii::t('app', 'Unable to upload attachment'));
             }
 
             // TODO non mp4 videos to be converted into mp4
@@ -135,8 +133,7 @@ class ArticleFileController extends ActiveController
             throw new ValidationException(Yii::t('app', 'Article file not exist'));
         }
 
-        $articleFile->label = $request->post('label');
-        if (!$articleFile->save()) {
+        if (!$articleFile->load($request->post(), '') || !$articleFile->save()) {
             throw new ValidationException(Yii::t('app', 'Unable to update label'));
         }
 
@@ -148,29 +145,16 @@ class ArticleFileController extends ActiveController
      *
      * @return mixed
      * @throws ValidationException
-     * @throws Throwable
-     * @throws Exception
-     * @throws StaleObjectException
      */
     public function actionDeleteAttachments()
     {
         $request = Yii::$app->request;
-
         $fileIds = $request->post('fileIds');
-        $articleFiles = ArticleFileResource::find()->byId($fileIds)->all();
 
-        if (!$articleFiles) {
-            throw new ValidationException(Yii::t('app', 'Article files not exist'));
+        if (count($fileIds) !== ArticleFileResource::deleteAll(['id' => $fileIds])) {
+            throw new ValidationException(Yii::t('app', 'Unable to delete attachments'));
         }
 
-        $dbTransaction = Yii::$app->db->beginTransaction();
-        foreach ($articleFiles as $articleFile) {
-            if ($articleFile->delete() === false) {
-                $dbTransaction->rollBack();
-                throw new ValidationException(Yii::t('app', 'Unable to delete attachments'));
-            }
-        }
-        $dbTransaction->commit();
         return $this->response(null, 204);
     }
 
@@ -189,13 +173,6 @@ class ArticleFileController extends ActiveController
             throw new ValidationException(Yii::t('app', 'Article file not exist'));
         }
 
-        $fullPath = Yii::getAlias('@storage' . $articleFile->path);
-        $fileName = $articleFile->name;
-
-        if ($articleFile->label) {
-            $fileName = $articleFile->label . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
-        }
-
-        return Yii::$app->response->sendFile($fullPath, $fileName);
+        return Yii::$app->response->sendFile($articleFile->getFullPath(), $articleFile->getFileName());
     }
 }

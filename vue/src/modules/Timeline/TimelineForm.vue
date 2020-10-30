@@ -11,7 +11,7 @@
         </b-form-group>
 
         <input-widget v-if="!model.id"
-          :model="model" attribute="file" type="file" :placeholder="$t('Choose a file or drop it here...')">
+                      :model="model" attribute="file" type="file" :placeholder="$t('Choose a file or drop it here...')">
         </input-widget>
 
         <input-widget :model="model" attribute="description" type="richtext"/>
@@ -68,6 +68,9 @@ export default {
           config: {
             onUploadProgress: (progressEvent) => {
               this.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+              if (this.progress >= 100) {
+                this.progress = 0;
+              }
             }
           }
         });

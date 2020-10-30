@@ -5,11 +5,11 @@ namespace app\modules\v1\workspaces\resources;
 
 
 use app\modules\v1\users\resources\UserResource;
+use app\modules\v1\workspaces\models\Article;
+use app\modules\v1\workspaces\models\TimelinePost;
 use app\rest\ValidationException;
 use Yii;
-use app\modules\v1\workspaces\models\Article;
 use yii\db\ActiveQuery;
-use yii\db\Exception;
 use yii\helpers\StringHelper;
 
 /**
@@ -45,6 +45,9 @@ class ArticleResource extends Article
                 $length = 240;
                 $model->depth == 0 ?: $length = 80;
                 return StringHelper::truncate(strip_tags($model->body), $length);
+            },
+            'image_url' => function () {
+                return $this->image_path ? Yii::getAlias('@storageUrl' . $this->image_path) : '';
             },
         ];
     }
@@ -82,20 +85,59 @@ class ArticleResource extends Article
      *
      * @return bool|int
      * @throws ValidationException
-     * @throws Exception
      */
     public function delete()
     {
         if ($this->getChildren()->count()) {
             throw new ValidationException(Yii::t('app', 'You can\'t delete this article because it has sub-articles'));
         }
-        $dbTransaction = Yii::$app->db->beginTransaction();
-        if (!$this->deleteWithChildren()) {
-            $dbTransaction->rollBack();
-            return false;
-        }
-        $dbTransaction->commit();
+        $this->deleteWithChildren();
+
         return true;
+    }
+
+    /**
+     * Load for image upload
+     *
+     * @param array $data
+     * @param null $formName
+     * @return bool
+     */
+    public function load($data, $formName = null)
+    {
+        $this->image = UploadedFile::getInstanceByName('image');
+
+        return parent::load($data, $formName);
+    }
+
+    /**
+     * Upload image
+     *
+     * @param bool $runValidation
+     * @param null $attributeNames
+     * @return bool
+     * @throws \yii\base\Exception
+     * @throws \yii\base\ErrorException
+     */
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if (!$this->image) {
+            return parent::save($runValidation, $attributeNames);
+        }
+        if (ModelHelper::isImage($this->image->extension)) {
+            ModelHelper::deleteImage($this->image_path);
+
+            $dirPath = '/articles/' . $this->workspace_id;
+            $this->image_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
+
+            $fullPath = Yii::getAlias('@storage' . $this->image_path);
+            if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
+            if (!$this->image->saveAs($fullPath, false)) {
+                throw new ValidationException(Yii::t('app', 'File not uploaded'));
+            }
+        }
+
+        return parent::save($runValidation, $attributeNames);
     }
 
     /**
@@ -105,9 +147,16 @@ class ArticleResource extends Article
      */
     public function getShareCount()
     {
+        $timelinePostTb = TimelinePostResource::tableName();
+        $tb = $this::tableName();
+
         return $this::find()
             ->byId($this->id)
-            ->innerJoin(TimelinePostResource::tableName() . ' t', 't.article_id = ' . $this::tableName() . '.id AND t.action =\'SHARE_ARTICLE\'')
+            ->innerJoin("$timelinePostTb t", [
+                "AND",
+                ["t.action" => TimelinePost::ACTION_SHARE_ARTICLE],
+                "t.article_id = $tb.id"
+            ])
             ->count();
     }
 }

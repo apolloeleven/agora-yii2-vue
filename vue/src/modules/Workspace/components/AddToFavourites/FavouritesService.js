@@ -10,9 +10,10 @@ class FavouritesService {
    *
    * @param name
    * @param path
+   * @param icon
    */
-  addFavourite(name, path) {
-    this.addFavouriteItem(name, path);
+  addFavourite(name, path, icon) {
+    this.addFavouriteItem(name, path, icon);
     this.saveFavourites();
   }
 
@@ -21,14 +22,15 @@ class FavouritesService {
    *
    * @param name
    * @param path
+   * @param icon
    */
-  addFavouriteItem(name, path) {
+  addFavouriteItem(name, path, icon) {
     MenuService.addItem(new MenuItem(path, {
       text: name,
       path: path,
       weight: 1001,
       favourite: true,
-      icon: 'fas fa-link',
+      icon: icon,
       linkOptions: {
         'class': 'pl-4'
       },
@@ -75,7 +77,7 @@ class FavouritesService {
       if (success) {
         this.removeAllFavourites();
         for (let item of JSON.parse(body)) {
-          this.addFavouriteItem(item.text, item.path);
+          this.addFavouriteItem(item.text, item.path, item.icon);
         }
       }
     }
@@ -86,6 +88,13 @@ class FavouritesService {
     favourites.forEach(fav => {
       this.removeFavourite(fav.path);
     })
+  }
+
+  getIcon(isFolder) {
+    if (isFolder) {
+      return 'fas fa-folder-open'
+    }
+    return 'fas fa-link'
   }
 }
 

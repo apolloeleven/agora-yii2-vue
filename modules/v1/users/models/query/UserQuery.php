@@ -7,9 +7,9 @@ use app\modules\v1\users\models\User;
 use app\modules\v1\workspaces\models\UserWorkspace;
 
 /**
- * This is the ActiveQuery class for [[\app\models\User]].
+ * Class UserQuery
  *
- * @see \app\models\User
+ * @package app\modules\v1\users\models\query
  */
 class UserQuery extends \yii\db\ActiveQuery
 {
@@ -38,7 +38,17 @@ class UserQuery extends \yii\db\ActiveQuery
      */
     public function active()
     {
-        return $this->andWhere(['status' => User::STATUS_ACTIVE]);
+        return $this->andWhere([User::tableName() . '.status' => User::STATUS_ACTIVE]);
+    }
+
+    /**
+     * Return non active users
+     *
+     * @return mixed
+     */
+    public function notActive()
+    {
+        return $this->andWhere([User::tableName() . '.status' => User::STATUS_INACTIVE]);
     }
 
     /**
@@ -49,7 +59,7 @@ class UserQuery extends \yii\db\ActiveQuery
      */
     public function byEmail($email)
     {
-        return $this->andWhere(['email' => $email]);
+        return $this->andWhere([User::tableName() . '.email' => $email]);
     }
 
     /**
@@ -60,7 +70,22 @@ class UserQuery extends \yii\db\ActiveQuery
      */
     public function byId($id)
     {
-        return $this->andWhere(['id' => $id]);
+        return $this->andWhere([User::tableName() . '.id' => $id]);
+    }
+
+    /**
+     * Find user by email or username
+     *
+     * @param $username
+     * @return UserQuery
+     */
+    public function byEmailOrUsername($username)
+    {
+        return $this->andWhere([
+            'OR',
+            [User::tableName() . '.username' => $username],
+            [User::tableName() . '.email' => $username]
+        ]);
     }
 
     /**
