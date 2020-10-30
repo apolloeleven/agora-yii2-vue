@@ -6,6 +6,7 @@ namespace app\modules\v1\workspaces\resources;
 
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\Article;
+use app\modules\v1\workspaces\models\TimelinePost;
 use app\rest\ValidationException;
 use Yii;
 use yii\db\ActiveQuery;
@@ -136,9 +137,16 @@ class ArticleResource extends Article
      */
     public function getShareCount()
     {
+        $timelinePostTb = TimelinePostResource::tableName();
+        $tb = $this::tableName();
+
         return $this::find()
             ->byId($this->id)
-            ->innerJoin(TimelinePostResource::tableName() . ' t', 't.article_id = ' . $this::tableName() . '.id AND t.action =\'SHARE_ARTICLE\'')
+            ->innerJoin("$timelinePostTb t", [
+                "AND",
+                ["t.action" => TimelinePost::ACTION_SHARE_ARTICLE],
+                "t.article_id = $tb.id"
+            ])
             ->count();
     }
 }
