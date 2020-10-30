@@ -12,6 +12,7 @@
     <WorkspaceForm/>
     <ArticleForm/>
     <TimelineForm/>
+    <TimelineShare/>
   </div>
 </template>
 
@@ -19,12 +20,13 @@
 import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
 import WorkspaceForm from "@/modules/Workspace/workspace/WorkspaceForm";
-import ArticleForm from "../../../../modules/Workspace/article/ArticleForm";
+import ArticleForm from "@/modules/Workspace/article/ArticleForm";
 import {mapState, createNamespacedHelpers} from 'vuex';
 import MenuService from "../../sidebar/MenuService";
 import MenuItem from "../../sidebar/MenuItem";
 import EmployeeFormModal from "@/modules/setup/employees/EmployeeFormModal";
 import TimelineForm from "@/modules/Timeline/TimelineForm";
+import TimelineShare from "@/modules/Timeline/TimelineShare";
 
 const {mapActions} = createNamespacedHelpers('user');
 const {mapState: mapStateWorkspace, mapActions: mapActionsWorkspace} = createNamespacedHelpers('workspace');
@@ -32,6 +34,7 @@ const {mapState: mapStateWorkspace, mapActions: mapActionsWorkspace} = createNam
 export default {
   name: "DefaultLayout",
   components: {
+    TimelineShare,
     TimelineForm,
     EmployeeFormModal,
     Sidebar,

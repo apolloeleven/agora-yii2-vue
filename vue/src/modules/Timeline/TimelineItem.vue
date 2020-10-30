@@ -6,13 +6,36 @@
           <b-img rounded="0" :src="timeline.createdBy.image_url  || '/assets/logo.png'" width="48" height="48"/>
         </template>
         <h5 class="mt-0">
-          {{ timeline.createdBy.display_name }}
+          {{ timeline.createdBy.displayName }}
+
+          <span v-if="timeline.action === SHARE_ARTICLE && timeline.article">
+            {{ $t('created article') }}
+            <router-link :to="{name: 'article.view', params: {id: timeline.article.id}}">
+              {{ timeline.article.title }}
+            </router-link>
+          </span>
+          <span v-else-if="timeline.action === SHARE_FILE && timeline.article">
+                {{ $t('uploaded attachment(s) to article') }}
+            <router-link :to="{name: 'article.view', params: {id: timeline.article.id}}">
+              {{ timeline.article.title }}
+            </router-link>
+          </span>
         </h5>
         <p class="mb-0">
           <i class="far fa-clock"/>
           {{ timeline.updated_at | relativeDate }}
         </p>
       </b-media>
+    </b-card-body>
+    <b-card-body v-if="timeline.action === this.SHARE_ARTICLE && timeline.article">
+      <div class="row">
+        <div class="col">
+          <b-card-img :src="timeline.article.image_path || ''" class="rounded-0"/>
+        </div>
+        <div class="col border-left">
+          <b-card-text text-tag="div" class="short-description" v-html="timeline.article.short_description"/>
+        </div>
+      </div>
     </b-card-body>
     <div v-if="timeline.file_url" class="timeline-preview">
       <div v-if="isImage(timeline.file_url)" class="image-preview">
@@ -35,6 +58,7 @@
 import DropdownButton from "../Workspace/components/DropdownButton";
 import fileService from '../../core/services/fileService';
 import {createNamespacedHelpers} from "vuex";
+import {SHARE_ARTICLE, SHARE_FILE} from "../../core/services/event-bus";
 
 const {mapState} = createNamespacedHelpers('user');
 
@@ -46,7 +70,10 @@ export default {
     timeline: Object
   },
   data() {
-    return {}
+    return {
+      SHARE_ARTICLE: SHARE_ARTICLE,
+      SHARE_FILE: SHARE_FILE,
+    }
   },
   computed: {
     ...mapState({

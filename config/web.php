@@ -79,8 +79,8 @@ $config = [
                         'v1/users/auth',
                         'v1/workspaces/workspace',
                         'v1/workspaces/article',
+                        'v1/workspaces/timeline',
                         'v1/workspaces/article-file',
-                        'v1/workspaces/timeline'
                     ]
                 ]
             ],

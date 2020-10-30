@@ -11,6 +11,7 @@
 
 <script>
 import {createNamespacedHelpers} from "vuex";
+import {EDIT_TIMELINE, eventBus} from "../../../core/services/event-bus";
 
 const {mapActions} = createNamespacedHelpers('workspace');
 const {mapActions: mapArticleActions} = createNamespacedHelpers('article');
@@ -35,7 +36,13 @@ export default {
       } else if (this.type === 'article') {
         this.showArticleModal({isArticle: true, article: this.model})
       } else if (this.type === 'timeline') {
-        this.showTimelineModal(this.model)
+        if (this.model.action === null) {
+          this.showTimelineModal(this.model)
+        } else {
+          eventBus.$emit(EDIT_TIMELINE, {
+            model: this.model
+          });
+        }
       }
     }
   },

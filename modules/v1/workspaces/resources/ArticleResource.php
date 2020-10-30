@@ -4,13 +4,13 @@
 namespace app\modules\v1\workspaces\resources;
 
 
-use app\helpers\ModelHelper;
+use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\Article;
+use app\modules\v1\workspaces\models\TimelinePost;
 use app\rest\ValidationException;
 use Yii;
-use yii\helpers\FileHelper;
+use yii\db\ActiveQuery;
 use yii\helpers\StringHelper;
-use yii\web\UploadedFile;
 
 /**
  * Class ArticleResource
@@ -19,6 +19,8 @@ use yii\web\UploadedFile;
  */
 class ArticleResource extends Article
 {
+    public $share_count;
+
     public function fields()
     {
         return [
@@ -29,6 +31,10 @@ class ArticleResource extends Article
             'body',
             'is_folder',
             'depth',
+            'image_path',
+            'share_count' => function () {
+                return $this->getShareCount();
+            },
             'created_at' => function () {
                 return $this->created_at * 1000;
             },
@@ -51,7 +57,17 @@ class ArticleResource extends Article
      */
     public function extraFields()
     {
-        return ['children', 'workspace', 'createdBy', 'updatedBy'];
+        return ['children', 'workspace', 'createdBy', 'updatedBy', 'articleFiles'];
+    }
+
+    /**
+     * Gets query for [[CreatedBy]].
+     *
+     * @return ActiveQuery
+     */
+    public function getCreatedBy()
+    {
+        return $this->hasOne(UserResource::class, ['id' => 'created_by']);
     }
 
     /**
@@ -112,5 +128,25 @@ class ArticleResource extends Article
         }
 
         return parent::save($runValidation, $attributeNames);
+    }
+
+    /**
+     * Get share article count
+     *
+     * @return bool|int|string|null
+     */
+    public function getShareCount()
+    {
+        $timelinePostTb = TimelinePostResource::tableName();
+        $tb = $this::tableName();
+
+        return $this::find()
+            ->byId($this->id)
+            ->innerJoin("$timelinePostTb t", [
+                "AND",
+                ["t.action" => TimelinePost::ACTION_SHARE_ARTICLE],
+                "t.article_id = $tb.id"
+            ])
+            ->count();
     }
 }

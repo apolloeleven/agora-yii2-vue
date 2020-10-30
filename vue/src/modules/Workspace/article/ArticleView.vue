@@ -90,6 +90,15 @@
                   <no-data v-else :model="currentArticle" :loading="loading" :text="$t('There is no description')"/>
                 </div>
               </b-card-body>
+              <b-card-footer>
+                <span class="float-right" v-if="currentArticle.createdBy">
+                    <i class="far fa-user-circle"/>
+                    {{ currentArticle.createdBy.displayName }}
+                <AttachmentShareButton
+                  :file="currentArticle" :model="currentArticle" :tag="'smallIcon'" modalType="article">
+                </AttachmentShareButton>
+              </span>
+              </b-card-footer>
             </b-card>
             <div class="article-list">
               <ArticleChildItem v-for="(article, index) in filteredArticles" :index="index"
@@ -130,12 +139,21 @@ import ContentSpinner from "../../../core/components/ContentSpinner";
 import NoData from "../components/NoData";
 import AddToFavourites from "../components/AddToFavourites/AddToFavourites";
 import Attachments from "./attachment/Attachments";
+import AttachmentShareButton from "./attachment/AttachmentShareButton";
 
 const {mapState, mapActions} = createNamespacedHelpers('article')
 
 export default {
   name: "ArticleView",
-  components: {Attachments, AddToFavourites, NoData, ContentSpinner, ArticleChildItem, BackButton},
+  components: {
+    AttachmentShareButton,
+    Attachments,
+    AddToFavourites,
+    NoData,
+    ContentSpinner,
+    ArticleChildItem,
+    BackButton
+  },
   data() {
     return {
       visible: false,

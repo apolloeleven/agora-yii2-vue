@@ -8,8 +8,8 @@
 namespace app\modules\v1\workspaces\resources;
 
 
-use app\modules\v1\setup\resources\UserResource;
 use app\modules\v1\users\models\query\UserQuery;
+use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\query\WorkspaceTimelinePostQuery;
 use app\modules\v1\workspaces\models\TimelinePost;
 use app\rest\ValidationException;
@@ -28,6 +28,7 @@ class TimelinePostResource extends TimelinePost
     {
         return [
             'id',
+            'action',
             'description',
             'file_url' => function () {
                 return $this->getFileUrl();
@@ -53,7 +54,7 @@ class TimelinePostResource extends TimelinePost
 
     public function extraFields()
     {
-        return ['workspace', 'workspaceTimelinePosts', 'workspace_id', 'createdBy'];
+        return ['workspaceTimelinePosts', 'createdBy', 'article', 'articleFiles'];
     }
 
     /**
@@ -138,5 +139,13 @@ class TimelinePostResource extends TimelinePost
     public function getCreatedBy()
     {
         return $this->hasOne(UserResource::class, ['id' => 'created_by']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getArticle()
+    {
+        return $this->hasOne(ArticleResource::class, ['id' => 'article_id']);
     }
 }

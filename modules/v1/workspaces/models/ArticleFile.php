@@ -146,14 +146,13 @@ class ArticleFile extends ActiveRecord
         $path = '/article-attachments/' . $this->article_id;
         $fullPath = Yii::getAlias('@storage' . $path);
 
-        $this->name = $file->name;
-        $this->path = $path;
-        $this->mime = $file->type;
-        $this->size = $file->size;
-
         if (!file_exists($fullPath) && !FileHelper::createDirectory($fullPath)) {
             throw new ValidationException(Yii::t('app', 'Unable to upload file'));
         }
+
+        $this->name = $file->name;
+        $this->mime = $file->type;
+        $this->size = $file->size;
         $this->path = $path . '/' . Yii::$app->security->generateRandomString() . '.' . $file->extension;
 
         if (!$file->saveAs(Yii::getAlias('@storage/' . $this->path))) {

@@ -11,12 +11,16 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\Json;
 use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "{{%timeline_posts}}".
  *
  * @property int $id
+ * @property int $article_id
+ * @property string|null $attachment_ids
+ * @property string|null $action
  * @property string|null $description
  * @property string|null $file_path
  * @property int|null $created_at
@@ -24,12 +28,17 @@ use yii\web\UploadedFile;
  * @property int|null $created_by
  * @property int|null $updated_by
  *
+ * @property Article $article
+ * @property ArticleFile[] $articleFiles
  * @property User $createdBy
  * @property User $updatedBy
  * @property WorkspaceTimelinePost[] $workspaceTimelinePosts
  */
 class TimelinePost extends ActiveRecord
 {
+    const ACTION_SHARE_FILE = "SHARE_FILE";
+    const ACTION_SHARE_ARTICLE = "SHARE_ARTICLE";
+
     /**
      * @var UploadedFile
      */
@@ -60,9 +69,10 @@ class TimelinePost extends ActiveRecord
     public function rules()
     {
         return [
-            [['description'], 'string'],
-            [['created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['description', 'attachment_ids'], 'string'],
+            [['article_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['file_path'], 'string', 'max' => 1024],
+            [['action'], 'string', 'max' => 255],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
             [['file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, gif, jpg, avi, flv, wmv, mov, mp4, ogg']
@@ -76,6 +86,9 @@ class TimelinePost extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'article_id' => Yii::t('app', 'Article ID'),
+            'attachment_ids' => Yii::t('app', 'Attachment IDs'),
+            'action' => Yii::t('app', 'Action'),
             'description' => Yii::t('app', 'Description'),
             'file_path' => Yii::t('app', 'File Path'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -107,6 +120,24 @@ class TimelinePost extends ActiveRecord
     }
 
     /**
+     * @return ActiveQuery
+     */
+    public function getArticle()
+    {
+        return $this->hasOne(Article::class, ['id' => 'article_id']);
+    }
+
+    /**
+     * Gets query for [[ArticleFiles]].
+     *
+     * @return ActiveQuery
+     */
+    public function getArticleFiles()
+    {
+        return $this->hasMany(ArticleFile::class, ['article_id' => 'article_id']);
+    }
+
+    /**
      * Gets query for [[WorkspaceTimelinePosts]].
      *
      * @return ActiveQuery|WorkspaceTimelinePostQuery
@@ -133,5 +164,17 @@ class TimelinePost extends ActiveRecord
     public function getFileUrl()
     {
         return $this->file_path ? Yii::getAlias('@storageUrl' . $this->file_path) : '';
+    }
+
+    /**
+     * Before check validate encode shared attachments id
+     *
+     * @return bool
+     */
+    public function beforeValidate()
+    {
+        $this->attachment_ids = Json::encode($this->attachment_ids);
+
+        return parent::beforeValidate();
     }
 }

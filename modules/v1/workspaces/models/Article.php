@@ -34,6 +34,7 @@ use yii\helpers\FileHelper;
  * @property User $createdBy
  * @property Article $parent
  * @property Article[] $children
+ * @property ArticleFile[] $articleFiles
  * @property User $updatedBy
  * @property Workspace $workspace
  */
@@ -112,6 +113,16 @@ class Article extends ActiveRecord
     public static function find()
     {
         return new ArticleQuery(get_called_class());
+    }
+
+    /**
+     * Gets query for [[ArticleFiles]].
+     *
+     * @return ActiveQuery
+     */
+    public function getArticleFiles()
+    {
+        return $this->hasMany(ArticleFile::class, ['article_id' => 'id']);
     }
 
     /**

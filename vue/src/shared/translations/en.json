@@ -22,5 +22,7 @@
   "{count} attachment(s) were successfully deleted": "{count} attachment(s) were successfully deleted",
   "{count} attachment(s) were successfully uploaded": "{count} attachment(s) were successfully uploaded",
   "{count} attachment(s) were not deleted": "{count} attachment(s) were not deleted",
-  "{file_names} file already exist. Are you sure that you want to overwrite them?": "{file_names} file already exist. Are you sure that you want to overwrite them?"
+  "{file_names} file already exist. Are you sure that you want to overwrite them?": "{file_names} file already exist. Are you sure that you want to overwrite them?",
+  "{number} attachment(s) were successfully shared on timeline": "{number} attachment(s) were successfully shared on timeline",
+  "The article '{title}' was successfully shared on timeline": "The article '{title}' was successfully shared on timeline"
 }
