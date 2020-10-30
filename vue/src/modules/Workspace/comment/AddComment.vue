@@ -4,12 +4,14 @@
       <template v-slot:aside>
         <b-img rounded="0" :src="'/assets/img/avatar.svg'" height="32" width="32"/>
       </template>
-      <b-input-group>
-        <b-form-input v-model="model.comment" :placeholder="parent_id ? $t('Write a replay') : $t('Leave comment')"/>
-        <b-input-group-append>
-          <b-button @click="onAdd" variant="info">{{ $t('Comment') }}</b-button>
-        </b-input-group-append>
-      </b-input-group>
+      <b-form @submit.prevent="onAdd">
+        <b-input-group>
+          <b-form-input v-model="model.comment" :placeholder="parent_id ? $t('Write a replay') : $t('Leave comment')"/>
+          <b-input-group-append>
+            <b-button @click="onAdd" variant="info">{{ $t('Comment') }}</b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </b-form>
     </b-media>
   </b-card-body>
 </template>
