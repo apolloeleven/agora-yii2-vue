@@ -61,7 +61,8 @@
     <AddComment :timeline_id="timeline.id" v-if="showComments"/>
     <b-card-body v-if="showComments && timeline.timelineComments && timeline.timelineComments.length">
       <CommentItem
-        v-for="(comment, index) in timeline.timelineComments" :comment="comment" :index="index" :key="index">
+        v-for="(comment, index) in timeline.timelineComments" :comment="comment" :index="index"
+        :key="`timeline-item-comment-${index}`">
       </CommentItem>
     </b-card-body>
     <dropdown-button :model="timeline" type="timeline" :permissionForEdit="isAllowed"/>
