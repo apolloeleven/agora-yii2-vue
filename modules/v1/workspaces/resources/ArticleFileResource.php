@@ -6,6 +6,7 @@ namespace app\modules\v1\workspaces\resources;
 
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\ArticleFile;
+use app\modules\v1\workspaces\models\TimelinePost;
 use Yii;
 use yii\db\ActiveQuery;
 
@@ -83,11 +84,17 @@ class ArticleFileResource extends ArticleFile
      */
     public function getShareCount()
     {
+        $timelinePostTb = TimelinePostResource::tableName();
+        $tb = $this::tableName();
+
         return $this::find()
             ->byId($this->id)
-            ->innerJoin(TimelinePostResource::tableName() . ' t', 't.article_id = ' . $this::tableName()
-                . '.article_id AND t.action =\'SHARE_FILE\'
-                AND FIND_IN_SET(' . $this::tableName() . '.id,SUBSTR(t.attachment_ids,2,LENGTH(t.attachment_ids)-2)) > 0')
+            ->innerJoin("$timelinePostTb t", [
+                "AND",
+                ["t.action" => TimelinePost::ACTION_SHARE_FILE],
+                "t.article_id = $tb.article_id",
+                "FIND_IN_SET($tb.id,SUBSTR(t.attachment_ids,2,LENGTH(t.attachment_ids)-2)) > 0"
+            ])
             ->count();
     }
 }
