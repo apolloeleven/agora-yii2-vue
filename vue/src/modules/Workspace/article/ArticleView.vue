@@ -108,7 +108,8 @@
               </b-card-footer>
               <AddComment :article_id="currentArticle.id" v-if="showComments"/>
               <b-card-body v-if="showComments && comments && comments.length">
-                <CommentItem v-for="(comment, index) in comments" :comment="comment" :index="index" :key="index"/>
+                <CommentItem v-for="(comment, index) in comments" :comment="comment" :index="index"
+                             :key="`article-view-comment-${index}`"/>
               </b-card-body>
             </b-card>
             <div class="article-list">

@@ -1,7 +1,7 @@
 <template>
   <b-media class="py-2">
     <template v-slot:aside>
-      <b-img rounded="0" :src="'/assets/logo.png'" width="32" height="32" :alt="comment.createdBy.displayName"/>
+      <b-img rounded="0" :src="'/assets/img/avatar.svg'" width="32" height="32" :alt="comment.createdBy.displayName"/>
     </template>
     <h6 class="mt-0 mb-0">
       <span style="color: #008BCA">{{ comment.createdBy.displayName }}</span>
@@ -20,7 +20,8 @@
     <DeleteComment :comment="comment"/>
     <AddComment :parent_id="comment.id" v-if="showComments"/>
     <b-card-body v-if="showComments">
-      <ChildCommentItem v-for="(com, index) in comment.childrenComments" :comment="com" :index="index" :key="index"/>
+      <ChildCommentItem v-for="(com, index) in comment.childrenComments" :comment="com" :index="index"
+                        :key="`comment-item-child-comment-${index}`"/>
     </b-card-body>
   </b-media>
 </template>
