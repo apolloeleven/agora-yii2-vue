@@ -8,7 +8,7 @@ export default class PasswordResetModel extends BaseModel {
 
   rules = {
     old_password: 'required',
-    password: 'required',
+    password: ['required', 'password'],
     confirm_password: [
       'required',
       {rule: 'confirmed', target: 'password'},
