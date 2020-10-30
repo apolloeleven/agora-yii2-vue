@@ -19,3 +19,5 @@ export const ADD_COMMENT = 'article/ADD_COMMENT';
 export const ADD_CHILD_COMMENT = 'article/ADD_ARTICLE_COMMENT';
 export const DELETE_ARTICLE_COMMENT = 'article/DELETE_ARTICLE_COMMENT';
 export const DELETE_CHILD_COMMENT = 'article/DELETE_COMMENT';
+export const LIKE = 'article/LIKE';
+export const UNLIKE = 'article/UNLIKE';

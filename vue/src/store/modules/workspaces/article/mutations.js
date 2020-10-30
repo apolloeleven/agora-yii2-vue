@@ -20,6 +20,8 @@ import {
   DELETE_ARTICLE_COMMENT,
   DELETE_CHILD_COMMENT,
   ADD_COMMENT,
+  LIKE,
+  UNLIKE,
 } from "./mutation-types";
 
 export default {
@@ -224,5 +226,23 @@ export default {
    */
   [DELETE_CHILD_COMMENT](state, data) {
     state.currentArticle.articleComments.forEach(a => a.childrenComments = a.childrenComments.filter(c => c.id !== data.id))
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [LIKE](state, data) {
+    state.currentArticle.userLikes.unshift(data);
+    state.currentArticle.myLikes.unshift(data);
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [UNLIKE](state, data) {
+    state.currentArticle.myLikes = [];
+    state.currentArticle.userLikes = state.currentArticle.userLikes.filter(l => l.id !== data.id);
   },
 };

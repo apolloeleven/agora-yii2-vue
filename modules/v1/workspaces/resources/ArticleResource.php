@@ -57,7 +57,16 @@ class ArticleResource extends Article
      */
     public function extraFields()
     {
-        return ['children', 'workspace', 'createdBy', 'updatedBy', 'articleFiles', 'articleComments'];
+        return [
+            'children',
+            'workspace',
+            'createdBy',
+            'updatedBy',
+            'articleFiles',
+            'articleComments',
+            'userLikes',
+            'myLikes',
+        ];
     }
 
     /**
@@ -78,6 +87,16 @@ class ArticleResource extends Article
     public function getArticleComments()
     {
         return $this->hasMany(UserCommentResource::class, ['article_id' => 'id'])->orderBy('created_at DESC');
+    }
+
+    /**
+     * Gets query for [[UserLikes]].
+     *
+     * @return ActiveQuery
+     */
+    public function getUserLikes()
+    {
+        return $this->hasMany(UserLikeResource::class, ['article_id' => 'id']);
     }
 
     /**
@@ -158,5 +177,14 @@ class ArticleResource extends Article
                 "t.article_id = $tb.id"
             ])
             ->count();
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getMyLikes()
+    {
+        return $this->hasMany(UserLikeResource::class, ['article_id' => 'id'])
+            ->andWhere(['created_by' => Yii::$app->user->id]);
     }
 }

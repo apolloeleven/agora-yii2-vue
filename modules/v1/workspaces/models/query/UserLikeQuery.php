@@ -4,19 +4,20 @@
 namespace app\modules\v1\workspaces\models\query;
 
 use app\modules\v1\workspaces\models\UserComment;
+use app\modules\v1\workspaces\models\UserLike;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * Class UserCommentQuery
+ * Class UserLikeQuery
  *
  * @package app\modules\v1\workspaces\models\query
  */
-class UserCommentQuery extends ActiveQuery
+class UserLikeQuery extends ActiveQuery
 {
     /**
      * @param null $db
-     * @return UserComment[]
+     * @return UserLike[]
      */
     public function all($db = null)
     {
@@ -25,7 +26,7 @@ class UserCommentQuery extends ActiveQuery
 
     /**
      * @param null $db
-     * @return UserComment|array|ActiveRecord
+     * @return UserLike|array|ActiveRecord
      */
     public function one($db = null)
     {
@@ -34,37 +35,28 @@ class UserCommentQuery extends ActiveQuery
 
     /**
      * @param $id
-     * @return UserCommentQuery
+     * @return UserLikeQuery
      */
     public function byId($id)
     {
-        return $this->andWhere([UserComment::tableName() . '.id' => $id]);
-    }
-
-    /**
-     * @param $parentId
-     * @return UserCommentQuery
-     */
-    public function byParentId($parentId)
-    {
-        return $this->andWhere([UserComment::tableName() . '.parent_id' => $parentId]);
+        return $this->andWhere([UserLike::tableName() . '.id' => $id]);
     }
 
     /**
      * @param $articleId
-     * @return UserCommentQuery
+     * @return UserLikeQuery
      */
     public function byArticleId($articleId)
     {
-        return $this->andWhere([UserComment::tableName() . '.article_id' => $articleId]);
+        return $this->andWhere([UserLike::tableName() . '.article_id' => $articleId]);
     }
 
     /**
      * @param $timelinePostId
-     * @return UserCommentQuery
+     * @return UserLikeQuery
      */
     public function byTimelinePostId($timelinePostId)
     {
-        return $this->andWhere([UserComment::tableName() . '.timeline_post_id' => $timelinePostId]);
+        return $this->andWhere([UserLike::tableName() . '.timeline_post_id' => $timelinePostId]);
     }
 }

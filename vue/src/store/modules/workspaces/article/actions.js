@@ -20,6 +20,8 @@ import {
   DELETE_ARTICLE_COMMENT,
   DELETE_CHILD_COMMENT,
   ADD_COMMENT,
+  LIKE,
+  UNLIKE,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 import store from "../../../index";
@@ -96,7 +98,8 @@ export async function deleteArticle({commit}, data) {
  */
 export async function getCurrentArticle({commit}, articleId) {
   const {success, body} = await httpService.get(`${url}/${articleId}?expand=workspace,createdBy,
-    articleComments.createdBy,articleComments.childrenComments.createdBy,articleComments.childrenComments.parent`)
+    articleComments.createdBy,articleComments.childrenComments.createdBy,articleComments.childrenComments.parent,
+    userLikes,myLikes`)
   if (success) {
     commit(GET_CURRENT_ARTICLE, body);
   }
@@ -366,6 +369,42 @@ export async function deleteComment({commit}, data) {
     }
   }
   return res;
+}
+
+/**
+ * Like article or timeline post
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<void>}
+ */
+export async function like({commit}, data) {
+  const {success, body} = await httpService.post(`/v1/workspaces/user-like`, data)
+  if (success) {
+    if (data.article_id) {
+      commit(LIKE, body)
+    } else {
+      store.commit('timeline/timeline/TIMELINE_LIKE', body)
+    }
+  }
+}
+
+/**
+ * Unlike article or timeline post
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<void>}
+ */
+export async function unlike({commit}, data) {
+  const {success} = await httpService.delete(`/v1/workspaces/user-like/${data.id}`)
+  if (success) {
+    if (data.article_id) {
+      commit(UNLIKE, data)
+    } else {
+      store.commit('timeline/timeline/TIMELINE_UNLIKE', data)
+    }
+  }
 }
 
 /**
