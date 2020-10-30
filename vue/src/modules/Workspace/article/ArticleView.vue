@@ -2,46 +2,46 @@
   <div id="article-view" class="page">
     <div class="page-header">
       <back-button/>
-      <b-breadcrumb :items="breadCrumb" class="d-none d-sm-flex"></b-breadcrumb>
+      <b-breadcrumb :items="breadCrumb" class="d-none d-sm-flex"/>
       <b-dropdown variant="link" no-caret right v-if="isFolder">
         <template v-slot:button-content>
           <b-button size="sm" pill variant="link">
-            <i class="fas fa-plus-circle fa-3x"></i>
+            <i class="fas fa-plus-circle fa-3x"/>
           </b-button>
         </template>
-        <b-dropdown-item v-if="lastFolder && multipleFolders"
-                         @click="showModal()">
-          <i class="fas fa-plus"></i>
+        <b-dropdown-item v-if="lastFolder && multipleFolders" @click="showModal()">
+          <i class="fas fa-plus"/>
           {{ $t('Create new folder') }}
         </b-dropdown-item>
         <b-dropdown-item @click="showModal(true)">
-          <i class="fas fa-plus"></i>
+          <i class="fas fa-plus"/>
           {{ $t('Create new article') }}
         </b-dropdown-item>
       </b-dropdown>
-      <AddToFavourites :name="favouriteName"/>
+      <AddToFavourites :name="favouriteName" :is-folder="isFolder"/>
     </div>
     <div class="page-content">
       <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
-      <b-card no-body class="mb-1" v-if="isFolder">
+      <b-card no-body v-if="isFolder">
         <b-card-header header-tag="header" class="p-1" aria-controls="collapse"
                        :aria-expanded="visible ? 'true' : 'false'" @click="visible = !visible">
-          <i v-if="!visible" class="fas fa-angle-double-down fa-2x"></i>
-          <i v-else class="fas fa-angle-double-up fa-2x"></i>
+          <i v-if="!visible" class="fas fa-angle-double-down fa-2x"/>
+          <i v-else class="fas fa-angle-double-up fa-2x"/>
         </b-card-header>
         <b-collapse id="collapse" v-model="visible">
           <b-card-body>
             <div class="row">
               <div class="col-md-4 col-sm-12">
                 <b-media class="article-header align-items-center">
-                  <i class="fas fa-folder-open fa-4x"></i>
+                  <b-img v-if="currentArticle.image_url" class="article-image" :src="currentArticle.image_url"/>
+                  <i v-else class="fas fa-folder-open fa-4x"/>
                 </b-media>
               </div>
               <div class="col-md-8 col-sm-12">
                 <div>
                   <h3 class="mt-0">{{ currentArticle.title }}</h3>
                 </div>
-                <div v-html="currentArticle.body"></div>
+                <div v-html="currentArticle.body"/>
               </div>
             </div>
           </b-card-body>
@@ -50,24 +50,26 @@
       <div class="p-3">
         <div class="row" v-if="lastFolder && isFolder && multipleFolders">
           <div class="col-md-12 col-lg-4">
-            <h4 class="border-bottom pb-1 mb-3">{{ $t('Articles') }}</h4>
+            <h4 class="border-bottom pb-1 mb-3 pb-2">{{ $t('Articles') }}</h4>
             <div class="article-list">
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
-              <no-data :model="filteredArticles" :loading="loading" :text="$t('There are no articles')"></no-data>
+              <no-data :model="filteredArticles" :loading="loading" :text="$t('There are no articles')"/>
               <div class="article-list">
-                <ArticleChildItem
-                  v-for="(article, index) in filteredArticles" :index="index" :model="article" :key="article.id"/>
+                <ArticleChildItem v-for="(article, index) in filteredArticles" :index="index"
+                                  :model="article" :key="`article-child-item-${article.id}`">
+                </ArticleChildItem>
               </div>
             </div>
           </div>
           <div class="col-md-12 col-lg-4">
-            <h4 class="border-bottom pb-1 mb-3">{{ $t('Folders') }}</h4>
+            <h4 class="border-bottom pb-1 mb-3 pb-2">{{ $t('Folders') }}</h4>
             <div class="article-list">
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
-              <no-data :model="filteredFolders" :loading="loading" :text="$t('There are no folders')"></no-data>
+              <no-data :model="filteredFolders" :loading="loading" :text="$t('There are no folders')"/>
               <div class="article-list">
-                <ArticleChildItem
-                  v-for="(folder, index) in filteredFolders" :index="index" :model="folder" :key="folder.id"/>
+                <ArticleChildItem v-for="(folder, index) in filteredFolders" :index="index"
+                                  :model="folder" :key="`folder-child-item-${folder.id}`">
+                </ArticleChildItem>
               </div>
             </div>
           </div>
@@ -84,9 +86,8 @@
               <b-card-body>
                 <div class="article-content">
                   <div v-if="currentArticle.body" class="article-body" v-html="currentArticle.body"></div>
-                  <no-data v-else :model="currentArticle" :loading="loading"
-                           :text="$t('There is no description')">
-                  </no-data>
+                  <b-img v-if="currentArticle.image_url" class="article-image" :src="currentArticle.image_url"/>
+                  <no-data v-else :model="currentArticle" :loading="loading" :text="$t('There is no description')"/>
                 </div>
               </b-card-body>
               <b-card-footer>
@@ -111,8 +112,9 @@
               </b-card-body>
             </b-card>
             <div class="article-list">
-              <ArticleChildItem
-                v-for="(article, index) in filteredArticles" :index="index" :model="article" :key="article.id"/>
+              <ArticleChildItem v-for="(article, index) in filteredArticles" :index="index"
+                                :model="article" :key="`article-view-${article.id}`">
+              </ArticleChildItem>
             </div>
           </div>
           <div class="col-sm-12 col-lg-6">
@@ -121,12 +123,13 @@
         </div>
         <div class="row" v-else-if="!lastFolder || !multipleFolders">
           <div class="col-sm-12 col-lg-6">
-            <h4 class="border-bottom pb-1 mb-3">{{ $t('Articles') }}</h4>
+            <h4 class="border-bottom pb-1 mb-3 pb-2">{{ $t('Articles') }}</h4>
             <div class="article-list">
-              <no-data :model="filteredArticles" :loading="loading" :text="$t('There are no articles')"></no-data>
+              <no-data :model="filteredArticles" :loading="loading" :text="$t('There are no articles')"/>
               <div v-if="filteredArticles" class="article-list">
-                <ArticleChildItem
-                  v-for="(article, index) in filteredArticles" :index="index" :model="article" :key="article.id"/>
+                <ArticleChildItem v-for="(article, index) in filteredArticles" :index="index"
+                                  :model="article" :key="`article-last-item-${article.id}`">
+                </ArticleChildItem>
               </div>
             </div>
           </div>
@@ -189,7 +192,7 @@ export default {
       return this.currentArticle.depth < 3;
     },
     isFolder() {
-      return this.currentArticle.is_folder;
+      return !!this.currentArticle.is_folder;
     },
     favouriteName() {
       const wk = this.currentArticle.workspace || {};
@@ -239,6 +242,11 @@ export default {
     display: flex;
     align-items: start;
   }
+}
+
+.article-image {
+  width: 160px;
+  min-width: 160px;
 }
 
 .article-description {

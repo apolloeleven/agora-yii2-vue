@@ -7,6 +7,7 @@ import employee from './modules/employee'
 import workspace from './modules/workspaces/workspace';
 import article from './modules/workspaces/article';
 import httpService from "../core/services/httpService";
+import {SHARE_ARTICLE, SHARE_FILE} from "@/core/services/event-bus";
 
 // Load vuex
 Vue.use(Vuex);
@@ -39,9 +40,9 @@ export default new Vuex.Store({
       const res = await httpService.post(`/v1/workspaces/timeline`, data);
       if (res.success) {
         const currentArticle = state.article.currentArticle;
-        if (currentArticle.id === data.article_id && data.action === 'SHARE_ARTICLE') {
+        if (currentArticle.id === data.article_id && data.action === SHARE_ARTICLE) {
           currentArticle.share_count++;
-        } else if (data.action === 'SHARE_FILE') {
+        } else if (data.action === SHARE_FILE) {
           state.article.articleFiles.filter(a => data.attachment_ids.includes(a.id)).forEach(item => item.share_count++);
         }
       }

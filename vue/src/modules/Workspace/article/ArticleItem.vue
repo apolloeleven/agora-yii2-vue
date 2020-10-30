@@ -4,7 +4,8 @@
       <router-link :to="{name: 'article.view', params: {id: article.id}}">
         <b-media class="p-3 d-flex align-items-center">
           <template v-slot:aside>
-            <i class="fas fa-folder-open fa-4x"></i>
+            <b-img v-if="article.image_url" class="article-image" :src="article.image_url" rounded/>
+            <i v-else class="fas fa-folder-open fa-4x"/>
           </template>
           <h5 class="m-0">{{ article.title }}</h5>
           <div v-html="article.short_description"></div>
@@ -29,4 +30,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.article-image {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+}
 </style>

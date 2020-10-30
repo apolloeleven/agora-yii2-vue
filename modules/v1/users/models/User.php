@@ -35,8 +35,10 @@ use yii\web\IdentityInterface;
  * @property string           $favourites
  * @property int|null         $created_at
  * @property int|null         $updated_at
+ *
  * @property UserDepartment[] $userDepartments
  * @property UserWorkspace[] $userWorkspaces
+ * @property Invitation $invitation
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -308,5 +310,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function getUserWorkspaces()
     {
         return $this->hasMany(UserWorkspace::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getInvitation()
+    {
+        return $this->hasOne(Invitation::class, ['user_id' => 'id']);
     }
 }
