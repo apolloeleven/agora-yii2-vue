@@ -37,6 +37,7 @@ use yii\web\UploadedFile;
 class TimelinePost extends ActiveRecord
 {
     const ACTION_SHARE_FILE = "SHARE_FILE";
+    const ACTION_SHARE_ARTICLE = "SHARE_ARTICLE";
 
     /**
      * @var UploadedFile
