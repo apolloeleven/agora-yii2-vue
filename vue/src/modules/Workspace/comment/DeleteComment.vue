@@ -17,9 +17,12 @@ export default {
   methods: {
     ...mapActions(['deleteComment']),
     async onDelete() {
-      const {success} = await this.deleteComment(this.comment);
-      if (!success) {
-        this.$toast(this.$t(`Unable to delete comment`), 'danger');
+      const confirm = await this.$confirm(this.$i18n.t('Are you sure you want to delete following comment ? '))
+      if (confirm) {
+        const {success} = await this.deleteComment(this.comment);
+        if (!success) {
+          this.$toast(this.$t(`Unable to delete comment`), 'danger');
+        }
       }
     },
   },
