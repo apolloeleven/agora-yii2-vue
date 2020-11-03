@@ -247,6 +247,15 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @return string|null
+     * @author Saiat Kalbiev <kalbievich11@gmail.com>
+     */
+    public function getImageUrl()
+    {
+        return $this->image_path ? env('API_HOST') . $this->image_path : null;
+    }
+
+    /**
      * Generates password hash from password and sets it to the model
      *
      * @param string $password
