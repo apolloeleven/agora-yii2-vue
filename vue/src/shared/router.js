@@ -6,8 +6,17 @@ import NotFoundComponent from "./../core/components/pages/NotFoundComponent";
 import Dashboard from "@/modules/Dashboard/Dashboard";
 import Login from "@/modules/Auth/Login";
 import Register from "@/modules/Auth/Register";
+import RequestPasswordReset from "@/modules/Auth/PasswordReset/RequestPasswordReset";
+import ResetPassword from "@/modules/Auth/PasswordReset/ResetPassword";
 import Setup from "@/modules/setup/Setup";
 import CountryList from "@/modules/setup/countries/CountryList";
+import UserInvitations from "@/modules/setup/invitations/UserInvitations";
+import User from "@/modules/User/User";
+import Profile from "@/modules/User/Profile";
+import Workspace from "@/modules/Workspace/workspace/Workspace";
+import WorkspaceView from "@/modules/Workspace/workspace/WorkspaceView";
+import ArticleView from "@/modules/Workspace/article/ArticleView";
+import EmployeeList from "@/modules/setup/employees/EmployeeList";
 import Orgchart from "../modules/OrgChart/Orgchart";
 
 Vue.use(Router);
@@ -30,10 +39,22 @@ const router = new Router({
       children: [
         {
           path: 'login',
+          name: 'auth.login',
           component: Login,
         },
         {
-          path: 'register',
+          path: 'request-password-reset',
+          name: 'request-password-reset',
+          component: RequestPasswordReset,
+        },
+        {
+          path: 'password-reset/:token',
+          name: 'password-reset',
+          component: ResetPassword,
+        },
+        {
+          path: 'register/:token',
+          name: 'auth.register',
           component: Register,
         }
       ]
@@ -49,7 +70,14 @@ const router = new Router({
       children: [
         {path: 'dashboard', name: 'dashboard', component: Dashboard,},
         {path: '/setup', name: 'setup', component: Setup,},
-        {path: '/setup/countries', name: 'countries', component: CountryList}
+        {path: '/setup/countries', name: 'countries', component: CountryList},
+        {path: '/setup/invitations', name: 'invitations', component: UserInvitations},
+        {path: '/setup/users', name: 'users', component: EmployeeList},
+        {path: '/profile', name: 'profile', component: Profile,},
+        {path: '/setup/countries', name: 'countries', component: CountryList},
+        {path: '/workspace', name: 'workspace', component: Workspace},
+        {path: '/workspace/:id', name: 'workspace.view', component: WorkspaceView},
+        {path: '/article/:id', name: 'article.view', component: ArticleView},
       ]
     },
     {

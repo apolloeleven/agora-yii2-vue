@@ -7,10 +7,9 @@ const ConfirmModal = {
       return new Promise((resolve, reject) => {
         this.$bvModal.msgBoxConfirm(message, {
           title: title,
-          buttonSize: 'sm',
           okVariant: 'danger',
-          okTitle: 'OK',
-          cancelTitle: 'Cancel',
+          okTitle: i18n.t('OK'),
+          cancelTitle: i18n.t('Cancel'),
           footerClass: 'p-2',
           hideHeaderClose: false,
           centered: true

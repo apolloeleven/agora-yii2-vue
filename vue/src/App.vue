@@ -3,6 +3,8 @@
     <transition name="fade" mode="out-in">
       <router-view/>
     </transition>
+    <notifications position="top center" group="error" :type="'error'" width="400" :duration="5000"/>
+    <notifications group="success" type="success" :duration="5000" width="400" position="top right"></notifications>
   </div>
 </template>
 
@@ -62,5 +64,13 @@ body,
 .fade-enter,
 .fade-leave-active {
   opacity: 0
+}
+
+.vue-notification-group {
+  margin: 15px;
+  .vue-notification {
+    cursor: pointer;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+  }
 }
 </style>

@@ -1,6 +1,13 @@
 import Vuex from "vuex";
 import Vue from 'vue';
-import setup from './setup';
+import setup from './modules/setup';
+import user from './modules/user';
+import timeline from './modules/timeline';
+import employee from './modules/employee'
+import workspace from './modules/workspaces/workspace';
+import article from './modules/workspaces/article';
+import httpService from "../core/services/httpService";
+import {SHARE_ARTICLE, SHARE_FILE} from "@/core/services/event-bus";
 
 // Load vuex
 Vue.use(Vuex);
@@ -9,10 +16,12 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     menuCollapsed: false,
-    menuHidden: false
+    menuHidden: false,
+    _menuItems: {},
   },
   getters: {
     menuItems: state => Object.values(state._menuItems).sort((a, b) => a.weight - b.weight),
+    favourites: state => Object.values(state._menuItems).filter(item => item.favourite).sort((a, b) => a.weight - b.weight),
   },
   actions: {
     addMenuItem({commit}, {name, menuItem}) {
@@ -26,7 +35,19 @@ export default new Vuex.Store({
     },
     toggleMenuHide({commit, state}) {
       commit('toggleMenuHide', !state.menuHidden);
-    }
+    },
+    async shareToTimeline({commit, state}, data) {
+      const res = await httpService.post(`/v1/workspaces/timeline`, data);
+      if (res.success) {
+        const currentArticle = state.article.currentArticle;
+        if (currentArticle.id === data.article_id && data.action === SHARE_ARTICLE) {
+          currentArticle.share_count++;
+        } else if (data.action === SHARE_FILE) {
+          state.article.articleFiles.filter(a => data.attachment_ids.includes(a.id)).forEach(item => item.share_count++);
+        }
+      }
+      return res;
+    },
   },
   mutations: {
     toggleMenuCollapse: (state, collapsed) => state.menuCollapsed = collapsed,
@@ -42,6 +63,11 @@ export default new Vuex.Store({
     },
   },
   modules: {
-    setup
+    setup,
+    user,
+    employee,
+    workspace,
+    article,
+    timeline
   }
 });

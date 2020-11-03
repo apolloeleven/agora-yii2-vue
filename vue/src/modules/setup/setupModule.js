@@ -11,6 +11,14 @@ MenuService.addItem(new MenuItem('setup', {
     {
       text: i18n.t('Countries'),
       path: '/setup/countries'
-    }
+    },
+    {
+      text: i18n.t('Invitations'),
+      path: '/setup/invitations'
+    },
+    {
+      text: i18n.t('Users'),
+      path: '/setup/users'
+    },
   ]
 }));

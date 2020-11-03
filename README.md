@@ -15,36 +15,43 @@ The minimum requirement by this project template that your Web server supports P
 INSTALLATION of API
 -------------------
 
-### Install via Composer
+#### You need to have `composer` installed.
 
-If you do not have [Composer](http://getcomposer.org/), you may install it by following the instructions
+If you do not have [Composer](http://getcomposer.org/), you need to install it by following the instructions
 at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
-
+ 
 1. Clone the project.
 1. Go to the project root directory. 
 1. Run `composer install`.
-1. Copy `.env.example` into `.env` and adjust database parameters in `.env` file. 
-1. Run `php create-database.php` to create database.
-1. Run `php yii migrate` to create tables and insert initial data.
-1. Run `php yii serve` and open in browser [http://localhost:8080](http://localhost:8080)
+1. Copy `.env.example` into `.env` and adjust parameters (Leave the database parameters unchanged if you are going to setup with docker)
 
-### Install with Docker
+### Setup with php builtin server
 
-Make sure you have docker installed.
+1. Adjust database parameters in `.env`
+1. Run `php create-database.php` to create the database.
+1. Run `sh migrate` to create tables and insert initial data.
+1. Run `php yii serve --port 8081` and open in browser [http://localhost:8081](http://localhost:8081)
+
+### Setup with Docker
+
+Make sure you have docker installed. Also, make sure you don't have Apache or Mysql running and ports 80 and 3306 are not busy.
 1. Start the docker processing: `docker-compose up -d`
-1. Run migrations: `docker-compose exec app php yii migrate`
+1. Run migrations: `docker-compose exec app sh migrate`
 
 Open in the browser [http://agora-api.localhost](http://agora-api.localhost)
 
 ##### To run console commands
-`docker-compose exec app php yii <controller>/<action>
+`docker-compose exec app php yii <controller>/<action>`
 
 INSTALLATION of VUE.JS APP
 --------------------------
 
 You must have [Node.js](https://nodejs.org) installed.<br>
-Go to the `vue` folder.<br>
 
+---
+
+Go to the `vue` folder.<br>
+Copy `.env.example` into `.env` and specify the API url in `VUE_APP_API_HOST`
 
 ## Project setup
 ```
@@ -178,3 +185,17 @@ vendor/bin/codecept run functional,unit -- --coverage-html --coverage-xml
 ```
 
 You can see code coverage output under the `tests/_output` directory.
+
+MAILER
+
+### Run mailer migration
+`php yii migrate --migrationPath="vendor/intermundia/yii2-mailer/migrations"`
+
+### SMTP configuration
+```
+   SMTP_HOST =
+   SMTP_USERNAME =
+   SMTP_PASSWORD =
+   SMTP_PORT =
+   SMTP_ENCRYPTION =
+```

@@ -1,5 +1,5 @@
 import axiosClient from './../../plugins/axios'
-import authService from "./auth.service";
+import authService from "./authService";
 
 const HTTP_BAD_REQUEST = 400;
 const HTTP_UNAUTHORIZED = 401;
@@ -22,6 +22,7 @@ function handleExceptionResponse(response, resolveObj) {
   resolveObj.success = false;
   resolveObj.body = response.data;
   resolveObj.response = response.response;
+  resolveObj.status = response.status;
 
   if (response.status === HTTP_UNAUTHORIZED) {
     authService.logout();
@@ -48,7 +49,7 @@ function handleExceptionResponse(response, resolveObj) {
   } else if (response.status === HTTP_NOT_FOUND) {
     resolveObj.toastError = 'Requested data was not found.';
   } else if (response.status === HTTP_INTERNAL_SERVER_ERROR) {
-    resolveObj.toastError = 'Internal server error.';
+    resolveObj.toastError = response.message || 'Internal server error.';
   } else if (response.status === HTTP_FORBIDDEN) {
     resolveObj.toastError = 'You don\'t have permission.';
   } else {

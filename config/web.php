@@ -1,17 +1,21 @@
 <?php
 
-use app\models\User;
+use yii\rest\UrlRule;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'name' => 'Agora',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
+        '@portalUrl' => env('PORTAL_HOST'),
+        '@storage' => dirname(__DIR__) . '/web/storage',
+        '@storageUrl' => env('API_HOST') . '/storage',
     ],
     'components' => [
         'request' => [
@@ -26,19 +30,23 @@ $config = [
         ],
         'user' => [
             'class' => yii\web\User::class,
-            'identityClass' => User::class,
+            'identityClass' => \app\modules\v1\setup\resources\UserResource::class,
             'enableSession' => false,
             'loginUrl' => null,
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'v1/setup/site/error',
         ],
         'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'class' => \intermundia\mailer\SwiftMailer::class,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => env('SMTP_HOST'),
+                'username' => env('SMTP_USERNAME'),
+                'password' => env('SMTP_PASSWORD'),
+                'port' => env('SMTP_PORT'),
+                'encryption' => env('SMTP_ENCRYPTION'),
+            ]
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -55,8 +63,32 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                [
+                    'pattern' => 'v1/workspaces/article-file/download-attachment/<id:\d+>',
+                    'route' => 'v1/workspaces/article-file/download-attachment'
+                ],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/department'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/users/user'],
+                [
+                    'class' => UrlRule::class,
+                    'pluralize' => false,
+                    'controller' => [
+                        'v1/users/invitation',
+                        'v1/users/employee',
+                        'v1/users/auth',
+                        'v1/workspaces/workspace',
+                        'v1/workspaces/article',
+                        'v1/workspaces/timeline',
+                        'v1/workspaces/article-file',
+                        'v1/workspaces/user-comment',
+                        'v1/workspaces/user-like',
+                    ]
+                ]
             ],
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
         ],
     ],
     'modules' => [
@@ -65,6 +97,12 @@ $config = [
             'modules' => [
                 'setup' => [
                     'class' => \app\modules\v1\setup\SetupModule::class
+                ],
+                'users' => [
+                    'class' => \app\modules\v1\users\UserModule::class
+                ],
+                'workspaces' => [
+                    'class' => \app\modules\v1\workspaces\WorkspaceModule::class
                 ]
             ]
         ]

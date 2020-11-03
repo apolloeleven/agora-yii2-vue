@@ -1,0 +1,60 @@
+<template>
+  <b-card-body :class="!parent_id ? 'bg-light' : ''">
+    <b-media>
+      <template v-slot:aside>
+        <b-img rounded="0" :src="'/assets/img/avatar.svg'" height="32" width="32"/>
+      </template>
+      <b-form @submit.prevent="onAdd">
+        <b-input-group>
+          <b-form-input v-model="model.comment" :placeholder="parent_id ? $t('Write a replay') : $t('Leave comment')"/>
+          <b-input-group-append>
+            <b-button @click="onAdd" variant="info">{{ $t('Comment') }}</b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </b-form>
+    </b-media>
+  </b-card-body>
+</template>
+
+<script>
+import AddCommentModel from "./AddCommentModel";
+import {createNamespacedHelpers} from "vuex";
+import InputWidget from "../../../core/components/input-widget/InputWidget";
+
+const {mapActions} = createNamespacedHelpers('article')
+
+export default {
+  name: "AddComment",
+  components: {InputWidget},
+  props: {
+    article_id: Number,
+    timeline_id: Number,
+    parent_id: Number,
+  },
+  data() {
+    return {
+      model: new AddCommentModel(),
+    }
+  },
+  methods: {
+    ...mapActions(['addComment']),
+    async onAdd() {
+      if (this.model.comment) {
+        this.model.article_id = this.article_id;
+        this.model.parent_id = this.parent_id;
+        this.model.timeline_post_id = this.timeline_id;
+
+        const {success} = await this.addComment(this.model);
+        if (!success) {
+          this.$toast(this.$t(`This comment not saved`), 'danger');
+        }
+        this.model = new AddCommentModel();
+      }
+    },
+  },
+}
+</script>
+
+<style scoped>
+
+</style>

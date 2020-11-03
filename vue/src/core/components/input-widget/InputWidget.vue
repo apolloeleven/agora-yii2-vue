@@ -1,6 +1,7 @@
 <template>
-  <ValidationProvider :name="`${attribute}-${uuid}`" :rules="rules || model.getRules(attribute)"
-                      :customMessages="customMessages" v-slot="v" tag="div" :vid="vid">
+  <ValidationProvider :name="`${attribute}-${uuid}`" :rules="model.getRules(attribute, rules || null)"
+                      :customMessages="model.getMessages(attribute, rules || null)" v-slot="v"
+                      tag="div" :vid="vid || attribute">
     <b-form-group v-if="isInput() || isTextarea()">
       <label v-if="computedLabel">
         {{ computedLabel }}
@@ -10,7 +11,7 @@
         <template v-slot:append v-if="appendQuestion">
           <b-tooltip :target="`question-mark-tooltip-${attribute}-${uuid}`" :title="appendQuestion"/>
           <b-input-group-text :id="`question-mark-tooltip-${attribute}-${uuid}`" class="hover-cursor">
-            <font-awesome-icon icon="question-circle" class="icon"/>
+            <i class="fas fa-question-circle"></i>
           </b-input-group-text>
         </template>
         <b-form-input v-if="type === 'number'" ref="currentInput" :size="size" :type="type" :disabled="disabled"
@@ -33,6 +34,109 @@
         {{ computedHint }}
       </b-form-text>
     </b-form-group>
+    <b-form-group v-if="isSelect() || isDate() || isMultiselect() || isRichtext()">
+      <label v-if="computedLabel">
+        {{ computedLabel }}
+        <span v-if="v.required" class="text-danger">*</span>
+      </label>
+      <b-input-group :prepend="prepend" :append="append" :size="size">
+        <template v-slot:append v-if="appendQuestion">
+          <b-tooltip :target="`question-mark-tooltip-${attribute}-${uuid}`" :title="appendQuestion"/>
+          <b-input-group-text :id="`question-mark-tooltip-${attribute}-${uuid}`" class="hover-cursor">
+            <i class="fas fa-question-circle"></i>
+          </b-input-group-text>
+        </template>
+
+        <b-form-select v-if="isSelect()" ref="currentInput" :size="size" :disabled="disabled" :options="selectOptions"
+                       :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
+                       :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
+                       @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)" :value-field="valueField"
+                       :text-field="textField"
+        />
+
+        <datePicker v-if="isDate()" ref="currentInput" :size="size" :disabled="disabled" :config="datePickerOptions"
+                    :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
+                    :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
+                    @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
+        />
+
+        <Multiselect v-if="isMultiselect()" ref="currentInput" :size="size" :disabled="disabled"
+                     :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`"
+                     :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" :state="getState(v)"
+                     :tag-placeholder="$t(multiselectPlaceholder)"
+                     :placeholder="computedPlaceholder"
+                     :options="multiselectOptions"
+                     :multiple="true"
+                     :taggable="true"
+                     :selectLabel="$t('Press enter to select')"
+                     :deselectLabel="$t('Press enter to remove')"
+                     :selectedLabel="$t('Selected')"
+                     track-by="value"
+                     label="text"
+                     @tag="addMultiselect">
+          <span slot="noOptions">{{ $t('List is empty.') }}</span>
+          <template slot="tag" slot-scope="{ option, remove }">
+                            <span class="multiselect__tag">
+                              <span>{{ $t(option.value) }}</span>
+                              <span class="multiselect__tag-icon" @click="remove(option)"></span>
+                            </span>
+          </template>
+        </Multiselect>
+
+        <ckeditor v-if="isRichtext()" :editor="editor" :config="editorConfig" ref="currentInput" :size="size"
+                  :disabled="disabled" :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`"
+                  :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]"
+        />
+
+        <b-form-invalid-feedback :state="getState(v)">
+          {{ getError(v.errors) }}
+        </b-form-invalid-feedback>
+      </b-input-group>
+    </b-form-group>
+    <b-form-group v-if="isTagsInput()">
+      <label v-if="computedLabel">
+        {{ computedLabel }}
+        <span v-if="v.required" class="text-danger">*</span>
+      </label>
+      <b-input-group :prepend="prepend" :append="append" :size="size">
+        <template v-slot:append v-if="appendQuestion">
+          <b-tooltip :target="`question-mark-tooltip-${attribute}-${uuid}`" :title="appendQuestion"/>
+          <b-input-group-text :id="`question-mark-tooltip-${attribute}-${uuid}`" class="hover-cursor">
+            <i class="fas fa-question-circle"></i>
+          </b-input-group-text>
+        </template>
+        <b-form-tags ref="currentInput" :size="size" :disabled="disabled"
+                     :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
+                     :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
+                     @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
+                     :placeholder="computedPlaceholder" :min="min"/>
+      </b-input-group>
+    </b-form-group>
+    <b-form-group v-if="isCheckbox()">
+      <b-form-checkbox ref="currentInput" :disabled="disabled" :name="`${attribute}-${uuid}`" @change="onChange"
+                       :key="`${attribute}-${uuid}`" v-model="model[attribute]" :switch="isSwitch" :size="size"
+                       :state="getState(v)">
+        <span v-if="computedLabel">
+          {{ computedLabel }}
+          <span v-if="v.required" class="text-danger">*</span>
+        </span>
+      </b-form-checkbox>
+      <b-form-invalid-feedback :state="getState(v)">{{ getError(v.errors) }}
+      </b-form-invalid-feedback>
+      <b-form-text v-if="computedHint">
+        {{ computedHint }}
+      </b-form-text>
+    </b-form-group>
+    <b-form-group v-if="isFileUpload()">
+      <label v-if="computedLabel">
+        {{ computedLabel }}
+        <span v-if="v.required" class="text-danger">*</span>
+      </label>
+      <b-form-file v-model="model[attribute]" :type="type" :placeholder="computedPlaceholder" :state="getState(v)"/>
+      <b-form-invalid-feedback :state="getState(v)">
+        {{ getError(v.errors) }}
+      </b-form-invalid-feedback>
+    </b-form-group>
   </ValidationProvider>
 </template>
 
@@ -40,13 +144,26 @@
 
 import BaseModel from "./BaseModel";
 import {uuid} from 'vue-uuid';
+import datePicker from 'vue-bootstrap-datetimepicker';
+import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
+import Multiselect from 'vue-multiselect'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 export default {
   name: 'InputWidget',
-  components: {},
+  components: {datePicker, Multiselect},
   props: {
     model: BaseModel,
     attribute: String,
+    multiselectOptions: {
+      type: Array,
+      default: Array
+    },
+    multiselectPlaceholder: {
+      type: String,
+      default: '',
+      required: false
+    },
     label: {
       type: [String, Boolean],
       default: null
@@ -88,7 +205,7 @@ export default {
       default: false,
     },
     rules: {
-      type: String,
+      type: [String, Object, Array],
       default: null,
       required: false
     },
@@ -104,21 +221,47 @@ export default {
     },
     vid: {
       type: String,
-      default() {
-        return `vid-${this.attribute}-${uuid.v4()}`
-      }
+      default: ''
     },
     min: {
       type: [String, Number],
       default: 0
+    },
+    selectOptions: {
+      type: Array,
+      default: () => []
+    },
+    isSwitch: {
+      type: Boolean,
+      default: false
+    },
+    valueField: {
+      type: String,
+      default: 'value'
+    },
+    textField: {
+      type: String,
+      default: 'text'
     }
   },
   data() {
     return {
       uuid: uuid.v4(),
+      datePickerOptions: {
+        format: 'DD-MM-YYYY'
+      },
+      editor: ClassicEditor,
+      editorConfig: {},
     }
   },
   methods: {
+    addMultiselect(newMultiselect) {
+      const tag = {
+        value: newMultiselect,
+        text: newMultiselect
+      };
+      this.model[this.attribute].push(tag);
+    },
     getError(errors) {
       if (this.model.hasError(this.attribute)) {
         return this.model.getFirstError(this.attribute);
@@ -147,10 +290,31 @@ export default {
       this.$refs.currentInput.focus();
     },
     isInput() {
-      return ['text', 'number', 'date', 'password', 'email', 'search', 'url', 'tel', 'time', 'range', 'color'].includes(this.type)
+      return ['text', 'number', 'password', 'email', 'search', 'url', 'tel', 'time', 'range', 'color'].includes(this.type)
+    },
+    isRichtext() {
+      return this.type === 'richtext';
+    },
+    isTagsInput() {
+      return this.type === 'tags';
+    },
+    isMultiselect() {
+      return this.type === 'multiselect';
+    },
+    isDate() {
+      return this.type === 'date';
     },
     isTextarea() {
       return this.type === 'textarea';
+    },
+    isSelect() {
+      return this.type === 'select';
+    },
+    isCheckbox() {
+      return this.type === 'checkbox';
+    },
+    isFileUpload() {
+      return this.type === 'file';
     },
     onChange(val) {
       if (this.type === 'number' && val === '') {
@@ -175,10 +339,6 @@ export default {
     },
   },
   computed: {
-    customMessages() {
-      //TODO Must check this.rules and extract error messages from there
-      return this.model.getMessages(this.attribute)
-    },
     computedPlaceholder() {
       if (this.placeholder === false) {
         return '';
@@ -204,7 +364,10 @@ export default {
 };
 
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style lang="scss">
-
+.ck.ck-reset.ck-editor.ck-rounded-corners {
+  width: 100%;
+}
 </style>

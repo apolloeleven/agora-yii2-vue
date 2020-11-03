@@ -2,7 +2,7 @@
 
 namespace app\modules\v1\setup\models;
 
-use app\models\User;
+use app\modules\v1\users\models\User;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -19,6 +19,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property User $createdBy
  * @property User $updatedBy
+ * @property Department[] $departments
  */
 class Country extends \yii\db\ActiveRecord
 {
@@ -71,21 +72,31 @@ class Country extends \yii\db\ActiveRecord
     /**
      * Gets query for [[CreatedBy]].
      *
-     * @return \yii\db\ActiveQuery|\app\models\query\UserQuery
+     * @return \yii\db\ActiveQuery|\app\modules\v1\users\models\query\UserQuery
      */
     public function getCreatedBy()
     {
-        return $this->hasOne(User::className(), ['id' => 'created_by']);
+        return $this->hasOne(User::class, ['id' => 'created_by']);
     }
 
     /**
      * Gets query for [[UpdatedBy]].
      *
-     * @return \yii\db\ActiveQuery|\app\models\query\UserQuery
+     * @return \yii\db\ActiveQuery|\app\modules\v1\users\models\query\UserQuery
      */
     public function getUpdatedBy()
     {
-        return $this->hasOne(User::className(), ['id' => 'updated_by']);
+        return $this->hasOne(User::class, ['id' => 'updated_by']);
+    }
+
+    /**
+     * Gets query for [[Departments]].
+     *
+     * @return \yii\db\ActiveQuery|\app\modules\v1\setup\models\query\DepartmentQuery
+     */
+    public function getDepartments()
+    {
+        return $this->hasMany(Department::class, ['country_id' => 'id']);
     }
 
     /**

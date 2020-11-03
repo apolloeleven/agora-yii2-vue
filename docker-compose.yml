@@ -1,7 +1,9 @@
 version: '3'
 services:
   app:
-    build: docker
+    build: docker/php
+    networks:
+      - agora
     volumes:
       - ./:/app
     depends_on:
@@ -11,6 +13,8 @@ services:
 
   nginx:
     image: nginx:1.12-alpine
+    networks:
+      - agora
     ports:
       - 80:80
     volumes:
@@ -21,6 +25,8 @@ services:
 
   db:
     image: mysql:5.7
+    networks:
+      - agora
     volumes:
       - /var/lib/mysql
       - ./docker/mysql/config.cnf:/etc/mysql/conf.d/config.cnf
@@ -31,3 +37,8 @@ services:
       MYSQL_DATABASE: yii2_agora
       MYSQL_USER: yii2_agora
       MYSQL_PASSWORD: 123456
+
+networks:
+  agora:
+    external:
+      name: nat

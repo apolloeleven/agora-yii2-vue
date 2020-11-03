@@ -17,21 +17,22 @@
         <span class="glyphicon glyphicon-remove"></span>
       </a>
 
-<!--      <b-form-input class="mr-sm-2" placeholder="Search"></b-form-input>-->
-<!--      <b-button class="my-2 my-sm-0" type="submit">Search</b-button>-->
+      <!--      <b-form-input class="mr-sm-2" placeholder="Search"></b-form-input>-->
+      <!--      <b-button class="my-2 my-sm-0" type="submit">Search</b-button>-->
     </b-nav-form>
-<!--    <div class="clearfix-xxs"></div>-->
+    <!--    <div class="clearfix-xxs"></div>-->
     <div class="navbar-items ml-auto">
       <b-navbar-nav class="user-actions">
         <!--    Avatar -->
         <b-nav-item-dropdown right>
           <!-- Using 'button-content' slot -->
           <template v-slot:button-content>
-            <img class="user-avatar" src="assets/img/users/me-160.jpg" alt="..."/>
+            <b-img class="user-avatar mr-2" :src="currentUser.data.image_url || '/assets/img/avatar.svg'" rounded="circle" alt="..."/>
+            {{ currentUser.data.display_name }}
             <b class="caret"></b>
           </template>
-          <b-dropdown-item href="#">Profile</b-dropdown-item>
-          <b-dropdown-item @click="onLogoutClick()" href="#">Sign Out</b-dropdown-item>
+          <b-dropdown-item :to="{name: 'profile'}">{{ $t('Profile') }}</b-dropdown-item>
+          <b-dropdown-item @click="onLogoutClick()" href="#">{{ $t('Sign Out') }}</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </div>
@@ -39,92 +40,28 @@
 </template>
 
 <script>
-  import SidebarToggle from './components/SidebarToggle'
+import SidebarToggle from './components/SidebarToggle'
+import {createNamespacedHelpers} from "vuex";
+import authService from "@/core/services/authService";
 
-  export default {
-    name: 'Navbar',
-    components: {
-      SidebarToggle
-    },
-    data(){
-      return {
-        messages: [
-          {
-            id: 1,
-            message: 'Lets all be unique together until we realise we are all the same.',
-            from: 'Cody Romero',
-            avatar: 'https://randomuser.me/api/portraits/men/34.jpg',
-            unread: true,
-            time: Date.now() - 1000 * 5
-          },
-          {
-            id: 2,
-            message: 'Please wait outside of the house.',
-            from: 'Diane Herrera',
-            avatar: 'https://randomuser.me/api/portraits/women/6.jpg',
-            unread: true,
-            time: Date.now() - 1000 * 55
-          },
-          {
-            id: 3,
-            message: 'The book is in front of the table.',
-            from: 'Leonard Reyes',
-            avatar: 'https://randomuser.me/api/portraits/men/27.jpg',
-            unread: true,
-            time: Date.now() - 1000 * 60 * 2
-          },
-          {
-            id: 4,
-            message: 'How was the math test?',
-            from: 'Alan Austin',
-            avatar: 'https://randomuser.me/api/portraits/men/79.jpg',
-            unread: true,
-            time: Date.now() - 1000 * 60 * 26
-          },
-          {
-            id: 5,
-            message: 'I really want to go to work, but I am too sick to drive.',
-            from: 'Scarlett Fernandez',
-            avatar: 'https://randomuser.me/api/portraits/women/81.jpg',
-            unread: false,
-            time: Date.now() - 1000 * 60 * 55
-          },
-          {
-            id: 6,
-            message: 'Christmas is coming.',
-            from: 'Larry Stewart',
-            avatar: 'https://randomuser.me/api/portraits/men/70.jpg',
-            unread: false,
-            time: Date.now() - 1000 * 60 * 60 * 24
-          },
-          {
-            id: 7,
-            message: 'She advised him to come back at once.',
-            from: 'Thomas Bradley',
-            avatar: 'https://randomuser.me/api/portraits/men/16.jpg',
-            unread: false,
-            time: Date.now() - 1000 * 60 * 60 * 24 * 5
-          },
-          {
-            id: 8,
-            message: 'The lake is a long way from here.',
-            from: 'Veronica Brown',
-            avatar: 'https://randomuser.me/api/portraits/women/86.jpg',
-            unread: false,
-            time: Date.now() - 1000 * 60 * 60 * 24 * 12
-          },
-        ],
-        notifications: [
-
-        ]
-      }
-    },
-    methods: {
-      onLogoutClick(){
-        this.$router.push('/auth/login');
-      }
+const {mapState} = createNamespacedHelpers('user');
+export default {
+  name: 'Navbar',
+  components: {
+    SidebarToggle
+  },
+  data() {
+    return {}
+  },
+  computed: {
+    ...mapState(['currentUser'])
+  },
+  methods: {
+    onLogoutClick() {
+      authService.logout();
     }
   }
+}
 </script>
 
 <style src="./Navbar.scss" lang="scss">
