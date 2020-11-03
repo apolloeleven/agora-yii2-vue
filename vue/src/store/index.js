@@ -24,6 +24,9 @@ export default new Vuex.Store({
     favourites: state => Object.values(state._menuItems).filter(item => item.favourite).sort((a, b) => a.weight - b.weight),
   },
   actions: {
+    async initGlobals({dispatch}) {
+      await dispatch('setup/getCountries');
+    },
     addMenuItem({commit}, {name, menuItem}) {
       commit('addMenuItem', {name, menuItem});
     },
