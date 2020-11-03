@@ -1,7 +1,8 @@
 <template>
   <div style="align-content: center; width: 100%">
     <content-spinner :show="loading"/>
-    <vo-basic :data="chartData" :verticalDepth="3" :pan="true" :zoom="true"></vo-basic>
+    <vo-basic v-if="chartData" :data="chartData" :verticalDepth="3" :pan="true" :zoom="true"></vo-basic>
+    <no-data-available v-else/>
   </div>
 </template>
 
@@ -9,10 +10,11 @@
 import {VoBasic} from '../../core/components/org-chart/src/index'
 import orgchartService from "@/modules/Orgchart/OrgchartService";
 import ContentSpinner from "@/core/components/ContentSpinner";
+import NoDataAvailable from "@/core/components/NoDataAvailable";
 
 export default {
   name: "OrgchartBody",
-  components: {ContentSpinner, VoBasic},
+  components: {NoDataAvailable, ContentSpinner, VoBasic},
   data() {
     return {
       chartData: {},
