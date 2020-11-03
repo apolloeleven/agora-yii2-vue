@@ -33,7 +33,7 @@ class OrgchartHelper
         $departments = $dataProvider->getModels();
 
         if (!$departments) {
-            return [];
+            return null;
         }
 
         $preparedData = $this->prepareDataBeforeTreeBuild($departments);
