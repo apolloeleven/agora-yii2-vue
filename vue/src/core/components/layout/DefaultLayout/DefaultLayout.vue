@@ -21,14 +21,14 @@ import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
 import WorkspaceForm from "@/modules/Workspace/workspace/WorkspaceForm";
 import ArticleForm from "@/modules/Workspace/article/ArticleForm";
-import {mapState, createNamespacedHelpers} from 'vuex';
+import {mapState, createNamespacedHelpers, mapActions} from 'vuex';
 import MenuService from "../../sidebar/MenuService";
 import MenuItem from "../../sidebar/MenuItem";
 import EmployeeFormModal from "@/modules/setup/employees/EmployeeFormModal";
 import TimelineForm from "@/modules/Timeline/TimelineForm";
 import TimelineShare from "@/modules/Timeline/TimelineShare";
 
-const {mapActions} = createNamespacedHelpers('user');
+const {mapActions: userMapActions} = createNamespacedHelpers('user');
 const {mapState: mapStateWorkspace, mapActions: mapActionsWorkspace} = createNamespacedHelpers('workspace');
 
 export default {
@@ -72,14 +72,18 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getProfile']),
+    ...userMapActions(['getProfile']),
     ...mapActionsWorkspace(['getWorkspaces']),
+    ...mapActions(['initGlobals'])
   },
   created() {
     this.getWorkspaces();
   },
   mounted() {
     this.getProfile();
+  },
+  beforeMount() {
+    this.initGlobals();
   }
 }
 </script>

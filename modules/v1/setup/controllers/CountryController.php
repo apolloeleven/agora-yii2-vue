@@ -8,6 +8,7 @@
 namespace app\modules\v1\setup\controllers;
 
 
+use app\helpers\OrgchartHelper;
 use app\modules\v1\setup\resources\CountryResource;
 use app\rest\ActiveController;
 
@@ -20,4 +21,14 @@ use app\rest\ActiveController;
 class CountryController extends ActiveController
 {
     public $modelClass = CountryResource::class;
+
+    /**
+     * @return array|mixed
+     * @author Saiat Kalbiev <kalbievich11@gmail.com>
+     */
+    public function actionOrgChartData()
+    {
+        $orgchartHelper = new OrgchartHelper();
+        return $orgchartHelper->getCharData(\Yii::$app->request->get('country_id'));
+    }
 }
