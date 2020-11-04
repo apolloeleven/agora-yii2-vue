@@ -11,6 +11,7 @@ use app\rest\ValidationException;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\StringHelper;
+use yii\web\UploadedFile;
 
 /**
  * Class ArticleResource
