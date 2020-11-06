@@ -3,6 +3,7 @@
 namespace app\modules\v1\setup\models;
 
 use app\modules\v1\users\models\User;
+use app\modules\v1\users\models\UserDepartment;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -10,20 +11,21 @@ use yii\behaviors\TimestampBehavior;
 /**
  * This is the model class for table "{{%departments}}".
  *
- * @property int          $id
- * @property string       $name
- * @property int          $country_id
- * @property int|null     $parent_id
- * @property int|null     $created_at
- * @property int|null     $created_by
- * @property int|null     $updated_at
- * @property int|null     $updated_by
+ * @property int $id
+ * @property string $name
+ * @property int $country_id
+ * @property int|null $parent_id
+ * @property int|null $created_at
+ * @property int|null $created_by
+ * @property int|null $updated_at
+ * @property int|null $updated_by
  *
- * @property Country      $country
- * @property User         $createdBy
- * @property Department   $parent
+ * @property Country $country
+ * @property User $createdBy
+ * @property Department $parent
  * @property Department[] $departments
- * @property User         $updatedBy
+ * @property UserDepartment[] $userDepartments
+ * @property User $updatedBy
  */
 class Department extends \yii\db\ActiveRecord
 {
@@ -134,5 +136,14 @@ class Department extends \yii\db\ActiveRecord
     public static function find()
     {
         return new \app\modules\v1\setup\models\query\DepartmentQuery(get_called_class());
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     * @author Saiat Kalbiev <kalbievich11@gmail.com>
+     */
+    public function getUserDepartments()
+    {
+        return $this->hasMany(UserDepartment::class, ['department_id' => 'id']);
     }
 }

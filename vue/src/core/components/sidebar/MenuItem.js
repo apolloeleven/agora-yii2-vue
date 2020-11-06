@@ -9,6 +9,7 @@ export default class MenuItem {
     linkOptions = {},
     children = [],
     isGroup = false,
+    favourite = false,
   }) {
     if (!name) {
       throw new Error("Please provide name in MenuItem constructor");
@@ -21,6 +22,7 @@ export default class MenuItem {
     this.image = image;
     this.linkOptions = linkOptions;
     this.children = children.map(child => new MenuItem(child.name || child.text, child));
+    this.favourite = favourite;
     this.name = name;
   }
 }

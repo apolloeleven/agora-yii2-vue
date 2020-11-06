@@ -33,11 +33,20 @@ class UserDepartmentResource extends UserDepartment
 
     public function extraFields()
     {
-        return ['department'];
+        return ['department', 'user'];
     }
 
     public function getDepartment()
     {
         return $this->hasOne(DepartmentResource::class, ['id' => 'department_id']);
+    }
+
+    /**
+     * @return \app\modules\v1\users\models\query\UserQuery|\yii\db\ActiveQuery
+     * @author Saiat Kalbiev <kalbievich11@gmail.com>
+     */
+    public function getUser()
+    {
+        return $this->hasOne(\app\modules\v1\setup\resources\UserResource::class, ['id' => 'user_id']);
     }
 }

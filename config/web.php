@@ -14,6 +14,8 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
         '@portalUrl' => env('PORTAL_HOST'),
+        '@storage' => dirname(__DIR__) . '/web/storage',
+        '@storageUrl' => env('API_HOST') . '/storage',
     ],
     'components' => [
         'request' => [
@@ -61,6 +63,10 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                [
+                    'pattern' => 'v1/workspaces/article-file/download-attachment/<id:\d+>',
+                    'route' => 'v1/workspaces/article-file/download-attachment'
+                ],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/department'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/users/user'],
@@ -70,7 +76,13 @@ $config = [
                     'controller' => [
                         'v1/users/invitation',
                         'v1/users/employee',
-                        'v1/users/auth'
+                        'v1/users/auth',
+                        'v1/workspaces/workspace',
+                        'v1/workspaces/article',
+                        'v1/workspaces/timeline',
+                        'v1/workspaces/article-file',
+                        'v1/workspaces/user-comment',
+                        'v1/workspaces/user-like',
                     ]
                 ]
             ],
@@ -88,6 +100,9 @@ $config = [
                 ],
                 'users' => [
                     'class' => \app\modules\v1\users\UserModule::class
+                ],
+                'workspaces' => [
+                    'class' => \app\modules\v1\workspaces\WorkspaceModule::class
                 ]
             ]
         ]

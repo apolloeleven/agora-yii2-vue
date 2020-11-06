@@ -9,6 +9,7 @@ namespace app\modules\v1\setup\resources;
 
 
 use app\modules\v1\setup\models\Department;
+use app\modules\v1\users\resources\UserDepartmentResource;
 use app\modules\v1\users\resources\UserResource;
 use app\rest\ValidationException;
 
@@ -33,7 +34,7 @@ class DepartmentResource extends Department
 
     public function extraFields()
     {
-        return ['country', 'createdBy', 'parent'];
+        return ['country', 'createdBy', 'parent', 'userDepartments'];
     }
 
     /**
@@ -64,5 +65,14 @@ class DepartmentResource extends Department
           'name' => $this->name,
           'country' => $this->country->name
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     * @author Saiat Kalbiev <kalbievich11@gmail.com>
+     */
+    public function getUserDepartments()
+    {
+        return $this->hasMany(UserDepartmentResource::class, ['department_id' => 'id']);
     }
 }

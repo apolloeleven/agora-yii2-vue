@@ -11,9 +11,12 @@ import ResetPassword from "@/modules/Auth/PasswordReset/ResetPassword";
 import Setup from "@/modules/setup/Setup";
 import CountryList from "@/modules/setup/countries/CountryList";
 import UserInvitations from "@/modules/setup/invitations/UserInvitations";
-import User from "@/modules/User/User";
 import Profile from "@/modules/User/Profile";
-import EmployeeList from "../modules/setup/employees/EmployeeList";
+import Workspace from "@/modules/Workspace/workspace/Workspace";
+import WorkspaceView from "@/modules/Workspace/workspace/WorkspaceView";
+import ArticleView from "@/modules/Workspace/article/ArticleView";
+import EmployeeList from "@/modules/setup/employees/EmployeeList";
+import Orgchart from "../modules/Orgchart/Orgchart";
 
 Vue.use(Router);
 
@@ -21,6 +24,7 @@ const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+
     {
       path: '/auth',
       name: 'auth',
@@ -59,12 +63,16 @@ const router = new Router({
       component: DefaultLayout,
       children: [
         {path: 'dashboard', name: 'dashboard', component: Dashboard,},
+        {path: 'orgchart', name: 'orgchart', component: Orgchart,},
         {path: '/setup', name: 'setup', component: Setup,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
         {path: '/setup/invitations', name: 'invitations', component: UserInvitations},
         {path: '/setup/users', name: 'users', component: EmployeeList},
         {path: '/profile', name: 'profile', component: Profile,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
+        {path: '/workspace', name: 'workspace', component: Workspace},
+        {path: '/workspace/:id', name: 'workspace.view', component: WorkspaceView},
+        {path: '/article/:id', name: 'article.view', component: ArticleView},
       ]
     },
     {

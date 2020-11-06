@@ -9,35 +9,81 @@
       </div>
     </div>
     <employee-form-modal/>
+    <WorkspaceForm/>
+    <ArticleForm/>
+    <TimelineForm/>
+    <TimelineShare/>
   </div>
 </template>
 
 <script>
 import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
-import {mapState, createNamespacedHelpers} from 'vuex';
-
-const {mapActions} = createNamespacedHelpers('user');
+import WorkspaceForm from "@/modules/Workspace/workspace/WorkspaceForm";
+import ArticleForm from "@/modules/Workspace/article/ArticleForm";
+import {mapState, createNamespacedHelpers, mapActions} from 'vuex';
+import MenuService from "../../sidebar/MenuService";
+import MenuItem from "../../sidebar/MenuItem";
 import EmployeeFormModal from "@/modules/setup/employees/EmployeeFormModal";
+import TimelineForm from "@/modules/Timeline/TimelineForm";
+import TimelineShare from "@/modules/Timeline/TimelineShare";
+
+const {mapActions: userMapActions} = createNamespacedHelpers('user');
+const {mapState: mapStateWorkspace, mapActions: mapActionsWorkspace} = createNamespacedHelpers('workspace');
 
 export default {
   name: "DefaultLayout",
   components: {
+    TimelineShare,
+    TimelineForm,
     EmployeeFormModal,
     Sidebar,
     Navbar,
+    WorkspaceForm,
+    ArticleForm,
   },
   computed: {
     ...mapState([
       'menuCollapsed',
       'menuHidden'
     ]),
+    ...mapStateWorkspace(['workspaces'])
+  },
+  watch: {
+    workspaces() {
+      const menuItems = MenuService.getItems();
+      menuItems.forEach(menuItem => {
+        if (menuItem.name.indexOf('workspace-') === 0) {
+          MenuService.removeItem(menuItem.name)
+        }
+      });
+      this.workspaces.forEach(function (w, i) {
+        MenuService.removeItem(`/workspace/${w.id}`);
+        MenuService.addItem(new MenuItem(`workspace-${w.id}`, {
+          text: w.name,
+          path: `/workspace/${w.id}`,
+          weight: 100 + i,
+          icon: 'fas fa-home',
+          linkOptions: {
+            'class': 'pl-4'
+          }
+        }))
+      })
+    },
   },
   methods: {
-    ...mapActions(['getProfile'])
+    ...userMapActions(['getProfile']),
+    ...mapActionsWorkspace(['getWorkspaces']),
+    ...mapActions(['initGlobals'])
+  },
+  created() {
+    this.getWorkspaces();
   },
   mounted() {
     this.getProfile();
+  },
+  beforeMount() {
+    this.initGlobals();
   }
 }
 </script>

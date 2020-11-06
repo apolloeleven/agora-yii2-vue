@@ -8,7 +8,8 @@ export default class EmployeeModel extends BaseModel {
   first_name = null;
   last_name = null;
   email = null;
-  roles = []
+  userWorkspaces = [];
+  status = false;
   userDepartments = [];
 
   rules = {
@@ -24,11 +25,11 @@ export default class EmployeeModel extends BaseModel {
     email: i18n.t('Email'),
     first_name: i18n.t('First Name'),
     last_name: i18n.t('Last Name'),
+    status: i18n.t('Activate User'),
   };
 
   constructor(data = {}) {
     super();
-
     const userDepartments = [];
 
     if (data.userDepartments) {
@@ -41,16 +42,18 @@ export default class EmployeeModel extends BaseModel {
         }))
       }
     }
-    const roles = [];
-    if (data.roles) {
-      for (let role in data.roles) {
-        if (data.roles.hasOwnProperty(role)) {
-          roles.push(new RoleModel({name: role}))
-        }
+    const userWorkspaces = [];
+    if (data.userWorkspaces) {
+      for (let userWorkspace of data.userWorkspaces) {
+        userWorkspaces.push(new RoleModel({
+          id: userWorkspace.id,
+          role: userWorkspace.role,
+          workspace_id: userWorkspace.workspace_id,
+        }))
       }
     }
     data.userDepartments = userDepartments;
-    data.roles = roles;
+    data.userWorkspaces = userWorkspaces;
     Object.assign(this, {...data});
   }
 }

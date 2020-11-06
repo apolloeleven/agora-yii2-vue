@@ -8,8 +8,10 @@
 namespace app\modules\v1\users\resources;
 
 
+use app\modules\v1\users\models\Invitation;
 use app\modules\v1\users\models\User;
 use app\modules\v1\users\models\UserDepartment;
+use app\modules\v1\workspaces\models\UserWorkspace;
 use app\rest\ValidationException;
 use Yii;
 use yii\db\ActiveQuery;
@@ -27,7 +29,7 @@ class UserResource extends User
     const ROLE_ADMIN = 'admin';
     const ROLE_WORKSPACE_ADMIN = 'workspaceAdmin';
 
-    public $roles, $userDepartmentsData;
+    public $userDepartmentsData, $userWorkspacesData;
 
     public function fields()
     {
@@ -45,23 +47,22 @@ class UserResource extends User
             'displayName' => function () {
                 return $this->getDisplayName();
             },
-            'roles' => function () {
-                return $this->getRoles();
-            },
             'access_token',
             'email',
-            'status',
+            'status' => function () {
+                return $this->status === 1;
+            },
         ];
     }
 
     public function extraFields()
     {
-        return ['userDepartments'];
+        return ['userDepartments', 'userWorkspaces'];
     }
 
     public function rules()
     {
-        return ArrayHelper::merge(parent::rules(), [[['roles', 'userDepartmentsData'], 'safe']]);
+        return ArrayHelper::merge(parent::rules(), [[['userDepartmentsData', 'userWorkspacesData'], 'safe']]);
     }
 
     public function save($runValidation = true, $attributeNames = null)
@@ -72,8 +73,14 @@ class UserResource extends User
             if (!$parentSave) {
                 $transaction->rollBack();
             }
-            $this->updateRoles($this->roles);
-            $this->updateUserDepartments($this->userDepartmentsData);
+            if ($this->userWorkspacesData) {
+                $this->updateRoles($this->userWorkspacesData);
+                $this->updateUserWorkspaces($this->userWorkspacesData);
+            }
+            if ($this->userDepartmentsData) {
+                $this->updateUserDepartments($this->userDepartmentsData);
+            }
+            $transaction->commit();
         } catch (\Exception $e) {
             $transaction->rollBack();
             $parentSave = false;
@@ -123,7 +130,7 @@ class UserResource extends User
 
         // Convert roles from post to array of strings
         foreach ($data as $role) {
-            $rolesFromPost[] = $role['name'];
+            $rolesFromPost[] = $role['role'];
         }
 
         // Check if some roles should be deleted
@@ -150,7 +157,6 @@ class UserResource extends User
 
     /**
      * @param $data
-     * @param $dbTransaction
      * @throws ValidationException
      */
     public function updateUserDepartments($data)
@@ -167,7 +173,7 @@ class UserResource extends User
         if ($idsToBeDeleted) {
             $count = UserDepartment::deleteAll(['id' => $idsToBeDeleted]);
             if ($count !== count($idsToBeDeleted)) {
-                throw new ValidationException(\Yii::t('app', 'Error while deleting user departments'));
+                throw new ValidationException(Yii::t('app', 'Error while deleting user departments'));
             }
         }
 
@@ -185,8 +191,79 @@ class UserResource extends User
             }
 
             if (!$userDepartment->load($userDepartmentData, '') || !$userDepartment->save()) {
-                throw new ValidationException(\Yii::t('app', 'Error while saving user department'));
+                throw new ValidationException(Yii::t('app', 'Error while saving user department'));
             }
         }
+    }
+
+    /**
+     * Update user workspace data
+     *
+     * @param $data
+     * @throws ValidationException
+     */
+    public function updateUserWorkspaces($data)
+    {
+        $existedIds = ArrayHelper::getColumn($data, 'id');
+        $deletedIds = [];
+
+        foreach ($this->userWorkspaces as $userWorkspace) {
+            if (!in_array($userWorkspace->id, $existedIds)) {
+                $deletedIds[] = $userWorkspace->id;
+            }
+        }
+
+        if ($deletedIds) {
+            if (UserWorkspace::deleteAll(['id' => $deletedIds]) !== count($deletedIds)) {
+                throw new ValidationException(Yii::t('app', 'Error while deleting user workspaces'));
+            }
+        }
+
+        $indexById = ArrayHelper::index($this->userWorkspaces, 'id');
+
+        foreach ($data as $userWorkspaceData) {
+            if (in_array($userWorkspaceData['id'], $deletedIds)) {
+                continue;
+            }
+
+            $userWorkspace = new UserWorkspace();
+            $userWorkspace->user_id = $this->id;
+            if (isset($indexById[$userWorkspaceData['id']])) {
+                $userWorkspace = $indexById[$userWorkspaceData['id']];
+            }
+
+            if (!$userWorkspace->load($userWorkspaceData, '') || !$userWorkspace->save()) {
+                throw new ValidationException(Yii::t('app', 'Error while saving user workspaces'));
+            }
+        }
+    }
+
+    /**
+     * Before save change invitation status from register to complete
+     *
+     * @param $insert
+     * @return bool|void
+     * @throws ValidationException
+     * @throws \Exception
+     */
+    public function beforeSave($insert)
+    {
+        $oldStatus = ArrayHelper::getValue($this->oldAttributes, 'status');
+
+        if ($oldStatus == self::STATUS_INACTIVE && $this->status == self::STATUS_ACTIVE && $this->invitation && $this->invitation->status == Invitation::STATUS_REGISTERED) {
+            $this->invitation->status = Invitation::STATUS_COMPLETED;
+            if (!$this->invitation->save()) {
+                throw new ValidationException(Yii::t('app', "Unable to update Invitation. Token: {$this->invitation->token}"));
+            }
+        }
+        return parent::beforeSave($insert);
+    }
+
+    // TODO after workspace will be ready change delete action
+    public function beforeDelete()
+    {
+        UserDepartment::deleteAll(['user_id' => $this->id]);
+
+        return parent::beforeDelete();
     }
 }

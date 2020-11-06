@@ -118,12 +118,13 @@ export default {
     async onUpdateClick() {
       this.userModel.resetErrors();
       this.userModel.image = this.image;
+      this.userModel.imageRemoved = this.$refs.uploader.imageRemoved;
       const userModel = JSON.parse(JSON.stringify(this.userModel))
       userModel.image = this.image;
       const {success} = await this.updateProfile(userModel);
       if (success) {
         this.$successToast(i18n.t('Your profile was updated'))
-        this.$refs.userModel.reset()
+        this.$refs.profileForm.reset()
       }
     },
     async initModel() {

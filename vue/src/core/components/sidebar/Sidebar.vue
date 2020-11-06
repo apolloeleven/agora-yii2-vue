@@ -28,6 +28,9 @@
 <script>
 import {createNamespacedHelpers, mapGetters, mapActions} from 'vuex';
 import SidebarItem from './SidebarItem'
+import MenuService from "./MenuService";
+import MenuItem from "./MenuItem";
+import FavouritesService from "../../../modules/Workspace/components/AddToFavourites/FavouritesService";
 
 const {mapState: mapStateUser, mapActions: mapUserActions} = createNamespacedHelpers('user');
 
@@ -41,6 +44,14 @@ export default {
     ...mapStateUser(['currentUser']),
   },
   created() {
+    MenuService.addItem(new MenuItem('favourites', {
+      text: this.$t('Short Cuts'),
+      isGroup: true,
+      weight: 1000,
+      icon: 'far fa-star'
+    }));
+
+    FavouritesService.readFromStorage();
   },
   methods: {
     ...mapActions(['toggleMenuCollapse']),
