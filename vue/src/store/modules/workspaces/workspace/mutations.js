@@ -58,15 +58,7 @@ export default {
    * @param data
    */
   [GET_CURRENT_WORKSPACE](state, data) {
-    state.currentWorkspace = data || {}
-  },
-  /**
-   *
-   * @param state
-   * @param data
-   */
-  [GET_EMPLOYEES](state, data) {
-    state.employees = data;
+    state.view.workspace = data || {}
   },
 
   /**

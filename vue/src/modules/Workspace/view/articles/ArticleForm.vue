@@ -30,7 +30,6 @@ export default {
     ...mapState({
       show: state => state.view.articles.modal.show,
       modalObject: state => state.view.articles.modal.object,
-      currentWorkspace: state => state.currentWorkspace,
     }),
     modalTitle() {
       if (this.model.id) {

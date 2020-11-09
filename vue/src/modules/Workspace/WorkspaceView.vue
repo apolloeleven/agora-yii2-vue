@@ -3,7 +3,7 @@
     <div class="page-header">
       <back-button/>
       <b-breadcrumb :items="breadCrumb" class="d-none d-sm-flex"></b-breadcrumb>
-      <WorkspaceUsers :model="employees"/>
+      <WorkspaceUsers :model="[]"/>
     </div>
 
     <sided-nav-layout :items="items"/>
@@ -34,8 +34,6 @@
 <script>
 import BackButton from "./components/BackButton";
 import {createNamespacedHelpers} from "vuex";
-import ContentSpinner from "../../core/components/ContentSpinner";
-import NoData from "./components/NoData";
 import WorkspaceUsers from "./WorkspaceUsers";
 import SidedNavLayout from "@/core/components/sided-nav-layout/SidedNavLayout";
 
@@ -44,7 +42,7 @@ const {mapState: mapArticleStates, mapActions: mapArticleActions} = createNamesp
 
 export default {
   name: "WorkspaceView",
-  components: {SidedNavLayout, WorkspaceUsers, NoData, ContentSpinner, BackButton},
+  components: {SidedNavLayout, WorkspaceUsers, BackButton},
   data() {
     return {
       visible: false,
@@ -57,18 +55,20 @@ export default {
     }
   },
   computed: {
-    ...mapState(['breadCrumb', 'currentWorkspace', 'employees']),
+    ...mapState({
+      breadCrumb: state => state.breadCrumb,
+      workspace: state => state.view.workspace,
+    }),
     ...mapArticleStates(['articles', 'loading']),
   },
   watch: {
     '$route.params.id': function (id) {
       this.getArticlesByWorkspace(id);
       this.getCurrentWorkspace(id);
-      this.getEmployees(id);
     },
   },
   methods: {
-    ...mapActions(['getWorkspaceBreadCrumb', 'getCurrentWorkspace', 'destroyCurrentWorkspace', 'getEmployees']),
+    ...mapActions(['getWorkspaceBreadCrumb', 'getCurrentWorkspace', 'destroyCurrentWorkspace']),
     ...mapArticleActions(['showArticleModal', 'getArticlesByWorkspace']),
     async getBreadCrumb() {
       const res = await this.getWorkspaceBreadCrumb(this.$route.params.id)
@@ -87,7 +87,6 @@ export default {
     this.getBreadCrumb();
     this.getArticlesByWorkspace(workspaceId);
     this.getCurrentWorkspace(workspaceId);
-    this.getEmployees(workspaceId);
   },
   destroyed() {
     this.destroyCurrentWorkspace({});

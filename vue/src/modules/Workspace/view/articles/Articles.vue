@@ -43,7 +43,7 @@ export default {
   components: {ContentSpinner, DropdownButtons},
   computed: {
     ...mapState({
-      workspace: state => state.currentWorkspace,
+      workspace: state => state.view.workspace,
       articles: state => state.view.articles.data,
       loading: state => state.view.articles.loading,
     })
