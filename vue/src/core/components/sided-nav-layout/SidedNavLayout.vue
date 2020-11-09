@@ -8,7 +8,7 @@
         </b-list-group-item>
       </b-list-group>
     </div>
-    <div class="content border">
+    <div class="content">
       <router-view/>
     </div>
   </div>
