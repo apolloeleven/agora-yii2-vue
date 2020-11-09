@@ -83,6 +83,7 @@ $config = [
                         'v1/workspaces/article-file',
                         'v1/workspaces/user-comment',
                         'v1/workspaces/user-like',
+                        'v1/workspaces/folder',
                     ]
                 ]
             ],
