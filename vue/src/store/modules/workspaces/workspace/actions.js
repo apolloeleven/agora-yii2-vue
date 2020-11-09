@@ -6,10 +6,13 @@ import {
   GET_BREAD_CRUMB,
   GET_CURRENT_WORKSPACE,
   GET_EMPLOYEES,
+  GET_ARTICLES,
+  TOGGLE_ARTICLES_LOADING,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 
-const url = '/v1/workspaces/workspace'
+const url = '/v1/workspaces/workspace';
+const articlesUrl = '/v1/workspaces/article';
 
 /**
  * Show workspace form's modal
@@ -171,4 +174,22 @@ export function prepareData(data) {
     data = tmp;
   }
   return data;
+}
+
+/**
+ * Get articles for workspace view
+ *
+ * @param commit
+ * @param { int } workspace_id
+ * @returns {Promise<void>}
+ */
+export async function getArticles({commit}, workspace_id) {
+  const {success, body} = await httpService.get(articlesUrl, {
+    params: {workspace_id, sort: 'title'}
+  })
+  if (success) {
+    commit(GET_ARTICLES, body);
+    commit(TOGGLE_ARTICLES_LOADING, true);
+  }
+  commit(TOGGLE_ARTICLES_LOADING, false);
 }

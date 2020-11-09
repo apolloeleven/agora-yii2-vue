@@ -6,6 +6,8 @@ import {
   GET_BREAD_CRUMB,
   GET_CURRENT_WORKSPACE,
   GET_EMPLOYEES,
+  GET_ARTICLES,
+  TOGGLE_ARTICLES_LOADING
 } from './mutation-types';
 
 export default {
@@ -59,5 +61,21 @@ export default {
    */
   [GET_EMPLOYEES](state, data) {
     state.employees = data;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_ARTICLES](state, data) {
+    state.view.articles.data = data;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [TOGGLE_ARTICLES_LOADING](state, data) {
+    state.view.articles.loading = data;
   },
 };

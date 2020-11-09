@@ -7,6 +7,13 @@ const STATE = {
   breadCrumb: [],
   currentWorkspace: {},
   employees: [],
+
+  view: {
+    articles: {
+      loading: false,
+      data: []
+    }
+  }
 };
 
 export default STATE;

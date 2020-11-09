@@ -5,3 +5,5 @@ export const WORKSPACE_DELETED = 'workspace/WORKSPACE_DELETED';
 export const GET_BREAD_CRUMB = 'workspace/GET_BREAD_CRUMB';
 export const GET_CURRENT_WORKSPACE = 'workspace/GET_CURRENT_WORKSPACE';
 export const GET_EMPLOYEES = 'workspace/GET_EMPLOYEES';
+export const GET_ARTICLES = 'workspace/GET_ARTICLES';
+export const TOGGLE_ARTICLES_LOADING = 'workspace/TOGGLE_ARTICLES_LOADING';
