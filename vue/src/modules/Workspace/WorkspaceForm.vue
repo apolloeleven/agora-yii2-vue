@@ -20,7 +20,7 @@
 
 <script>
 import WorkspaceFormModel from "./WorkspaceFormModel";
-import InputWidget from "../../../core/components/input-widget/InputWidget";
+import InputWidget from "../../core/components/input-widget/InputWidget";
 import {createNamespacedHelpers} from "vuex";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace');

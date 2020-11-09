@@ -45,7 +45,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../core/scss/variables";
+@import "../../core/scss/variables";
 
 .users-popover {
   width: 320px;

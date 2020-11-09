@@ -19,7 +19,7 @@
 <script>
 import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
-import WorkspaceForm from "@/modules/Workspace/workspace/WorkspaceForm";
+import WorkspaceForm from "@/modules/Workspace/WorkspaceForm";
 import ArticleForm from "@/modules/Workspace/article/ArticleForm";
 import {mapState, createNamespacedHelpers, mapActions} from 'vuex';
 import MenuService from "../../sidebar/MenuService";

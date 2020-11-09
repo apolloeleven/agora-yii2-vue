@@ -37,7 +37,7 @@
 
 <script>
 import {createNamespacedHelpers} from "vuex";
-import ContentSpinner from "../../../core/components/ContentSpinner";
+import ContentSpinner from "@/core/components/ContentSpinner";
 import DropdownButton from "@/modules/Workspace/components/DropdownButton";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace');

@@ -32,11 +32,11 @@
 </template>
 
 <script>
-import BackButton from "../components/BackButton";
+import BackButton from "./components/BackButton";
 import {createNamespacedHelpers} from "vuex";
-import ArticleItem from "../article/ArticleItem";
-import ContentSpinner from "../../../core/components/ContentSpinner";
-import NoData from "../components/NoData";
+import ArticleItem from "./article/ArticleItem";
+import ContentSpinner from "../../core/components/ContentSpinner";
+import NoData from "./components/NoData";
 import WorkspaceUsers from "./WorkspaceUsers";
 import SidedNavLayout from "@/core/components/sided-nav-layout/SidedNavLayout";
 

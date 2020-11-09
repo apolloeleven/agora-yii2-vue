@@ -12,15 +12,15 @@ import Setup from "@/modules/setup/Setup";
 import CountryList from "@/modules/setup/countries/CountryList";
 import UserInvitations from "@/modules/setup/invitations/UserInvitations";
 import Profile from "@/modules/User/Profile";
-import Workspace from "@/modules/Workspace/workspace/Workspace";
-import WorkspaceView from "@/modules/Workspace/workspace/WorkspaceView";
+import Workspace from "@/modules/Workspace/Workspace";
+import WorkspaceView from "@/modules/Workspace/WorkspaceView";
 import ArticleView from "@/modules/Workspace/article/ArticleView";
 import EmployeeList from "@/modules/setup/employees/EmployeeList";
 import Orgchart from "../modules/Orgchart/Orgchart";
-import WorkspaceTimeline from "@/modules/Workspace/workspace/view/WorkspaceTimeline";
-import WorkspaceFiles from "@/modules/Workspace/workspace/view/WorkspaceFiles";
-import WorkspaceArticles from "@/modules/Workspace/workspace/view/WorkspaceArticles";
-import WorkspaceAbout from "@/modules/Workspace/workspace/view/WorkspaceAbout";
+import WorkspaceTimeline from "@/modules/Workspace/view/WorkspaceTimeline";
+import WorkspaceFiles from "@/modules/Workspace/view/WorkspaceFiles";
+import WorkspaceArticles from "@/modules/Workspace/view/WorkspaceArticles";
+import WorkspaceAbout from "@/modules/Workspace/view/WorkspaceAbout";
 
 Vue.use(Router);
 
