@@ -16,6 +16,7 @@ import {EDIT_TIMELINE, eventBus} from "../../../core/services/event-bus";
 const {mapActions} = createNamespacedHelpers('workspace');
 const {mapActions: mapArticleActions} = createNamespacedHelpers('article');
 const {mapActions: mapTimelineActions} = createNamespacedHelpers('timeline');
+const {mapActions: mapFileManagerActions} = createNamespacedHelpers('fileManager');
 
 export default {
   name: "EditButton",
@@ -28,11 +29,12 @@ export default {
     ...mapActions(['showWorkspaceModal']),
     ...mapArticleActions(['showArticleModal']),
     ...mapTimelineActions(['showTimelineModal']),
+    ...mapFileManagerActions(['showFolderModal']),
     onEditClick() {
       if (this.type === 'workspace') {
         this.showWorkspaceModal(this.model)
       } else if (this.type === 'folder') {
-        this.showArticleModal({isArticle: false, article: this.model})
+        this.showFolderModal(this.model.item)
       } else if (this.type === 'article') {
         this.showArticleModal({isArticle: true, article: this.model})
       } else if (this.type === 'timeline') {

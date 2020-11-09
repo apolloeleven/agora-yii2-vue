@@ -43,7 +43,7 @@ export default {
   watch: {
     modalFolder() {
       if (this.modalFolder) {
-        this.model = new ArticleFormModel(this.modalFolder);
+        this.model = new FolderFormModel(this.modalFolder);
       }
     },
   },
@@ -74,9 +74,6 @@ export default {
       }
 
       if (res.success) {
-        if (action === 'updated') {
-          this.updateFavourites()
-        }
         this.$toast(this.$t(`The folder '{title}' was successfully ${action}`, {title: this.model.name}));
         this.hideModal()
       } else {

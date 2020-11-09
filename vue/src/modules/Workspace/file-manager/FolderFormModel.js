@@ -2,18 +2,18 @@ import BaseModel from "../../../core/components/input-widget/BaseModel";
 import i18n from "../../../shared/i18n";
 
 export default class FolderFormModel extends BaseModel {
-  title = '';
+  name = '';
   body = '';
   file = null;
 
   rules = {
-    title: 'required',
+    name: 'required',
     body: '',
     file: '',
   };
 
   attributeLabels = {
-    title: i18n.t('Title'),
+    name: i18n.t('Title'),
     body: i18n.t('Body'),
     file: i18n.t('Image'),
   };
