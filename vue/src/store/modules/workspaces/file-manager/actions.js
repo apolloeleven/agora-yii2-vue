@@ -155,59 +155,45 @@ export function prepareData(data) {
   return data;
 }
 
-//
-// /** Article Files Actions */
-//
-// /**
-//  * Get attachment config data
-//  *
-//  * @param commit
-//  * @returns {Promise<void>}
-//  */
-// export async function getAttachConfig({commit}) {
-//   const {success, body} = await httpService.get(`${url}/get-attach-config`)
-//   if (success) {
-//     commit(GET_ATTACH_CONFIG, body)
-//   }
-// }
-//
-// /**
-//  * Upload files
-//  *
-//  * @param dispatch
-//  * @param payload
-//  * @param data
-//  * @param config
-//  * @returns {Promise<unknown>}
-//  */
-// export async function attachFiles({dispatch}, {data, config}) {
-//   const res = await httpService.post(`${url}/attach-files`, prepareFiles(data), config)
-//   if (res.success) {
-//     dispatch('getFilesByArticle', data.article_id);
-//   }
-//   return res;
-// }
-//
-// /**
-//  * Get article files data by article
-//  *
-//  * @param commit
-//  * @param articleId
-//  * @returns {Promise<void>}
-//  */
-// export async function getFilesByArticle({commit}, articleId) {
-//   const {success, body} = await httpService.get(url, {
-//     params: {
-//       articleId,
-//       expand: 'updatedBy',
-//       sort: 'name'
-//     }
-//   });
-//   if (success) {
-//     commit(GET_FILES, body);
-//   }
-// }
-//
+
+/**
+ * Upload files
+ *
+ * @param dispatch
+ * @param payload
+ * @param data
+ * @param config
+ * @returns {Promise<unknown>}
+ */
+export async function attachFiles({dispatch}, {data, config}) {
+  const res = await httpService.post(`${url}/attach-files`, prepareFiles(data), config)
+  if (res.success) {
+    dispatch('getFilesByFolder', data.folder_id);
+  }
+  return res;
+}
+
+
+/**
+ * Get article files data by article
+ *
+ * @param commit
+ * @param folderId
+ * @returns {Promise<void>}
+ */
+export async function getFilesByFolder({commit}, folderId) {
+  const {success, body} = await httpService.get(url, {
+    params: {
+      folderId,
+      expand: 'updatedBy',
+      sort: 'name'
+    }
+  });
+  if (success) {
+    commit(GET_FILES, body);
+  }
+}
+
 // /**
 //  * Show edit label dialog form
 //  *
@@ -259,24 +245,24 @@ export function prepareData(data) {
 //   return res;
 // }
 //
-// /**
-//  * Prepare file to upload
-//  *
-//  * @param data
-//  * @returns {FormData}
-//  */
-// export function prepareFiles(data) {
-//   const tmp = new FormData();
-//   for (let key in data.files) {
-//     if (data.files.hasOwnProperty(key)) {
-//       tmp.append('files[]', data.files[key], data.files.name);
-//     }
-//   }
-//   for (let key in data) {
-//     if (data.hasOwnProperty(key) && data[key] !== 'files') {
-//       tmp.append(key, data[key]);
-//     }
-//   }
-//   data = tmp;
-//   return data;
-// }
+/**
+ * Prepare file to upload
+ *
+ * @param data
+ * @returns {FormData}
+ */
+export function prepareFiles(data) {
+  const tmp = new FormData();
+  for (let key in data.files) {
+    if (data.files.hasOwnProperty(key)) {
+      tmp.append('files[]', data.files[key], data.files.name);
+    }
+  }
+  for (let key in data) {
+    if (data.hasOwnProperty(key) && data[key] !== 'files') {
+      tmp.append(key, data[key]);
+    }
+  }
+  data = tmp;
+  return data;
+}
