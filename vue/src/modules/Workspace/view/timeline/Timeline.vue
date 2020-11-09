@@ -40,11 +40,6 @@ export default {
       loading: state => state.loading,
     }),
   },
-  watch: {
-    '$route.params.id': function (id) {
-      this.getTimelinePosts(id);
-    },
-  },
   methods: {
     ...mapTimelineActions(['showTimelineModal', 'getTimelinePosts']),
     showTimelineForm() {
