@@ -11,7 +11,11 @@ const STATE = {
   view: {
     articles: {
       loading: false,
-      data: []
+      data: [],
+      modal: {
+        show: false,
+        object: null
+      }
     }
   }
 };

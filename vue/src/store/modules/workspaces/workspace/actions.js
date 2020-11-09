@@ -7,7 +7,7 @@ import {
   GET_CURRENT_WORKSPACE,
   GET_EMPLOYEES,
   GET_ARTICLES,
-  TOGGLE_ARTICLES_LOADING,
+  TOGGLE_ARTICLES_LOADING, SHOW_ARTICLE_MODAL, HIDE_ARTICLE_MODAL, UPDATE_ARTICLE, CREATE_ARTICLE, REMOVE_ARTICLE,
 } from './mutation-types';
 import httpService from "../../../../core/services/httpService";
 
@@ -177,10 +177,9 @@ export function prepareData(data) {
 }
 
 /**
- * Get articles for workspace view
  *
  * @param commit
- * @param { int } workspace_id
+ * @param workspace_id
  * @returns {Promise<void>}
  */
 export async function getArticles({commit}, workspace_id) {
@@ -192,4 +191,63 @@ export async function getArticles({commit}, workspace_id) {
     commit(TOGGLE_ARTICLES_LOADING, true);
   }
   commit(TOGGLE_ARTICLES_LOADING, false);
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ */
+export function showArticleModal({commit}, data) {
+  commit(SHOW_ARTICLE_MODAL, data);
+}
+
+/**
+ *
+ * @param commit
+ */
+export function hideArticleModal({commit}) {
+  commit(HIDE_ARTICLE_MODAL);
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function createArticle({commit}, data) {
+  let response = await httpService.post(articlesUrl, data);
+  if (response.success) {
+    commit(CREATE_ARTICLE, response.body);
+  }
+  return response;
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function updateArticle({commit}, data) {
+  let response = await httpService.put(`${articlesUrl}/${data.id}`, data);
+  if (response.success) {
+    commit(UPDATE_ARTICLE, response.body);
+  }
+  return response;
+}
+
+/**
+ *
+ * @param commit
+ * @param id
+ * @returns {Promise<unknown>}
+ */
+export async function deleteArticle({commit}, id) {
+  const response = await httpService.delete(`${articlesUrl}/${id}`);
+  if (response.success) {
+    commit(REMOVE_ARTICLE, id);
+  }
+  return response;
 }
