@@ -1,5 +1,8 @@
 <template>
-  <div class="row">
+  <div v-if="loading">
+    <content-spinner show/>
+  </div>
+  <div v-else class="row">
     <div class="col-md-12">
       <div class="row">
         <div class="col-md-12 text-right pb-3">
@@ -10,7 +13,6 @@
         </div>
       </div>
       <div class="timeline-records">
-        <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
         <no-data :model="timelineData" :loading="loading" :text="$t('Nothing is shared on timeline')"></no-data>
         <template v-if="!loading">
           <TimelineItem v-for="(timeline, index) in timelineData" :timeline="timeline"
