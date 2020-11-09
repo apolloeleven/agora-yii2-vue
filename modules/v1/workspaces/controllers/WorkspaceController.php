@@ -70,19 +70,4 @@ class WorkspaceController extends ActiveController
 
         return $breadCrumb;
     }
-
-    /**
-     * Get employees data by workspace id
-     *
-     * @param $workspaceId
-     * @return mixed
-     */
-    public function actionGetEmployees($workspaceId)
-    {
-        return UserResource::find()
-            ->byWorkspaceId($workspaceId)
-            ->active()
-            ->orderByName()
-            ->all();
-    }
 }
