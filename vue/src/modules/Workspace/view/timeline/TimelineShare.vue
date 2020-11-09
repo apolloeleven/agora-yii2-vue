@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import InputWidget from "../../core/components/input-widget/InputWidget";
+import InputWidget from "@/core/components/input-widget/InputWidget";
 import TimelineFormModel from "./TimelineFormModel";
 import {mapActions, createNamespacedHelpers} from 'vuex';
-import {EDIT_TIMELINE, eventBus, SHARE_ARTICLE, SHARE_FILE, SHARE_TO_TIMELINE} from "../../core/services/event-bus";
+import {EDIT_TIMELINE, eventBus, SHARE_ARTICLE, SHARE_FILE, SHARE_TO_TIMELINE} from "@/core/services/event-bus";
 
 const {mapState, mapActions: mapTimelineActions} = createNamespacedHelpers('timeline');
 

@@ -71,13 +71,13 @@
 </template>
 
 <script>
-import DropdownButton from "../Workspace/components/DropdownButton";
-import fileService from '../../core/services/fileService';
+import DropdownButton from "../../../Workspace/components/DropdownButton";
+import fileService from '@/core/services/fileService';
 import {createNamespacedHelpers} from "vuex";
-import {SHARE_ARTICLE, SHARE_FILE} from "../../core/services/event-bus";
-import CommentItem from "../Workspace/comment/CommentItem";
-import AddComment from "../Workspace/comment/AddComment";
-import LikeUnlikeButton from "../Workspace/components/LikeUnlikeButton";
+import {SHARE_ARTICLE, SHARE_FILE} from "@/core/services/event-bus";
+import CommentItem from "../../../Workspace/comment/CommentItem";
+import AddComment from "../../../Workspace/comment/AddComment";
+import LikeUnlikeButton from "../../../Workspace/components/LikeUnlikeButton";
 
 const {mapState} = createNamespacedHelpers('user');
 

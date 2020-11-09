@@ -22,9 +22,9 @@
 
 <script>
 import {createNamespacedHelpers} from "vuex";
-import ContentSpinner from "../../core/components/ContentSpinner";
+import ContentSpinner from "@/core/components/ContentSpinner";
 import TimelineFormModel from "./TimelineFormModel";
-import InputWidget from "../../core/components/input-widget/InputWidget";
+import InputWidget from "@/core/components/input-widget/InputWidget";
 
 const {mapState, mapActions} = createNamespacedHelpers('timeline');
 const {mapState: mapStateWorkspace} = createNamespacedHelpers('workspace');

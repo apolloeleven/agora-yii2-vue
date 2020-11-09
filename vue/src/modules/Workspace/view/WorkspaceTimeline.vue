@@ -24,7 +24,7 @@
 <script>
 import ContentSpinner from "@/core/components/ContentSpinner";
 import NoData from "@/modules/Workspace/components/NoData";
-import TimelineItem from "@/modules/Timeline/TimelineItem";
+import TimelineItem from "@/modules/Workspace/view/timeline/TimelineItem";
 import {createNamespacedHelpers} from "vuex";
 
 const {mapActions: mapTimelineActions, mapState: mapTimelineState} = createNamespacedHelpers('timeline');
