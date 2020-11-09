@@ -17,6 +17,10 @@ import WorkspaceView from "@/modules/Workspace/workspace/WorkspaceView";
 import ArticleView from "@/modules/Workspace/article/ArticleView";
 import EmployeeList from "@/modules/setup/employees/EmployeeList";
 import Orgchart from "../modules/Orgchart/Orgchart";
+import WorkspaceTimeline from "@/modules/Workspace/workspace/view/WorkspaceTimeline";
+import WorkspaceFiles from "@/modules/Workspace/workspace/view/WorkspaceFiles";
+import WorkspaceArticles from "@/modules/Workspace/workspace/view/WorkspaceArticles";
+import WorkspaceAbout from "@/modules/Workspace/workspace/view/WorkspaceAbout";
 
 Vue.use(Router);
 
@@ -71,7 +75,19 @@ const router = new Router({
         {path: '/profile', name: 'profile', component: Profile,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
         {path: '/workspace', name: 'workspace', component: Workspace},
-        {path: '/workspace/:id', name: 'workspace.view', component: WorkspaceView},
+        {
+          path: '/workspace/:id',
+          name: 'workspace.view',
+          component: WorkspaceView,
+          redirect: 'workspace/:id/timeline',
+          meta: {requiresAuth: true},
+          children: [
+            {path: 'timeline', name: 'workspace.timeline', component: WorkspaceTimeline},
+            {path: 'files', name: 'workspace.files', component: WorkspaceFiles},
+            {path: 'articles', name: 'workspace.articles', component: WorkspaceArticles},
+            {path: 'about', name: 'workspace.about', component: WorkspaceAbout},
+          ]
+        },
         {path: '/article/:id', name: 'article.view', component: ArticleView},
       ]
     },
