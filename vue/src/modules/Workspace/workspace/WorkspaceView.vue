@@ -38,7 +38,7 @@
       <div class="content-wrapper p-3">
         <div class="row">
           <div class="col-sm-12 col-lg-6 col-xl-7 mb-4 order-lg-3 col-folders">
-            <h4 class="border-bottom pb-1 mb-3 pb-2">{{ $t('Folders') }}</h4>
+            <!--<h4 class="border-bottom pb-1 mb-3 pb-2">{{ $t('Folders') }}</h4>
             <div class="folder-list">
               <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
               <no-data :model="articles" :loading="loading" :text="$t('There are no folders')"/>
@@ -46,7 +46,11 @@
                 <ArticleItem class="mb-2 col-md-12 col-xl-6" v-for="(article, index) in articles"
                              :article="article" :index="index" :key="`article-item-${article.id}`">
                 </ArticleItem>
-              </div>
+              </div>-->
+            <h4 class="border-bottom pb-1 mb-3 pb-2">{{ $t('File Manager') }}</h4>
+            <div class="folder-list">
+              <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
+              <FileManager :model="articles"/>
             </div>
           </div>
           <div class="col-sm-12 col-lg-6 col-xl-5 order-lg-2 mb-4 col-timeline">
@@ -77,6 +81,7 @@ import ContentSpinner from "../../../core/components/ContentSpinner";
 import NoData from "../components/NoData";
 import WorkspaceUsers from "./WorkspaceUsers";
 import TimelineItem from "../../Timeline/TimelineItem";
+import FileManager from "../file-manager/FileManager";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace')
 const {mapState: mapArticleStates, mapActions: mapArticleActions} = createNamespacedHelpers('article')
@@ -84,7 +89,7 @@ const {mapActions: mapTimelineActions, mapState: mapTimelineState} = createNames
 
 export default {
   name: "WorkspaceView",
-  components: {TimelineItem, WorkspaceUsers, NoData, ContentSpinner, ArticleItem, BackButton},
+  components: {FileManager, TimelineItem, WorkspaceUsers, NoData, ContentSpinner, ArticleItem, BackButton},
   data() {
     return {
       visible: false,
