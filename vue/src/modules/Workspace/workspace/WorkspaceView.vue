@@ -4,10 +4,6 @@
       <back-button/>
       <b-breadcrumb :items="breadCrumb" class="d-none d-sm-flex"></b-breadcrumb>
       <WorkspaceUsers :model="employees"/>
-      <b-button @click="showModal" variant="info">
-        <i class="fas fa-plus-circle"/>
-        {{ $t('Create new folder') }}
-      </b-button>
     </div>
 
     <sided-nav-layout :items="items"/>
