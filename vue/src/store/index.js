@@ -6,6 +6,7 @@ import timeline from './modules/timeline';
 import employee from './modules/employee'
 import workspace from './modules/workspaces/workspace';
 import article from './modules/workspaces/article';
+import fileManager from './modules/workspaces/file-manager';
 import httpService from "../core/services/httpService";
 import {SHARE_ARTICLE, SHARE_FILE} from "@/core/services/event-bus";
 
@@ -71,6 +72,7 @@ export default new Vuex.Store({
     employee,
     workspace,
     article,
-    timeline
+    timeline,
+    fileManager,
   }
 });

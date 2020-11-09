@@ -34,7 +34,7 @@ export default {
       if (this.type === 'workspace') {
         this.showWorkspaceModal(this.model)
       } else if (this.type === 'folder') {
-        this.showFolderModal(this.model.item)
+        this.showFolderModal(this.model)
       } else if (this.type === 'article') {
         this.showArticleModal({isArticle: true, article: this.model})
       } else if (this.type === 'timeline') {

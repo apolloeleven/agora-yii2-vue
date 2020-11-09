@@ -1,27 +1,25 @@
 <template>
   <div class="attachments">
     <b-card no-body class="attachment-card">
-      <template v-slot:header>
-        <h5 class="mb-0">{{ $t('File Manager') }}</h5>
-        <b-button class="p-0" variant="link" size="lg" id="attachment-technical-notes">
-          <i class="fas fa-question-circle"/>
-        </b-button>
-      </template>
       <b-card-body>
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <div class="upload-btn-wrapper">
-            <b-button variant="success">
-              <i class="fas fa-cloud-upload-alt"/>
-              {{ $t('Upload') }}
-              <input class="input-file" id="file" type="file" name="file" multiple/>
-            </b-button>
-            &nbsp;<b-button @click="showModal" variant="info">
+          <div>
+            <div class="file-manager-btn-wrapper">
+              <b-button variant="success">
+                <i class="fas fa-cloud-upload-alt"/>
+                {{ $t('Upload') }}
+                <input class="input-file" id="file" type="file" name="file" @change="onFileChoose" multiple/>
+              </b-button>
+            </div>
+            <div class="file-manager-btn-wrapper">
+              <b-button @click="showModal" variant="info">
               <i class="fas fa-plus-circle"/>
               {{ $t('Create folder') }}
             </b-button>
+            </div>
           </div>
         </div>
-        <b-table small striped hover :items="articleFiles" no-local-sorting :fields="fields">
+        <b-table small striped hover :items="foldersAndFiles" no-local-sorting :fields="fields">
           <template v-slot:table-busy>
             <div class="text-center text-danger my-2">
               <b-spinner class="align-middle"/>
@@ -40,27 +38,34 @@
                 <i class="far fa-edit"/>
                 {{ $t('Edit Label') }}
               </b-dropdown-item>
+              <EditButton :model="data.item" type="folder"/>
+              <DeleteButton :model="data.item" type="folder"/>
             </b-dropdown>
           </template>
         </b-table>
       </b-card-body>
     </b-card>
+    <FolderForm/>
   </div>
 </template>
 
 <script>
 
 import {createNamespacedHelpers} from "vuex";
+import FolderForm from "./FolderForm";
+import EditButton from "../components/EditButton";
+import DeleteButton from "../components/DeleteButton";
 
-const {mapState, mapActions} = createNamespacedHelpers('article');
+const {mapState, mapActions} = createNamespacedHelpers('fileManager');
 
 export default {
   name: "FileManager",
+  components: {DeleteButton, EditButton, FolderForm},
   props: {
     model: Array
   },
   computed: {
-    ...mapState(['articleFiles']),
+    ...mapState(['foldersAndFiles']),
     fields() {
       return [
         {key: 'checkbox', label: ''},
@@ -70,16 +75,32 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['showFolderModal', 'getFoldersByWorkspace']),
     showEditLabelModal(file) {
       this.showEditLabelDialog(file)
     },
     showModal() {
-      this.showArticleModal({isArticle: false, article: null})
+      this.showFolderModal(null)
     },
+    async onFileChoose(ev) {
+      console.log(ev)
+    }
+  },
+  mounted() {
+    const workspaceId = this.$route.params.id;
+
+    this.getFoldersByWorkspace(workspaceId);
   },
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+.attachments {
+  .file-manager-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    margin: 2px;
+  }
+}
 </style>
