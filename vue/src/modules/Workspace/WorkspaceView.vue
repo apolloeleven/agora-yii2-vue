@@ -34,7 +34,6 @@
 <script>
 import BackButton from "./components/BackButton";
 import {createNamespacedHelpers} from "vuex";
-import ArticleItem from "./article/ArticleItem";
 import ContentSpinner from "../../core/components/ContentSpinner";
 import NoData from "./components/NoData";
 import WorkspaceUsers from "./WorkspaceUsers";
@@ -45,7 +44,7 @@ const {mapState: mapArticleStates, mapActions: mapArticleActions} = createNamesp
 
 export default {
   name: "WorkspaceView",
-  components: {SidedNavLayout, WorkspaceUsers, NoData, ContentSpinner, ArticleItem, BackButton},
+  components: {SidedNavLayout, WorkspaceUsers, NoData, ContentSpinner, BackButton},
   data() {
     return {
       visible: false,

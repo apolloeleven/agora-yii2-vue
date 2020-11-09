@@ -14,7 +14,6 @@ import UserInvitations from "@/modules/setup/invitations/UserInvitations";
 import Profile from "@/modules/User/Profile";
 import Workspace from "@/modules/Workspace/Workspace";
 import WorkspaceView from "@/modules/Workspace/WorkspaceView";
-import ArticleView from "@/modules/Workspace/article/ArticleView";
 import EmployeeList from "@/modules/setup/employees/EmployeeList";
 import Orgchart from "../modules/Orgchart/Orgchart";
 import Timeline from "@/modules/Workspace/view/timeline/Timeline";
@@ -88,7 +87,6 @@ const router = new Router({
             {path: 'about', name: 'workspace.about', component: WorkspaceAbout},
           ]
         },
-        {path: '/article/:id', name: 'article.view', component: ArticleView},
       ]
     },
     {
