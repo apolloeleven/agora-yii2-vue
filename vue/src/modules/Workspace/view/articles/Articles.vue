@@ -1,5 +1,8 @@
 <template>
-  <div class="articles-wrapper">
+  <div v-if="loading">
+    <content-spinner show/>
+  </div>
+  <div v-else class="articles-wrapper">
     <div class="row">
       <div class="col-md-12 text-right pb-3">
         <b-button @click="onCreateArticleClick" size="sm" variant="outline-primary">
@@ -31,16 +34,18 @@
 
 import {createNamespacedHelpers} from "vuex";
 import DropdownButtons from "@/core/components/DropdownButtons";
+import ContentSpinner from "@/core/components/ContentSpinner";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "Articles",
-  components: {DropdownButtons},
+  components: {ContentSpinner, DropdownButtons},
   computed: {
     ...mapState({
       workspace: state => state.currentWorkspace,
-      articles: state => state.view.articles.data
+      articles: state => state.view.articles.data,
+      loading: state => state.view.articles.loading,
     })
   },
   methods: {

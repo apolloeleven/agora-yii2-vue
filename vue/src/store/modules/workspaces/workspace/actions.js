@@ -183,12 +183,12 @@ export function prepareData(data) {
  * @returns {Promise<void>}
  */
 export async function getArticles({commit}, workspace_id) {
+  commit(TOGGLE_ARTICLES_LOADING, true);
   const {success, body} = await httpService.get(articlesUrl, {
     params: {workspace_id, sort: 'title'}
   })
   if (success) {
     commit(GET_ARTICLES, body);
-    commit(TOGGLE_ARTICLES_LOADING, true);
   }
   commit(TOGGLE_ARTICLES_LOADING, false);
 }
