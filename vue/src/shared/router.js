@@ -19,7 +19,7 @@ import EmployeeList from "@/modules/setup/employees/EmployeeList";
 import Orgchart from "../modules/Orgchart/Orgchart";
 import Timeline from "@/modules/Workspace/view/timeline/Timeline";
 import WorkspaceFiles from "@/modules/Workspace/view/WorkspaceFiles";
-import WorkspaceArticles from "@/modules/Workspace/view/WorkspaceArticles";
+import Articles from "@/modules/Workspace/view/articles/Articles";
 import WorkspaceAbout from "@/modules/Workspace/view/WorkspaceAbout";
 
 Vue.use(Router);
@@ -84,7 +84,7 @@ const router = new Router({
           children: [
             {path: 'timeline', name: 'workspace.timeline', component: Timeline},
             {path: 'files', name: 'workspace.files', component: WorkspaceFiles},
-            {path: 'articles', name: 'workspace.articles', component: WorkspaceArticles},
+            {path: 'articles', name: 'workspace.articles', component: Articles},
             {path: 'about', name: 'workspace.about', component: WorkspaceAbout},
           ]
         },
