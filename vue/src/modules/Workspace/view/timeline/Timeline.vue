@@ -30,7 +30,7 @@ import {createNamespacedHelpers} from "vuex";
 const {mapActions: mapTimelineActions, mapState: mapTimelineState} = createNamespacedHelpers('timeline');
 
 export default {
-  name: "WorkspaceTimeline",
+  name: "Timeline",
   components: {TimelineItem, NoData, ContentSpinner},
   computed: {
     ...mapTimelineState({

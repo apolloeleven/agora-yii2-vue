@@ -17,7 +17,7 @@ import WorkspaceView from "@/modules/Workspace/WorkspaceView";
 import ArticleView from "@/modules/Workspace/article/ArticleView";
 import EmployeeList from "@/modules/setup/employees/EmployeeList";
 import Orgchart from "../modules/Orgchart/Orgchart";
-import WorkspaceTimeline from "@/modules/Workspace/view/WorkspaceTimeline";
+import Timeline from "@/modules/Workspace/view/timeline/Timeline";
 import WorkspaceFiles from "@/modules/Workspace/view/WorkspaceFiles";
 import WorkspaceArticles from "@/modules/Workspace/view/WorkspaceArticles";
 import WorkspaceAbout from "@/modules/Workspace/view/WorkspaceAbout";
@@ -82,7 +82,7 @@ const router = new Router({
           redirect: 'workspace/:id/timeline',
           meta: {requiresAuth: true},
           children: [
-            {path: 'timeline', name: 'workspace.timeline', component: WorkspaceTimeline},
+            {path: 'timeline', name: 'workspace.timeline', component: Timeline},
             {path: 'files', name: 'workspace.files', component: WorkspaceFiles},
             {path: 'articles', name: 'workspace.articles', component: WorkspaceArticles},
             {path: 'about', name: 'workspace.about', component: WorkspaceAbout},
