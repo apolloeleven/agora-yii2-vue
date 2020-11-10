@@ -25,7 +25,7 @@
 
 <script>
 import ContentSpinner from "@/core/components/ContentSpinner";
-import NoData from "@/modules/Workspace/components/NoData";
+import NoData from "@/core/components/NoData";
 import TimelineItem from "@/modules/Workspace/view/timeline/TimelineItem";
 import {createNamespacedHelpers} from "vuex";
 

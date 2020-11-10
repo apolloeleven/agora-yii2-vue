@@ -4,7 +4,6 @@ import setup from './modules/setup';
 import user from './modules/user';
 import employee from './modules/employee'
 import workspace from './modules/workspaces';
-import article from './modules/workspaces/article';
 import httpService from "../core/services/httpService";
 import {SHARE_ARTICLE, SHARE_FILE} from "@/core/services/event-bus";
 
@@ -69,6 +68,5 @@ export default new Vuex.Store({
     user,
     employee,
     workspace,
-    article,
   }
 });

@@ -27,14 +27,6 @@ import {
   WORKSPACE_DELETED,
 } from './mutation-types';
 import httpService from "../../../core/services/httpService";
-import {
-  ADD_CHILD_COMMENT,
-  ADD_COMMENT,
-  DELETE_ARTICLE_COMMENT,
-  DELETE_CHILD_COMMENT,
-  LIKE,
-  UNLIKE
-} from "./article/mutation-types";
 
 const url = '/v1/workspaces/workspace';
 const articlesUrl = '/v1/workspaces/article';
