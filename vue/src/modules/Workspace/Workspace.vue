@@ -26,7 +26,7 @@
                   </router-link>
                 </b-card-title>
               </b-card-body>
-              <dropdown-button :model="workspace" type="workspace"/>
+              <dropdown-buttons :item="workspace" @editClicked="onEditClicked" @removeClicked="onRemoveClicked"/>
             </b-card>
           </div>
         </div>
@@ -38,13 +38,13 @@
 <script>
 import {createNamespacedHelpers} from "vuex";
 import ContentSpinner from "@/core/components/ContentSpinner";
-import DropdownButton from "@/modules/Workspace/components/DropdownButton";
+import DropdownButtons from "@/core/components/DropdownButtons";
 
-const {mapState, mapActions} = createNamespacedHelpers('workspace');
+const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "Workspace",
-  components: {DropdownButton, ContentSpinner},
+  components: {DropdownButtons, ContentSpinner},
   data() {
     return {
       breadCrumb: [
@@ -55,12 +55,30 @@ export default {
     }
   },
   computed: {
-    ...mapState(['loading', 'workspaces'])
+    ...mapWorkspaceState({
+      loading: state => state.view.loading,
+      workspaces: state => state.workspaces,
+    })
   },
   methods: {
-    ...mapActions(['showWorkspaceModal', 'getWorkspaces']),
+    ...mapWorkspaceActions(['showWorkspaceModal', 'getWorkspaces', 'deleteWorkspace']),
     showModal() {
       this.showWorkspaceModal(null)
+    },
+    onEditClicked(workspace) {
+      this.showWorkspaceModal(workspace)
+    },
+    async onRemoveClicked(workspace) {
+      const result = await this.$confirm(this.$t('All users and timeline records will be removed from this workspace. Are you sure you want to continue?'),
+        this.$t('This operation can not be undone'))
+      if (result) {
+        const res = await this.deleteWorkspace(workspace);
+        if (res.success) {
+          this.$toast(this.$t(`The workspace '{name}' was successfully deleted`, {name: workspace.name}));
+        } else {
+          this.$toast(res.body.message, 'danger');
+        }
+      }
     },
   },
   created() {

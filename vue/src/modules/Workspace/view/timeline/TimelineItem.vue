@@ -66,24 +66,25 @@
         :key="`timeline-item-comment-${index}`">
       </CommentItem>
     </b-card-body>
-    <dropdown-button :model="timeline" type="timeline" :permissionForEdit="isAllowed"/>
+    <dropdown-buttons :item="timeline" @editClicked="onEditClicked" @removeClicked="onRemoveClicked"/>
   </b-card>
 </template>
 
 <script>
-import DropdownButton from "../../../Workspace/components/DropdownButton";
 import fileService from '@/core/services/fileService';
 import {createNamespacedHelpers} from "vuex";
 import {SHARE_ARTICLE, SHARE_FILE} from "@/core/services/event-bus";
 import CommentItem from "../../../Workspace/comment/CommentItem";
 import AddComment from "../../../Workspace/comment/AddComment";
 import LikeUnlikeButton from "../../../Workspace/components/LikeUnlikeButton";
+import DropdownButtons from "../../../../core/components/DropdownButtons";
 
 const {mapState} = createNamespacedHelpers('user');
+const {mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "TimelineItem",
-  components: {LikeUnlikeButton, AddComment, CommentItem, DropdownButton},
+  components: {DropdownButtons, LikeUnlikeButton, AddComment, CommentItem},
   props: {
     index: Number,
     timeline: Object
@@ -104,12 +105,28 @@ export default {
     },
   },
   methods: {
+    ...mapWorkspaceActions(['showTimelineModal', 'deleteTimelinePost']),
     isImage(url) {
       return fileService.isImage(url)
     },
     isVideo(url) {
       return fileService.isVideo(url)
     },
+    onEditClicked() {
+      this.showTimelineModal(this.timeline);
+    },
+    async onRemoveClicked() {
+      const result = await this.$confirm(this.$t('All timeline records and attachments will be deleted from this timeline. Are you sure you want to continue?'),
+        this.$t('This operation can not be undone'))
+      if (result) {
+        const res = await this.deleteTimelinePost(this.timeline);
+        if (res.success) {
+          this.$toast(this.$t(`The timeline item was successfully deleted`));
+        } else {
+          this.$toast(res.body.message, 'danger');
+        }
+      }
+    }
   },
 }
 </script>
