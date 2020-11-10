@@ -39,7 +39,7 @@ import ContentSpinner from "@/core/components/ContentSpinner";
 const {mapState, mapActions} = createNamespacedHelpers('workspace');
 
 export default {
-  name: "Articles",
+  name: "WorkspaceArticles",
   components: {ContentSpinner, DropdownButtons},
   computed: {
     ...mapState({
