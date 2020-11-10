@@ -74,4 +74,20 @@ class FolderQuery extends ActiveQuery
     {
         return $this->andWhere([Folder::tableName() . '.depth' => 0]);
     }
+
+    /**
+     * @return FolderQuery
+     */
+    public function byName($name)
+    {
+        return $this->andWhere([Folder::tableName() . '.name' => $name]);
+    }
+
+    /**
+     * @return FolderQuery
+     */
+    public function isFile()
+    {
+        return $this->andWhere([Folder::tableName() . '.is_file' => 1]);
+    }
 }

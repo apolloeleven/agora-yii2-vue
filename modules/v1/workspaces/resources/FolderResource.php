@@ -4,11 +4,16 @@
 namespace app\modules\v1\workspaces\resources;
 
 
+use app\helpers\ModelHelper;
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\Folder;
 use app\rest\ValidationException;
 use Yii;
+use yii\base\ErrorException;
+use yii\base\Exception;
 use yii\db\ActiveQuery;
+use yii\helpers\FileHelper;
+use yii\web\UploadedFile;
 
 /**
  * Class FolderResource
@@ -18,6 +23,8 @@ use yii\db\ActiveQuery;
 class FolderResource extends Folder
 {
     const VIDEO = 'video';
+
+    public $share_count;
 
     public function fields()
     {
@@ -77,4 +84,51 @@ class FolderResource extends Folder
 
         return true;
     }
+
+    /**
+     * Load for image upload
+     *
+     * @param array $data
+     * @param null $formName
+     * @return bool
+     */
+    public function load($data, $formName = null)
+    {
+        $this->image = UploadedFile::getInstanceByName('image');
+
+        return parent::load($data, $formName);
+    }
+
+    /**
+     * Upload image
+     *
+     * @param bool $runValidation
+     * @param null $attributeNames
+     * @return bool
+     * @throws Exception
+     * @throws ErrorException
+     */
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if (!$this->image) {
+            return parent::save($runValidation, $attributeNames);
+        }
+        if (ModelHelper::isImage($this->image->extension)) {
+            ModelHelper::deleteImage($this->file_path);
+
+            $dirPath = '/folders';
+            $this->mime = $this->image->type;
+            $this->size = $this->image->size;
+            $this->file_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '/' . $this->image->name;
+
+            $fullPath = Yii::getAlias('@storage' . $this->file_path);
+            if (!is_dir(dirname($fullPath))) FileHelper::createDirectory(dirname($fullPath));
+            if (!$this->image->saveAs($fullPath, false)) {
+                throw new ValidationException(Yii::t('app', 'File not uploaded'));
+            }
+        }
+
+        return parent::save($runValidation, $attributeNames);
+    }
+
 }

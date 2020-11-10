@@ -5,8 +5,12 @@ namespace app\modules\v1\workspaces\controllers;
 
 use app\modules\v1\workspaces\resources\FolderResource;
 use app\rest\ActiveController;
+use app\rest\ValidationException;
 use Yii;
+use yii\base\ErrorException;
+use yii\base\Exception;
 use yii\data\ActiveDataProvider;
+use yii\web\UploadedFile;
 
 /**
  * Class FolderController
@@ -38,6 +42,12 @@ class FolderController extends ActiveController
         ]);
     }
 
+    /**
+     * @return array|mixed
+     * @throws ValidationException
+     * @throws Exception
+     * @throws ErrorException
+     */
     public function actionCreate()
     {
         $request = Yii::$app->request;
@@ -54,17 +64,79 @@ class FolderController extends ActiveController
             $workspaceId = $parentFolder->workspace_id;
         }
 
-        $folder = new FolderResource();
+        if ($isFile) {
+            $attachFiles = UploadedFile::getInstancesByName('files');
+            if (!$attachFiles) {
+                throw new ValidationException(Yii::t('app', 'Unable to find files'));
+            }
 
-        $folder->name = $request->post('name');
-        $folder->body = $request->post('body');
-        $folder->workspace_id = $workspaceId;
-        $folder->is_file = $isFile ? 1 : 0;
+            $attachments = [];
 
-        if ((!$folder->load($request->post(), '')) && !$folder->validate()) {
-            return $this->validationError($folder->getFirstErrors());
+            foreach ($attachFiles as $attachFile) {
+                if ($folderId) {
+                    $folder = FolderResource::find()
+                        ->byParentId($folderId)
+                        ->byName($attachFile->name)
+                        ->isFile()
+                        ->one();
+                    $fileExist = true;
+                } else {
+                    $folder = FolderResource::find()
+                        ->byWorkspaceId($workspaceId)
+                        ->byName($attachFile->name)
+                        ->isFile()
+                        ->one();
+                    $fileExist = true;
+                }
+
+                // if exist same name file overwrite
+                if (!$folder) {
+                    $fileExist = false;
+                    $folder = new FolderResource();
+                    $folder->is_file = 1;
+                    $folder->workspace_id = $workspaceId;
+                }
+
+                if (!$folder->uploadFile($attachFile)) {
+                    throw new ValidationException(Yii::t('app', 'Unable to upload attachment'));
+                }
+
+                if ($fileExist) {
+                    if (!$folder->save()) {
+                        return $this->validationError($folder->getFirstErrors());
+                    }
+                } else {
+                    $this->nestedSetModel($folderId, $folder, $parentFolder);
+                }
+                $attachments[] = $attachFile;
+            }
+            return $this->response($attachments, 201);
+        } else {
+            $folder = new FolderResource();
+            $folder->name = $request->post('name');
+            $folder->body = $request->post('body');
+            $folder->workspace_id = $workspaceId;
+            $folder->is_file = $isFile ? 1 : 0;
+
+            if ((!$folder->load($request->post(), '')) && !$folder->validate()) {
+                return $this->validationError($folder->getFirstErrors());
+            }
+
+            $this->nestedSetModel($folderId, $folder, $parentFolder);
+
+            return $this->response($folder, 201);
         }
+    }
 
+    /**
+     *
+     *
+     * @param $folderId
+     * @param $folder
+     * @param $parentFolder
+     */
+    private function nestedSetModel($folderId, $folder, $parentFolder)
+    {
         if (!$folderId) {
             if (!$folder->makeRoot()) {
                 $this->validationError($folder->getFirstErrors());
@@ -75,8 +147,6 @@ class FolderController extends ActiveController
                 $this->validationError($folder->getFirstErrors());
             }
         }
-
-        return $this->response($folder, 201);
     }
 
     /**

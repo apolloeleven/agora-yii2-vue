@@ -4,12 +4,16 @@ namespace app\modules\v1\workspaces\models;
 
 use app\modules\v1\users\models\User;
 use app\modules\v1\workspaces\models\query\FolderQuery;
+use app\rest\ValidationException;
 use creocoder\nestedsets\NestedSetsBehavior;
 use Yii;
+use yii\base\Exception;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\FileHelper;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "{{%folders}}".
@@ -42,6 +46,8 @@ use yii\db\ActiveRecord;
  */
 class Folder extends ActiveRecord
 {
+    public $image;
+
     /**
      * {@inheritdoc}
      */
@@ -80,6 +86,7 @@ class Folder extends ActiveRecord
             [['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Folder::class, 'targetAttribute' => ['parent_id' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
             [['workspace_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workspace::class, 'targetAttribute' => ['workspace_id' => 'id']],
+            [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, gif, jpg']
         ];
     }
 
@@ -166,5 +173,33 @@ class Folder extends ActiveRecord
     public function getWorkspace()
     {
         return $this->hasOne(Workspace::class, ['id' => 'workspace_id']);
+    }
+
+
+    /**
+     * Upload file
+     *
+     * @param UploadedFile $file
+     * @return bool
+     * @throws Exception
+     */
+    public function uploadFile(UploadedFile $file)
+    {
+        $path = '/files';
+        $fullPath = Yii::getAlias('@storage' . $path);
+
+        if (!file_exists($fullPath) && !FileHelper::createDirectory($fullPath)) {
+            throw new ValidationException(Yii::t('app', 'Unable to upload file'));
+        }
+
+        $this->name = $file->name;
+        $this->mime = $file->type;
+        $this->size = $file->size;
+        $this->file_path = $path . '/' . Yii::$app->security->generateRandomString() . '.' . $file->extension;
+
+        if (!$file->saveAs(Yii::getAlias('@storage/' . $this->file_path))) {
+            throw new ValidationException(Yii::t('app', "File was NOT uploaded at '$this->file_path'"));
+        }
+        return true;
     }
 }
