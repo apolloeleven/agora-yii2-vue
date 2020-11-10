@@ -34,6 +34,7 @@ class FolderResource extends Folder
             'body',
             'label',
             'depth',
+            'size',
             'is_file',
             'file_path',
             'mime' => function () {
@@ -65,6 +66,16 @@ class FolderResource extends Folder
     public function getCreatedBy()
     {
         return $this->hasOne(UserResource::class, ['id' => 'created_by']);
+    }
+
+    /**
+     * Gets query for [[UpdatedBy]].
+     *
+     * @return ActiveQuery
+     */
+    public function getUpdatedBy()
+    {
+        return $this->hasOne(UserResource::class, ['id' => 'updated_by']);
     }
 
 

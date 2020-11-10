@@ -25,6 +25,18 @@ const STATE = {
         object: null,
       }
     },
+    folders: {
+      loading: false,
+      folderAndFiles: [],
+      folder: {},
+      data: [],
+      isFile: false,
+      modal: {
+        show: false,
+        object: null,
+      },
+      attachConfig: {},
+    },
   }
 };
 

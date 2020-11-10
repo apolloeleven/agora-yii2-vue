@@ -27,12 +27,26 @@ import {
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
+  GET_ATTACH_CONFIG,
+  SHOW_FOLDER_MODAL,
+  HIDE_FOLDER_MODAL,
+  GET_ALL_FOLDERS,
+  START_LOADING,
+  STOP_LOADING,
+  FOLDER_DELETED,
+  GET_BREAD_CRUMB,
+  GET_CURRENT_FOLDER,
+  GET_FILES,
+  SHOW_EDIT_LABEL_DIALOG,
+  HIDE_EDIT_LABEL_DIALOG,
+  UPDATE_LABEL,
 } from './mutation-types';
 import httpService from "../../../core/services/httpService";
 
 const url = '/v1/workspaces/workspace';
 const articlesUrl = '/v1/workspaces/article';
 const timelineUrl = '/v1/workspaces/timeline';
+const folderUrl = '/v1/workspaces/folder';
 
 const timelineExpand = `expand=article,createdBy,timelineComments.createdBy,timelineComments.childrenComments.createdBy,
 timelineComments.childrenComments.parent,userLikes,myLikes&sort=-created_at`
@@ -167,7 +181,7 @@ export function prepareData(data) {
     const tmp = new FormData();
     for (let key in data) {
       if (data.hasOwnProperty(key)) {
-        if (key === 'folder_in_folder') {
+        if (key === 'depth' || key === 'is_file') {
           tmp.append(key, data[key]);
         } else {
           tmp.append(key, data[key] || '');
@@ -411,4 +425,153 @@ export async function unlike({commit}, data) {
   if (success) {
     commit(TIMELINE_UNLIKE, data)
   }
+}
+
+/**
+ * Get attachment config data
+ *
+ * @param commit
+ * @returns {Promise<void>}
+ */
+export async function getAttachConfig({commit}) {
+  const {success, body} = await httpService.get(`${folderUrl}/get-attach-config`)
+  if (success) {
+    commit(GET_ATTACH_CONFIG, body)
+  }
+}
+
+/**
+ * Show folder form modal
+ *
+ * @param commit
+ * @param data
+ */
+export function showFolderModal({commit}, data) {
+  commit(SHOW_FOLDER_MODAL, data);
+}
+
+/**
+ * Hide folder form modal
+ *
+ * @param { function } commit
+ * @param { bool } hideModal
+ */
+export function hideFolderModal({commit}, hideModal) {
+  commit(HIDE_FOLDER_MODAL, hideModal);
+}
+
+/**
+ * @param payload
+ * @returns {Promise<unknown>}
+ * @param { Object } data
+ */
+export async function createFolder({dispatch}, data) {
+  return await httpService.post(folderUrl, prepareData(data));
+}
+
+/**
+ * @param dispatch
+ * @param { Object } data
+ * @returns {Promise<unknown>}
+ */
+export async function updateFolder({dispatch}, data) {
+  const id = data.id;
+  data = prepareData(data);
+
+  if (data instanceof FormData) {
+    data.append('_method', 'PUT');
+    return await httpService.post(`${folderUrl}/${id}`, data);
+  } else {
+    return await httpService.put(`${folderUrl}/${id}`, data);
+  }
+}
+
+/**
+ * @param commit
+ * @param { Object } data
+ * @returns {Promise<unknown>}
+ */
+export async function deleteFolder({commit}, data) {
+  const res = await httpService.delete(`${folderUrl}/${data.id}`);
+  if (res.success) {
+    commit(FOLDER_DELETED, data.id)
+  }
+  return res;
+}
+
+/**
+ * Get current article
+ *
+ * @param commit
+ * @param { int } folderId
+ * @returns {Promise<void>}
+ */
+export async function getCurrentFolder({commit}, folderId) {
+  const {success, body} = await httpService.get(`${folderUrl}/${folderId}?expand=workspace,createdBy`)
+  if (success) {
+    commit(GET_CURRENT_FOLDER, body);
+  }
+}
+
+/**
+ * Get folders for workspace view
+ *
+ * @param commit
+ * @param { int } workspaceId
+ * @returns {Promise<void>}
+ */
+export async function getFoldersByWorkspace({commit}, workspaceId) {
+  const {success, body} = await httpService.get(`${folderUrl}?workspace_id=${workspaceId}&sort=title&expand=updatedBy`)
+  if (success) {
+    commit(GET_ALL_FOLDERS, body)
+  }
+}
+
+/**
+ * Get folders by parent id for article view page
+ *
+ * @param commit
+ * @param { int } parentId
+ * @returns {Promise<void>}
+ */
+export async function getFoldersByParent({commit}, parentId) {
+  const {success, body} = await httpService.get(`${folderUrl}/by-parent?folderId=${parentId}&sort=title`)
+  if (success) {
+    commit(GET_ALL_FOLDERS, body)
+  }
+}
+
+/**
+ * Upload files
+ *
+ * @param dispatch
+ * @param payload
+ * @param data
+ * @param config
+ * @returns {Promise<unknown>}
+ */
+export async function attachFiles({dispatch}, {data, config}) {
+  return await httpService.post(folderUrl, prepareFiles(data), config)
+}
+
+/**
+ * Prepare file to upload
+ *
+ * @param data
+ * @returns {FormData}
+ */
+export function prepareFiles(data) {
+  const tmp = new FormData();
+  for (let key in data.files) {
+    if (data.files.hasOwnProperty(key)) {
+      tmp.append('files[]', data.files[key], data.files.name);
+    }
+  }
+  for (let key in data) {
+    if (data.hasOwnProperty(key) && data[key] !== 'files') {
+      tmp.append(key, data[key]);
+    }
+  }
+  data = tmp;
+  return data;
 }

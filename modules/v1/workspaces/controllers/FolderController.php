@@ -163,4 +163,19 @@ class FolderController extends ActiveController
             'query' => $query
         ]);
     }
+
+    /**
+     * Get attachment config data
+     *
+     * @return mixed
+     */
+    public function actionGetAttachConfig()
+    {
+        $phpConfig = [
+            'upload_max_filesize' => ['title' => 'Max file size', 'size' => ini_get('upload_max_filesize')],
+            'max_file_uploads' => ['title' => 'Max file uploads', 'size' => ini_get('max_file_uploads')],
+        ];
+
+        return $this->response($phpConfig);
+    }
 }

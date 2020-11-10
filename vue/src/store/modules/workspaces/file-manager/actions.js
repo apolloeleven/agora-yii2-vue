@@ -157,24 +157,6 @@ export function prepareData(data) {
 
 
 /**
- * Upload files
- *
- * @param dispatch
- * @param payload
- * @param data
- * @param config
- * @returns {Promise<unknown>}
- */
-export async function attachFiles({dispatch}, {data, config}) {
-  const res = await httpService.post(`${url}/attach-files`, prepareFiles(data), config)
-  if (res.success) {
-    dispatch('getFilesByFolder', data.folder_id);
-  }
-  return res;
-}
-
-
-/**
  * Get article files data by article
  *
  * @param commit

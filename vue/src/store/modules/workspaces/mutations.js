@@ -9,15 +9,21 @@ import {
   DELETE_TIMELINE_CHILD_COMMENT,
   DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
+  FOLDER_DELETED,
+  GET_ALL_FOLDERS,
   GET_ARTICLES,
+  GET_ATTACH_CONFIG,
+  GET_CURRENT_FOLDER,
   GET_CURRENT_WORKSPACE,
   GET_TIMELINE_DATA,
   GET_WORKSPACES,
   HIDE_ARTICLE_MODAL,
+  HIDE_FOLDER_MODAL,
   HIDE_TIMELINE_MODAL,
   HIDE_WORKSPACE_MODAL,
   REMOVE_ARTICLE,
   SHOW_ARTICLE_MODAL,
+  SHOW_FOLDER_MODAL,
   SHOW_TIMELINE_MODAL,
   SHOW_WORKSPACE_MODAL,
   TIMELINE_LIKE,
@@ -29,6 +35,7 @@ import {
   WORKSPACE_DELETED,
 } from './mutation-types';
 import _ from 'lodash';
+import {HIDE_EDIT_LABEL_DIALOG, SHOW_EDIT_LABEL_DIALOG} from "./file-manager/mutation-types";
 
 export default {
   /**
@@ -265,6 +272,51 @@ export default {
    */
   [CHANGE_TIMELINE_MODAL_LOADING](state, loading) {
     state.view.timeline.modal.loading = loading
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_ATTACH_CONFIG](state, data) {
+    state.view.folders.attachConfig = data
+  },
+  /**
+   * @param state
+   * @param { Object } data
+   */
+  [SHOW_FOLDER_MODAL](state, data) {
+    state.view.folders.modal.show = true;
+    state.view.folders.modal.object = data;
+  },
+  /**
+   * @param state
+   */
+  [HIDE_FOLDER_MODAL](state) {
+    state.view.folders.modal.show = false;
+    state.view.folders.modal.object = null;
+  },
+  /**
+   * @param state
+   * @param data
+   */
+  [GET_ALL_FOLDERS](state, data) {
+    state.view.folders.folderAndFiles = data;
+  },
+  /**
+   * @param state
+   * @param id
+   */
+  [FOLDER_DELETED](state, id) {
+    state.view.folders.folderAndFiles = state.view.folders.folderAndFiles.filter(a => a.id !== id)
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_CURRENT_FOLDER](state, data) {
+    state.view.folders.folder = data || {}
   },
 
 };

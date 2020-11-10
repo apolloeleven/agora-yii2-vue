@@ -29,15 +29,17 @@
           <template v-slot:cell(checkbox)="{item}">
             <b-form-checkbox v-model="item.selected" value="1" unchecked-value="0"/>
           </template>
+          <template v-slot:cell(size)="{item}">
+            {{ item.size | prettyBytes }}
+          </template>
+          <template v-slot:cell(updated_at)="{item}">
+            {{ item.updated_at | toDatetime }}
+          </template>
           <template v-slot:cell(actions)="data">
             <b-dropdown variant="link" toggle-class="text-decoration-none p-0" no-caret right>
               <template v-slot:button-content>
                 <i class="fas fa-ellipsis-v"/>
               </template>
-              <b-dropdown-item @click="showEditLabelModal(data.item)">
-                <i class="far fa-edit"/>
-                {{ $t('Edit Label') }}
-              </b-dropdown-item>
             </b-dropdown>
           </template>
         </b-table>
@@ -50,33 +52,36 @@
 <script>
 
 import {createNamespacedHelpers} from "vuex";
-import FolderForm from "../../file-manager/FolderForm";
+import FolderForm from "./FolderForm";
+import DropdownButtons from "../../../../core/components/DropdownButtons";
 
 const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "WorkspaceFiles",
-  components: {FolderForm},
+  components: {DropdownButtons, FolderForm},
   props: {
     model: Array
   },
   computed: {
-    ...mapState(['foldersAndFiles', 'currentFolder']),
-    ...mapArticleState(['attachConfig']),
+    ...mapWorkspaceState({
+      foldersAndFiles: state => state.view.folders.folderAndFiles,
+      currentFolder: state => state.view.folders.folder,
+      attachConfig: state => state.view.folders.attachConfig,
+    }),
     fields() {
       return [
         {key: 'checkbox', label: ''},
         {key: 'name', class: 'name', sortable: true},
-        {key: 'actions', class: 'text-center'}
+        {key: 'size', class: 'size', sortable: true},
+        {key: 'updated_at', sortable: true,},
+        {key: 'updatedBy.displayName', label: this.$i18n.t('Updated By'), sortable: true},
+        {key: 'actions', class: 'text-center'},
       ]
     },
   },
   methods: {
-    ...mapActions(['showFolderModal', 'getFoldersByWorkspace', 'attachFiles']),
-    ...mapArticleActions(['getAttachConfig']),
-    showEditLabelModal(file) {
-      this.showEditLabelDialog(file)
-    },
+    ...mapWorkspaceActions(['showFolderModal', 'getFoldersByWorkspace', 'attachFiles', 'getAttachConfig']),
     showModal() {
       this.showFolderModal(null)
     },
@@ -132,6 +137,7 @@ export default {
       const filesObject = {
         workspace_id: workspaceId,
         files: filesArray,
+        isFile: true,
       };
       const res = await this.attachFiles({
         data: filesObject,
@@ -164,12 +170,66 @@ export default {
 </script>
 
 <style lang="scss">
-.attachments {
+.file-manager-card {
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.technical-notes {
+  list-style: none;
+  padding-left: 10px;
+  font-size: 16px;
+}
+
+.technical-notes-headline {
+  margin: 0;
+  padding-left: 5px;
+  font-style: italic;
+}
+
+.file-manager {
+  .attachment-icon {
+    font-size: 18px;
+  }
+
   .file-manager-btn-wrapper {
     position: relative;
     overflow: hidden;
     display: inline-block;
     margin: 2px;
+  }
+
+  .attachment-name {
+    cursor: pointer;
+  }
+
+  .attachment-name:hover {
+    color: #3989c6 !important;
+  }
+
+  .input-file {
+    font-size: 20px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+  }
+
+  td.name {
+    word-break: break-all;
+  }
+
+  td.size {
+    white-space: nowrap;
+  }
+
+  .action-button-wrapper {
+    button {
+      margin-left: 10px;
+    }
   }
 }
 </style>

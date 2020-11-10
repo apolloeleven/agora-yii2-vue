@@ -15,13 +15,11 @@
 </template>
 
 <script>
-import InputWidget from "../../../core/components/input-widget/InputWidget";
+import InputWidget from "../../../../core/components/input-widget/InputWidget";
 import FolderFormModel from "./FolderFormModel";
-import ArticleFormModel from "../article/ArticleFormModel";
 import {createNamespacedHelpers} from "vuex";
 
-const {mapState, mapActions} = createNamespacedHelpers('fileManager');
-const {mapState: mapWorkspaceState} = createNamespacedHelpers('workspace');
+const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 export default {
   name: "FolderForm",
   components: {InputWidget},
@@ -31,8 +29,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['showModal', 'modalFolder', 'currentFolder', 'isFile']),
-    ...mapWorkspaceState(['currentWorkspace']),
+    ...mapWorkspaceState({
+      workspace: state => state.view.workspace,
+      showModal: state => state.view.folders.modal.show,
+      modalFolder: state => state.view.folders.modal.object,
+      isFile: state => state.view.folders.isFile,
+      currentFolder: state => state.view.folders.folder,
+    }),
     modalTitle() {
       if (this.modalFolder) {
         return this.$t(`Update folder '{name}'`, {name: this.modalFolder.title});
@@ -48,12 +51,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['hideFolderModal', 'getFoldersByParent', 'getFoldersByWorkspace', 'createFolder', 'updateFolder']),
+    ...mapWorkspaceActions(['hideFolderModal', 'getFoldersByParent', 'getFoldersByWorkspace', 'createFolder', 'updateFolder']),
     async onSubmit() {
       let action;
 
-      if (this.currentWorkspace.id) {
-        this.model.workspace_id = this.currentWorkspace.id;
+      if (this.workspace.id) {
+        this.model.workspace_id = this.workspace.id;
       }
       this.model.folder_id = this.currentFolder.id;
       this.model.isFile = this.isFile;

@@ -27,3 +27,17 @@ export const DELETE_TIMELINE_COMMENT = 'workspace/DELETE_TIMELINE_COMMENT';
 export const DELETE_TIMELINE_CHILD_COMMENT = 'workspace/DELETE_TIMELINE_CHILD_COMMENT';
 export const TIMELINE_LIKE = 'workspace/TIMELINE_LIKE';
 export const TIMELINE_UNLIKE = 'workspace/TIMELINE_UNLIKE';
+
+export const GET_ATTACH_CONFIG = 'workspace/GET_ATTACH_CONFIG';
+export const SHOW_FOLDER_MODAL = 'workspace/SHOW_FOLDER_MODAL';
+export const HIDE_FOLDER_MODAL = 'workspace/HIDE_FOLDER_MODAL';
+export const GET_ALL_FOLDERS = 'workspace/GET_ALL_FOLDERS';
+export const START_LOADING = 'workspace/START_LOADING';
+export const STOP_LOADING = 'workspace/STOP_LOADING';
+export const FOLDER_DELETED = 'workspace/FOLDER_DELETED';
+export const GET_BREAD_CRUMB = 'workspace/GET_BREAD_CRUMB';
+export const GET_CURRENT_FOLDER = 'workspace/GET_CURRENT_FOLDER';
+export const GET_FILES = 'workspace/GET_FILES';
+export const SHOW_EDIT_LABEL_DIALOG = 'workspace/SHOW_EDIT_LABEL_DIALOG';
+export const HIDE_EDIT_LABEL_DIALOG = 'workspace/HIDE_EDIT_LABEL_DIALOG';
+export const UPDATE_LABEL = 'workspace/UPDATE_LABEL';
