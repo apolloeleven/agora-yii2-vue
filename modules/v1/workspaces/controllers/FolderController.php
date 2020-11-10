@@ -51,12 +51,12 @@ class FolderController extends ActiveController
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $folderId = $request->post('article_id');
+        $folderId = $request->post('folder_id');
         $workspaceId = $request->post('workspace_id');
         $isFile = $request->post('isFile');
 
         $parentFolder = null;
-        if ($folderId) {
+        if ($folderId && !$isFile) {
             $parentFolder = FolderResource::findOne($folderId);
             if (!$parentFolder) {
                 return $this->validationError(Yii::t('app', 'Unable to find parent folder'));

@@ -42,6 +42,8 @@ use yii\web\UploadedFile;
  * @property Folder $parent
  * @property Folder[] $children
  * @property User $updatedBy
+ * @property UserComment[] $userComments
+ * @property UserLike[] $userLikes
  * @property Workspace $workspace
  */
 class Folder extends ActiveRecord
@@ -166,6 +168,27 @@ class Folder extends ActiveRecord
     }
 
     /**
+     * Gets query for [[UserComments]].
+     *
+     * @return ActiveQuery
+     */
+    public function getUserComments()
+    {
+        return $this->hasMany(UserComment::class, ['folder_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[UserLikes]].
+     *
+     * @return ActiveQuery
+     */
+    public function getUserLikes()
+    {
+        return $this->hasMany(UserLike::class, ['folder_id' => 'id']);
+    }
+
+
+    /**
      * Gets query for [[Workspace]].
      *
      * @return ActiveQuery
@@ -174,7 +197,6 @@ class Folder extends ActiveRecord
     {
         return $this->hasOne(Workspace::class, ['id' => 'workspace_id']);
     }
-
 
     /**
      * Upload file
