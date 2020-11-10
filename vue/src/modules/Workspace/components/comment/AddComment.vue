@@ -19,7 +19,7 @@
 <script>
 import AddCommentModel from "./AddCommentModel";
 import {createNamespacedHelpers} from "vuex";
-import InputWidget from "../../../core/components/input-widget/InputWidget";
+import InputWidget from "../../../../core/components/input-widget/InputWidget";
 
 const {mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace')
 
