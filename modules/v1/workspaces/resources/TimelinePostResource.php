@@ -15,7 +15,6 @@ use app\rest\ValidationException;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
-use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
@@ -53,7 +52,6 @@ class TimelinePostResource extends TimelinePost
         return [
             'createdBy',
             'article',
-            'articleFiles',
             'timelineComments',
             'userLikes',
             'myLikes',

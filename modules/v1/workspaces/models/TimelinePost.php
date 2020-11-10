@@ -30,7 +30,6 @@ use yii\web\UploadedFile;
  * @property int|null $updated_by
  *
  * @property Article $article
- * @property ArticleFile[] $articleFiles
  * @property UserLike[] $myLikes
  * @property UserComment[] $userComments
  * @property UserLike[] $userLikes
@@ -132,16 +131,6 @@ class TimelinePost extends ActiveRecord
     public function getArticle()
     {
         return $this->hasOne(Article::class, ['id' => 'article_id']);
-    }
-
-    /**
-     * Gets query for [[ArticleFiles]].
-     *
-     * @return ActiveQuery
-     */
-    public function getArticleFiles()
-    {
-        return $this->hasMany(ArticleFile::class, ['article_id' => 'article_id']);
     }
 
     /**

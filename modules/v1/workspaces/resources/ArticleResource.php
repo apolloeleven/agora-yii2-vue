@@ -49,9 +49,6 @@ class ArticleResource extends Article
                 $model->depth == 0 ?: $length = 80;
                 return StringHelper::truncate(strip_tags($model->body), $length);
             },
-            'image_url' => function () {
-                return $this->image_path ? Yii::getAlias('@storageUrl' . $this->image_path) : '';
-            },
         ];
     }
 
@@ -65,7 +62,6 @@ class ArticleResource extends Article
             'workspace',
             'createdBy',
             'updatedBy',
-            'articleFiles',
             'articleComments',
             'userLikes',
             'myLikes',

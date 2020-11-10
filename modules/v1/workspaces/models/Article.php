@@ -10,7 +10,6 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\helpers\FileHelper;
 
 /**
  * This is the model class for table "{{%articles}}".
@@ -34,7 +33,6 @@ use yii\helpers\FileHelper;
  * @property User $createdBy
  * @property Article $parent
  * @property Article[] $children
- * @property ArticleFile[] $articleFiles
  * @property UserComment[] $userComments
  * @property UserLike[] $userLikes
  * @property UserLike[] $myLikes
@@ -116,16 +114,6 @@ class Article extends ActiveRecord
     public static function find()
     {
         return new ArticleQuery(get_called_class());
-    }
-
-    /**
-     * Gets query for [[ArticleFiles]].
-     *
-     * @return ActiveQuery
-     */
-    public function getArticleFiles()
-    {
-        return $this->hasMany(ArticleFile::class, ['article_id' => 'id']);
     }
 
     /**
