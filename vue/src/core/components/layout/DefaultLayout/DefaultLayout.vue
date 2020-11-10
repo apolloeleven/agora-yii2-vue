@@ -5,7 +5,7 @@
     <div id="menu-content-wrapper">
       <Sidebar/>
       <div id="content">
-        <router-view :key="$route.fullPath"/>
+        <router-view/>
       </div>
     </div>
     <employee-form-modal/>
