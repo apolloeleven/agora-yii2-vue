@@ -5,6 +5,6 @@ import i18n from './../../shared/i18n'
 MenuService.addItem(new MenuItem('orgchart', {
   text: i18n.t('Org Chart'),
   path: '/orgchart',
-  weight: 2,
+  weight: 999,
   icon: 'fas fa-sitemap'
 }));
