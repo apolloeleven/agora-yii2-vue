@@ -19,7 +19,7 @@ import Orgchart from "../modules/Orgchart/Orgchart";
 import Timeline from "@/modules/Workspace/view/timeline/Timeline";
 import WorkspaceFiles from "@/modules/Workspace/view/WorkspaceFiles";
 import Articles from "@/modules/Workspace/view/articles/Articles";
-import WorkspaceAbout from "@/modules/Workspace/view/WorkspaceAbout";
+import WorkspaceAbout from "@/modules/Workspace/view/about/WorkspaceAbout";
 
 Vue.use(Router);
 
