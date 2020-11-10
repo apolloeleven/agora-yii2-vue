@@ -114,7 +114,7 @@ class m201109_073650_create_folders_table extends Migration
             '{{%folders}}'
         );
 
-        // drops index for column `workspace_id`
+        // drops index for column `parent_id`
         $this->dropIndex(
             '{{%idx-folder-parent_id}}',
             '{{%folders}}'
