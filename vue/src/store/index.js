@@ -37,7 +37,7 @@ export default new Vuex.Store({
     toggleMenuHide({commit, state}) {
       commit('toggleMenuHide', !state.menuHidden);
     },
-    async shareToTimeline({commit, state}, data) {
+    async shareToTimeline({state}, data) {
       const res = await httpService.post(`/v1/workspaces/timeline`, data);
       if (res.success) {
         const currentArticle = state.article.currentArticle;

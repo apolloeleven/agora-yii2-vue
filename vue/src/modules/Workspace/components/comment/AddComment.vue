@@ -19,13 +19,11 @@
 <script>
 import AddCommentModel from "./AddCommentModel";
 import {createNamespacedHelpers} from "vuex";
-import InputWidget from "../../../../core/components/input-widget/InputWidget";
 
 const {mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace')
 
 export default {
   name: "AddComment",
-  components: {InputWidget},
   props: {
     article_id: Number,
     timeline_id: Number,

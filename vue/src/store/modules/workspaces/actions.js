@@ -153,20 +153,6 @@ export async function getWorkspaces({commit}) {
 }
 
 /**
- * Get Employees by workspace id
- *
- * @param commit
- * @param workspaceId
- * @returns {Promise<void>}
- */
-export async function getEmployees({commit}, workspaceId) {
-  const {success, body} = await httpService.get(`${url}/get-employees?workspaceId=${workspaceId}`)
-  if (success) {
-    commit(GET_EMPLOYEES, body)
-  }
-}
-
-/**
  * Prepare data for upload
  *
  * @param data
