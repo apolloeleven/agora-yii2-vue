@@ -14,7 +14,7 @@
         <form v-on:submit.prevent="onLoginClick">
           <ValidationObserver ref="loginForm">
             <div class="auth-form">
-              <input-widget ref="usernameInputWidget" :model="model" attribute="username"/>
+              <input-widget ref="emailInputWidget" :model="model" attribute="email"/>
               <input-widget :model="model" attribute="password" type="password"/>
               <div class="d-flex align-items-center justify-content-between">
                 <button class="btn btn-primary mr-2">{{ $t('Login') }}</button>
@@ -60,7 +60,7 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.$refs.usernameInputWidget.focus()
+      this.$refs.emailInputWidget.focus()
     }, 500)
   }
 }
