@@ -4,10 +4,6 @@
   </div>
   <div v-else class="workspace-view page">
     <div class="page-header">
-      <b-button variant="light" class="mr-2" :to="{name: 'workspace'}">
-        <i class="fas fa-arrow-left"></i>
-        {{ $t('Back') }}
-      </b-button>
       <b-breadcrumb :items="breadcrumbs" class="d-none d-sm-flex"></b-breadcrumb>
       <WorkspaceUsers :model="[]"/>
     </div>
