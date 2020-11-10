@@ -29,15 +29,15 @@ import NoData from "@/modules/Workspace/components/NoData";
 import TimelineItem from "@/modules/Workspace/view/timeline/TimelineItem";
 import {createNamespacedHelpers} from "vuex";
 
-const {mapActions: mapTimelineActions, mapState: mapTimelineState} = createNamespacedHelpers('timeline');
+const {mapActions: mapTimelineActions, mapState: mapTimelineState} = createNamespacedHelpers('workspace');
 
 export default {
   name: "Timeline",
   components: {TimelineItem, NoData, ContentSpinner},
   computed: {
     ...mapTimelineState({
-      timelineData: state => state.timelineData,
-      loading: state => state.loading,
+      timelineData: state => state.view.timeline.data,
+      loading: state => state.view.timeline.loading,
     }),
   },
   methods: {

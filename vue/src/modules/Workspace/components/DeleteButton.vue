@@ -15,7 +15,7 @@ import FavouritesService from "./AddToFavourites/FavouritesService";
 
 const {mapActions} = createNamespacedHelpers('workspace');
 const {mapActions: mapArticleActions} = createNamespacedHelpers('article');
-const {mapActions: mapTimelineActions} = createNamespacedHelpers('timeline');
+const {mapActions: mapTimelineActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "DeleteButton",

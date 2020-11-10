@@ -15,7 +15,7 @@ import {EDIT_TIMELINE, eventBus} from "../../../core/services/event-bus";
 
 const {mapActions} = createNamespacedHelpers('workspace');
 const {mapActions: mapArticleActions} = createNamespacedHelpers('article');
-const {mapActions: mapTimelineActions} = createNamespacedHelpers('timeline');
+const {mapActions: mapTimelineActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "EditButton",

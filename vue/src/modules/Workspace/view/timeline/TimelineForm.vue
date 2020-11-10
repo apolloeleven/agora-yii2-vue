@@ -26,8 +26,7 @@ import ContentSpinner from "@/core/components/ContentSpinner";
 import TimelineFormModel from "./TimelineFormModel";
 import InputWidget from "@/core/components/input-widget/InputWidget";
 
-const {mapState, mapActions} = createNamespacedHelpers('timeline');
-const {mapState: mapStateWorkspace} = createNamespacedHelpers('workspace');
+const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "TimelineForm",
@@ -39,8 +38,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(['loading', 'showModal', 'modalTimeline']),
-    ...mapStateWorkspace(['workspaces']),
+    ...mapWorkspaceState({
+      loading: state => state.view.timeline.loading,
+      showModal: state => state.view.timeline.modal.show,
+      modalTimeline: state => state.view.timeline.modal.object,
+      workspaces: state => state.workspaces,
+    }),
     userWorkspaceOptions() {
       return this.workspaces.map(function (w) {
         return {value: w.id, text: w.name}
@@ -55,7 +58,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['hideTimelineModal', 'postOnTimeline', 'updateTimelinePost']),
+    ...mapWorkspaceActions(['hideTimelineModal', 'postOnTimeline', 'updateTimelinePost']),
     async onSubmit() {
       this.model.workspace_id = this.$route.params.id;
 

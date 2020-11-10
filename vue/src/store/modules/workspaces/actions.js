@@ -3,16 +3,31 @@ import {
   HIDE_WORKSPACE_MODAL,
   GET_WORKSPACES,
   WORKSPACE_DELETED,
-  GET_BREAD_CRUMB,
   GET_CURRENT_WORKSPACE,
   TOGGLE_VIEW_LOADING,
   GET_ARTICLES,
-  TOGGLE_ARTICLES_LOADING, SHOW_ARTICLE_MODAL, HIDE_ARTICLE_MODAL, UPDATE_ARTICLE, CREATE_ARTICLE, REMOVE_ARTICLE,
+  TOGGLE_ARTICLES_LOADING,
+  SHOW_ARTICLE_MODAL,
+  HIDE_ARTICLE_MODAL,
+  UPDATE_ARTICLE,
+  CREATE_ARTICLE,
+  REMOVE_ARTICLE,
+  SHOW_TIMELINE_MODAL,
+  GET_TIMELINE_DATA,
+  CHANGE_TIMELINE_LOADING,
+  HIDE_TIMELINE_MODAL,
+  DELETED_TIMELINE_POST,
+  ADD_TIMELINE_POST,
+  UPDATE_TIMELINE_POST,
 } from './mutation-types';
-import httpService from "../../../../core/services/httpService";
+import httpService from "../../../core/services/httpService";
 
 const url = '/v1/workspaces/workspace';
 const articlesUrl = '/v1/workspaces/article';
+const timelineUrl = '/v1/workspaces/timeline';
+
+const timelineExpand = `expand=article,createdBy,timelineComments.createdBy,timelineComments.childrenComments.createdBy,
+timelineComments.childrenComments.parent,userLikes,myLikes&sort=-created_at`
 
 /**
  * Show workspace form's modal
@@ -242,4 +257,98 @@ export async function deleteArticle({commit}, id) {
     commit(REMOVE_ARTICLE, id);
   }
   return response;
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ */
+export function showTimelineModal({commit}, data) {
+  commit(SHOW_TIMELINE_MODAL, data)
+}
+
+/**
+ *
+ * @param commit
+ */
+export function hideTimelineModal({commit}) {
+  commit(HIDE_TIMELINE_MODAL)
+}
+
+/**
+ *
+ * @param commit
+ * @param workspaceId
+ * @returns {Promise<unknown>}
+ */
+export async function getTimelinePosts({commit}, workspaceId) {
+  commit(CHANGE_TIMELINE_LOADING)
+  const res = await httpService.get(`${timelineUrl}?workspace_id=${workspaceId}&${timelineExpand}`);
+  if (res.success) {
+    commit(CHANGE_TIMELINE_LOADING)
+    commit(GET_TIMELINE_DATA, res.body);
+  }
+  return res;
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function deleteTimelinePost({commit}, data) {
+  const res = await httpService.delete(`${timelineUrl}/${data.id}?${timelineExpand}`);
+  if (res.success) {
+    commit(DELETED_TIMELINE_POST, data.id);
+  }
+  return res;
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function updateTimelinePost({commit}, data) {
+  const res = await httpService.put(`${timelineUrl}/${data.id}`, data);
+  if (res.success) {
+    commit(UPDATE_TIMELINE_POST, res.body);
+  }
+  return res;
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ * @param config
+ * @returns {Promise<unknown>}
+ */
+export async function postOnTimeline({commit}, {data, config}) {
+  const res = await httpService.post(`${timelineUrl}?${timelineExpand}`, prepareTimelineData(data), config);
+  if (res.success) {
+    commit(ADD_TIMELINE_POST, res.body);
+  }
+  return res;
+}
+
+/**
+ *
+ * @param data
+ * @returns {*}
+ */
+export function prepareTimelineData(data) {
+  if (data.file && data.file instanceof File) {
+    const tmp = new FormData();
+    for (let key in data) {
+      if (data.hasOwnProperty(key)) {
+        tmp.append(key, data[key] || '');
+      }
+    }
+    data = tmp;
+  }
+  return data;
 }

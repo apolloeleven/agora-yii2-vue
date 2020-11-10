@@ -15,7 +15,7 @@ import TimelineFormModel from "./TimelineFormModel";
 import {mapActions, createNamespacedHelpers} from 'vuex';
 import {EDIT_TIMELINE, eventBus, SHARE_ARTICLE, SHARE_FILE, SHARE_TO_TIMELINE} from "@/core/services/event-bus";
 
-const {mapState, mapActions: mapTimelineActions} = createNamespacedHelpers('timeline');
+const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "TimelineShare",
@@ -29,7 +29,9 @@ export default {
     }
   },
   computed: {
-    ...mapState(['timelineData']),
+    ...mapWorkspaceState({
+      timelineData: state => state.view.timeline.data,
+    }),
     modalTitle() {
       if (this.edit) {
         return this.$t('Update timeline shared post');
@@ -38,7 +40,7 @@ export default {
     }
   },
   methods: {
-    ...mapTimelineActions(['updateTimelinePost']),
+    ...mapWorkspaceActions(['updateTimelinePost']),
     ...mapActions(['shareToTimeline']),
     async onSubmit() {
       if (this.edit) {

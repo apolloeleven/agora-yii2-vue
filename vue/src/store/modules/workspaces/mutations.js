@@ -1,0 +1,254 @@
+import {
+  SHOW_WORKSPACE_MODAL,
+  HIDE_WORKSPACE_MODAL,
+  GET_WORKSPACES,
+  WORKSPACE_DELETED,
+  GET_CURRENT_WORKSPACE,
+  GET_ARTICLES,
+  TOGGLE_ARTICLES_LOADING,
+  SHOW_ARTICLE_MODAL,
+  HIDE_ARTICLE_MODAL,
+  CREATE_ARTICLE,
+  UPDATE_ARTICLE,
+  REMOVE_ARTICLE,
+  TOGGLE_VIEW_LOADING,
+  SHOW_TIMELINE_MODAL,
+  GET_TIMELINE_DATA,
+  HIDE_TIMELINE_MODAL,
+  CHANGE_TIMELINE_LOADING,
+  DELETED_TIMELINE_POST,
+  ADD_TIMELINE_COMMENT,
+  DELETE_TIMELINE_COMMENT,
+  ADD_TIMELINE_CHILD_COMMENT,
+  DELETE_TIMELINE_CHILD_COMMENT,
+  TIMELINE_LIKE,
+  TIMELINE_UNLIKE,
+  ADD_TIMELINE_POST,
+  UPDATE_TIMELINE_POST,
+} from './mutation-types';
+import _ from 'lodash';
+
+export default {
+  /**
+   * @param state
+   * @param workspace
+   */
+  [SHOW_WORKSPACE_MODAL](state, workspace) {
+    state.showModal = true;
+    state.modalWorkspace = workspace;
+  },
+  /**
+   * @param state
+   */
+  [HIDE_WORKSPACE_MODAL](state) {
+    state.showModal = false;
+    state.modalWorkspace = null;
+  },
+  /**
+   * @param state
+   * @param data
+   */
+  [GET_WORKSPACES](state, data) {
+    state.workspaces = data;
+  },
+  /**
+   * @param state
+   * @param id
+   */
+  [WORKSPACE_DELETED](state, id) {
+    state.workspaces = state.workspaces.filter(w => w.id !== id)
+  },
+  /**
+   * @param state
+   * @param data
+   */
+  [GET_CURRENT_WORKSPACE](state, data) {
+    state.view.workspace = data || {}
+  },
+  /**
+   * @param state
+   * @param data
+   */
+  [TOGGLE_VIEW_LOADING](state, data) {
+    state.view.loading = data
+  },
+
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_ARTICLES](state, data) {
+    state.view.articles.data = data;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [TOGGLE_ARTICLES_LOADING](state, data) {
+    state.view.articles.loading = data;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [SHOW_ARTICLE_MODAL](state, data) {
+    console.log(data)
+    state.view.articles.modal.show = true;
+    state.view.articles.modal.object = _.cloneDeep(data.object);
+  },
+  /**
+   *
+   * @param state
+   */
+  [HIDE_ARTICLE_MODAL](state) {
+    state.view.articles.modal.show = false;
+    state.view.articles.modal.object = null;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [CREATE_ARTICLE](state, data) {
+    state.view.articles.data.unshift(data);
+  },
+  /**
+   *
+   * @param state
+   * @param article
+   */
+  [UPDATE_ARTICLE](state, article) {
+    let index = state.view.articles.data.findIndex(a => a.id === article.id);
+    state.view.articles.data[index] = {...state.view.articles.data[index], ...article};
+    state.view.articles.data = [...state.view.articles.data];
+  },
+  /**
+   *
+   * @param state
+   * @param id
+   */
+  [REMOVE_ARTICLE](state, id) {
+    const rows = state.view.articles.data.filter(a => a.id !== id);
+    state.view.articles.data = [...rows];
+  },
+
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [SHOW_TIMELINE_MODAL](state, data) {
+    state.view.timeline.modal.show = true;
+    state.view.timeline.modal.object = _.cloneDeep(data);
+  },
+  /**
+   *
+   * @param state
+   */
+  [HIDE_TIMELINE_MODAL](state) {
+    state.view.timeline.modal.show = false;
+    state.view.timeline.modal.object = null;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_TIMELINE_DATA](state, data) {
+    state.view.timeline.loading = false;
+    state.view.timeline.data = data;
+  },
+  /**
+   *
+   * @param state
+   */
+  [CHANGE_TIMELINE_LOADING](state) {
+    state.view.timeline.loading = !state.view.timeline.loading;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [ADD_TIMELINE_POST](state, data) {
+    state.view.timeline.data.unshift(data);
+  },
+  /**
+   *
+   * @param state
+   * @param timeline
+   */
+  [UPDATE_TIMELINE_POST](state, timeline) {
+    let index = state.view.timeline.data.findIndex(a => a.id === timeline.id);
+    state.view.timeline.data[index] = {...state.view.timeline.data[index], ...timeline};
+    state.view.timeline.data = [...state.view.timeline.data];
+  },
+  /**
+   *
+   * @param state
+   * @param id
+   */
+  [DELETED_TIMELINE_POST](state, id) {
+    state.view.timeline.data = state.view.timeline.data.filter(t => t.id !== id);
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [ADD_TIMELINE_COMMENT](state, data) {
+    state.view.timeline.data.filter(t => t.id === data.timeline_post_id).forEach(t => t.timelineComments.unshift(data));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [DELETE_TIMELINE_COMMENT](state, data) {
+    state.view.timeline.data.forEach(t => t.timelineComments = t.timelineComments.filter(c => c.id !== data.id));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [ADD_TIMELINE_CHILD_COMMENT](state, data) {
+    state.view.timeline.data.filter(t => t.id === data.parent.timeline_post_id)
+      .forEach(t => t.timelineComments.filter(tc => tc.id === data.parent_id)
+        .forEach(tc => tc.childrenComments.unshift(data)));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [DELETE_TIMELINE_CHILD_COMMENT](state, data) {
+    state.view.timeline.data
+      .forEach(t => t.timelineComments
+        .forEach(t => t.childrenComments = t.childrenComments.filter(c => c.id !== data.id)));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [TIMELINE_LIKE](state, data) {
+    const timelinePost = state.view.timeline.data.filter(t => t.id === data.timeline_post_id);
+    timelinePost.forEach(t => t.userLikes.unshift(data));
+    timelinePost.forEach(t => t.myLikes.unshift(data));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [TIMELINE_UNLIKE](state, data) {
+    const timelinePost = state.view.timeline.data.filter(t => t.id === data.timeline_post_id);
+    timelinePost.forEach(t => t.myLikes = []);
+    timelinePost.forEach(t => t.userLikes = t.userLikes.filter(l => l.id !== data.id));
+  },
+
+};
