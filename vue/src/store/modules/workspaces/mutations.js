@@ -3,6 +3,8 @@ import {
   ADD_TIMELINE_COMMENT,
   ADD_TIMELINE_POST,
   CHANGE_TIMELINE_LOADING,
+  CHANGE_TIMELINE_MODAL_LOADING,
+  CHANGE_WORKSPACE_LOADING,
   CREATE_ARTICLE,
   DELETE_TIMELINE_CHILD_COMMENT,
   DELETE_TIMELINE_COMMENT,
@@ -29,6 +31,13 @@ import {
 import _ from 'lodash';
 
 export default {
+  /**
+   * @param state
+   * @param loading
+   */
+  [CHANGE_WORKSPACE_LOADING](state, loading) {
+    state.loading = loading;
+  },
   /**
    * @param state
    * @param workspace
@@ -248,6 +257,14 @@ export default {
     const timelinePost = state.view.timeline.data.filter(t => t.id === data.timeline_post_id);
     timelinePost.forEach(t => t.myLikes = []);
     timelinePost.forEach(t => t.userLikes = t.userLikes.filter(l => l.id !== data.id));
+  },
+  /**
+   *
+   * @param state
+   * @param loading
+   */
+  [CHANGE_TIMELINE_MODAL_LOADING](state, loading) {
+    state.view.timeline.modal.loading = loading
   },
 
 };

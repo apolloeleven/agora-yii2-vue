@@ -55,10 +55,7 @@ export default {
     }
   },
   computed: {
-    ...mapWorkspaceState({
-      loading: state => state.view.loading,
-      workspaces: state => state.workspaces,
-    })
+    ...mapWorkspaceState(['loading', 'workspaces'])
   },
   methods: {
     ...mapWorkspaceActions(['showWorkspaceModal', 'getWorkspaces', 'deleteWorkspace']),

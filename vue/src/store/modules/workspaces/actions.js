@@ -3,6 +3,8 @@ import {
   ADD_TIMELINE_COMMENT,
   ADD_TIMELINE_POST,
   CHANGE_TIMELINE_LOADING,
+  CHANGE_TIMELINE_MODAL_LOADING,
+  CHANGE_WORKSPACE_LOADING,
   CREATE_ARTICLE,
   DELETE_TIMELINE_CHILD_COMMENT,
   DELETE_TIMELINE_COMMENT,
@@ -146,9 +148,11 @@ export async function destroyCurrentWorkspace({commit}, workspace) {
  * @returns {Promise<void>}
  */
 export async function getWorkspaces({commit}) {
+  commit(CHANGE_WORKSPACE_LOADING, true)
   const {success, body} = await httpService.get(`${url}/get-workspaces?expand=updatedBy&sort=name`);
   if (success) {
     commit(GET_WORKSPACES, body);
+    commit(CHANGE_WORKSPACE_LOADING, false)
   }
 }
 
@@ -320,9 +324,11 @@ export async function updateTimelinePost({commit}, data) {
  * @returns {Promise<unknown>}
  */
 export async function postOnTimeline({commit}, {data, config}) {
+  commit(CHANGE_TIMELINE_MODAL_LOADING, true)
   const res = await httpService.post(`${timelineUrl}?${timelineExpand}`, prepareTimelineData(data), config);
   if (res.success) {
     commit(ADD_TIMELINE_POST, res.body);
+    commit(CHANGE_TIMELINE_MODAL_LOADING, false)
   }
   return res;
 }

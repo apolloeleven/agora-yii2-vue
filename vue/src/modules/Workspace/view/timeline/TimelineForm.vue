@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     ...mapWorkspaceState({
-      loading: state => state.view.timeline.loading,
+      loading: state => state.view.timeline.modal.loading,
       showModal: state => state.view.timeline.modal.show,
       modalTimeline: state => state.view.timeline.modal.object,
       workspaces: state => state.workspaces,

@@ -1,3 +1,4 @@
+export const CHANGE_WORKSPACE_LOADING = 'workspace/CHANGE_WORKSPACE_LOADING';
 export const SHOW_WORKSPACE_MODAL = 'workspace/SHOW_WORKSPACE_MODAL';
 export const HIDE_WORKSPACE_MODAL = 'workspace/HIDE_WORKSPACE_MODAL';
 export const GET_WORKSPACES = 'workspace/GET_WORKSPACES';
@@ -13,6 +14,7 @@ export const UPDATE_ARTICLE = 'workspace/UPDATE_ARTICLE';
 export const REMOVE_ARTICLE = 'workspace/REMOVE_ARTICLE';
 
 export const CHANGE_TIMELINE_LOADING = 'workspace/CHANGE_LOADING';
+export const CHANGE_TIMELINE_MODAL_LOADING = 'workspace/CHANGE_TIMELINE_MODAL_LOADING';
 export const SHOW_TIMELINE_MODAL = 'workspace/SHOW_TIMELINE_MODAL';
 export const HIDE_TIMELINE_MODAL = 'workspace/HIDE_TIMELINE_MODAL';
 export const GET_TIMELINE_DATA = 'workspace/GET_TIMELINE_DATA';
