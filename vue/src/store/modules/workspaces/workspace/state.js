@@ -3,7 +3,6 @@ const STATE = {
   showModal: false,
   workspaces: [],
   modalWorkspace: null,
-  breadCrumb: [],
 
   view: {
     loading: false,

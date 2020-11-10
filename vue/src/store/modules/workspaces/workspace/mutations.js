@@ -3,7 +3,6 @@ import {
   HIDE_WORKSPACE_MODAL,
   GET_WORKSPACES,
   WORKSPACE_DELETED,
-  GET_BREAD_CRUMB,
   GET_CURRENT_WORKSPACE,
   GET_ARTICLES,
   TOGGLE_ARTICLES_LOADING,
@@ -45,13 +44,6 @@ export default {
    */
   [WORKSPACE_DELETED](state, id) {
     state.workspaces = state.workspaces.filter(w => w.id !== id)
-  },
-  /**
-   * @param state
-   * @param data
-   */
-  [GET_BREAD_CRUMB](state, data) {
-    state.breadCrumb = data
   },
   /**
    * @param state

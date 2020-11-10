@@ -130,19 +130,6 @@ export async function getWorkspaces({commit}) {
 }
 
 /**
- * Get breadcrumb for workspace view page
- *
- * @param commit
- * @param workspaceId
- * @returns {Promise<void>}
- */
-export async function getWorkspaceBreadCrumb({commit}, workspaceId) {
-  const res = await httpService.get(`${url}/get-bread-crumb?workspaceId=${workspaceId}`);
-  if (res.success) commit(GET_BREAD_CRUMB, res.body);
-  return res;
-}
-
-/**
  * Get Employees by workspace id
  *
  * @param commit
