@@ -5,7 +5,6 @@ import {
   WORKSPACE_DELETED,
   GET_BREAD_CRUMB,
   GET_CURRENT_WORKSPACE,
-  GET_EMPLOYEES,
   GET_ARTICLES,
   TOGGLE_ARTICLES_LOADING,
   SHOW_ARTICLE_MODAL,
@@ -13,6 +12,7 @@ import {
   CREATE_ARTICLE,
   UPDATE_ARTICLE,
   REMOVE_ARTICLE,
+  TOGGLE_VIEW_LOADING,
 } from './mutation-types';
 import _ from 'lodash';
 
@@ -59,6 +59,13 @@ export default {
    */
   [GET_CURRENT_WORKSPACE](state, data) {
     state.view.workspace = data || {}
+  },
+  /**
+   * @param state
+   * @param data
+   */
+  [TOGGLE_VIEW_LOADING](state, data) {
+    state.view.loading = data
   },
 
   /**

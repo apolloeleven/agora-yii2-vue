@@ -5,7 +5,7 @@ import {
   WORKSPACE_DELETED,
   GET_BREAD_CRUMB,
   GET_CURRENT_WORKSPACE,
-  GET_EMPLOYEES,
+  TOGGLE_VIEW_LOADING,
   GET_ARTICLES,
   TOGGLE_ARTICLES_LOADING, SHOW_ARTICLE_MODAL, HIDE_ARTICLE_MODAL, UPDATE_ARTICLE, CREATE_ARTICLE, REMOVE_ARTICLE,
 } from './mutation-types';
@@ -97,10 +97,13 @@ export async function deleteWorkspace({commit, dispatch}, data) {
  * @returns {Promise<void>}
  */
 export async function getCurrentWorkspace({commit}, workspaceId) {
-  const {success, body} = await httpService.get(`${url}/${workspaceId}`)
-  if (success) {
-    commit(GET_CURRENT_WORKSPACE, body);
+  commit(TOGGLE_VIEW_LOADING, true);
+  const response = await httpService.get(`${url}/${workspaceId}`)
+  if (response.success) {
+    commit(GET_CURRENT_WORKSPACE, response.body);
   }
+  commit(TOGGLE_VIEW_LOADING, false);
+  return response;
 }
 
 /**
