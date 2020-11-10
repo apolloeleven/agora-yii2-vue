@@ -21,7 +21,7 @@ import AddCommentModel from "./AddCommentModel";
 import {createNamespacedHelpers} from "vuex";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 
-const {mapActions} = createNamespacedHelpers('article')
+const {mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace')
 
 export default {
   name: "AddComment",
@@ -37,7 +37,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['addComment']),
+    ...mapWorkspaceActions(['addComment']),
     async onAdd() {
       if (this.model.comment) {
         this.model.article_id = this.article_id;

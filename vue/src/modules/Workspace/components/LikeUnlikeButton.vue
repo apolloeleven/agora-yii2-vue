@@ -11,7 +11,7 @@
 <script>
 import {createNamespacedHelpers} from "vuex";
 
-const {mapActions} = createNamespacedHelpers('article');
+const {mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "LikeUnlikeButton",
@@ -25,7 +25,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['like', 'unlike']),
+    ...mapWorkspaceActions(['like', 'unlike']),
     async onLike() {
       const params = {}
       if (this.type === 'timeline') {

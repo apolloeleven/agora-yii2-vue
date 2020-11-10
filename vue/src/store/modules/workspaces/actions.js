@@ -1,26 +1,40 @@
 import {
-  SHOW_WORKSPACE_MODAL,
-  HIDE_WORKSPACE_MODAL,
-  GET_WORKSPACES,
-  WORKSPACE_DELETED,
-  GET_CURRENT_WORKSPACE,
-  TOGGLE_VIEW_LOADING,
-  GET_ARTICLES,
-  TOGGLE_ARTICLES_LOADING,
-  SHOW_ARTICLE_MODAL,
-  HIDE_ARTICLE_MODAL,
-  UPDATE_ARTICLE,
-  CREATE_ARTICLE,
-  REMOVE_ARTICLE,
-  SHOW_TIMELINE_MODAL,
-  GET_TIMELINE_DATA,
-  CHANGE_TIMELINE_LOADING,
-  HIDE_TIMELINE_MODAL,
-  DELETED_TIMELINE_POST,
+  ADD_TIMELINE_CHILD_COMMENT,
+  ADD_TIMELINE_COMMENT,
   ADD_TIMELINE_POST,
+  CHANGE_TIMELINE_LOADING,
+  CREATE_ARTICLE,
+  DELETE_TIMELINE_CHILD_COMMENT,
+  DELETE_TIMELINE_COMMENT,
+  DELETED_TIMELINE_POST,
+  GET_ARTICLES,
+  GET_CURRENT_WORKSPACE,
+  GET_TIMELINE_DATA,
+  GET_WORKSPACES,
+  HIDE_ARTICLE_MODAL,
+  HIDE_TIMELINE_MODAL,
+  HIDE_WORKSPACE_MODAL,
+  REMOVE_ARTICLE,
+  SHOW_ARTICLE_MODAL,
+  SHOW_TIMELINE_MODAL,
+  SHOW_WORKSPACE_MODAL,
+  TIMELINE_LIKE,
+  TIMELINE_UNLIKE,
+  TOGGLE_ARTICLES_LOADING,
+  TOGGLE_VIEW_LOADING,
+  UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
+  WORKSPACE_DELETED,
 } from './mutation-types';
 import httpService from "../../../core/services/httpService";
+import {
+  ADD_CHILD_COMMENT,
+  ADD_COMMENT,
+  DELETE_ARTICLE_COMMENT,
+  DELETE_CHILD_COMMENT,
+  LIKE,
+  UNLIKE
+} from "./article/mutation-types";
 
 const url = '/v1/workspaces/workspace';
 const articlesUrl = '/v1/workspaces/article';
@@ -351,4 +365,66 @@ export function prepareTimelineData(data) {
     data = tmp;
   }
   return data;
+}
+
+/**
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function addComment({commit}, data) {
+  const res = await httpService.post(`/v1/workspaces/user-comment?expand=createdBy,childrenComments,parent`, data);
+  if (res.success) {
+    if (data.parent_id) {
+      commit(ADD_TIMELINE_CHILD_COMMENT, res.body)
+    } else {
+      commit(ADD_TIMELINE_COMMENT, res.body)
+    }
+  }
+  return res;
+}
+
+/**
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function deleteComment({commit}, data) {
+  const res = await httpService.delete(`/v1/workspaces/user-comment/${data.id}`);
+  if (res.success) {
+    if (data.parent_id) {
+      commit(DELETE_TIMELINE_CHILD_COMMENT, data)
+    } else {
+      commit(DELETE_TIMELINE_COMMENT, data)
+    }
+  }
+  return res;
+}
+
+/**
+ * Like article or timeline post
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<void>}
+ */
+export async function like({commit}, data) {
+  const {success, body} = await httpService.post(`/v1/workspaces/user-like`, data)
+  if (success) {
+    commit(TIMELINE_LIKE, body)
+  }
+}
+
+/**
+ * Unlike article or timeline post
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<void>}
+ */
+export async function unlike({commit}, data) {
+  const {success} = await httpService.delete(`/v1/workspaces/user-like/${data.id}`)
+  if (success) {
+    commit(TIMELINE_UNLIKE, data)
+  }
 }

@@ -7,7 +7,7 @@
 <script>
 import {createNamespacedHelpers} from "vuex";
 
-const {mapActions} = createNamespacedHelpers('article')
+const {mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace')
 
 export default {
   name: "DeleteComment",
@@ -15,7 +15,7 @@ export default {
     comment: Object,
   },
   methods: {
-    ...mapActions(['deleteComment']),
+    ...mapWorkspaceActions(['deleteComment']),
     async onDelete() {
       const confirm = await this.$confirm(this.$i18n.t('Are you sure you want to delete following comment ? '))
       if (confirm) {
