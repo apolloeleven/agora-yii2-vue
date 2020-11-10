@@ -5,7 +5,7 @@
   <div v-else class="workspace-view page">
     <div class="page-header">
       <back-button/>
-      <b-breadcrumb :items="breadCrumb" class="d-none d-sm-flex"></b-breadcrumb>
+      <b-breadcrumb :items="breadcrumbs" class="d-none d-sm-flex"></b-breadcrumb>
       <WorkspaceUsers :model="[]"/>
     </div>
     <sided-nav-layout :items="items"/>
@@ -26,7 +26,7 @@ export default {
   components: {ContentSpinner, SidedNavLayout, WorkspaceUsers, BackButton},
   data() {
     return {
-      visible: false,
+      breadcrumbs: [],
       items: [
         {title: this.$i18n.t('Timeline'), to: {name: 'workspace.timeline'}, icon: 'fa fa-bars'},
         {title: this.$i18n.t('Files'), to: {name: 'workspace.files'}, icon: 'fa fa-folder'},
@@ -37,24 +37,22 @@ export default {
   },
   computed: {
     ...mapState({
-      breadCrumb: state => state.breadCrumb,
       workspace: state => state.view.workspace,
       loading: state => state.view.loading,
     }),
   },
   methods: {
-    ...mapActions(['getWorkspaceBreadCrumb', 'getCurrentWorkspace', 'destroyCurrentWorkspace']),
-    async getBreadCrumbs() {
-      const res = await this.getWorkspaceBreadCrumb(this.$route.params.id)
-      if (!res.success) {
-        this.$toast(this.$t(res.body), 'danger')
-        this.$router.push({name: 'workspace'});
-      }
+    ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace']),
+    initBreadcrumbs() {
+      this.breadcrumbs = [
+        {text: this.$i18n.t('My Workspaces'), to: {name: 'workspace'}},
+        {text: this.workspace.abbreviation || this.workspace.name, active: true}
+      ];
     },
   },
-  beforeMount() {
-    this.getBreadCrumbs();
-    this.getCurrentWorkspace(this.$route.params.id);
+  async beforeMount() {
+    await this.getCurrentWorkspace(this.$route.params.id);
+    this.initBreadcrumbs();
   },
   destroyed() {
     this.destroyCurrentWorkspace({});
@@ -63,11 +61,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.workspace-image {
-  width: 160px;
-  min-width: 160px;
-}
-
 .page-content {
   display: grid;
   grid-gap: 1em;
@@ -77,5 +70,4 @@ export default {
     grid-column: 2/7;
   }
 }
-
 </style>
