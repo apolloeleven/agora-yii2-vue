@@ -5,7 +5,7 @@ namespace app\modules\v1\workspaces\models;
 use app\modules\v1\users\models\query\UserQuery;
 use app\modules\v1\users\models\User;
 use app\modules\v1\workspaces\models\query\TimelinePostQuery;
-use app\modules\v1\workspaces\models\query\WorkspaceTimelinePostQuery;
+use app\modules\v1\workspaces\models\query\WorkspaceQuery;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -18,6 +18,7 @@ use yii\web\UploadedFile;
  * This is the model class for table "{{%timeline_posts}}".
  *
  * @property int $id
+ * @property int $workspace_id
  * @property int $article_id
  * @property string|null $attachment_ids
  * @property string|null $action
@@ -29,13 +30,12 @@ use yii\web\UploadedFile;
  * @property int|null $updated_by
  *
  * @property Article $article
- * @property ArticleFile[] $articleFiles
  * @property UserLike[] $myLikes
  * @property UserComment[] $userComments
  * @property UserLike[] $userLikes
  * @property User $createdBy
  * @property User $updatedBy
- * @property WorkspaceTimelinePost[] $workspaceTimelinePosts
+ * @property Workspace[] $workspaces
  */
 class TimelinePost extends ActiveRecord
 {
@@ -72,12 +72,14 @@ class TimelinePost extends ActiveRecord
     public function rules()
     {
         return [
+            [['workspace_id'], 'required'],
             [['description', 'attachment_ids'], 'string'],
-            [['article_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['article_id', 'created_at', 'updated_at', 'created_by', 'updated_by', 'workspace_id'], 'integer'],
             [['file_path'], 'string', 'max' => 1024],
             [['action'], 'string', 'max' => 255],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
-            [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
+            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
+            [['workspace_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workspace::class, 'targetAttribute' => ['workspace_id' => 'id']],
             [['file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, gif, jpg, avi, flv, wmv, mov, mp4, ogg']
         ];
     }
@@ -89,6 +91,7 @@ class TimelinePost extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'workspace_id' => Yii::t('app', 'Workspace ID'),
             'article_id' => Yii::t('app', 'Article ID'),
             'attachment_ids' => Yii::t('app', 'Attachment IDs'),
             'action' => Yii::t('app', 'Action'),
@@ -131,16 +134,6 @@ class TimelinePost extends ActiveRecord
     }
 
     /**
-     * Gets query for [[ArticleFiles]].
-     *
-     * @return ActiveQuery
-     */
-    public function getArticleFiles()
-    {
-        return $this->hasMany(ArticleFile::class, ['article_id' => 'article_id']);
-    }
-
-    /**
      * Gets query for [[UserComments]].
      *
      * @return ActiveQuery
@@ -161,13 +154,11 @@ class TimelinePost extends ActiveRecord
     }
 
     /**
-     * Gets query for [[WorkspaceTimelinePosts]].
-     *
-     * @return ActiveQuery|WorkspaceTimelinePostQuery
+     * @return ActiveQuery|WorkspaceQuery
      */
-    public function getWorkspaceTimelinePosts()
+    public function getWorkspaces()
     {
-        return $this->hasMany(WorkspaceTimelinePost::class, ['timeline_post_id' => 'id']);
+        return $this->hasMany(Workspace::class, ['workspace_id' => 'id']);
     }
 
     /**

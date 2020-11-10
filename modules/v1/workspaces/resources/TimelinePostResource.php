@@ -10,25 +10,26 @@ namespace app\modules\v1\workspaces\resources;
 
 use app\modules\v1\users\models\query\UserQuery;
 use app\modules\v1\users\resources\UserResource;
-use app\modules\v1\workspaces\models\query\WorkspaceTimelinePostQuery;
 use app\modules\v1\workspaces\models\TimelinePost;
 use app\rest\ValidationException;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
-use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
 class TimelinePostResource extends TimelinePost
 {
-    public $workspace_id;
-
+    /**
+     * @return array
+     * @author Saiat Kalbiev <kalbievich11@gmail.com>
+     */
     public function fields()
     {
         return [
             'id',
             'action',
+            'workspace_id',
             'description',
             'file_url' => function () {
                 return $this->getFileUrl();
@@ -42,26 +43,19 @@ class TimelinePostResource extends TimelinePost
         ];
     }
 
-    public function attributes()
-    {
-        return ArrayHelper::merge(array_keys(parent::attributeLabels()), ['workspace_id']);
-    }
-
-    public function rules()
-    {
-        return array_merge(parent::rules(), [[['workspace_id'], 'integer']]);
-    }
-
+    /**
+     * @return array|string[]
+     * @author Saiat Kalbiev <kalbievich11@gmail.com>
+     */
     public function extraFields()
     {
         return [
-            'workspaceTimelinePosts',
             'createdBy',
             'article',
-            'articleFiles',
             'timelineComments',
             'userLikes',
             'myLikes',
+            'workspace',
         ];
     }
 
@@ -70,8 +64,7 @@ class TimelinePostResource extends TimelinePost
      */
     public function getWorkspace()
     {
-        return $this->hasOne(WorkspaceResource::class, ['id' => 'timeline_post_id'])
-            ->via('workspaceTimelinePosts');
+        return $this->hasOne(WorkspaceResource::class, ['workspace_id' => 'id']);
     }
 
     /**
@@ -94,47 +87,9 @@ class TimelinePostResource extends TimelinePost
         return $this->hasMany(UserLikeResource::class, ['timeline_post_id' => 'id']);
     }
 
-    /**
-     * @return WorkspaceTimelinePostQuery|ActiveQuery
-     */
-    public function getWorkspaceTimelinePosts()
-    {
-        return $this->hasMany(WorkspaceTimelinePostResource::class, ['timeline_post_id' => 'id']);
-    }
-
-    /**
-     * After save Timeline Post create new Workspace Timeline Post
-     *
-     * @param $insert
-     * @param $changedAttributes
-     * @throws ValidationException
-     */
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-        if ($insert) {
-            $workspaceTimelinePosts = new WorkspaceTimelinePostResource();
-            $workspaceTimelinePosts->workspace_id = $this->workspace_id;
-            $workspaceTimelinePosts->timeline_post_id = $this->id;
-            if (!$workspaceTimelinePosts->save()) {
-                throw new ValidationException(\Yii::t('app', 'Unable to create Workspace Timeline Post'));
-            }
-        }
-    }
-
-    /**
-     * Delete Workspace Timeline Posts before Timeline Post is deleted
-     */
-    public function beforeDelete()
-    {
-        WorkspaceTimelinePostResource::deleteAll(['timeline_post_id' => $this->id]);
-        return parent::beforeDelete();
-    }
-
     public function load($data, $formName = null)
     {
         $this->file = UploadedFile::getInstanceByName('file');
-
         return parent::load($data, $formName);
     }
 
