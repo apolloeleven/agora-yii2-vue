@@ -16,9 +16,9 @@ import Workspace from "@/modules/Workspace/Workspace";
 import WorkspaceView from "@/modules/Workspace/WorkspaceView";
 import EmployeeList from "@/modules/setup/employees/EmployeeList";
 import Orgchart from "../modules/Orgchart/Orgchart";
-import Timeline from "@/modules/Workspace/view/timeline/Timeline";
-import WorkspaceFiles from "@/modules/Workspace/view/WorkspaceFiles";
-import Articles from "@/modules/Workspace/view/articles/Articles";
+import WorkspaceTimeline from "@/modules/Workspace/view/timeline/WorkspaceTimeline";
+import WorkspaceFiles from "@/modules/Workspace/view/files/WorkspaceFiles";
+import WorkspaceArticles from "@/modules/Workspace/view/articles/WorkspaceArticles";
 import WorkspaceAbout from "@/modules/Workspace/view/about/WorkspaceAbout";
 
 Vue.use(Router);
@@ -81,9 +81,9 @@ const router = new Router({
           redirect: 'workspace/:id/timeline',
           meta: {requiresAuth: true},
           children: [
-            {path: 'timeline', name: 'workspace.timeline', component: Timeline},
+            {path: 'timeline', name: 'workspace.timeline', component: WorkspaceTimeline},
             {path: 'files', name: 'workspace.files', component: WorkspaceFiles},
-            {path: 'articles', name: 'workspace.articles', component: Articles},
+            {path: 'articles', name: 'workspace.articles', component: WorkspaceArticles},
             {path: 'about', name: 'workspace.about', component: WorkspaceAbout},
           ]
         },

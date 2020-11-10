@@ -2,6 +2,7 @@
 const STATE = {
   showModal: false,
   workspaces: [],
+  loading: false,
   modalWorkspace: null,
 
   view: {
@@ -14,7 +15,16 @@ const STATE = {
         show: false,
         object: null
       }
-    }
+    },
+    timeline: {
+      loading: false,
+      data: [],
+      modal: {
+        loading: false,
+        show: false,
+        object: null,
+      }
+    },
   }
 };
 

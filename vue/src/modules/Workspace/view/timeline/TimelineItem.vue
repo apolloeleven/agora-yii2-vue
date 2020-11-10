@@ -51,7 +51,7 @@
       </div>
     </div>
     <b-card-footer>
-      <LikeUnlikeButton class="mr-2" :model="timeline" type="timeline"/>
+      <LikeUnlikeButton class="mr-2" :item="timeline.userLikes" :liked="liked" @onLikeClicked="onLikeClicked"/>
       <b-button size="sm" pill variant="light" :pressed.sync="showComments">
         <i class="far fa-comments fa-lg"/>
         <b-badge v-if="timeline.timelineComments" class="ml-2" pill variant="secondary">
@@ -66,24 +66,25 @@
         :key="`timeline-item-comment-${index}`">
       </CommentItem>
     </b-card-body>
-    <dropdown-button :model="timeline" type="timeline" :permissionForEdit="isAllowed"/>
+    <dropdown-buttons :item="timeline" @editClicked="onEditClicked" @removeClicked="onRemoveClicked"/>
   </b-card>
 </template>
 
 <script>
-import DropdownButton from "../../../Workspace/components/DropdownButton";
 import fileService from '@/core/services/fileService';
 import {createNamespacedHelpers} from "vuex";
 import {SHARE_ARTICLE, SHARE_FILE} from "@/core/services/event-bus";
-import CommentItem from "../../../Workspace/comment/CommentItem";
-import AddComment from "../../../Workspace/comment/AddComment";
-import LikeUnlikeButton from "../../../Workspace/components/LikeUnlikeButton";
+import CommentItem from "@/modules/Workspace/components/comment/CommentItem";
+import AddComment from "@/modules/Workspace/components/comment/AddComment";
+import LikeUnlikeButton from "@/core/components/LikeUnlikeButton";
+import DropdownButtons from "@/core/components/DropdownButtons";
 
 const {mapState} = createNamespacedHelpers('user');
+const {mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "TimelineItem",
-  components: {LikeUnlikeButton, AddComment, CommentItem, DropdownButton},
+  components: {DropdownButtons, LikeUnlikeButton, AddComment, CommentItem},
   props: {
     index: Number,
     timeline: Object
@@ -102,13 +103,43 @@ export default {
     isAllowed() {
       return this.user.id === this.timeline.createdBy.id;
     },
+    liked() {
+      return !!(this.timeline.myLikes && this.timeline.myLikes.length > 0);
+    }
   },
   methods: {
+    ...mapWorkspaceActions(['showTimelineModal', 'deleteTimelinePost', 'like', 'unlike']),
     isImage(url) {
       return fileService.isImage(url)
     },
     isVideo(url) {
       return fileService.isVideo(url)
+    },
+    onEditClicked() {
+      this.showTimelineModal(this.timeline);
+    },
+    async onRemoveClicked() {
+      const result = await this.$confirm(this.$t('All timeline records and attachments will be deleted from this timeline. Are you sure you want to continue?'),
+        this.$t('This operation can not be undone'))
+      if (result) {
+        const res = await this.deleteTimelinePost(this.timeline);
+        if (res.success) {
+          this.$toast(this.$t(`The timeline item was successfully deleted`));
+        } else {
+          this.$toast(res.body.message, 'danger');
+        }
+      }
+    },
+    async onLikeClicked() {
+      const params = {}
+      params.timeline_post_id = this.timeline.id;
+
+      if (this.liked) {
+        params.id = this.timeline.myLikes[0].id;
+        await this.unlike(params);
+      } else {
+        await this.like(params);
+      }
     },
   },
 }

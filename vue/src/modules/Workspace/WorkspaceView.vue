@@ -4,7 +4,10 @@
   </div>
   <div v-else class="workspace-view page">
     <div class="page-header">
-      <back-button/>
+      <b-button variant="light" class="mr-2" :to="{name: 'workspace'}">
+        <i class="fas fa-arrow-left"></i>
+        {{ $t('Back') }}
+      </b-button>
       <b-breadcrumb :items="breadcrumbs" class="d-none d-sm-flex"></b-breadcrumb>
       <WorkspaceUsers :model="[]"/>
     </div>
@@ -13,7 +16,6 @@
 </template>
 
 <script>
-import BackButton from "./components/BackButton";
 import {createNamespacedHelpers} from "vuex";
 import WorkspaceUsers from "./WorkspaceUsers";
 import SidedNavLayout from "@/core/components/sided-nav-layout/SidedNavLayout";
@@ -23,7 +25,7 @@ const {mapState, mapActions} = createNamespacedHelpers('workspace')
 
 export default {
   name: "WorkspaceView",
-  components: {ContentSpinner, SidedNavLayout, WorkspaceUsers, BackButton},
+  components: {ContentSpinner, SidedNavLayout, WorkspaceUsers},
   data() {
     return {
       breadcrumbs: [],
