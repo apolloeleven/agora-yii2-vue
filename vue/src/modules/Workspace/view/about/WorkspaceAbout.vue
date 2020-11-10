@@ -19,9 +19,6 @@ export default {
     ...mapState({
       workspace: state => state.view.workspace
     })
-  },
-  mounted() {
-    console.log(this.workspace);
   }
 }
 </script>
