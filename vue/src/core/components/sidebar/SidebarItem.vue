@@ -6,7 +6,7 @@
   <router-link v-else :to="to || '#'" tag="li" active-class="active" :exact="true" :class="{opened: opened}">
     <a :class="linkOptions.class" @click="onMenuItemClick">
       <sidebar-item-content :image="image" :icon="icon" :name="name" :badge="badge"
-                            :badge-classes="badgeClasses"></sidebar-item-content>
+                            :badge-classes="badgeClasses" :is-smaller="linkOptions.smaller ? linkOptions.smaller : false"></sidebar-item-content>
       <span v-if="children && children.length" class="menu-item-toggle-icon " @click="toggleItem($event)">
           <i v-if="level === 1" class="fa fa-chevron-circle-right"></i>
           <i v-else-if="!opened" class="fa fa-plus-square-o"></i>

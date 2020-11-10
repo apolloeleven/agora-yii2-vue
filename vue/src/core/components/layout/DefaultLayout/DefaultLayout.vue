@@ -65,7 +65,8 @@ export default {
           weight: 100 + i,
           icon: 'fas fa-dot-circle',
           linkOptions: {
-            'class': 'pl-4'
+            'class': 'pl-4',
+            'smaller': true,
           }
         }))
       })
