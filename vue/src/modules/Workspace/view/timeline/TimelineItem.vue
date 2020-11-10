@@ -51,7 +51,7 @@
       </div>
     </div>
     <b-card-footer>
-      <LikeUnlikeButton class="mr-2" :model="timeline" type="timeline"/>
+      <LikeUnlikeButton class="mr-2" :item="timeline.userLikes" :liked="liked" @onLikeClicked="onLikeClicked"/>
       <b-button size="sm" pill variant="light" :pressed.sync="showComments">
         <i class="far fa-comments fa-lg"/>
         <b-badge v-if="timeline.timelineComments" class="ml-2" pill variant="secondary">
@@ -76,8 +76,8 @@ import {createNamespacedHelpers} from "vuex";
 import {SHARE_ARTICLE, SHARE_FILE} from "@/core/services/event-bus";
 import CommentItem from "../../../Workspace/comment/CommentItem";
 import AddComment from "../../../Workspace/comment/AddComment";
-import LikeUnlikeButton from "../../../Workspace/components/LikeUnlikeButton";
-import DropdownButtons from "../../../../core/components/DropdownButtons";
+import LikeUnlikeButton from "@/core/components/LikeUnlikeButton";
+import DropdownButtons from "@/core/components/DropdownButtons";
 
 const {mapState} = createNamespacedHelpers('user');
 const {mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
@@ -103,9 +103,12 @@ export default {
     isAllowed() {
       return this.user.id === this.timeline.createdBy.id;
     },
+    liked() {
+      return !!(this.timeline.myLikes && this.timeline.myLikes.length > 0);
+    }
   },
   methods: {
-    ...mapWorkspaceActions(['showTimelineModal', 'deleteTimelinePost']),
+    ...mapWorkspaceActions(['showTimelineModal', 'deleteTimelinePost', 'like', 'unlike']),
     isImage(url) {
       return fileService.isImage(url)
     },
@@ -126,7 +129,18 @@ export default {
           this.$toast(res.body.message, 'danger');
         }
       }
-    }
+    },
+    async onLikeClicked() {
+      const params = {}
+      params.timeline_post_id = this.timeline.id;
+
+      if (this.liked) {
+        params.id = this.timeline.myLikes[0].id;
+        await this.unlike(params);
+      } else {
+        await this.like(params);
+      }
+    },
   },
 }
 </script>
