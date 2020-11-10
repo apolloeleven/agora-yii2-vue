@@ -63,7 +63,7 @@ export default {
           text: w.name,
           path: `/workspace/${w.id}`,
           weight: 100 + i,
-          icon: 'fas fa-home',
+          icon: 'fas fa-dot-circle',
           linkOptions: {
             'class': 'pl-4'
           }
