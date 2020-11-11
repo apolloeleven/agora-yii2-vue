@@ -27,6 +27,8 @@ import {
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
+  TOGGLE_ARTICLE_VIEW_LOADING,
+  GET_ARTICLE,
 } from './mutation-types';
 import httpService from "../../../core/services/httpService";
 
@@ -194,6 +196,17 @@ export async function getArticles({commit}, workspace_id) {
     commit(GET_ARTICLES, body);
   }
   commit(TOGGLE_ARTICLES_LOADING, false);
+}
+
+export async function getArticle({commit}, id) {
+  commit(TOGGLE_ARTICLE_VIEW_LOADING, true);
+  const {success, body} = await httpService.get(`${articlesUrl}/${id}`, {
+    params: {expand: 'createdBy'}
+  })
+  if (success) {
+    commit(GET_ARTICLE, body);
+  }
+  commit(TOGGLE_ARTICLE_VIEW_LOADING, false);
 }
 
 /**
