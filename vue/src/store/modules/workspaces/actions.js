@@ -188,7 +188,7 @@ export function prepareData(data) {
 export async function getArticles({commit}, workspace_id) {
   commit(TOGGLE_ARTICLES_LOADING, true);
   const {success, body} = await httpService.get(articlesUrl, {
-    params: {workspace_id, sort: 'title'}
+    params: {workspace_id, sort: 'title', expand: 'createdBy'}
   })
   if (success) {
     commit(GET_ARTICLES, body);
@@ -220,7 +220,9 @@ export function hideArticleModal({commit}) {
  * @returns {Promise<unknown>}
  */
 export async function createArticle({commit}, data) {
-  let response = await httpService.post(articlesUrl, data);
+  let response = await httpService.post(articlesUrl, data, {
+    params: {expand: 'createdBy'}
+  });
   if (response.success) {
     commit(CREATE_ARTICLE, response.body);
   }
@@ -234,7 +236,9 @@ export async function createArticle({commit}, data) {
  * @returns {Promise<unknown>}
  */
 export async function updateArticle({commit}, data) {
-  let response = await httpService.put(`${articlesUrl}/${data.id}`, data);
+  let response = await httpService.put(`${articlesUrl}/${data.id}`, data, {
+    params: {expand: 'createdBy'}
+  });
   if (response.success) {
     commit(UPDATE_ARTICLE, response.body);
   }
