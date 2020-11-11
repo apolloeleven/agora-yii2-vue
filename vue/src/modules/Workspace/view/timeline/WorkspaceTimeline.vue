@@ -4,9 +4,9 @@
   </div>
   <div v-else class="row">
     <div class="col-md-12">
-      <div class="row">
-        <div class="col-md-12 text-right pb-3">
-          <b-button @click="showTimelineForm" size="sm" variant="outline-primary">
+      <div class="card mb-3">
+        <div class="card-header border-bottom-0 text-right">
+          <b-button @click="showTimelineForm" size="sm" variant="primary">
             <i class="fas fa-plus-circle"/>
             {{ $t('Write on timeline') }}
           </b-button>
