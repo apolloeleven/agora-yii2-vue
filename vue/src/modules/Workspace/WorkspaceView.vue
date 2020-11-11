@@ -150,10 +150,10 @@ export default {
   .page-content {
     display: grid;
     grid-gap: 1em;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(4, 1fr);
 
     .content {
-      grid-column: 1/6;
+      grid-column: 1/4;
     }
   }
 }

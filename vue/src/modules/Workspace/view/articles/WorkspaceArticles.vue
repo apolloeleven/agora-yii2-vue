@@ -6,7 +6,7 @@
     <div class="card">
       <div class="card-header d-flex align-items-center">
         <h5 class="mb-0">{{ articles.length }} {{ $t('article(s)') }}</h5>
-        <b-button @click="onCreateArticleClick" size="sm" variant="primary" class="ml-auto">
+        <b-button :to="{name: 'workspace.articles.view_create'}" size="sm" variant="primary" class="ml-auto">
           <i class="fas fa-plus-circle"/>
           {{ $t('Create Article') }}
         </b-button>
@@ -16,7 +16,8 @@
         <div :class="{'border-bottom': index < articles.length - 1}" v-for="(article, index) in articles"
              :key="`article-item-${article.id}`" class="p-3 d-flex align-items-center">
           <div>
-            <router-link class="d-inline-block" :to="{name: 'article.view', params: {id: article.id}}">
+            <router-link class="d-inline-block"
+                         :to="{name: 'workspace.articles.view_update', params: {articleId: article.id}}">
               <h5 class="mb-0">{{ article.title }}</h5>
             </router-link>
             <small class="mt-2 text-muted d-block">
