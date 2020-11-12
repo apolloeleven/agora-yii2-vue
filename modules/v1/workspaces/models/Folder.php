@@ -48,8 +48,6 @@ use yii\web\UploadedFile;
  */
 class Folder extends ActiveRecord
 {
-    public $image;
-
     /**
      * {@inheritdoc}
      */
@@ -88,7 +86,6 @@ class Folder extends ActiveRecord
             [['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Folder::class, 'targetAttribute' => ['parent_id' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
             [['workspace_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workspace::class, 'targetAttribute' => ['workspace_id' => 'id']],
-            [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, gif, jpg']
         ];
     }
 

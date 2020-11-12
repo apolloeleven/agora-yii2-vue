@@ -4,9 +4,6 @@
       :visible="showModal" id="article-form" ref="modal" size="lg" :title="modalTitle"
       @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-title="$t('Submit')" scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
-        <input-widget
-          :model="model" attribute="image" type="file" :placeholder="$t('Choose a image or drop it here...')">
-        </input-widget>
         <input-widget :model="model" attribute="name"/>
         <input-widget :model="model" attribute="body" type="richtext"/>
       </b-form>

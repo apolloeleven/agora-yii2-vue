@@ -394,7 +394,7 @@ export function hideFolderModal({commit}, hideModal) {
  * @param { Object } data
  */
 export async function createFolder({dispatch}, data) {
-  return await httpService.post(folderUrl, prepareData(data));
+  return await httpService.post(folderUrl, data);
 }
 
 /**
@@ -403,15 +403,7 @@ export async function createFolder({dispatch}, data) {
  * @returns {Promise<unknown>}
  */
 export async function updateFolder({dispatch}, data) {
-  const id = data.id;
-  data = prepareData(data);
-
-  if (data instanceof FormData) {
-    data.append('_method', 'PUT');
-    return await httpService.post(`${folderUrl}/${id}`, data);
-  } else {
-    return await httpService.put(`${folderUrl}/${id}`, data);
-  }
+  return await httpService.put(`${folderUrl}/${data.id}`, data);
 }
 
 /**

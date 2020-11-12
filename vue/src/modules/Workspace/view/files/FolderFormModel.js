@@ -4,18 +4,15 @@ import i18n from "../../../../shared/i18n";
 export default class FolderFormModel extends BaseModel {
   name = '';
   body = '';
-  image = null;
 
   rules = {
     name: 'required',
     body: '',
-    image: '',
   };
 
   attributeLabels = {
     name: i18n.t('Title'),
     body: i18n.t('Body'),
-    image: i18n.t('Image'),
   };
 
   constructor(data = {}) {
