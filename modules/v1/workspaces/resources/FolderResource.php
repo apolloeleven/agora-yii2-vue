@@ -153,5 +153,4 @@ class FolderResource extends Folder
 
         return parent::save($runValidation, $attributeNames);
     }
-
 }

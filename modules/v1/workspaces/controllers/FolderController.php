@@ -154,15 +154,60 @@ class FolderController extends ActiveController
      * Get folders by parent
      *
      * @param $folderId
-     * @return ActiveDataProvider
+     * @return array
+     * @throws ValidationException
      */
     public function actionByParent($folderId)
     {
-        $query = FolderResource::find()->byParentId($folderId);
+        $data = FolderResource::find()->byParentId($folderId)->all();
+        $breadCrumbs = $this->getBreadCrumb($folderId);
 
-        return new ActiveDataProvider([
-            'query' => $query
-        ]);
+        return [
+            'data' => $data,
+            'breadCrumbs' => $breadCrumbs
+        ];
+    }
+
+    /**
+     * Get bread crumbs for files
+     *
+     * @param $folderId
+     * @return mixed
+     * @throws ValidationException
+     */
+    private function getBreadCrumb($folderId)
+    {
+        $article = FolderResource::findOne(['id' => $folderId]);
+
+        if (!$article) {
+            throw new ValidationException(Yii::t('app', 'This folder not exist'));
+        }
+
+        $breadCrumb[] = [
+            'text' => Yii::t('app', 'Files'),
+            'to' => [
+                'name' => 'workspace.files',
+            ]
+        ];
+
+        $parents = $article->parents()->all();
+
+        foreach ($parents as $parent) {
+            $breadCrumb[] = [
+                'text' => $parent->name,
+                'to' => [
+                    'name' => 'workspace.folder',
+                    'params' => [
+                        'folderId' => $parent->id
+                    ]
+                ]
+            ];
+        }
+        $breadCrumb[] = [
+            'text' => $article->name
+        ];
+
+        return $breadCrumb;
     }
 
     /**

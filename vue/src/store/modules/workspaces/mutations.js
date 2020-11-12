@@ -10,6 +10,7 @@ import {
   GET_ALL_FOLDERS,
   GET_ARTICLES,
   GET_ATTACH_CONFIG,
+  GET_BREAD_CRUMB,
   GET_CURRENT_FOLDER,
   GET_CURRENT_WORKSPACE,
   GET_TIMELINE_DATA,
@@ -241,6 +242,13 @@ export default {
    */
   [GET_ALL_FOLDERS](state, data) {
     state.view.folders.folderAndFiles = data;
+  },
+  /**
+   * @param state
+   * @param data
+   */
+  [GET_BREAD_CRUMB](state, data) {
+    state.view.folders.breadCrumbs = data;
   },
   /**
    * @param state

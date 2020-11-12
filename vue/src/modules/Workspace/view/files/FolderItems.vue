@@ -2,25 +2,29 @@
   <b-card no-body class="file-manager-card">
     <b-card-body>
       <div class="d-flex justify-content-between align-items-center mb-2">
+        <b-breadcrumb :items="breadCrumbs" class="d-none d-sm-flex"/>
         <div>
           <div class="file-manager-btn-wrapper">
-            <b-button variant="success">
+            <b-button variant="success" size="sm">
               <i class="fas fa-cloud-upload-alt"/>
               {{ $t('Upload') }}
               <input class="input-file" id="file" type="file" name="file" @change="onFileChoose" multiple/>
             </b-button>
           </div>
           <div class="file-manager-btn-wrapper">
-            <b-button @click="showModal" variant="info">
+            <b-button @click="showModal" variant="info" size="sm">
               <i class="fas fa-plus-circle"/>
               {{ $t('Create folder') }}
             </b-button>
           </div>
+          <div class="file-manager-btn-wrapper">
+            <b-button :disabled="selected.length === 0" variant="danger" @click="onDeleteMultipleFiles" size="sm">
+              <i class="far trash-alt"/>
+              {{ $t('Delete') }}
+            </b-button>
+          </div>
         </div>
-        <b-button :disabled="selected.length === 0" variant="outline-danger" @click="onDeleteMultipleFiles">
-          <i class="far trash-alt"/>
-          {{ $t('Delete') }}
-        </b-button>
+
       </div>
       <b-table small striped hover :items="model" no-local-sorting :fields="fields" @sort-changed="onSort">
         <template v-slot:table-busy>
@@ -79,7 +83,8 @@ export default {
   props: {
     model: Array,
     fields: Array,
-    selected: Array
+    selected: Array,
+    breadCrumbs: Array,
   },
   methods: {
     onFileChoose(e) {
@@ -126,6 +131,10 @@ export default {
 }
 
 .file-manager {
+  .breadcrumb {
+    background: white;
+  }
+
   .attachment-icon {
     font-size: 18px;
   }

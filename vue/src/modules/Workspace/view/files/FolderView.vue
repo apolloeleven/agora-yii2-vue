@@ -1,8 +1,8 @@
 <template>
   <div class="file-manager">
-    <FolderItems :model="foldersAndFiles" :fields="fields" :selected="selected" @onFileChoose="onFileChoose"
-                 @showModal="showModal" @editClicked="editClicked" @onDeleteMultipleFiles="onDeleteMultipleFiles"
-                 @removeClicked="removeClicked" @onSort="onSort"/>
+    <FolderItems :model="foldersAndFiles" :fields="fields" :selected="selected" :breadCrumbs="breadCrumbs"
+                 @onFileChoose="onFileChoose" @showModal="showModal" @editClicked="editClicked"
+                 @onDeleteMultipleFiles="onDeleteMultipleFiles" @removeClicked="removeClicked" @onSort="onSort"/>
     <FolderForm/>
   </div>
 </template>
@@ -27,6 +27,7 @@ export default {
   computed: {
     ...mapWorkspaceState({
       foldersAndFiles: state => state.view.folders.folderAndFiles,
+      breadCrumbs: state => state.view.folders.breadCrumbs,
       currentFolder: state => state.view.folders.folder,
       attachConfig: state => state.view.folders.attachConfig,
     }),

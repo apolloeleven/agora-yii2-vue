@@ -10,6 +10,7 @@ import {
   GET_ALL_FOLDERS,
   GET_ARTICLES,
   GET_ATTACH_CONFIG,
+  GET_BREAD_CRUMB,
   GET_CURRENT_FOLDER,
   GET_CURRENT_WORKSPACE,
   GET_TIMELINE_DATA,
@@ -464,7 +465,8 @@ export async function getFoldersByWorkspace({commit}, workspaceId) {
 export async function getFoldersByParent({commit}, parentId) {
   const {success, body} = await httpService.get(`${folderUrl}/by-parent?folderId=${parentId}&expand=updatedBy&sort=title`)
   if (success) {
-    commit(GET_ALL_FOLDERS, body)
+    commit(GET_ALL_FOLDERS, body.data)
+    commit(GET_BREAD_CRUMB, body.breadCrumbs)
   }
 }
 

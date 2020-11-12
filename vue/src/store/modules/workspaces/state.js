@@ -28,6 +28,7 @@ const STATE = {
     folders: {
       loading: false,
       folderAndFiles: [],
+      breadCrumbs: [],
       folder: {},
       data: [],
       isFile: false,
