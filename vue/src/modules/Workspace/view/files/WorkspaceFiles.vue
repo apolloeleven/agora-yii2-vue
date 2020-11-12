@@ -142,7 +142,6 @@ export default {
 
       if (res.success) {
         this.$toast(this.$t(`{count} attachment(s) were successfully uploaded`, {count: filesObject.files.length}));
-        this.foldersAndFiles = res.body.map((file) => file.id);
       } else {
         this.$toast(res.body.message, 'danger');
       }
