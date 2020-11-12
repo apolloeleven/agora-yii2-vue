@@ -23,6 +23,7 @@ import {
   SHOW_FOLDER_MODAL,
   SHOW_TIMELINE_MODAL,
   SHOW_WORKSPACE_MODAL,
+  SORT_FILES,
   TOGGLE_ARTICLES_LOADING,
   TOGGLE_VIEW_LOADING,
   UPDATE_ARTICLE,
@@ -492,6 +493,16 @@ export async function attachFiles({commit}, {data, config}) {
  */
 export async function destroyedCurrentFolder({commit}, folder) {
   commit(GET_CURRENT_FOLDER, folder)
+}
+
+/**
+ * Sort File rows
+ *
+ * @param commit
+ * @param column
+ */
+export function sortFiles({commit}, column) {
+  commit(SORT_FILES, column);
 }
 
 /**

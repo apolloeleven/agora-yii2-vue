@@ -1,7 +1,7 @@
 <template>
   <div class="file-manager">
     <FolderItems :model="foldersAndFiles" :fields="fields" :selected="selected"
-                 @onFileChoose="onFileChoose" @showModal="showModal" @editClicked="editClicked"
+                 @onFileChoose="onFileChoose" @showModal="showModal" @editClicked="editClicked" @onSort="onSort"
                  @removeClicked="removeClicked" @onDeleteMultipleFiles="onDeleteMultipleFiles"/>
     <FolderForm/>
   </div>
@@ -18,6 +18,12 @@ const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNam
 export default {
   name: "WorkspaceFiles",
   components: {FolderItems, FolderForm},
+  data() {
+    return {
+      sortBy: null,
+      sortDesc: null,
+    }
+  },
   computed: {
     ...mapWorkspaceState({
       foldersAndFiles: state => state.view.folders.folderAndFiles,
@@ -39,7 +45,8 @@ export default {
     },
   },
   methods: {
-    ...mapWorkspaceActions(['showFolderModal', 'getFoldersByWorkspace', 'attachFiles', 'getAttachConfig', 'deleteFolder']),
+    ...mapWorkspaceActions(['showFolderModal', 'getFoldersByWorkspace', 'attachFiles',
+      'getAttachConfig', 'deleteFolder', 'sortFiles']),
     showModal() {
       this.showFolderModal(null)
     },
@@ -139,6 +146,11 @@ export default {
       } else {
         this.$toast(res.body.message, 'danger');
       }
+    },
+    onSort(e) {
+      this.sortBy = e.sortBy;
+      this.sortDesc = e.sortDesc;
+      this.sortFiles({sortBy: this.sortBy, sortDesc: this.sortDesc});
     },
   },
   mounted() {

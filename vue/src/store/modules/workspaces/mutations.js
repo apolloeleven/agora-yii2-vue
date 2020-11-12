@@ -23,6 +23,7 @@ import {
   SHOW_FOLDER_MODAL,
   SHOW_TIMELINE_MODAL,
   SHOW_WORKSPACE_MODAL,
+  SORT_FILES,
   TOGGLE_ARTICLES_LOADING,
   TOGGLE_VIEW_LOADING,
   UPDATE_ARTICLE,
@@ -266,6 +267,50 @@ export default {
     state.view.folders.folderAndFiles = state.view.folders.folderAndFiles
       .concat(data.filter(d => !fileIds.includes(d.id)))
 
+  },
+  /**
+   *
+   * @param state
+   * @param column
+   */
+  [SORT_FILES](state, column) {
+    state.view.folders.folderAndFiles = state.view.folders.folderAndFiles
+      .sort((nextFile, prevFile) => {
+        let next;
+        let prev;
+        let comparison = 0;
+        let sortBy = column.sortBy;
+        let order = column.sortDesc ? 'desc' : 'asc';
+
+        if (sortBy !== 'updatedBy.displayName') {
+          if (!nextFile.hasOwnProperty(sortBy) || !prevFile.hasOwnProperty(sortBy)) {
+            return comparison;
+          }
+          let nextSortKey = sortBy, prevSortKey = sortBy;
+
+          if (sortBy === 'name') {
+            nextSortKey = nextFile['label'] ? 'label' : sortBy;
+            prevSortKey = prevFile['label'] ? 'label' : sortBy;
+          }
+          next = typeof nextFile[nextSortKey] === 'string' ? nextFile[nextSortKey].toUpperCase() : nextFile[nextSortKey];
+          prev = typeof prevFile[prevSortKey] === 'string' ? prevFile[prevSortKey].toUpperCase() : prevFile[prevSortKey];
+        } else {
+          let firstKey = 'updatedBy';
+          let secondKey = 'displayName';
+          if (!nextFile[firstKey].hasOwnProperty(secondKey) || !prevFile[firstKey].hasOwnProperty(secondKey)) {
+            return comparison;
+          }
+          next = typeof nextFile[firstKey][secondKey] === 'string' ? nextFile[firstKey][secondKey].toUpperCase() : nextFile[firstKey][secondKey];
+          prev = typeof prevFile[firstKey][secondKey] === 'string' ? prevFile[firstKey][secondKey].toUpperCase() : prevFile[firstKey][secondKey];
+        }
+
+        if (next > prev) {
+          comparison = 1;
+        } else if (next < prev) {
+          comparison = -1;
+        }
+        return order === 'desc' ? comparison * -1 : comparison;
+      });
   },
 
 };

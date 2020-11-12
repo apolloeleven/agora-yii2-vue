@@ -22,7 +22,7 @@
           {{ $t('Delete') }}
         </b-button>
       </div>
-      <b-table small striped hover :items="model" no-local-sorting :fields="fields">
+      <b-table small striped hover :items="model" no-local-sorting :fields="fields" @sort-changed="onSort">
         <template v-slot:table-busy>
           <div class="text-center text-danger my-2">
             <b-spinner class="align-middle"/>
@@ -96,6 +96,9 @@ export default {
     },
     onDeleteMultipleFiles(e) {
       this.$emit('onDeleteMultipleFiles', e)
+    },
+    onSort(e) {
+      this.$emit('onSort', e)
     },
   }
 }
