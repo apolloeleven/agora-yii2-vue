@@ -57,7 +57,7 @@ class FolderController extends ActiveController
         $isFile = $request->post('isFile');
 
         $parentFolder = null;
-        if ($folderId && !$isFile) {
+        if ($folderId) {
             $parentFolder = FolderResource::findOne($folderId);
             if (!$parentFolder) {
                 return $this->validationError(Yii::t('app', 'Unable to find parent folder'));

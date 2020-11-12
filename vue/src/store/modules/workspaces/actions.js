@@ -461,7 +461,7 @@ export async function getFoldersByWorkspace({commit}, workspaceId) {
  * @returns {Promise<void>}
  */
 export async function getFoldersByParent({commit}, parentId) {
-  const {success, body} = await httpService.get(`${folderUrl}/by-parent?folderId=${parentId}&sort=title`)
+  const {success, body} = await httpService.get(`${folderUrl}/by-parent?folderId=${parentId}&expand=updatedBy&sort=title`)
   if (success) {
     commit(GET_ALL_FOLDERS, body)
   }
