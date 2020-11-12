@@ -32,10 +32,12 @@
         <template v-slot:cell(name)="files">
           <router-link v-if="files.item.is_file === 0" class="folder-name"
                        :to="{name: 'workspace.folder', params: {folderId: files.item.id}}">
+            <i class="fas fa-folder-open"/>
             {{ files.item.name }}
           </router-link>
           <!--TODO attachment preview-->
           <a v-else class="file-name">
+            <i class="far fa-file-alt"/>
             {{ files.item.name }}
           </a>
         </template>
