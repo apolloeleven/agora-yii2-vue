@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     ...mapWorkspaceActions(['showFolderModal', 'getFoldersByParent', 'attachFiles', 'getAttachConfig',
-      'getCurrentFolder', 'deleteFolder']),
+      'getCurrentFolder', 'deleteFolder', 'destroyedCurrentFolder']),
     showModal() {
       this.showFolderModal(null)
     },
@@ -154,6 +154,9 @@ export default {
     this.getCurrentFolder(parentId);
     this.getAttachConfig();
   },
+  destroyed() {
+    this.destroyedCurrentFolder({});
+  }
 }
 </script>
 

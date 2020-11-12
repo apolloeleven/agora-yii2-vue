@@ -485,6 +485,16 @@ export async function attachFiles({commit}, {data, config}) {
 }
 
 /**
+ *
+ * @param commit
+ * @param folder
+ * @returns {Promise<void>}
+ */
+export async function destroyedCurrentFolder({commit}, folder) {
+  commit(GET_CURRENT_FOLDER, folder)
+}
+
+/**
  * Prepare file to upload
  *
  * @param data
