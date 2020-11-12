@@ -109,22 +109,6 @@ class FolderResource extends Folder
     }
 
     /**
-     * Check folder and delete if has no sub-folders
-     *
-     * @return bool|int
-     * @throws ValidationException
-     */
-    public function delete()
-    {
-        if ($this->getChildren()->count()) {
-            throw new ValidationException(Yii::t('app', 'You can\'t delete this folder because it has sub-articles'));
-        }
-        $this->deleteWithChildren();
-
-        return true;
-    }
-
-    /**
      * Load for image upload
      *
      * @param array $data

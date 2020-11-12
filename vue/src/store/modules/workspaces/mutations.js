@@ -1,13 +1,10 @@
 import {
-  ADD_TIMELINE_CHILD_COMMENT,
-  ADD_TIMELINE_COMMENT,
+  ADD_ATTACH_FILES,
   ADD_TIMELINE_POST,
   CHANGE_TIMELINE_LOADING,
   CHANGE_TIMELINE_MODAL_LOADING,
   CHANGE_WORKSPACE_LOADING,
   CREATE_ARTICLE,
-  DELETE_TIMELINE_CHILD_COMMENT,
-  DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
   FOLDER_DELETED,
   GET_ALL_FOLDERS,
@@ -26,8 +23,6 @@ import {
   SHOW_FOLDER_MODAL,
   SHOW_TIMELINE_MODAL,
   SHOW_WORKSPACE_MODAL,
-  TIMELINE_LIKE,
-  TIMELINE_UNLIKE,
   TOGGLE_ARTICLES_LOADING,
   TOGGLE_VIEW_LOADING,
   UPDATE_ARTICLE,
@@ -35,7 +30,6 @@ import {
   WORKSPACE_DELETED,
 } from './mutation-types';
 import _ from 'lodash';
-import {HIDE_EDIT_LABEL_DIALOG, SHOW_EDIT_LABEL_DIALOG} from "./file-manager/mutation-types";
 
 export default {
   /**
@@ -212,62 +206,6 @@ export default {
   /**
    *
    * @param state
-   * @param data
-   */
-  [ADD_TIMELINE_COMMENT](state, data) {
-    state.view.timeline.data.filter(t => t.id === data.timeline_post_id).forEach(t => t.timelineComments.unshift(data));
-  },
-  /**
-   *
-   * @param state
-   * @param data
-   */
-  [DELETE_TIMELINE_COMMENT](state, data) {
-    state.view.timeline.data.forEach(t => t.timelineComments = t.timelineComments.filter(c => c.id !== data.id));
-  },
-  /**
-   *
-   * @param state
-   * @param data
-   */
-  [ADD_TIMELINE_CHILD_COMMENT](state, data) {
-    state.view.timeline.data.filter(t => t.id === data.parent.timeline_post_id)
-      .forEach(t => t.timelineComments.filter(tc => tc.id === data.parent_id)
-        .forEach(tc => tc.childrenComments.unshift(data)));
-  },
-  /**
-   *
-   * @param state
-   * @param data
-   */
-  [DELETE_TIMELINE_CHILD_COMMENT](state, data) {
-    state.view.timeline.data
-      .forEach(t => t.timelineComments
-        .forEach(t => t.childrenComments = t.childrenComments.filter(c => c.id !== data.id)));
-  },
-  /**
-   *
-   * @param state
-   * @param data
-   */
-  [TIMELINE_LIKE](state, data) {
-    const timelinePost = state.view.timeline.data.filter(t => t.id === data.timeline_post_id);
-    timelinePost.forEach(t => t.userLikes.unshift(data));
-    timelinePost.forEach(t => t.myLikes.unshift(data));
-  },
-  /**
-   *
-   * @param state
-   * @param data
-   */
-  [TIMELINE_UNLIKE](state, data) {
-    const timelinePost = state.view.timeline.data.filter(t => t.id === data.timeline_post_id);
-    timelinePost.forEach(t => t.myLikes = []);
-    timelinePost.forEach(t => t.userLikes = t.userLikes.filter(l => l.id !== data.id));
-  },
-  /**
-   *
-   * @param state
    * @param loading
    */
   [CHANGE_TIMELINE_MODAL_LOADING](state, loading) {
@@ -305,10 +243,10 @@ export default {
   },
   /**
    * @param state
-   * @param id
+   * @param ids
    */
-  [FOLDER_DELETED](state, id) {
-    state.view.folders.folderAndFiles = state.view.folders.folderAndFiles.filter(a => a.id !== id)
+  [FOLDER_DELETED](state, ids) {
+    state.view.folders.folderAndFiles = state.view.folders.folderAndFiles.filter(a => !ids.includes(a.id))
   },
   /**
    *
@@ -317,6 +255,17 @@ export default {
    */
   [GET_CURRENT_FOLDER](state, data) {
     state.view.folders.folder = data || {}
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [ADD_ATTACH_FILES](state, data) {
+    const fileIds = state.view.folders.folderAndFiles.map(d => d.id);
+    state.view.folders.folderAndFiles = state.view.folders.folderAndFiles
+      .concat(data.filter(d => !fileIds.includes(d.id)))
+
   },
 
 };

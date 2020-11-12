@@ -1,8 +1,8 @@
 <template>
   <div class="file-manager">
-    <FolderItems :model="foldersAndFiles" :fields="fields" :selected="selected"
-                 @onFileChoose="onFileChoose" @showModal="showModal" @editClicked="editClicked"
-                 @removeClicked="removeClicked" @onDeleteMultipleFiles="onDeleteMultipleFiles"/>
+    <FolderItems :model="foldersAndFiles" :fields="fields" :selected="selected" @onFileChoose="onFileChoose"
+                 @showModal="showModal" @editClicked="editClicked" @onDeleteMultipleFiles="onDeleteMultipleFiles"
+                 @removeClicked="removeClicked"/>
     <FolderForm/>
   </div>
 </template>
@@ -16,7 +16,7 @@ import FolderItems from "./FolderItems";
 const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
-  name: "WorkspaceFiles",
+  name: "FolderView",
   components: {FolderItems, FolderForm},
   computed: {
     ...mapWorkspaceState({
@@ -38,8 +38,15 @@ export default {
       return this.foldersAndFiles.filter(a => a.selected === '1')
     },
   },
+  watch: {
+    '$route.params.folderId': function (id) {
+      this.getCurrentFolder(id);
+      this.getFoldersByParent(id);
+    }
+  },
   methods: {
-    ...mapWorkspaceActions(['showFolderModal', 'getFoldersByWorkspace', 'attachFiles', 'getAttachConfig', 'deleteFolder']),
+    ...mapWorkspaceActions(['showFolderModal', 'getFoldersByParent', 'attachFiles', 'getAttachConfig',
+      'getCurrentFolder', 'deleteFolder']),
     showModal() {
       this.showFolderModal(null)
     },
@@ -107,16 +114,16 @@ export default {
             this.$t(`{file_names} file already exist. Are you sure that you want to overwrite them?`, {file_names: `${checkFiles.join(',')}`}),
             this.$t('Filename conflicts'))
           if (result) {
-            this.filesAttach(ev, this.$route.params.id, filesArray)
+            this.filesAttach(ev, this.$route.params.folderId, filesArray)
           }
         } else {
-          this.filesAttach(ev, this.$route.params.id, filesArray);
+          this.filesAttach(ev, this.$route.params.folderId, filesArray);
         }
       }
     },
     async filesAttach(ev, workspaceId, filesArray) {
       const filesObject = {
-        workspace_id: workspaceId,
+        folder_id: workspaceId,
         files: filesArray,
         isFile: true,
       };
@@ -142,8 +149,9 @@ export default {
     },
   },
   mounted() {
-    const workspaceId = this.$route.params.id;
-    this.getFoldersByWorkspace(workspaceId);
+    const parentId = this.$route.params.folderId;
+    this.getFoldersByParent(parentId);
+    this.getCurrentFolder(parentId);
     this.getAttachConfig();
   },
 }

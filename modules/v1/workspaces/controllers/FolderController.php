@@ -6,6 +6,7 @@ namespace app\modules\v1\workspaces\controllers;
 use app\modules\v1\workspaces\resources\FolderResource;
 use app\rest\ActiveController;
 use app\rest\ValidationException;
+use DeepCopyTest\Matcher\Y;
 use Yii;
 use yii\base\ErrorException;
 use yii\base\Exception;
@@ -108,7 +109,7 @@ class FolderController extends ActiveController
                 } else {
                     $this->nestedSetModel($folderId, $folder, $parentFolder);
                 }
-                $attachments[] = $attachFile;
+                $attachments[] = $folder;
             }
             return $this->response($attachments, 201);
         } else {
@@ -124,8 +125,8 @@ class FolderController extends ActiveController
 
             $this->nestedSetModel($folderId, $folder, $parentFolder);
 
-            return $this->response($folder, 201);
         }
+        return $this->response($folder, 201);
     }
 
     /**
@@ -177,5 +178,29 @@ class FolderController extends ActiveController
         ];
 
         return $this->response($phpConfig);
+    }
+
+    /**
+     *
+     *
+     * @return void
+     * @throws ValidationException
+     * @throws \yii\db\Exception
+     */
+    public function actionDeleteFolders()
+    {
+        $request = Yii::$app->request;
+        $fileIds = $request->post('fileIds');
+
+        $dbTransaction = Yii::$app->db->beginTransaction();
+        foreach ($fileIds as $id) {
+            $folder = FolderResource::findOne(['id' => $id]);
+            if ($folder->getChildren()->count()) {
+                $dbTransaction->rollBack();
+                throw new ValidationException(Yii::t('app', 'You can\'t delete this folder because it has sub-folders or files'));
+            }
+            $folder->deleteWithChildren();
+        }
+        $dbTransaction->commit();
     }
 }

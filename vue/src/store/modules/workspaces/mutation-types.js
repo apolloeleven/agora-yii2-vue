@@ -21,14 +21,9 @@ export const GET_TIMELINE_DATA = 'workspace/GET_TIMELINE_DATA';
 export const ADD_TIMELINE_POST = 'workspace/ADD_TIMELINE_POST';
 export const UPDATE_TIMELINE_POST = 'workspace/UPDATE_TIMELINE_POST';
 export const DELETED_TIMELINE_POST = 'workspace/DELETED_TIMELINE_POST';
-export const ADD_TIMELINE_COMMENT = 'workspace/ADD_TIMELINE_COMMENT';
-export const ADD_TIMELINE_CHILD_COMMENT = 'workspace/ADD_TIMELINE_CHILD_COMMENT';
-export const DELETE_TIMELINE_COMMENT = 'workspace/DELETE_TIMELINE_COMMENT';
-export const DELETE_TIMELINE_CHILD_COMMENT = 'workspace/DELETE_TIMELINE_CHILD_COMMENT';
-export const TIMELINE_LIKE = 'workspace/TIMELINE_LIKE';
-export const TIMELINE_UNLIKE = 'workspace/TIMELINE_UNLIKE';
 
 export const GET_ATTACH_CONFIG = 'workspace/GET_ATTACH_CONFIG';
+export const ADD_ATTACH_FILES = 'workspace/ADD_ATTACH_FILES';
 export const SHOW_FOLDER_MODAL = 'workspace/SHOW_FOLDER_MODAL';
 export const HIDE_FOLDER_MODAL = 'workspace/HIDE_FOLDER_MODAL';
 export const GET_ALL_FOLDERS = 'workspace/GET_ALL_FOLDERS';
