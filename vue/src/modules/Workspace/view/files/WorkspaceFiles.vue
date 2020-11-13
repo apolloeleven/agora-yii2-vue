@@ -1,8 +1,8 @@
 <template>
   <div class="file-manager">
-    <FolderItems :model="foldersAndFiles" :fields="fields" :selected="selected"
-                 @onFileChoose="onFileChoose" @showModal="showModal" @editClicked="editClicked" @onSort="onSort"
-                 @removeClicked="removeClicked" @onDeleteMultipleFiles="onDeleteMultipleFiles"/>
+    <FolderItems :model="foldersAndFiles" :fields="fields" :selected="selected" @onSort="onSort"
+                 @onFileChoose="onFileChoose" @onShowModal="onShowModal" @onEditClick="onEditClick"
+                 @onRemoveClick="onRemoveClick" @onDeleteMultipleFiles="onDeleteMultipleFiles"/>
     <FolderForm/>
   </div>
 </template>
@@ -47,10 +47,10 @@ export default {
   methods: {
     ...mapWorkspaceActions(['showFolderModal', 'getFoldersByWorkspace', 'attachFiles',
       'getAttachConfig', 'deleteFolder', 'sortFiles']),
-    showModal() {
+    onShowModal() {
       this.showFolderModal(null)
     },
-    editClicked(e) {
+    onEditClick(e) {
       this.showFolderModal(e)
     },
     onDeleteMultipleFiles() {
@@ -70,7 +70,7 @@ export default {
         }
       }
     },
-    removeClicked(e) {
+    onRemoveClick(e) {
       this.showDeleteConfirmation([e.id])
     },
     checkFileNames(fileNames) {

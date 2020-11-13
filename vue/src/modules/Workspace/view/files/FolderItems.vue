@@ -12,7 +12,7 @@
             </b-button>
           </div>
           <div class="file-manager-btn-wrapper">
-            <b-button @click="showModal" variant="info" size="sm">
+            <b-button @click="onShowModal" variant="info" size="sm">
               <i class="fas fa-plus-circle"/>
               {{ $t('Create folder') }}
             </b-button>
@@ -62,11 +62,11 @@
             <template v-slot:button-content>
               <i class="fas fa-ellipsis-v"/>
             </template>
-            <b-dropdown-item v-if="!isFile(data.item)" @click="editClicked(data.item)">
+            <b-dropdown-item v-if="!isFile(data.item)" @click="onEditClick(data.item)">
               <i class="fas fa-pencil-alt mr-2"></i>
               {{ $t('Edit') }}
             </b-dropdown-item>
-            <b-dropdown-item @click="removeClicked(data.item)">
+            <b-dropdown-item @click="onRemoveClick(data.item)">
               <i class="far fa-trash-alt mr-2"></i>
               {{ $t('Remove') }}
             </b-dropdown-item>
@@ -107,14 +107,14 @@ export default {
     onFileChoose(e) {
       this.$emit('onFileChoose', e)
     },
-    showModal(e) {
-      this.$emit('showModal', e)
+    onShowModal(e) {
+      this.$emit('onShowModal', e)
     },
-    removeClicked(e) {
-      this.$emit('removeClicked', e)
+    onRemoveClick(e) {
+      this.$emit('onRemoveClick', e)
     },
-    editClicked(e) {
-      this.$emit('editClicked', e)
+    onEditClick(e) {
+      this.$emit('onEditClick', e)
     },
     onDeleteMultipleFiles(e) {
       this.$emit('onDeleteMultipleFiles', e)

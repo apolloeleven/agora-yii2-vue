@@ -1,9 +1,9 @@
 <template>
   <div class="file-manager">
     <FolderItems :model="foldersAndFiles" :fields="fields" :selected="selected" :breadCrumbs="breadCrumbs"
-                 :currentFolder="currentFolder" @onFileChoose="onFileChoose" @showModal="showModal"
-                 @editClicked="editClicked" @onDeleteMultipleFiles="onDeleteMultipleFiles"
-                 @removeClicked="removeClicked" @onSort="onSort"/>
+                 :currentFolder="currentFolder" @onFileChoose="onFileChoose" @onShowModal="onShowModal"
+                 @onEditClick="onEditClick" @onDeleteMultipleFiles="onDeleteMultipleFiles"
+                 @onRemoveClick="onRemoveClick" @onSort="onSort"/>
     <FolderForm/>
   </div>
 </template>
@@ -55,10 +55,10 @@ export default {
   methods: {
     ...mapWorkspaceActions(['showFolderModal', 'getFoldersByParent', 'attachFiles', 'getAttachConfig',
       'getCurrentFolder', 'deleteFolder', 'destroyedCurrentFolder', 'sortFiles']),
-    showModal() {
+    onShowModal() {
       this.showFolderModal(null)
     },
-    editClicked(e) {
+    onEditClick(e) {
       this.showFolderModal(e)
     },
     onDeleteMultipleFiles() {
@@ -78,7 +78,7 @@ export default {
         }
       }
     },
-    removeClicked(e) {
+    onRemoveClick(e) {
       this.showDeleteConfirmation([e.id])
     },
     checkFileNames(fileNames) {
