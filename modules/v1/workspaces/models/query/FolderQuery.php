@@ -94,9 +94,9 @@ class FolderQuery extends ActiveQuery
     /**
      * @return FolderQuery
      */
-    public function isDefaultFolder()
+    public function isTimelineFolder()
     {
-        return $this->andWhere([Folder::tableName() . '.is_default_folder' => 1]);
+        return $this->andWhere([Folder::tableName() . '.is_timeline_folder' => 1]);
     }
 
     /**

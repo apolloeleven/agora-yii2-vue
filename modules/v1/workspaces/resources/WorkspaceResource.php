@@ -97,13 +97,21 @@ class WorkspaceResource extends Workspace
                 throw new ValidationException(Yii::t('app', 'Unable to create user workspace'));
             }
 
-            $folder = new Folder();
-            $folder->workspace_id = $this->id;
-            $folder->is_default_folder = 1;
-            $folder->name = 'From Timeline Posts';
+            $workspaceRootFolder = new Folder();
+            $workspaceRootFolder->workspace_id = $this->id;
 
-            if (!$folder->makeRoot()) {
-                throw new ValidationException(Yii::t('app', 'Unable to create folder'));
+            if (!$workspaceRootFolder->makeRoot()) {
+                throw new ValidationException(Yii::t('app', 'Unable to create root folder'));
+            }
+
+            $childFolder = new Folder();
+            $childFolder->workspace_id = $this->id;
+            $childFolder->is_timeline_folder = 1;
+            $childFolder->parent_id = $workspaceRootFolder->id;
+            $childFolder->name = 'From Timeline Posts';
+
+            if (!$childFolder->appendTo($workspaceRootFolder)) {
+                throw new ValidationException(Yii::t('app', 'Unable to create child folder'));
             }
         }
     }

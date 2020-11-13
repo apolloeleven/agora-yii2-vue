@@ -92,14 +92,14 @@ export default {
   computed: {
     isDefaultFolder() {
       if (this.currentFolder) {
-        return this.currentFolder.is_default_folder === 1
+        return this.currentFolder.is_timeline_folder === 1
       }
       return false;
     },
   },
   methods: {
     isDefault(item) {
-      return item.is_default_folder === 1;
+      return item.is_timeline_folder === 1;
     },
     isFile(item) {
       return item.is_file === 1;

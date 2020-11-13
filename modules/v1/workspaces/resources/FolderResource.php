@@ -30,7 +30,7 @@ class FolderResource extends Folder
             'depth',
             'size',
             'is_file',
-            'is_default_folder',
+            'is_timeline_folder',
             'file_path',
             'mime' => function () {
                 $mime = explode('/', $this->mime)[0];

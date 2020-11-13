@@ -159,7 +159,7 @@ class FolderController extends ActiveController
     public function actionByParent($folderId)
     {
         $data = FolderResource::find()->byParentId($folderId)->all();
-        $defaultFolder = FolderResource::find()->byId($folderId)->isDefaultFolder()->one();
+        $defaultFolder = FolderResource::find()->byId($folderId)->isTimelineFolder()->one();
         if ($defaultFolder) {
             $data = FolderResource::find()->hasTimelineFile()->byWorkspaceId($defaultFolder->workspace_id)->all();
         }
