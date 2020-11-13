@@ -455,20 +455,6 @@ export async function getCurrentFolder({commit}, folderId) {
 }
 
 /**
- * Get folders for workspace view
- *
- * @param commit
- * @param { int } workspaceId
- * @returns {Promise<void>}
- */
-export async function getFoldersByWorkspace({commit}, workspaceId) {
-  const {success, body} = await httpService.get(`${folderUrl}?workspace_id=${workspaceId}&sort=title&expand=updatedBy`)
-  if (success) {
-    commit(GET_ALL_FOLDERS, body)
-  }
-}
-
-/**
  * Get folders by parent id for article view page
  *
  * @param commit

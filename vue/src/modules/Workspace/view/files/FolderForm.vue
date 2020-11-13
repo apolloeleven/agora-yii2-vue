@@ -47,7 +47,7 @@ export default {
     },
   },
   methods: {
-    ...mapWorkspaceActions(['hideFolderModal', 'getFoldersByParent', 'getFoldersByWorkspace', 'createFolder', 'updateFolder']),
+    ...mapWorkspaceActions(['hideFolderModal', 'getFoldersByParent', 'createFolder', 'updateFolder']),
     async onSubmit() {
       let action;
 
@@ -66,11 +66,7 @@ export default {
         res = await this.createFolder({...this.model.toJSON()});
       }
 
-      if (this.model.folder_id) {
-        this.getFoldersByParent(this.model.folder_id);
-      } else if (this.model.workspace_id) {
-        this.getFoldersByWorkspace(this.model.workspace_id);
-      }
+      this.getFoldersByParent(this.model.folder_id);
 
       if (res.success) {
         this.$toast(this.$t(`The folder '{title}' was successfully ${action}`, {title: this.model.name}));
