@@ -30,7 +30,13 @@
               }}
             </small>
           </div>
-          <i class="ml-auto far fa-trash-alt text-danger hover-pointer" @click="onRemoveClicked(article)"></i>
+          <div class="ml-auto">
+            <b-tooltip :show.sync="article.showTooltip" triggers=""
+                       :target="`copy-tooltip-${article.id}`" :title="$t('Copied!')" placement="auto"></b-tooltip>
+            <i :id="`copy-tooltip-${article.id}`" class="mr-3 far fa-copy text-primary hover-pointer"
+               @click="onCopyUrlClick(article)"></i>
+            <i class="far fa-trash-alt text-danger hover-pointer" @click="onRemoveClicked(article)"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -67,6 +73,13 @@ export default {
         }
       }
     },
+    onCopyUrlClick(article) {
+      article.showTooltip = true;
+      this.$copyText(`${window.location.origin}/workspace/${this.workspace.id}/articles/${article.id}`);
+      setTimeout(() => {
+        article.showTooltip = false
+      }, 1500)
+    }
   },
   beforeMount() {
     this.getArticles(this.workspace.id);

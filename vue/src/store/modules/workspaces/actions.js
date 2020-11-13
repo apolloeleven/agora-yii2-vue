@@ -189,10 +189,14 @@ export function prepareData(data) {
  */
 export async function getArticles({commit}, workspace_id) {
   commit(TOGGLE_ARTICLES_LOADING, true);
-  const {success, body} = await httpService.get(articlesUrl, {
+  let {success, body} = await httpService.get(articlesUrl, {
     params: {workspace_id, sort: 'title', expand: 'createdBy'}
   })
   if (success) {
+    body = body.map((article) => {
+      article.showTooltip = false;
+      return article
+    })
     commit(GET_ARTICLES, body);
   }
   commit(TOGGLE_ARTICLES_LOADING, false);
