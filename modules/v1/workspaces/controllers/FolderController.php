@@ -126,8 +126,8 @@ class FolderController extends ActiveController
 
             $this->nestedSetModel($folderId, $folder, $parentFolder);
 
+            return $this->response($folder, 201);
         }
-        return $this->response($folder, 201);
     }
 
     /**
@@ -182,9 +182,9 @@ class FolderController extends ActiveController
      */
     private function getBreadCrumb($folderId)
     {
-        $article = FolderResource::findOne(['id' => $folderId]);
+        $folder = FolderResource::findOne(['id' => $folderId]);
 
-        if (!$article) {
+        if (!$folder) {
             throw new ValidationException(Yii::t('app', 'This folder not exist'));
         }
 
@@ -195,7 +195,7 @@ class FolderController extends ActiveController
             ]
         ];
 
-        $parents = $article->parents()->all();
+        $parents = $folder->parents()->all();
 
         foreach ($parents as $parent) {
             $breadCrumb[] = [
@@ -209,7 +209,7 @@ class FolderController extends ActiveController
             ];
         }
         $breadCrumb[] = [
-            'text' => $article->name
+            'text' => $folder->name
         ];
 
         return $breadCrumb;
