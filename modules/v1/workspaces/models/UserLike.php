@@ -16,14 +16,12 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property int|null $article_id
  * @property int|null $timeline_post_id
- * @property int|null $folder_id
  * @property int|null $created_at
  * @property int|null $created_by
  *
  * @property Article $article
  * @property User $createdBy
  * @property TimelinePost $timelinePost
- * @property Folder $folder
  */
 class UserLike extends ActiveRecord
 {
@@ -58,11 +56,10 @@ class UserLike extends ActiveRecord
     public function rules()
     {
         return [
-            [['article_id', 'timeline_post_id', 'folder_id', 'created_at', 'created_by'], 'integer'],
+            [['article_id', 'timeline_post_id', 'created_at', 'created_by'], 'integer'],
             [['article_id'], 'exist', 'skipOnError' => true, 'targetClass' => Article::class, 'targetAttribute' => ['article_id' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['timeline_post_id'], 'exist', 'skipOnError' => true, 'targetClass' => TimelinePost::class, 'targetAttribute' => ['timeline_post_id' => 'id']],
-            [['folder_id'], 'exist', 'skipOnError' => true, 'targetClass' => Folder::class, 'targetAttribute' => ['folder_id' => 'id']],
         ];
     }
 
@@ -75,7 +72,6 @@ class UserLike extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'article_id' => Yii::t('app', 'Article ID'),
             'timeline_post_id' => Yii::t('app', 'Timeline Post ID'),
-            'folder_id' => Yii::t('app', 'Folder ID'),
             'created_at' => Yii::t('app', 'Created At'),
             'created_by' => Yii::t('app', 'Created By'),
         ];
@@ -117,15 +113,5 @@ class UserLike extends ActiveRecord
     public function getTimelinePost()
     {
         return $this->hasOne(TimelinePost::class, ['id' => 'timeline_post_id']);
-    }
-
-    /**
-     * Gets query for [[Folder]].
-     *
-     * @return ActiveQuery
-     */
-    public function getFolder()
-    {
-        return $this->hasOne(Folder::class, ['id' => 'folder_id']);
     }
 }
