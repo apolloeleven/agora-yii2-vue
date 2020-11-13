@@ -73,7 +73,7 @@ class UserResource extends User
             if (!$parentSave) {
                 $transaction->rollBack();
             }
-            if ($this->userWorkspacesData) {
+            if (isset($this->userWorkspacesData)) {
                 $this->updateRoles($this->userWorkspacesData);
                 $this->updateUserWorkspaces($this->userWorkspacesData);
             }
