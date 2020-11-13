@@ -94,6 +94,7 @@ export default {
       if (this.currentFolder) {
         return this.currentFolder.is_default_folder === 1
       }
+      return false;
     },
   },
   methods: {

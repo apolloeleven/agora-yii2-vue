@@ -20,7 +20,7 @@
             <template v-slot:cell(departments)="data">
               <ul v-if="data.item.userDepartments.length > 0"
                   style="width: 100%; list-style-type: none;padding-inline-start: 0">
-                <li v-for="dep in data.item.userDepartments">
+                <li v-for="dep in data.item.userDepartments" v-bind:key="`departments-${dep}`">
                   {{ dep.department.name }}
                 </li>
               </ul>
@@ -28,7 +28,7 @@
             <template v-slot:cell(country)="data">
               <ul v-if="data.item.userDepartments.length > 0"
                   style="width: 100%; list-style-type: none; padding-inline-start: 0">
-                <li v-for="dep in data.item.userDepartments">
+                <li v-for="dep in data.item.userDepartments" v-bind:key="`country-${dep}`">
                   {{ dep.department.country.name }}
                 </li>
               </ul>

@@ -8,6 +8,7 @@ import {
   DELETED_TIMELINE_POST,
   FOLDER_DELETED,
   GET_ALL_FOLDERS,
+  GET_ARTICLE,
   GET_ARTICLES,
   GET_ATTACH_CONFIG,
   GET_BREAD_CRUMB,
@@ -25,13 +26,12 @@ import {
   SHOW_TIMELINE_MODAL,
   SHOW_WORKSPACE_MODAL,
   SORT_FILES,
+  TOGGLE_ARTICLE_VIEW_LOADING,
   TOGGLE_ARTICLES_LOADING,
   TOGGLE_VIEW_LOADING,
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
-  TOGGLE_ARTICLE_VIEW_LOADING,
-  GET_ARTICLE,
 } from './mutation-types';
 import httpService from "../../../core/services/httpService";
 
@@ -410,7 +410,7 @@ export function hideFolderModal({commit}, hideModal) {
 }
 
 /**
- * @param payload
+ * @param commit
  * @returns {Promise<unknown>}
  * @param { Object } data
  */
