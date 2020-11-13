@@ -77,7 +77,7 @@ class UserResource extends User
                 $this->updateRoles($this->userWorkspacesData);
                 $this->updateUserWorkspaces($this->userWorkspacesData);
             }
-            if ($this->userDepartmentsData) {
+            if (isset($this->userDepartmentsData)) {
                 $this->updateUserDepartments($this->userDepartmentsData);
             }
             $transaction->commit();
