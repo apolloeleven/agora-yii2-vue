@@ -130,7 +130,7 @@ class TimelinePostResource extends TimelinePost
      */
     public function getFileUrl()
     {
-        $folder = FolderResource::findOne(['timeline_id' => $this->id]);
+        $folder = FolderResource::findOne(['timeline_post_id' => $this->id]);
         return $folder ? Yii::getAlias('@storageUrl' . $folder->file_path) : '';
     }
 
@@ -155,7 +155,7 @@ class TimelinePostResource extends TimelinePost
             if ($this->file) {
                 $folder = new Folder();
                 $folder->workspace_id = $this->workspace_id;
-                $folder->timeline_id = $this->id;
+                $folder->timeline_post_id = $this->id;
                 $folder->is_file = 1;
 
                 $parentFolder = Folder::findOne(['workspace_id' => $folder->workspace_id]);

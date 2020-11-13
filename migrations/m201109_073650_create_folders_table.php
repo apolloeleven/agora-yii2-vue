@@ -16,7 +16,7 @@ class m201109_073650_create_folders_table extends Migration
             'id' => $this->primaryKey(),
             'parent_id' => $this->integer(),
             'workspace_id' => $this->integer()->notNull(),
-            'timeline_id' => $this->integer(),
+            'timeline_post_id' => $this->integer(),
             'is_default_folder' => $this->integer(1)->defaultValue(0),
             'is_file' => $this->integer(1)->defaultValue(0),
             'name' => $this->string(1024),
@@ -70,18 +70,18 @@ class m201109_073650_create_folders_table extends Migration
             'CASCADE'
         );
 
-        // creates index for column `timeline_id`
+        // creates index for column `timeline_post_id`
         $this->createIndex(
-            '{{%idx-folder-timeline_id}}',
+            '{{%idx-folder-timeline_post_id}}',
             '{{%folders}}',
-            'timeline_id'
+            'timeline_post_id'
         );
 
         // add foreign key for table `{{%timeline_posts}}`
         $this->addForeignKey(
-            '{{%fk-folder-timeline_id}}',
+            '{{%fk-folder-timeline_post_id}}',
             '{{%folders}}',
-            'timeline_id',
+            'timeline_post_id',
             '{{%timeline_posts}}',
             'id',
             'CASCADE'
@@ -153,13 +153,13 @@ class m201109_073650_create_folders_table extends Migration
 
         // drops foreign key for table `{{%timeline_posts}}`
         $this->dropForeignKey(
-            '{{%fk-folder-timeline_id}}',
+            '{{%fk-folder-timeline_post_id}}',
             '{{%folders}}'
         );
 
-        // drops index for column `timeline_id`
+        // drops index for column `timeline_post_id`
         $this->dropIndex(
-            '{{%idx-folder-timeline_id}}',
+            '{{%idx-folder-timeline_post_id}}',
             '{{%folders}}'
         );
 
