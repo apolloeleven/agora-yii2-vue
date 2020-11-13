@@ -20,6 +20,8 @@ use yii\web\UploadedFile;
  * @property int $id
  * @property int $workspace_id
  * @property int $article_id
+ * @property string|null $name
+ * @property int $size
  * @property string|null $attachment_ids
  * @property string|null $action
  * @property string|null $description
@@ -73,8 +75,8 @@ class TimelinePost extends ActiveRecord
     {
         return [
             [['workspace_id'], 'required'],
-            [['description', 'attachment_ids'], 'string'],
-            [['article_id', 'created_at', 'updated_at', 'created_by', 'updated_by', 'workspace_id'], 'integer'],
+            [['description', 'name', 'attachment_ids'], 'string'],
+            [['article_id', 'size', 'created_at', 'updated_at', 'created_by', 'updated_by', 'workspace_id'], 'integer'],
             [['file_path'], 'string', 'max' => 1024],
             [['action'], 'string', 'max' => 255],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
@@ -95,6 +97,8 @@ class TimelinePost extends ActiveRecord
             'article_id' => Yii::t('app', 'Article ID'),
             'attachment_ids' => Yii::t('app', 'Attachment IDs'),
             'action' => Yii::t('app', 'Action'),
+            'name' => Yii::t('app', 'Name'),
+            'size' => Yii::t('app', 'Size'),
             'description' => Yii::t('app', 'Description'),
             'file_path' => Yii::t('app', 'File Path'),
             'created_at' => Yii::t('app', 'Created At'),

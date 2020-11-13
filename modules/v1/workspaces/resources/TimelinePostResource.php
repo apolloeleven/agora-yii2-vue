@@ -20,6 +20,8 @@ use yii\web\UploadedFile;
 
 class TimelinePostResource extends TimelinePost
 {
+    const IS_FILE = 1;
+
     /**
      * @return array
      * @author Saiat Kalbiev <kalbievich11@gmail.com>
@@ -34,6 +36,11 @@ class TimelinePostResource extends TimelinePost
             'file_url' => function () {
                 return $this->getFileUrl();
             },
+            'is_file' => function () {
+                return TimelinePostResource::IS_FILE;
+            },
+            'name',
+            'size',
             'created_at' => function () {
                 return $this->created_at * 1000;
             },
@@ -51,6 +58,7 @@ class TimelinePostResource extends TimelinePost
     {
         return [
             'createdBy',
+            'updatedBy',
             'article',
             'timelineComments',
             'userLikes',
@@ -105,6 +113,8 @@ class TimelinePostResource extends TimelinePost
             return parent::save($runValidation, $attributeNames);
         }
         $dirPath = '/timelinePosts/' . $this->workspace_id;
+        $this->name = $this->file->name;
+        $this->size = $this->file->size;
         $this->file_path = $dirPath . '/' . Yii::$app->security->generateRandomString() . '.' . $this->file->extension;
 
         $fullPath = Yii::getAlias('@storage' . $this->file_path);
@@ -122,6 +132,14 @@ class TimelinePostResource extends TimelinePost
     public function getCreatedBy()
     {
         return $this->hasOne(UserResource::class, ['id' => 'created_by']);
+    }
+
+    /**
+     * @return UserQuery|ActiveQuery
+     */
+    public function getUpdatedBy()
+    {
+        return $this->hasOne(UserResource::class, ['id' => 'updated_by']);
     }
 
     /**

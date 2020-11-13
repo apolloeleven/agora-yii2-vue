@@ -393,16 +393,16 @@ export function hideFolderModal({commit}, hideModal) {
  * @returns {Promise<unknown>}
  * @param { Object } data
  */
-export async function createFolder({dispatch}, data) {
+export async function createFolder({commit}, data) {
   return await httpService.post(folderUrl, data);
 }
 
 /**
- * @param dispatch
+ * @param commit
  * @param { Object } data
  * @returns {Promise<unknown>}
  */
-export async function updateFolder({dispatch}, data) {
+export async function updateFolder({commit}, data) {
   return await httpService.put(`${folderUrl}/${data.id}`, data);
 }
 

@@ -3,7 +3,7 @@
     <b-card-body>
       <div class="d-flex justify-content-between align-items-center mb-2">
         <b-breadcrumb :items="breadCrumbs" class="d-none d-sm-flex"/>
-        <div>
+        <div v-if="!isDefaultFolder">
           <div class="file-manager-btn-wrapper">
             <b-button variant="success" size="sm">
               <i class="fas fa-cloud-upload-alt"/>
@@ -34,7 +34,7 @@
           </div>
         </template>
         <template v-slot:cell(name)="files">
-          <router-link v-if="files.item.is_file === 0" class="folder-name"
+          <router-link v-if="!isFile(files.item)" class="folder-name"
                        :to="{name: 'workspace.folder', params: {folderId: files.item.id}}">
             <i class="fas fa-folder-open"/>
             {{ files.item.name }}
@@ -46,7 +46,9 @@
           </a>
         </template>
         <template v-slot:cell(checkbox)="{item}">
-          <b-form-checkbox v-model="item.selected" value="1" unchecked-value="0"/>
+          <b-form-checkbox
+            v-if="!isDefault(item) && !isDefaultFolder" v-model="item.selected" value="1" unchecked-value="0">
+          </b-form-checkbox>
         </template>
         <template v-slot:cell(size)="{item}">
           {{ item.size | prettyBytes }}
@@ -55,11 +57,12 @@
           {{ item.updated_at | toDatetime }}
         </template>
         <template v-slot:cell(actions)="data">
-          <b-dropdown variant="link" toggle-class="text-decoration-none p-0" no-caret right>
+          <b-dropdown v-if="!isDefault(data.item) && !isDefaultFolder" variant="link"
+                      toggle-class="text-decoration-none p-0" no-caret right>
             <template v-slot:button-content>
               <i class="fas fa-ellipsis-v"/>
             </template>
-            <b-dropdown-item v-if="data.item.is_file === 0" @click="editClicked(data.item)">
+            <b-dropdown-item v-if="!isFile(data.item)" @click="editClicked(data.item)">
               <i class="fas fa-pencil-alt mr-2"></i>
               {{ $t('Edit') }}
             </b-dropdown-item>
@@ -75,18 +78,31 @@
 </template>
 
 <script>
-import DropdownButtons from "../../../../core/components/DropdownButtons";
 
 export default {
   name: "FolderItems",
-  components: {DropdownButtons},
+  components: {},
   props: {
     model: Array,
     fields: Array,
     selected: Array,
     breadCrumbs: Array,
+    currentFolder: Object,
+  },
+  computed: {
+    isDefaultFolder() {
+      if (this.currentFolder) {
+        return this.currentFolder.is_default_folder === 1
+      }
+    },
   },
   methods: {
+    isDefault(item) {
+      return item.is_default_folder === 1;
+    },
+    isFile(item) {
+      return item.is_file === 1;
+    },
     onFileChoose(e) {
       this.$emit('onFileChoose', e)
     },

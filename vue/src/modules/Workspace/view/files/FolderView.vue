@@ -1,8 +1,9 @@
 <template>
   <div class="file-manager">
     <FolderItems :model="foldersAndFiles" :fields="fields" :selected="selected" :breadCrumbs="breadCrumbs"
-                 @onFileChoose="onFileChoose" @showModal="showModal" @editClicked="editClicked"
-                 @onDeleteMultipleFiles="onDeleteMultipleFiles" @removeClicked="removeClicked" @onSort="onSort"/>
+                 :currentFolder="currentFolder" @onFileChoose="onFileChoose" @showModal="showModal"
+                 @editClicked="editClicked" @onDeleteMultipleFiles="onDeleteMultipleFiles"
+                 @removeClicked="removeClicked" @onSort="onSort"/>
     <FolderForm/>
   </div>
 </template>

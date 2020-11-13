@@ -90,4 +90,12 @@ class FolderQuery extends ActiveQuery
     {
         return $this->andWhere([Folder::tableName() . '.is_file' => 1]);
     }
+
+    /**
+     * @return FolderQuery
+     */
+    public function isDefaultFolder()
+    {
+        return $this->andWhere([Folder::tableName() . '.is_default_folder' => 1]);
+    }
 }
