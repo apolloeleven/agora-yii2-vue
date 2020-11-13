@@ -171,20 +171,13 @@ class FolderController extends ActiveController
             throw new ValidationException(Yii::t('app', 'This folder not exist'));
         }
 
-        $breadCrumb[] = [
-            'text' => Yii::t('app', 'Files'),
-            'to' => [
-                'name' => 'workspace.files',
-            ]
-        ];
-
         $parents = $folder->parents()->all();
 
         foreach ($parents as $parent) {
             $breadCrumb[] = [
                 'text' => $parent->name,
                 'to' => [
-                    'name' => 'workspace.folder',
+                    'name' => 'workspace.files',
                     'params' => [
                         'folderId' => $parent->id
                     ]

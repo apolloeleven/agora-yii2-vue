@@ -106,6 +106,7 @@ class WorkspaceResource extends Workspace
             }
 
             $workspaceRootFolder = new Folder();
+            $workspaceRootFolder->name = 'Files';
             $workspaceRootFolder->workspace_id = $this->id;
 
             if (!$workspaceRootFolder->makeRoot()) {
