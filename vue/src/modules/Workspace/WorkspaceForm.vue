@@ -9,7 +9,6 @@
         <input-widget
           :model="model" attribute="image" type="file" :placeholder="$t('Choose a image or drop it here...')">
         </input-widget>
-        <input-widget :model="model" attribute="folder_in_folder" type="checkbox"/>
         <input-widget :model="model" attribute="name"/>
         <input-widget :model="model" attribute="abbreviation"/>
         <input-widget :model="model" attribute="description" type="richtext"/>
@@ -46,7 +45,6 @@ export default {
   methods: {
     ...mapActions(['hideWorkspaceModal', 'createWorkspace', 'updateWorkspace']),
     async onSubmit() {
-      this.model.folder_in_folder = this.model.folder_in_folder ? 1 : 0
       let action
       let res
       if (this.model.id) {
@@ -60,7 +58,6 @@ export default {
         this.$toast(this.$t(`The workspace '{name}' was successfully ${action}`, {name: this.model.name}));
         this.hideModal()
       } else {
-        this.model.folder_in_folder = !!this.model.folder_in_folder;
         this.model.setMultipleErrors(res.body);
       }
     },

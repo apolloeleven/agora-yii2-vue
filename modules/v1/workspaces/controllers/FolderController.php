@@ -121,7 +121,6 @@ class FolderController extends ActiveController
         } else {
             $folder = new FolderResource();
             $folder->name = $request->post('name');
-            $folder->body = $request->post('body');
             $folder->workspace_id = $workspaceId;
             $folder->is_file = $isFile ? 1 : 0;
 

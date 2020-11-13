@@ -29,9 +29,6 @@ class WorkspaceResource extends Workspace
             'name',
             'abbreviation',
             'description',
-            'folder_in_folder' => function () {
-                return !!$this->folder_in_folder;
-            },
             'created_at' => function () {
                 return $this->created_at * 1000;
             },

@@ -5,7 +5,6 @@
       @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-title="$t('Submit')" scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
         <input-widget :model="model" attribute="name"/>
-        <input-widget :model="model" attribute="body" type="richtext"/>
       </b-form>
     </b-modal>
   </ValidationObserver>

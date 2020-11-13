@@ -25,7 +25,6 @@ class FolderResource extends Folder
             'parent_id',
             'workspace_id',
             'name',
-            'body',
             'label',
             'depth',
             'size',
