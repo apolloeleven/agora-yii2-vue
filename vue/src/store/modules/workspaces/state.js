@@ -14,7 +14,11 @@ const STATE = {
       modal: {
         show: false,
         object: null
-      }
+      },
+      view: {
+        article: null,
+        loading: false,
+      },
     },
     timeline: {
       loading: false,

@@ -3,44 +3,58 @@
     <content-spinner show/>
   </div>
   <div v-else class="articles-wrapper">
-    <div class="row">
-      <div class="col-md-12 text-right pb-3">
-        <b-button @click="onCreateArticleClick" size="sm" variant="outline-primary">
+    <div class="card">
+      <div class="card-header d-flex align-items-center">
+        <h5 class="mb-0">{{ articles.length }} {{ $t('article(s)') }}</h5>
+        <b-button :to="{name: 'workspace.articles.view_create'}" size="sm" variant="primary" class="ml-auto">
           <i class="fas fa-plus-circle"/>
           {{ $t('Create Article') }}
         </b-button>
       </div>
-    </div>
-    <div class="article-item" v-for="(article) in articles" :key="`article-item-${article.id}`">
-      <b-card no-body class="mb-3">
-        <div class="p-3">
-          <router-link class="d-inline-block" :to="{name: 'article.view', params: {id: article.id}}">
-            <h5 class="mb-0">{{ article.title }}</h5>
-          </router-link>
-          <div v-if="article.short_description && article.short_description.length > 0"
-               v-html="article.short_description" class="mt-3"></div>
-          <small class="mt-3 text-muted d-block">
-            <i class="far fa-clock"></i>
-            {{ article.updated_at | relativeDate }}
-          </small>
+      <div class="card-body p-0">
+        <no-data-available v-if="articles.length === 0" height="100"/>
+        <div :class="{'border-bottom': index < articles.length - 1}" v-for="(article, index) in articles"
+             :key="`article-item-${article.id}`" class="p-3 d-flex align-items-center">
+          <div>
+            <router-link class="d-inline-block"
+                         :to="{name: 'workspace.articles.view_update', params: {articleId: article.id}}">
+              <h5 class="mb-0">{{ article.title }}</h5>
+            </router-link>
+            <small class="mt-2 text-muted d-block">
+              <i class="far fa-clock"></i>
+              {{
+                $t("Created {time} by {owner}", {
+                  time: $options.filters.relativeDate(article.created_at),
+                  owner: article.createdBy.displayName
+                })
+              }}
+            </small>
+          </div>
+          <div class="ml-auto">
+            <b-tooltip :show.sync="article.showTooltip" triggers=""
+                       :target="`copy-tooltip-${article.id}`" :title="$t('Copied!')" placement="auto"></b-tooltip>
+            <i :id="`copy-tooltip-${article.id}`" class="mr-3 far fa-copy text-primary hover-pointer"
+               @click="onCopyUrlClick(article)"></i>
+            <i class="far fa-trash-alt text-danger hover-pointer" @click="onRemoveClicked(article)"></i>
+          </div>
         </div>
-        <dropdown-buttons :item="article" @editClicked="onEditClicked" @removeClicked="onRemoveClicked"/>
-      </b-card>
+      </div>
     </div>
+
   </div>
 </template>
 
 <script>
 
 import {createNamespacedHelpers} from "vuex";
-import DropdownButtons from "@/core/components/DropdownButtons";
 import ContentSpinner from "@/core/components/ContentSpinner";
+import NoDataAvailable from "@/core/components/NoDataAvailable";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "WorkspaceArticles",
-  components: {ContentSpinner, DropdownButtons},
+  components: {NoDataAvailable, ContentSpinner},
   computed: {
     ...mapState({
       workspace: state => state.view.workspace,
@@ -49,13 +63,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['getArticles', 'showArticleModal', 'deleteArticle']),
-    onCreateArticleClick() {
-      this.showArticleModal({object: {workspace_id: this.workspace.id}});
-    },
-    onEditClicked(article) {
-      this.showArticleModal({object: article});
-    },
+    ...mapActions(['getArticles', 'deleteArticle']),
     async onRemoveClicked(article) {
       let success = await this.$confirm(this.$i18n.t("Are you sure you want to remove following article?"));
       if (success) {
@@ -65,6 +73,13 @@ export default {
         }
       }
     },
+    onCopyUrlClick(article) {
+      article.showTooltip = true;
+      this.$copyText(`${window.location.origin}/workspace/${this.workspace.id}/articles/${article.id}`);
+      setTimeout(() => {
+        article.showTooltip = false
+      }, 1500)
+    }
   },
   beforeMount() {
     this.getArticles(this.workspace.id);
@@ -73,5 +88,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

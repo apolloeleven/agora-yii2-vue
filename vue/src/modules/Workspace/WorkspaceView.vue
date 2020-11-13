@@ -2,30 +2,55 @@
   <div v-if="loading">
     <content-spinner show/>
   </div>
-  <div v-else class="workspace-view page">
-    <div class="page-header">
-      <b-button variant="light" class="mr-2" :to="{name: 'workspace'}">
-        <i class="fas fa-arrow-left"></i>
-        {{ $t('Back') }}
-      </b-button>
-      <b-breadcrumb :items="breadcrumbs" class="d-none d-sm-flex"></b-breadcrumb>
-      <WorkspaceUsers :model="[]"/>
+  <div v-else class="workspace-view page p-3">
+    <div class="workspace-header">
+      <div class="banner">
+      </div>
+      <div class="workspace-name-container">
+        <h1 class="m-0">{{ workspace.name }}</h1>
+      </div>
+      <div class="workspace-img-container">
+        <b-img :src="workspace.image_url || '/assets/logo.png'" fluid class="rounded-0"/>
+      </div>
+      <div class="menu-container">
+        <b-nav tabs>
+          <b-nav-item v-for="(item, index) in items" :to="item.to" active-class="active"
+                      :key="`workspace-tab-${index}`">
+            <i v-if="item.icon" :class="item.icon" class="mr-2"></i>{{ $t(item.title) }}
+          </b-nav-item>
+          <div class="ml-auto d-flex align-items-center pr-3">
+            <slot name="right-placeholder"></slot>
+          </div>
+        </b-nav>
+      </div>
     </div>
-    <sided-nav-layout :items="items"/>
+    <div class="page-content mt-3">
+      <div class="content">
+        <router-view/>
+      </div>
+      <div class="right-side-bar">
+        <div class="card">
+          <div class="card-header">
+            {{ $t('Activities') }}
+          </div>
+          <div class="card-body">
+            Lorem Ipsum Dolor
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import {createNamespacedHelpers} from "vuex";
-import WorkspaceUsers from "./WorkspaceUsers";
-import SidedNavLayout from "@/core/components/sided-nav-layout/SidedNavLayout";
 import ContentSpinner from "@/core/components/ContentSpinner";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace')
 
 export default {
   name: "WorkspaceView",
-  components: {ContentSpinner, SidedNavLayout, WorkspaceUsers},
+  components: {ContentSpinner},
   data() {
     return {
       breadcrumbs: [],
@@ -63,13 +88,73 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.page-content {
-  display: grid;
-  grid-gap: 1em;
-  grid-template-columns: repeat(6, 1fr);
+.workspace-view {
+  .workspace-header {
+    position: relative;
 
-  .content {
-    grid-column: 2/7;
+    .banner {
+      background-color: #3989c6;
+      background-image: linear-gradient(#c6e3fc, #3989c6);
+      height: 7rem;
+      z-index: 1;
+    }
+
+    .workspace-name-container {
+      position: absolute;
+      left: 10rem;
+      top: 3.5rem;
+      color: white;
+    }
+
+    .workspace-img-container {
+      background-color: white;
+      z-index: 2;
+      border: 3px solid white;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      top: 1.25rem;
+      left: 1rem;
+      position: absolute;
+      width: 8rem;
+      height: 8rem;
+    }
+
+    .menu-container {
+      padding-left: 9rem;
+      background-color: white;
+
+      .nav {
+        border-bottom: none;
+
+        .nav-item {
+          .nav-link {
+            padding: 0.85rem 1.25rem;
+            color: #212529;
+
+            &.active {
+              background-color: transparent;
+              border: 1px solid transparent;
+              color: #3989c6;
+            }
+
+            &:hover {
+              border: 1px solid transparent;
+              color: #3989c6;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .page-content {
+    display: grid;
+    grid-gap: 1em;
+    grid-template-columns: repeat(4, 1fr);
+
+    .content {
+      grid-column: 1/4;
+    }
   }
 }
 </style>

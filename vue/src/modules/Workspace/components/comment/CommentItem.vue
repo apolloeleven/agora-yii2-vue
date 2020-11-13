@@ -19,7 +19,7 @@
     </p>
     <DeleteComment :comment="comment"/>
     <AddComment :parent_id="comment.id" v-if="showComments"/>
-    <b-card-body v-if="showComments">
+    <b-card-body v-if="showComments" class="pt-1 pb-1">
       <ChildCommentItem v-for="(com, index) in comment.childrenComments" :comment="com" :index="index"
                         :key="`comment-item-child-comment-${index}`"/>
     </b-card-body>

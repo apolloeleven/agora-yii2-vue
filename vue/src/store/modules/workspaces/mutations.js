@@ -5,6 +5,8 @@ import {
   CHANGE_TIMELINE_MODAL_LOADING,
   CHANGE_WORKSPACE_LOADING,
   CREATE_ARTICLE,
+  TOGGLE_ARTICLE_VIEW_LOADING,
+  GET_ARTICLE,
   DELETED_TIMELINE_POST,
   FOLDER_DELETED,
   GET_ALL_FOLDERS,
@@ -92,6 +94,22 @@ export default {
    */
   [GET_ARTICLES](state, data) {
     state.view.articles.data = data;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [TOGGLE_ARTICLE_VIEW_LOADING](state, data) {
+    state.view.articles.view.loading = data;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_ARTICLE](state, data) {
+    state.view.articles.view.article = data;
   },
   /**
    *

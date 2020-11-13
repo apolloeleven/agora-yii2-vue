@@ -30,6 +30,8 @@ import {
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
+  TOGGLE_ARTICLE_VIEW_LOADING,
+  GET_ARTICLE,
 } from './mutation-types';
 import httpService from "../../../core/services/httpService";
 
@@ -191,13 +193,28 @@ export function prepareData(data) {
  */
 export async function getArticles({commit}, workspace_id) {
   commit(TOGGLE_ARTICLES_LOADING, true);
-  const {success, body} = await httpService.get(articlesUrl, {
-    params: {workspace_id, sort: 'title'}
+  let {success, body} = await httpService.get(articlesUrl, {
+    params: {workspace_id, sort: 'title', expand: 'createdBy'}
   })
   if (success) {
+    body = body.map((article) => {
+      article.showTooltip = false;
+      return article
+    })
     commit(GET_ARTICLES, body);
   }
   commit(TOGGLE_ARTICLES_LOADING, false);
+}
+
+export async function getArticle({commit}, id) {
+  commit(TOGGLE_ARTICLE_VIEW_LOADING, true);
+  const {success, body} = await httpService.get(`${articlesUrl}/${id}`, {
+    params: {expand: 'createdBy'}
+  })
+  if (success) {
+    commit(GET_ARTICLE, body);
+  }
+  commit(TOGGLE_ARTICLE_VIEW_LOADING, false);
 }
 
 /**
@@ -224,7 +241,9 @@ export function hideArticleModal({commit}) {
  * @returns {Promise<unknown>}
  */
 export async function createArticle({commit}, data) {
-  let response = await httpService.post(articlesUrl, data);
+  let response = await httpService.post(articlesUrl, data, {
+    params: {expand: 'createdBy'}
+  });
   if (response.success) {
     commit(CREATE_ARTICLE, response.body);
   }
@@ -238,7 +257,9 @@ export async function createArticle({commit}, data) {
  * @returns {Promise<unknown>}
  */
 export async function updateArticle({commit}, data) {
-  let response = await httpService.put(`${articlesUrl}/${data.id}`, data);
+  let response = await httpService.put(`${articlesUrl}/${data.id}`, data, {
+    params: {expand: 'createdBy'}
+  });
   if (response.success) {
     commit(UPDATE_ARTICLE, response.body);
   }

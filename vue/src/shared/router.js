@@ -20,6 +20,7 @@ import WorkspaceTimeline from "@/modules/Workspace/view/timeline/WorkspaceTimeli
 import WorkspaceFiles from "@/modules/Workspace/view/files/WorkspaceFiles";
 import WorkspaceArticles from "@/modules/Workspace/view/articles/WorkspaceArticles";
 import WorkspaceAbout from "@/modules/Workspace/view/about/WorkspaceAbout";
+import ArticleView from "@/modules/Workspace/view/articles/ArticleView";
 import FolderView from "@/modules/Workspace/view/files/FolderView";
 
 Vue.use(Router);
@@ -86,6 +87,8 @@ const router = new Router({
             {path: 'files', name: 'workspace.files', component: WorkspaceFiles},
             {path: 'files/:folderId', name: 'workspace.folder', component: FolderView},
             {path: 'articles', name: 'workspace.articles', component: WorkspaceArticles},
+            {path: 'articles/new', name: 'workspace.articles.view_create', component: ArticleView},
+            {path: 'articles/:articleId', name: 'workspace.articles.view_update', component: ArticleView},
             {path: 'about', name: 'workspace.about', component: WorkspaceAbout},
           ]
         },

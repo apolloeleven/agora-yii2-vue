@@ -1,6 +1,6 @@
 <template>
   <b-card no-body class="mb-3" :style="'animation-delay: '+(index / 5)+'s'">
-    <b-card-body class="pr-5">
+    <b-card-body class="pr-5 pb-0">
       <b-media>
         <template v-slot:aside>
           <b-img rounded="0" :src="timeline.createdBy.image_url  || '/assets/logo.png'" width="48" height="48"/>
@@ -38,7 +38,7 @@
       </div>
     </b-card-body>
     <div v-if="timeline.file_url" class="timeline-preview">
-      <div v-if="isImage(timeline.file_url)" class="image-preview">
+      <div v-if="isImage(timeline.file_url)" class="image-preview mt-3">
         <b-img :src="timeline.file_url" class="img-fluid" style="cursor: pointer"/>
       </div>
       <video v-else-if="isVideo(timeline.file_url)" controls class="video-preview">
@@ -50,7 +50,7 @@
         <div class="p-3 description" v-html="timeline.description"></div>
       </div>
     </div>
-    <b-card-footer>
+    <b-card-footer class="pb-0">
       <LikeUnlikeButton class="mr-2" :item="timeline.userLikes" :liked="liked" @onLikeClicked="onLikeClicked"/>
       <b-button size="sm" pill variant="light" :pressed.sync="showComments">
         <i class="far fa-comments fa-lg"/>
@@ -60,7 +60,7 @@
       </b-button>
     </b-card-footer>
     <AddComment :timeline_id="timeline.id" v-if="showComments"/>
-    <b-card-body v-if="showComments && timeline.timelineComments && timeline.timelineComments.length">
+    <b-card-body v-if="showComments && timeline.timelineComments && timeline.timelineComments.length" class="pt-1 pb-1">
       <CommentItem
         v-for="(comment, index) in timeline.timelineComments" :comment="comment" :index="index"
         :key="`timeline-item-comment-${index}`">

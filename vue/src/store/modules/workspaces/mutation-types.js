@@ -12,6 +12,8 @@ export const HIDE_ARTICLE_MODAL = 'workspace/HIDE_ARTICLE_MODAL';
 export const CREATE_ARTICLE = 'workspace/CREATE_ARTICLE';
 export const UPDATE_ARTICLE = 'workspace/UPDATE_ARTICLE';
 export const REMOVE_ARTICLE = 'workspace/REMOVE_ARTICLE';
+export const TOGGLE_ARTICLE_VIEW_LOADING = 'workspace/TOGGLE_ARTICLE_VIEW_LOADING';
+export const GET_ARTICLE = 'workspace/GET_ARTICLE';
 
 export const CHANGE_TIMELINE_LOADING = 'workspace/CHANGE_LOADING';
 export const CHANGE_TIMELINE_MODAL_LOADING = 'workspace/CHANGE_TIMELINE_MODAL_LOADING';
