@@ -4,16 +4,10 @@
 namespace app\modules\v1\workspaces\resources;
 
 
-use app\helpers\ModelHelper;
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\Folder;
-use app\rest\ValidationException;
 use Yii;
-use yii\base\ErrorException;
-use yii\base\Exception;
 use yii\db\ActiveQuery;
-use yii\helpers\FileHelper;
-use yii\web\UploadedFile;
 
 /**
  * Class FolderResource
@@ -36,6 +30,7 @@ class FolderResource extends Folder
             'depth',
             'size',
             'is_file',
+            'is_default_folder',
             'file_path',
             'mime' => function () {
                 $mime = explode('/', $this->mime)[0];
@@ -55,7 +50,14 @@ class FolderResource extends Folder
      */
     public function extraFields()
     {
-        return ['children', 'workspace', 'createdBy', 'updatedBy', 'folderComments', 'userLikes', 'myLikes'];
+        return [
+            'children',
+            'workspace',
+            'createdBy',
+            'updatedBy',
+            'myLikes',
+            'workspace.timelinePosts'
+        ];
     }
 
     /**

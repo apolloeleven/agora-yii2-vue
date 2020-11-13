@@ -6,6 +6,7 @@ namespace app\modules\v1\workspaces\resources;
 
 use app\helpers\ModelHelper;
 use app\modules\v1\users\resources\UserResource;
+use app\modules\v1\workspaces\models\Folder;
 use app\modules\v1\workspaces\models\UserWorkspace;
 use app\modules\v1\workspaces\models\Workspace;
 use app\rest\ValidationException;
@@ -48,7 +49,7 @@ class WorkspaceResource extends Workspace
      */
     public function extraFields()
     {
-        return ['createdBy', 'updatedBy', 'articles'];
+        return ['createdBy', 'updatedBy', 'articles', 'timelinePosts'];
     }
 
     /**
@@ -67,8 +68,17 @@ class WorkspaceResource extends Workspace
         return $this->hasOne(UserResource::class, ['id' => 'updated_by']);
     }
 
+
     /**
-     * After save workspace create new user workspace
+     * @return ActiveQuery
+     */
+    public function getTimelinePosts()
+    {
+        return $this->hasMany(TimelinePostResource::class, ['workspace_id' => 'id']);
+    }
+
+    /**
+     * After save workspace create new user workspace and default folder for timeline posts
      *
      * @param $insert
      * @param $changedAttributes
@@ -85,6 +95,15 @@ class WorkspaceResource extends Workspace
 
             if (!$userWorkspace->save()) {
                 throw new ValidationException(Yii::t('app', 'Unable to create user workspace'));
+            }
+
+            $folder = new Folder();
+            $folder->workspace_id = $this->id;
+            $folder->is_default_folder = 1;
+            $folder->name = 'From Timeline Posts';
+
+            if (!$folder->makeRoot()) {
+                throw new ValidationException(Yii::t('app', 'Unable to create folder'));
             }
         }
     }

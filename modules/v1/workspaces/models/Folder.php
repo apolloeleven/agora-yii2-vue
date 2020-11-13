@@ -21,6 +21,7 @@ use yii\web\UploadedFile;
  * @property int $id
  * @property int|null $parent_id
  * @property int $workspace_id
+ * @property int|null $is_default_folder
  * @property int|null $is_file
  * @property string|null $name
  * @property string|null $label
@@ -77,7 +78,7 @@ class Folder extends ActiveRecord
     public function rules()
     {
         return [
-            [['parent_id', 'workspace_id', 'is_file', 'size', 'lft', 'rgt', 'depth', 'tree', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['parent_id', 'workspace_id', 'is_default_folder', 'is_file', 'size', 'lft', 'rgt', 'depth', 'tree', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['workspace_id'], 'required'],
             [['body', 'content'], 'string'],
             [['name', 'label', 'file_path'], 'string', 'max' => 1024],
@@ -98,6 +99,8 @@ class Folder extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'parent_id' => Yii::t('app', 'Parent ID'),
             'workspace_id' => Yii::t('app', 'Workspace ID'),
+            'is_default_folder' => Yii::t('app', 'Is Default Folder'),
+            'is_file' => Yii::t('app', 'Is File'),
             'name' => Yii::t('app', 'Name'),
             'label' => Yii::t('app', 'Label'),
             'body' => Yii::t('app', 'Body'),

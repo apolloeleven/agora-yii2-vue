@@ -16,6 +16,7 @@ class m201109_073650_create_folders_table extends Migration
             'id' => $this->primaryKey(),
             'parent_id' => $this->integer(),
             'workspace_id' => $this->integer()->notNull(),
+            'is_default_folder' => $this->integer(1)->defaultValue(0),
             'is_file' => $this->integer(1)->defaultValue(0),
             'name' => $this->string(1024),
             'label' => $this->string(1024),
