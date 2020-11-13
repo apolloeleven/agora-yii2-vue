@@ -20,7 +20,6 @@ class UserCommentResource extends UserComment
             'id',
             'comment',
             'article_id',
-            'folder_id',
             'parent_id',
             'timeline_post_id',
             'created_at' => function () {
