@@ -128,7 +128,7 @@ export async function deleteWorkspace({commit, dispatch}, data) {
 export async function getCurrentWorkspace({commit}, workspaceId) {
   commit(TOGGLE_VIEW_LOADING, true);
   const response = await httpService.get(`${url}/${workspaceId}`, {
-    params: {expand: 'createdBy'}
+    params: {expand: 'createdBy,rootFolders'}
   })
   if (response.success) {
     commit(GET_CURRENT_WORKSPACE, response.body);
@@ -476,7 +476,7 @@ export async function getFoldersByWorkspace({commit}, workspaceId) {
  * @returns {Promise<void>}
  */
 export async function getFoldersByParent({commit}, parentId) {
-  const {success, body} = await httpService.get(`${folderUrl}/by-parent?folderId=${parentId}&expand=updatedBy&sort=title`)
+  const {success, body} = await httpService.get(`${folderUrl}?parent_id=${parentId}&expand=updatedBy&sort=title`)
   if (success) {
     commit(GET_ALL_FOLDERS, body.data)
     commit(GET_BREAD_CRUMB, body.breadCrumbs)

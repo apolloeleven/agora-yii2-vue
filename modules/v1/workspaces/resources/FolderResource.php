@@ -55,8 +55,6 @@ class FolderResource extends Folder
             'workspace',
             'createdBy',
             'updatedBy',
-            'myLikes',
-            'workspace.timelinePosts'
         ];
     }
 
@@ -78,35 +76,5 @@ class FolderResource extends Folder
     public function getUpdatedBy()
     {
         return $this->hasOne(UserResource::class, ['id' => 'updated_by']);
-    }
-
-
-    /**
-     * Gets query for [[ArticleComments]].
-     *
-     * @return ActiveQuery
-     */
-    public function getFolderComments()
-    {
-        return $this->hasMany(UserCommentResource::class, ['folder_id' => 'id'])->orderBy('created_at DESC');
-    }
-
-    /**
-     * Gets query for [[UserLikes]].
-     *
-     * @return ActiveQuery
-     */
-    public function getUserLikes()
-    {
-        return $this->hasMany(UserLikeResource::class, ['folder_id' => 'id']);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getMyLikes()
-    {
-        return $this->hasMany(UserLikeResource::class, ['folder_id' => 'id'])
-            ->andWhere(['created_by' => Yii::$app->user->id]);
     }
 }

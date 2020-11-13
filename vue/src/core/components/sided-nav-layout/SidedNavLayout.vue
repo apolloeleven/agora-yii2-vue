@@ -28,9 +28,6 @@ export default {
       if (typeof item.to === 'string') {
         return item.to === this.$route.name;
       } else if (typeof item.to === 'object') {
-        if (this.$route.name === 'workspace.folder') {
-          return item.to.name === 'workspace.files';
-        }
         return item.to.name === this.$route.name;
       }
       return false;

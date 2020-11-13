@@ -54,12 +54,6 @@ export default {
   data() {
     return {
       breadcrumbs: [],
-      items: [
-        {title: this.$i18n.t('Timeline'), to: {name: 'workspace.timeline'}, icon: 'fa fa-bars'},
-        {title: this.$i18n.t('Files'), to: {name: 'workspace.files'}, icon: 'fa fa-folder'},
-        {title: this.$i18n.t('Articles'), to: {name: 'workspace.articles'}, icon: 'fa fa-book'},
-        {title: this.$i18n.t('About'), to: {name: 'workspace.about'}, icon: 'fa fa-info-circle'},
-      ]
     }
   },
   computed: {
@@ -67,6 +61,18 @@ export default {
       workspace: state => state.view.workspace,
       loading: state => state.view.loading,
     }),
+    items() {
+      return [
+        {title: this.$i18n.t('Timeline'), to: {name: 'workspace.timeline'}, icon: 'fa fa-bars'},
+        {
+          title: this.$i18n.t('Files'),
+          to: {name: 'workspace.files', params: {folderId: this.workspace.rootFolders.id}},
+          icon: 'fa fa-folder'
+        },
+        {title: this.$i18n.t('Articles'), to: {name: 'workspace.articles'}, icon: 'fa fa-book'},
+        {title: this.$i18n.t('About'), to: {name: 'workspace.about'}, icon: 'fa fa-info-circle'},
+      ]
+    },
   },
   methods: {
     ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace']),

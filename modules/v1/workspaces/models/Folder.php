@@ -171,27 +171,6 @@ class Folder extends ActiveRecord
     }
 
     /**
-     * Gets query for [[UserComments]].
-     *
-     * @return ActiveQuery
-     */
-    public function getUserComments()
-    {
-        return $this->hasMany(UserComment::class, ['folder_id' => 'id']);
-    }
-
-    /**
-     * Gets query for [[UserLikes]].
-     *
-     * @return ActiveQuery
-     */
-    public function getUserLikes()
-    {
-        return $this->hasMany(UserLike::class, ['folder_id' => 'id']);
-    }
-
-
-    /**
      * Gets query for [[Workspace]].
      *
      * @return ActiveQuery

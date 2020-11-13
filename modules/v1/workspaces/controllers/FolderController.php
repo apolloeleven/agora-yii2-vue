@@ -7,9 +7,7 @@ use app\modules\v1\workspaces\resources\FolderResource;
 use app\rest\ActiveController;
 use app\rest\ValidationException;
 use Yii;
-use yii\base\ErrorException;
 use yii\base\Exception;
-use yii\data\ActiveDataProvider;
 use yii\web\UploadedFile;
 
 /**
@@ -30,23 +28,32 @@ class FolderController extends ActiveController
         return $actions;
     }
 
+    /**
+     *
+     *
+     * @return array
+     * @throws ValidationException
+     */
     public function prepareDataProvider()
     {
-        $request = Yii::$app->request;
-        $workspaceId = $request->get('workspace_id');
+        $parentId = Yii::$app->request->get('parent_id');
+        $data = FolderResource::find()->byParentId($parentId)->all();
+        $defaultFolder = FolderResource::find()->byId($parentId)->isTimelineFolder()->one();
+        if ($defaultFolder) {
+            $data = FolderResource::find()->hasTimelineFile()->byWorkspaceId($defaultFolder->workspace_id)->all();
+        }
+        $breadCrumbs = $this->getBreadCrumb($parentId);
 
-        $query = FolderResource::find()->byWorkspaceId($workspaceId)->roots();
-
-        return new ActiveDataProvider([
-            'query' => $query
-        ]);
+        return [
+            'data' => $data,
+            'breadCrumbs' => $breadCrumbs
+        ];
     }
 
     /**
      * @return array|mixed
      * @throws ValidationException
      * @throws Exception
-     * @throws ErrorException
      */
     public function actionCreate()
     {
@@ -147,28 +154,6 @@ class FolderController extends ActiveController
                 $this->validationError($folder->getFirstErrors());
             }
         }
-    }
-
-    /**
-     * Get folders by parent
-     *
-     * @param $folderId
-     * @return array
-     * @throws ValidationException
-     */
-    public function actionByParent($folderId)
-    {
-        $data = FolderResource::find()->byParentId($folderId)->all();
-        $defaultFolder = FolderResource::find()->byId($folderId)->isTimelineFolder()->one();
-        if ($defaultFolder) {
-            $data = FolderResource::find()->hasTimelineFile()->byWorkspaceId($defaultFolder->workspace_id)->all();
-        }
-        $breadCrumbs = $this->getBreadCrumb($folderId);
-
-        return [
-            'data' => $data,
-            'breadCrumbs' => $breadCrumbs
-        ];
     }
 
     /**

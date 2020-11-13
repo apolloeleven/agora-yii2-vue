@@ -49,7 +49,7 @@ class WorkspaceResource extends Workspace
      */
     public function extraFields()
     {
-        return ['createdBy', 'updatedBy', 'articles', 'timelinePosts'];
+        return ['createdBy', 'updatedBy', 'articles', 'rootFolders'];
     }
 
     /**
@@ -68,13 +68,21 @@ class WorkspaceResource extends Workspace
         return $this->hasOne(UserResource::class, ['id' => 'updated_by']);
     }
 
-
     /**
      * @return ActiveQuery
      */
     public function getTimelinePosts()
     {
         return $this->hasMany(TimelinePostResource::class, ['workspace_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getRootFolders()
+    {
+        return $this->hasOne(FolderResource::class, ['workspace_id' => 'id'])
+            ->andWhere(['depth' => 0]);
     }
 
     /**
