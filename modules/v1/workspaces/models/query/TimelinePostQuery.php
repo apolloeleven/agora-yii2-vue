@@ -40,14 +40,4 @@ class TimelinePostQuery extends ActiveQuery
     {
         return $this->andWhere([TimelinePost::tableName() . '.workspace_id' => $id]);
     }
-
-    /**
-     * Get timeline posts which has file
-     *
-     * @return TimelinePostQuery
-     */
-    public function hasFile()
-    {
-        return $this->andWhere(['NOT', [TimelinePost::tableName() . '.file_path' => null]]);
-    }
 }

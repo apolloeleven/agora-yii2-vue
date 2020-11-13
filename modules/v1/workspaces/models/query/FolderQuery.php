@@ -98,4 +98,14 @@ class FolderQuery extends ActiveQuery
     {
         return $this->andWhere([Folder::tableName() . '.is_default_folder' => 1]);
     }
+
+    /**
+     * Get timeline posts which has file
+     *
+     * @return FolderQuery
+     */
+    public function hasTimelineFile()
+    {
+        return $this->andWhere(['NOT', [Folder::tableName() . '.timeline_id' => null]]);
+    }
 }

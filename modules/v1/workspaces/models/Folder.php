@@ -21,6 +21,7 @@ use yii\web\UploadedFile;
  * @property int $id
  * @property int|null $parent_id
  * @property int $workspace_id
+ * @property int $timeline_id
  * @property int|null $is_default_folder
  * @property int|null $is_file
  * @property string|null $name
@@ -45,6 +46,7 @@ use yii\web\UploadedFile;
  * @property User $updatedBy
  * @property UserComment[] $userComments
  * @property UserLike[] $userLikes
+ * @property TimelinePost $timelinePost
  * @property Workspace $workspace
  */
 class Folder extends ActiveRecord
@@ -78,7 +80,7 @@ class Folder extends ActiveRecord
     public function rules()
     {
         return [
-            [['parent_id', 'workspace_id', 'is_default_folder', 'is_file', 'size', 'lft', 'rgt', 'depth', 'tree', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['parent_id', 'workspace_id', 'timeline_id', 'is_default_folder', 'is_file', 'size', 'lft', 'rgt', 'depth', 'tree', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['workspace_id'], 'required'],
             [['body', 'content'], 'string'],
             [['name', 'label', 'file_path'], 'string', 'max' => 1024],
@@ -99,6 +101,7 @@ class Folder extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'parent_id' => Yii::t('app', 'Parent ID'),
             'workspace_id' => Yii::t('app', 'Workspace ID'),
+            'timeline_id' => Yii::t('app', 'Timeline ID'),
             'is_default_folder' => Yii::t('app', 'Is Default Folder'),
             'is_file' => Yii::t('app', 'Is File'),
             'name' => Yii::t('app', 'Name'),
@@ -187,6 +190,16 @@ class Folder extends ActiveRecord
         return $this->hasMany(UserLike::class, ['folder_id' => 'id']);
     }
 
+
+    /**
+     * Gets query for [[Workspace]].
+     *
+     * @return ActiveQuery
+     */
+    public function getTimelinePost()
+    {
+        return $this->hasOne(TimelinePost::class, ['id' => 'timeline_id']);
+    }
 
     /**
      * Gets query for [[Workspace]].

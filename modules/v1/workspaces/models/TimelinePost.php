@@ -20,12 +20,9 @@ use yii\web\UploadedFile;
  * @property int $id
  * @property int $workspace_id
  * @property int $article_id
- * @property string|null $name
- * @property int $size
  * @property string|null $attachment_ids
  * @property string|null $action
  * @property string|null $description
- * @property string|null $file_path
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $created_by
@@ -41,7 +38,6 @@ use yii\web\UploadedFile;
  */
 class TimelinePost extends ActiveRecord
 {
-    const ACTION_SHARE_FILE = "SHARE_FILE";
     const ACTION_SHARE_ARTICLE = "SHARE_ARTICLE";
 
     /**
@@ -75,9 +71,8 @@ class TimelinePost extends ActiveRecord
     {
         return [
             [['workspace_id'], 'required'],
-            [['description', 'name', 'attachment_ids'], 'string'],
-            [['article_id', 'size', 'created_at', 'updated_at', 'created_by', 'updated_by', 'workspace_id'], 'integer'],
-            [['file_path'], 'string', 'max' => 1024],
+            [['description', 'attachment_ids'], 'string'],
+            [['article_id', 'created_at', 'updated_at', 'created_by', 'updated_by', 'workspace_id'], 'integer'],
             [['action'], 'string', 'max' => 255],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
@@ -97,15 +92,11 @@ class TimelinePost extends ActiveRecord
             'article_id' => Yii::t('app', 'Article ID'),
             'attachment_ids' => Yii::t('app', 'Attachment IDs'),
             'action' => Yii::t('app', 'Action'),
-            'name' => Yii::t('app', 'Name'),
-            'size' => Yii::t('app', 'Size'),
             'description' => Yii::t('app', 'Description'),
-            'file_path' => Yii::t('app', 'File Path'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'created_by' => Yii::t('app', 'Created By'),
             'updated_by' => Yii::t('app', 'Updated By'),
-            'image' => Yii::t('app', 'Image'),
         ];
     }
 
@@ -172,16 +163,6 @@ class TimelinePost extends ActiveRecord
     public static function find()
     {
         return new TimelinePostQuery(get_called_class());
-    }
-
-    /**
-     * Get timeline post file path
-     *
-     * @return bool|string
-     */
-    public function getFileUrl()
-    {
-        return $this->file_path ? Yii::getAlias('@storageUrl' . $this->file_path) : '';
     }
 
     /**

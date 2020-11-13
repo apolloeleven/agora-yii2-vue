@@ -4,10 +4,8 @@
 namespace app\modules\v1\workspaces\controllers;
 
 use app\modules\v1\workspaces\resources\FolderResource;
-use app\modules\v1\workspaces\resources\TimelinePostResource;
 use app\rest\ActiveController;
 use app\rest\ValidationException;
-use DeepCopyTest\Matcher\Y;
 use Yii;
 use yii\base\ErrorException;
 use yii\base\Exception;
@@ -163,7 +161,7 @@ class FolderController extends ActiveController
         $data = FolderResource::find()->byParentId($folderId)->all();
         $defaultFolder = FolderResource::find()->byId($folderId)->isDefaultFolder()->one();
         if ($defaultFolder) {
-            $data = TimelinePostResource::find()->hasFile()->byWorkspaceId($defaultFolder->workspace_id)->all();
+            $data = FolderResource::find()->hasTimelineFile()->byWorkspaceId($defaultFolder->workspace_id)->all();
         }
         $breadCrumbs = $this->getBreadCrumb($folderId);
 
