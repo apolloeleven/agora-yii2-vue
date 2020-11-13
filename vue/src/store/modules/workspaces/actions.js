@@ -332,8 +332,8 @@ export async function postOnTimeline({commit}, {data, config}) {
   const res = await httpService.post(`${timelineUrl}?${timelineExpand}`, prepareTimelineData(data), config);
   if (res.success) {
     commit(ADD_TIMELINE_POST, res.body);
-    commit(CHANGE_TIMELINE_MODAL_LOADING, false)
   }
+  commit(CHANGE_TIMELINE_MODAL_LOADING, false)
   return res;
 }
 
