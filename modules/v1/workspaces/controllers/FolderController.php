@@ -37,7 +37,7 @@ class FolderController extends ActiveController
     public function prepareDataProvider()
     {
         $parentId = Yii::$app->request->get('parent_id');
-        $data = FolderResource::find()->byParentId($parentId)->all();
+        $data = FolderResource::find()->byParentId($parentId)->hasNotTimelineFile()->all();
         $defaultFolder = FolderResource::find()->byId($parentId)->isTimelineFolder()->one();
         if ($defaultFolder) {
             $data = FolderResource::find()->hasTimelineFile()->byWorkspaceId($defaultFolder->workspace_id)->all();

@@ -108,4 +108,14 @@ class FolderQuery extends ActiveQuery
     {
         return $this->andWhere(['NOT', [Folder::tableName() . '.timeline_post_id' => null]]);
     }
+
+    /**
+     * Get without timeline posts which has file
+     *
+     * @return FolderQuery
+     */
+    public function hasNotTimelineFile()
+    {
+        return $this->andWhere([Folder::tableName() . '.timeline_post_id' => null]);
+    }
 }
