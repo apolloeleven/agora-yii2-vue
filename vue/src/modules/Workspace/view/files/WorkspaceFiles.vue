@@ -63,7 +63,7 @@
               <template v-slot:button-content>
                 <i class="fas fa-ellipsis-v"/>
               </template>
-              <b-dropdown-item v-if="!isFile(item)" @click="onCopyUrlClick(item)">
+              <b-dropdown-item @click="onCopyUrlClick(item)">
                 <i class="far fa-copy"/>
                 {{ $t('Copy') }}
               </b-dropdown-item>
@@ -163,7 +163,7 @@ export default {
       }
     },
     onCopyUrlClick(item) {
-      this.$copyText(`${window.location.origin}/workspace/${item.workspace_id}/files/${item.id}`);
+      this.$copyText(`${window.location.origin}/workspace/${item.workspace_id}/files/${item.parent_id}`);
     },
     checkFileNames(fileNames) {
       return this.foldersAndFiles.filter(f => fileNames.includes(f.name)).map(f => f.name);

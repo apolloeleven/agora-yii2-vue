@@ -6,7 +6,6 @@ namespace app\modules\v1\workspaces\resources;
 
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\Folder;
-use Yii;
 use yii\db\ActiveQuery;
 
 /**
