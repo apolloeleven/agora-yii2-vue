@@ -132,12 +132,6 @@ export default {
   methods: {
     ...mapWorkspaceActions(['showFolderModal', 'getFoldersByParent', 'attachFiles', 'getAttachConfig',
       'getCurrentFolder', 'deleteFolder', 'destroyedCurrentFolder', 'sortFiles']),
-    isDefault(item) {
-      return item.is_timeline_folder === 1;
-    },
-    isFile(item) {
-      return item.is_file === 1;
-    },
     onShowModal() {
       this.showFolderModal(null)
     },
@@ -146,6 +140,9 @@ export default {
     },
     onDeleteMultipleFiles() {
       this.showDeleteConfirmation(this.selected.map(a => a.id))
+    },
+    onRemoveClick(e) {
+      this.showDeleteConfirmation([e.id])
     },
     async showDeleteConfirmation(fileIds) {
       const result = await this.$confirm(
@@ -160,9 +157,6 @@ export default {
           this.$toast(res.body.message, 'danger');
         }
       }
-    },
-    onRemoveClick(e) {
-      this.showDeleteConfirmation([e.id])
     },
     checkFileNames(fileNames) {
       return this.foldersAndFiles.filter(f => fileNames.includes(f.name)).map(f => f.name);
@@ -232,7 +226,7 @@ export default {
       ev.target.value = '';
 
       if (res.success) {
-        this.$toast(this.$t(`{count} attachment(s) were successfully uploaded`, {count: filesObject.files.length}));
+        this.$toast(this.$t(`{count} file(s) were successfully uploaded`, {count: filesObject.files.length}));
       } else {
         this.$toast(res.body.message, 'danger');
       }
@@ -241,6 +235,12 @@ export default {
       this.sortBy = e.sortBy;
       this.sortDesc = e.sortDesc;
       this.sortFiles({sortBy: this.sortBy, sortDesc: this.sortDesc});
+    },
+    isDefault(item) {
+      return item.is_timeline_folder === 1;
+    },
+    isFile(item) {
+      return item.is_file === 1;
     },
   },
   mounted() {
@@ -262,18 +262,6 @@ export default {
     justify-content: space-between;
     align-items: center;
   }
-}
-
-.technical-notes {
-  list-style: none;
-  padding-left: 10px;
-  font-size: 16px;
-}
-
-.technical-notes-headline {
-  margin: 0;
-  padding-left: 5px;
-  font-style: italic;
 }
 
 .file-manager {
