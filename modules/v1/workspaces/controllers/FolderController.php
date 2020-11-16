@@ -37,16 +37,23 @@ class FolderController extends ActiveController
     public function prepareDataProvider()
     {
         $parentId = Yii::$app->request->get('parent_id');
+
         $data = FolderResource::find()->byParentId($parentId)->hasNotTimelineFile()->all();
         $defaultFolder = FolderResource::find()->byId($parentId)->isTimelineFolder()->one();
         if ($defaultFolder) {
             $data = FolderResource::find()->hasTimelineFile()->byWorkspaceId($defaultFolder->workspace_id)->all();
         }
-        $breadCrumbs = $this->getBreadCrumb($parentId);
+
+        $folder = FolderResource::findOne(['id' => $parentId]);
+        if (!$folder) {
+            throw new ValidationException(Yii::t('app', 'This folder not exist'));
+        }
+        $breadcrumbData = $folder->parents()->all();
 
         return [
             'data' => $data,
-            'breadCrumbs' => $breadCrumbs
+            'currentFolder' => $folder,
+            'breadcrumbData' => $breadcrumbData
         ];
     }
 
@@ -153,41 +160,6 @@ class FolderController extends ActiveController
                 $this->validationError($folder->getFirstErrors());
             }
         }
-    }
-
-    /**
-     * Get bread crumbs for files
-     *
-     * @param $folderId
-     * @return mixed
-     * @throws ValidationException
-     */
-    private function getBreadCrumb($folderId)
-    {
-        $folder = FolderResource::findOne(['id' => $folderId]);
-
-        if (!$folder) {
-            throw new ValidationException(Yii::t('app', 'This folder not exist'));
-        }
-
-        $parents = $folder->parents()->all();
-
-        foreach ($parents as $parent) {
-            $breadCrumb[] = [
-                'text' => $parent->name,
-                'to' => [
-                    'name' => 'workspace.files',
-                    'params' => [
-                        'folderId' => $parent->id
-                    ]
-                ]
-            ];
-        }
-        $breadCrumb[] = [
-            'text' => $folder->name
-        ];
-
-        return $breadCrumb;
     }
 
     /**

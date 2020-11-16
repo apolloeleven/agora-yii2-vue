@@ -32,7 +32,7 @@ const STATE = {
     folders: {
       loading: false,
       folderAndFiles: [],
-      breadCrumbs: [],
+      breadcrumb: [],
       folder: {},
       data: [],
       isFile: false,

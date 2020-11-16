@@ -3,7 +3,7 @@
     <b-card no-body class="file-manager-card">
       <b-card-body>
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <b-breadcrumb :items="breadCrumbs" class="d-none d-sm-flex"/>
+          <b-breadcrumb :items="breadcrumb" class="d-none d-sm-flex"/>
           <div v-if="!isDefaultFolder">
             <div class="file-manager-btn-wrapper">
               <b-button variant="success" size="sm">
@@ -99,7 +99,7 @@ export default {
   computed: {
     ...mapWorkspaceState({
       foldersAndFiles: state => state.view.folders.folderAndFiles,
-      breadCrumbs: state => state.view.folders.breadCrumbs,
+      breadcrumb: state => state.view.folders.breadcrumb,
       currentFolder: state => state.view.folders.folder,
       attachConfig: state => state.view.folders.attachConfig,
     }),

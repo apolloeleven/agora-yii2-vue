@@ -465,7 +465,7 @@ export async function getFoldersByParent({commit}, parentId) {
   const {success, body} = await httpService.get(`${folderUrl}?parent_id=${parentId}&expand=updatedBy&sort=title`)
   if (success) {
     commit(GET_ALL_FOLDERS, body.data)
-    commit(GET_BREAD_CRUMB, body.breadCrumbs)
+    commit(GET_BREAD_CRUMB, {breadcrumbData: body.breadcrumbData, folder: body.currentFolder})
   }
 }
 

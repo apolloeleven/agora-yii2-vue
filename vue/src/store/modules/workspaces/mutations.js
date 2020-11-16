@@ -263,10 +263,14 @@ export default {
   },
   /**
    * @param state
-   * @param data
+   * @param breadcrumbData
+   * @param folder
    */
-  [GET_BREAD_CRUMB](state, data) {
-    state.view.folders.breadCrumbs = data;
+  [GET_BREAD_CRUMB](state, {breadcrumbData, folder}) {
+    state.view.folders.breadcrumb = breadcrumbData.map(bc => (
+      {text: bc.name, to: {name: 'workspace.files', params: {folderId: bc.id}}}
+    ));
+    state.view.folders.breadcrumb.push({text: folder.name})
   },
   /**
    * @param state
