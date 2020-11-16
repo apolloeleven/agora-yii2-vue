@@ -18,7 +18,7 @@
   "Should contain at least 1 lower case, 1 upper case, 1 digit and min length of 8": "Should contain at least 1 lower case, 1 upper case, 1 digit and min length of 8",
   "Created {time} by {owner}": "Created {time} by {owner}",
   "Too much files for upload at same time": "Too much files for upload at same time",
-  "You are about to delete {count} file(s) and folder(s).": "You are about to delete {count} file(s) and folder(s).",
+  "You are about to delete {count} item(s). Are you sure you want to continue?": "You are about to delete {count} item(s). Are you sure you want to continue?",
   "This operation can not be undone": "This operation can not be undone",
   " Are you sure you want to continue?": " Are you sure you want to continue?",
   "{count} file(s) and folder(s) were successfully deleted": "{count} file(s) and folder(s) were successfully deleted",

@@ -149,9 +149,9 @@ export default {
     },
     async showDeleteConfirmation(fileIds) {
       const result = await this.$confirm(
-        this.$t('You are about to delete {count} file(s) and folder(s).' +
-          ' Are you sure you want to continue?', {count: fileIds.length}),
-        this.$t('This operation can not be undone'))
+        this.$t('You are about to delete {count} item(s). Are you sure you want to continue?', {count: fileIds.length}),
+        this.$t('This operation can not be undone')
+      );
       if (result) {
         const res = await this.deleteFolder(fileIds);
         if (res.success) {
