@@ -63,12 +63,16 @@
               <template v-slot:button-content>
                 <i class="fas fa-ellipsis-v"/>
               </template>
+              <b-dropdown-item v-if="!isFile(data.item)" @click="onCopyUrlClick(data.item)">
+                <i class="far fa-copy"/>
+                {{ $t('Copy') }}
+              </b-dropdown-item>
               <b-dropdown-item v-if="!isFile(data.item)" @click="onEditClick(data.item)">
-                <i class="fas fa-pencil-alt mr-2"></i>
+                <i class="fas fa-pencil-alt mr-2"/>
                 {{ $t('Edit') }}
               </b-dropdown-item>
               <b-dropdown-item @click="onRemoveClick(data.item)">
-                <i class="far fa-trash-alt mr-2"></i>
+                <i class="far fa-trash-alt mr-2"/>
                 {{ $t('Remove') }}
               </b-dropdown-item>
             </b-dropdown>
@@ -157,6 +161,9 @@ export default {
           this.$toast(res.body.message, 'danger');
         }
       }
+    },
+    onCopyUrlClick(item) {
+      this.$copyText(`${window.location.origin}/workspace/${item.workspace_id}/files/${item.id}`);
     },
     checkFileNames(fileNames) {
       return this.foldersAndFiles.filter(f => fileNames.includes(f.name)).map(f => f.name);
