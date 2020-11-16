@@ -27,7 +27,7 @@
           </div>
         </div>
         <b-table :busy="loading" small striped hover :items="foldersAndFiles" no-local-sorting :fields="fields"
-                 @sort-changed="onSort">
+                 @sort-changed="onSort" class="mb-0">
           <template v-slot:table-busy>
             <content-spinner show/>
           </template>
@@ -60,7 +60,7 @@
                 <i class="fas fa-ellipsis-v"/>
               </template>
               <b-dropdown-item @click="onCopyUrlClick(item)">
-                <i class="far fa-copy"/>
+                <i class="far fa-copy mr-2"/>
                 {{ $t('Copy') }}
               </b-dropdown-item>
               <b-dropdown-item v-if="!isFile(item) && !isDefault(item)" @click="onEditClick(item)">
