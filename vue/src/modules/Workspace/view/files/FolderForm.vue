@@ -29,7 +29,7 @@ export default {
       workspace: state => state.view.workspace,
       showModal: state => state.view.folders.modal.show,
       modalFolder: state => state.view.folders.modal.object,
-      isFile: state => state.view.folders.isFile,
+      isFile: state => state.view.folders.modal.isFile,
       currentFolder: state => state.view.folders.folder,
     }),
     modalTitle() {

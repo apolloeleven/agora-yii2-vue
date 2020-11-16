@@ -32,8 +32,7 @@ class FolderResource extends Folder
             'is_timeline_folder',
             'file_path',
             'mime' => function () {
-                $mime = explode('/', $this->mime)[0];
-                return $mime == self::VIDEO ? $mime : $this->mime;
+                return $this->getMime();
             },
             'created_at' => function () {
                 return $this->created_at * 1000;
@@ -75,5 +74,14 @@ class FolderResource extends Folder
     public function getUpdatedBy()
     {
         return $this->hasOne(UserResource::class, ['id' => 'updated_by']);
+    }
+
+    /**
+     * @return mixed|string|null
+     */
+    public function getMime()
+    {
+        $mime = explode('/', $this->mime)[0];
+        return $mime == self::VIDEO ? $mime : $this->mime;
     }
 }

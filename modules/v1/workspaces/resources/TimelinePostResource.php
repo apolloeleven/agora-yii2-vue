@@ -151,24 +151,25 @@ class TimelinePostResource extends TimelinePost
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        if ($insert) {
-            if ($this->file) {
-                $folder = new Folder();
-                $folder->workspace_id = $this->workspace_id;
-                $folder->timeline_post_id = $this->id;
-                $folder->is_file = 1;
+        if ($insert && $this->file) {
+            $folder = new Folder();
+            $folder->workspace_id = $this->workspace_id;
+            $folder->timeline_post_id = $this->id;
+            $folder->is_file = 1;
 
-                $parentFolder = Folder::findOne(['workspace_id' => $folder->workspace_id]);
+            $parentFolder = Folder::findOne(['workspace_id' => $folder->workspace_id]);
 
-                $folder->parent_id = $parentFolder->id;
+            if (!$parentFolder) {
+                throw new ValidationException(Yii::t('app', 'Unable to find parent folder'));
+            }
+            $folder->parent_id = $parentFolder->id;
 
-                if (!$folder->uploadFile($this->file)) {
-                    throw new ValidationException(Yii::t('app', 'Unable to upload attachment'));
-                }
+            if (!$folder->uploadFile($this->file)) {
+                throw new ValidationException(Yii::t('app', 'Unable to upload attachment'));
+            }
 
-                if (!$folder->appendTo($parentFolder)) {
-                    throw new ValidationException(Yii::t('app', 'Unable to upload file'));
-                }
+            if (!$folder->appendTo($parentFolder)) {
+                throw new ValidationException(Yii::t('app', 'Unable to upload file'));
             }
         }
     }

@@ -128,7 +128,7 @@ export async function deleteWorkspace({commit, dispatch}, data) {
 export async function getCurrentWorkspace({commit}, workspaceId) {
   commit(TOGGLE_VIEW_LOADING, true);
   const response = await httpService.get(`${url}/${workspaceId}`, {
-    params: {expand: 'createdBy,rootFolders'}
+    params: {expand: 'createdBy,rootFolder'}
   })
   if (response.success) {
     commit(GET_CURRENT_WORKSPACE, response.body);

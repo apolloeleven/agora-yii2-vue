@@ -46,7 +46,7 @@ class WorkspaceResource extends Workspace
      */
     public function extraFields()
     {
-        return ['createdBy', 'updatedBy', 'articles', 'rootFolders'];
+        return ['createdBy', 'updatedBy', 'articles', 'rootFolder'];
     }
 
     /**
@@ -76,7 +76,7 @@ class WorkspaceResource extends Workspace
     /**
      * @return ActiveQuery
      */
-    public function getRootFolders()
+    public function getRootFolder()
     {
         return $this->hasOne(FolderResource::class, ['workspace_id' => 'id'])
             ->andWhere(['depth' => 0]);
@@ -114,7 +114,7 @@ class WorkspaceResource extends Workspace
             $childFolder->workspace_id = $this->id;
             $childFolder->is_timeline_folder = 1;
             $childFolder->parent_id = $workspaceRootFolder->id;
-            $childFolder->name = 'From Timeline Posts';
+            $childFolder->name = "$this->name - timeline Posts";
 
             if (!$childFolder->appendTo($workspaceRootFolder)) {
                 throw new ValidationException(Yii::t('app', 'Unable to create child folder'));

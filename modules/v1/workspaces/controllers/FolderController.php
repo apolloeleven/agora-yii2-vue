@@ -38,7 +38,7 @@ class FolderController extends ActiveController
     {
         $parentId = Yii::$app->request->get('parent_id');
 
-        $data = FolderResource::find()->byParentId($parentId)->hasNotTimelineFile()->all();
+        $data = FolderResource::find()->byParentId($parentId)->hasNoTimelineFile()->all();
         $defaultFolder = FolderResource::find()->byId($parentId)->isTimelineFolder()->one();
         if ($defaultFolder) {
             $data = FolderResource::find()->hasTimelineFile()->byWorkspaceId($defaultFolder->workspace_id)->all();
@@ -46,7 +46,7 @@ class FolderController extends ActiveController
 
         $folder = FolderResource::findOne(['id' => $parentId]);
         if (!$folder) {
-            throw new ValidationException(Yii::t('app', 'This folder not exist'));
+            throw new ValidationException(Yii::t('app', 'This folder does not exist'));
         }
         $breadcrumbData = $folder->parents()->all();
 
@@ -115,10 +115,8 @@ class FolderController extends ActiveController
                     throw new ValidationException(Yii::t('app', 'Unable to upload attachment'));
                 }
 
-                if ($fileExist) {
-                    if (!$folder->save()) {
-                        return $this->validationError($folder->getFirstErrors());
-                    }
+                if ($fileExist && !$folder->save()) {
+                    return $this->validationError($folder->getFirstErrors());
                 } else {
                     $this->nestedSetModel($folderId, $folder, $parentFolder);
                 }
@@ -150,10 +148,8 @@ class FolderController extends ActiveController
      */
     private function nestedSetModel($folderId, $folder, $parentFolder)
     {
-        if (!$folderId) {
-            if (!$folder->makeRoot()) {
-                $this->validationError($folder->getFirstErrors());
-            }
+        if (!$folderId && !$folder->makeRoot()) {
+            $this->validationError($folder->getFirstErrors());
         } else {
             $folder->parent_id = $folderId;
             if (!$folder->appendTo($parentFolder)) {
@@ -170,8 +166,8 @@ class FolderController extends ActiveController
     public function actionGetAttachConfig()
     {
         $phpConfig = [
-            'upload_max_filesize' => ['title' => 'Max file size', 'size' => ini_get('upload_max_filesize')],
-            'max_file_uploads' => ['title' => 'Max file uploads', 'size' => ini_get('max_file_uploads')],
+            'upload_max_filesize' => ['title' => Yii::t('app', 'Max file size'), 'size' => ini_get('upload_max_filesize')],
+            'max_file_uploads' => ['title' => Yii::t('app', 'Max file uploads'), 'size' => ini_get('max_file_uploads')],
         ];
 
         return $this->response($phpConfig);

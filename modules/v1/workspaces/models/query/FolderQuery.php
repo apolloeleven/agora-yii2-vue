@@ -114,7 +114,7 @@ class FolderQuery extends ActiveQuery
      *
      * @return FolderQuery
      */
-    public function hasNotTimelineFile()
+    public function hasNoTimelineFile()
     {
         return $this->andWhere([Folder::tableName() . '.timeline_post_id' => null]);
     }

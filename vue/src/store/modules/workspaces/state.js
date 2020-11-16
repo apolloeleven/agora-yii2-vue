@@ -35,10 +35,10 @@ const STATE = {
       breadcrumb: [],
       folder: {},
       data: [],
-      isFile: false,
       modal: {
         show: false,
         object: null,
+        isFile: false,
       },
       attachConfig: {},
     },

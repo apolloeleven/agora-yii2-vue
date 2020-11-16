@@ -212,7 +212,7 @@ class Folder extends ActiveRecord
         $this->file_path = $path . '/' . Yii::$app->security->generateRandomString() . '.' . $file->extension;
 
         if (!$file->saveAs(Yii::getAlias('@storage/' . $this->file_path))) {
-            throw new ValidationException(Yii::t('app', "File was NOT uploaded at '$this->file_path'"));
+            throw new ValidationException(Yii::t('app', 'Unable to save file'));
         }
         return true;
     }
