@@ -29,6 +29,7 @@ use yii\helpers\FileHelper;
  * @property User $createdBy
  * @property User $updatedBy
  * @property TimelinePost[] $timelinePosts
+ * @property Folder[] $folders
  * @property Workspace[] $userWorkspaces
  */
 class Workspace extends ActiveRecord
@@ -133,6 +134,14 @@ class Workspace extends ActiveRecord
     public function getArticles()
     {
         return $this->hasMany(Article::class, ['workspace_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getFolders()
+    {
+        return $this->hasMany(Folder::class, ['workspace_id' => 'id']);
     }
 
     /**

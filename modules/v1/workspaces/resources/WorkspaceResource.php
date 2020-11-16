@@ -173,10 +173,11 @@ class WorkspaceResource extends Workspace
      */
     public function delete()
     {
-        if ($this->getArticles()->count()) {
+        if ($this->getFolders()->count()) {
             throw new ValidationException(Yii::t('app', 'You can\'t delete this workspace because it has folders'));
         }
         UserWorkspace::deleteAll(['workspace_id' => $this->id]);
+        Workspace::deleteAll(['id' => $this->id]);
 
         return true;
     }
