@@ -27,6 +27,8 @@
         </p>
       </b-media>
     </b-card-body>
+
+    <div class="p-3 description" v-html="timeline.description"></div>
     <b-card-body v-if="timeline.action === this.SHARE_ARTICLE && timeline.article">
       <div class="row">
         <div class="col">
@@ -38,19 +40,14 @@
       </div>
     </b-card-body>
     <div v-if="timeline.file_url" class="timeline-preview">
-      <div v-if="isImage(timeline.file_url)" class="image-preview mt-3">
+      <div v-if="isImage(timeline.file_url)" class="image-preview">
         <b-img :src="timeline.file_url" class="img-fluid" style="cursor: pointer"/>
       </div>
       <video v-else-if="isVideo(timeline.file_url)" controls class="video-preview">
         <source :src="timeline.file_url">
       </video>
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="p-3 description" v-html="timeline.description"></div>
-      </div>
-    </div>
-    <b-card-footer class="pb-0">
+    <b-card-footer >
       <LikeUnlikeButton class="mr-2" :item="timeline.userLikes" :liked="liked" @onLikeClicked="onLikeClicked"/>
       <b-button size="sm" pill variant="light" :pressed.sync="showComments">
         <i class="far fa-comments fa-lg"/>
@@ -162,8 +159,8 @@ export default {
 
 .image-preview {
   position: relative;
-  width: 300px;
-  height: 200px;
+  //width: 300px;
+  //height: 200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
