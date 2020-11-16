@@ -14,7 +14,7 @@
       </div>
       <div class="menu-container">
         <b-nav tabs>
-          <b-nav-item v-for="(item, index) in items" :to="item.to" active-class="active"
+          <b-nav-item :active="isActive(item)" v-for="(item, index) in items" :to="item.to" active-class="active"
                       :key="`workspace-tab-${index}`">
             <i v-if="item.icon" :class="item.icon" class="mr-2"></i>{{ $t(item.title) }}
           </b-nav-item>
@@ -82,6 +82,14 @@ export default {
         {text: this.workspace.abbreviation || this.workspace.name, active: true}
       ];
     },
+    isActive(item) {
+      if (typeof item.to === 'string') {
+        return item.to === this.$route.name;
+      } else if (typeof item.to === 'object') {
+        return item.to.name === this.$route.name;
+      }
+      return false;
+    }
   },
   async beforeMount() {
     await this.getCurrentWorkspace(this.$route.params.id);
