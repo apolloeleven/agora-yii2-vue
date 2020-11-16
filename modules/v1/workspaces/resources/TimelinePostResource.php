@@ -157,7 +157,7 @@ class TimelinePostResource extends TimelinePost
             $folder->timeline_post_id = $this->id;
             $folder->is_file = 1;
 
-            $parentFolder = Folder::findOne(['workspace_id' => $folder->workspace_id]);
+            $parentFolder = Folder::find()->byWorkspaceId($folder->workspace_id)->isTimelineFolder()->one();
 
             if (!$parentFolder) {
                 throw new ValidationException(Yii::t('app', 'Unable to find parent folder'));
