@@ -57,21 +57,21 @@
           <template v-slot:cell(updated_at)="{item}">
             {{ item.updated_at | toDatetime }}
           </template>
-          <template v-slot:cell(actions)="data">
-            <b-dropdown v-if="!isDefault(data.item) && !isDefaultFolder" variant="link"
+          <template v-slot:cell(actions)="{item}">
+            <b-dropdown v-if="!isDefault(item) && !isDefaultFolder" variant="link"
                         toggle-class="text-decoration-none p-0" no-caret right>
               <template v-slot:button-content>
                 <i class="fas fa-ellipsis-v"/>
               </template>
-              <b-dropdown-item v-if="!isFile(data.item)" @click="onCopyUrlClick(data.item)">
+              <b-dropdown-item v-if="!isFile(item)" @click="onCopyUrlClick(item)">
                 <i class="far fa-copy"/>
                 {{ $t('Copy') }}
               </b-dropdown-item>
-              <b-dropdown-item v-if="!isFile(data.item)" @click="onEditClick(data.item)">
+              <b-dropdown-item v-if="!isFile(item)" @click="onEditClick(item)">
                 <i class="fas fa-pencil-alt mr-2"/>
                 {{ $t('Edit') }}
               </b-dropdown-item>
-              <b-dropdown-item @click="onRemoveClick(data.item)">
+              <b-dropdown-item @click="onRemoveClick(item)">
                 <i class="far fa-trash-alt mr-2"/>
                 {{ $t('Remove') }}
               </b-dropdown-item>
