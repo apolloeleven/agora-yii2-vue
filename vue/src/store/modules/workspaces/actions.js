@@ -27,7 +27,7 @@ import {
   SHOW_WORKSPACE_MODAL,
   SORT_FILES,
   TOGGLE_ARTICLE_VIEW_LOADING,
-  TOGGLE_ARTICLES_LOADING,
+  TOGGLE_ARTICLES_LOADING, TOGGLE_FOLDERS_LOADING,
   TOGGLE_VIEW_LOADING,
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
@@ -462,11 +462,13 @@ export async function getCurrentFolder({commit}, folderId) {
  * @returns {Promise<void>}
  */
 export async function getFoldersByParent({commit}, parentId) {
+  commit(TOGGLE_FOLDERS_LOADING, true);
   const {success, body} = await httpService.get(`${folderUrl}?parent_id=${parentId}&expand=updatedBy&sort=title`)
   if (success) {
     commit(GET_ALL_FOLDERS, body.data)
     commit(GET_BREAD_CRUMB, {breadcrumbData: body.breadcrumbData, folder: body.currentFolder})
   }
+  commit(TOGGLE_FOLDERS_LOADING, false);
 }
 
 /**

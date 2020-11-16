@@ -9,6 +9,7 @@ import {
   GET_ARTICLE,
   DELETED_TIMELINE_POST,
   FOLDER_DELETED,
+  TOGGLE_FOLDERS_LOADING,
   GET_ALL_FOLDERS,
   GET_ARTICLES,
   GET_ATTACH_CONFIG,
@@ -260,6 +261,13 @@ export default {
    */
   [GET_ALL_FOLDERS](state, data) {
     state.view.folders.folderAndFiles = data;
+  },
+  /**
+   * @param state
+   * @param data
+   */
+  [TOGGLE_FOLDERS_LOADING](state, data) {
+    state.view.folders.loading = data;
   },
   /**
    * @param state

@@ -28,6 +28,7 @@ export const GET_ATTACH_CONFIG = 'workspace/GET_ATTACH_CONFIG';
 export const ADD_ATTACH_FILES = 'workspace/ADD_ATTACH_FILES';
 export const SHOW_FOLDER_MODAL = 'workspace/SHOW_FOLDER_MODAL';
 export const HIDE_FOLDER_MODAL = 'workspace/HIDE_FOLDER_MODAL';
+export const TOGGLE_FOLDERS_LOADING = 'workspace/TOGGLE_FOLDERS_LOADING';
 export const GET_ALL_FOLDERS = 'workspace/GET_ALL_FOLDERS';
 export const FOLDER_DELETED = 'workspace/FOLDER_DELETED';
 export const GET_BREAD_CRUMB = 'workspace/GET_BREAD_CRUMB';

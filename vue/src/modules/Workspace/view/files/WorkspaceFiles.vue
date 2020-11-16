@@ -3,7 +3,7 @@
     <b-card no-body class="file-manager-card">
       <b-card-body>
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <b-breadcrumb :items="breadcrumb" class="d-none d-sm-flex"/>
+          <b-breadcrumb :items="breadcrumb" class="d-none d-sm-flex mb-0"/>
           <div v-if="!isDefaultFolder">
             <div class="file-manager-btn-wrapper">
               <b-button variant="success" size="sm">
@@ -25,14 +25,11 @@
               </b-button>
             </div>
           </div>
-
         </div>
-        <b-table small striped hover :items="foldersAndFiles" no-local-sorting :fields="fields" @sort-changed="onSort">
+        <b-table :busy="loading" small striped hover :items="foldersAndFiles" no-local-sorting :fields="fields"
+                 @sort-changed="onSort">
           <template v-slot:table-busy>
-            <div class="text-center text-danger my-2">
-              <b-spinner class="align-middle"/>
-              <strong>{{ $t('Loading...') }}</strong>
-            </div>
+            <content-spinner show/>
           </template>
           <template v-slot:cell(name)="files">
             <router-link v-if="!isFile(files.item)" class="folder-name"
@@ -88,12 +85,13 @@
 
 import {createNamespacedHelpers} from "vuex";
 import FolderForm from "./FolderForm";
+import ContentSpinner from "@/core/components/ContentSpinner";
 
 const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "WorkspaceFiles",
-  components: {FolderForm},
+  components: {ContentSpinner, FolderForm},
   data() {
     return {
       sortBy: null,
@@ -103,6 +101,7 @@ export default {
   computed: {
     ...mapWorkspaceState({
       foldersAndFiles: state => state.view.folders.folderAndFiles,
+      loading: state => state.view.folders.loading,
       breadcrumb: state => state.view.folders.breadcrumb,
       currentFolder: state => state.view.folders.folder,
       attachConfig: state => state.view.folders.attachConfig,
