@@ -9,6 +9,7 @@ import {
   DELETED_TIMELINE_POST,
   FOLDER_DELETED,
   GET_ALL_FOLDERS,
+  GET_ALL_USER,
   GET_ARTICLE,
   GET_ARTICLES,
   GET_ATTACH_CONFIG,
@@ -583,4 +584,26 @@ export function showInviteModal({commit}) {
  */
 export function hideInviteModal({commit}) {
   commit(HIDE_INVITE_MODAL)
+}
+
+/**
+ *
+ * @param commit
+ * @returns {Promise<unknown>}
+ */
+export async function getAllUser({commit}) {
+  const {success, body} = await httpService.get(`${url}/get-all-user`)
+  if (success) {
+    commit(GET_ALL_USER, body)
+  }
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<void>}
+ */
+export async function inviteUsers({commit}, data) {
+  return await httpService.post(`${url}/invite-users`, data)
 }

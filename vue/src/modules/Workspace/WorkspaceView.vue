@@ -24,7 +24,7 @@
             </b-nav-item>
             <div class="ml-auto d-flex align-items-center pr-3">
               <slot name="right-placeholder"></slot>
-              <b-button @click="onInviteClick" variant="info">
+              <b-button @click="onInviteClick" variant="info" size="sm">
                 <i class="fas fa-plus-circle"/>
                 {{ $t('Invite') }}
               </b-button>
@@ -182,7 +182,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace', 'showInviteModal']),
+    ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace', 'showInviteModal', 'getAllUser']),
     initBreadcrumbs() {
       this.breadcrumbs = [
         {text: this.$i18n.t('My Workspaces'), to: {name: 'workspace'}},
@@ -218,6 +218,7 @@ export default {
   async beforeMount() {
     await this.getCurrentWorkspace(this.$route.params.id);
     this.initBreadcrumbs();
+    this.getAllUser();
   },
   destroyed() {
     this.destroyCurrentWorkspace({});

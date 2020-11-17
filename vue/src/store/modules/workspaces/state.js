@@ -50,6 +50,7 @@ const STATE = {
     invite: {
       modal: {
         show: false,
+        users: [],
       }
     }
   }

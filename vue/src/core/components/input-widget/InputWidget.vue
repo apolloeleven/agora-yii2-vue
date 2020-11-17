@@ -50,7 +50,8 @@
         <b-form-select v-if="isSelect()" ref="currentInput" :size="size" :disabled="disabled" :options="selectOptions"
                        :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
                        :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" @change="onChange"
-                       @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)" :value-field="valueField"
+                       @input="onInput" @keydown="onKeydown" @blur="onBlur" :state="getState(v)"
+                       :value-field="valueField"
                        :text-field="textField"
         />
 
@@ -63,23 +64,16 @@
         <Multiselect v-if="isMultiselect()" ref="currentInput" :size="size" :disabled="disabled"
                      :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`"
                      :key="`${attribute}-${uuid}`" :id="inputId" v-model="model[attribute]" :state="getState(v)"
-                     :tag-placeholder="$t(multiselectPlaceholder)"
-                     :placeholder="computedPlaceholder"
-                     :options="multiselectOptions"
-                     :multiple="true"
-                     :taggable="true"
-                     :selectLabel="$t('Press enter to select')"
-                     :deselectLabel="$t('Press enter to remove')"
-                     :selectedLabel="$t('Selected')"
-                     track-by="value"
-                     label="text"
-                     @tag="addMultiselect">
+                     :tag-placeholder="$t(multiselectPlaceholder)" :placeholder="computedPlaceholder"
+                     :options="multiselectOptions" :multiple="true" :selectLabel="$t('Press enter to select')"
+                     :deselectLabel="$t('Press enter to remove')" :selectedLabel="$t('Selected')"
+                     track-by="value" label="text">
           <span slot="noOptions">{{ $t('List is empty.') }}</span>
           <template slot="tag" slot-scope="{ option, remove }">
-                            <span class="multiselect__tag">
-                              <span>{{ $t(option.value) }}</span>
-                              <span class="multiselect__tag-icon" @click="remove(option)"></span>
-                            </span>
+            <span class="multiselect__tag">
+              <span>{{ $t(option.text) }}</span>
+              <span class="multiselect__tag-icon" @click="remove(option)"></span>
+            </span>
           </template>
         </Multiselect>
 

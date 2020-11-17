@@ -2,14 +2,14 @@ import BaseModel from "@/core/components/input-widget/BaseModel";
 import i18n from "@/shared/i18n";
 
 export default class WorkspaceInviteModel extends BaseModel {
-  name = '';
+  selectedUsers = [];
+  allUser = [];
 
-  rules = {
-    name: 'required',
-  };
+  rules = {};
 
   attributeLabels = {
-    name: i18n.t('Name'),
+    selectedUsers: i18n.t('Invite User'),
+    allUser: i18n.t('Select all registered users'),
   };
 
   constructor(data = {}) {
