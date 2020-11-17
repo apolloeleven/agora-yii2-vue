@@ -1,16 +1,15 @@
 import {
   ADD_ATTACH_FILES,
   ADD_TIMELINE_POST,
+  CHANGE_CAROUSEL,
   CHANGE_TIMELINE_LOADING,
   CHANGE_TIMELINE_MODAL_LOADING,
   CHANGE_WORKSPACE_LOADING,
   CREATE_ARTICLE,
-  TOGGLE_ARTICLE_VIEW_LOADING,
-  GET_ARTICLE,
   DELETED_TIMELINE_POST,
   FOLDER_DELETED,
-  TOGGLE_FOLDERS_LOADING,
   GET_ALL_FOLDERS,
+  GET_ARTICLE,
   GET_ARTICLES,
   GET_ATTACH_CONFIG,
   GET_BREAD_CRUMB,
@@ -20,15 +19,19 @@ import {
   GET_WORKSPACES,
   HIDE_ARTICLE_MODAL,
   HIDE_FOLDER_MODAL,
+  HIDE_PREVIEW_MODAL,
   HIDE_TIMELINE_MODAL,
   HIDE_WORKSPACE_MODAL,
   REMOVE_ARTICLE,
   SHOW_ARTICLE_MODAL,
   SHOW_FOLDER_MODAL,
+  SHOW_PREVIEW_MODAL,
   SHOW_TIMELINE_MODAL,
   SHOW_WORKSPACE_MODAL,
   SORT_FILES,
+  TOGGLE_ARTICLE_VIEW_LOADING,
   TOGGLE_ARTICLES_LOADING,
+  TOGGLE_FOLDERS_LOADING,
   TOGGLE_VIEW_LOADING,
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
@@ -349,6 +352,31 @@ export default {
         }
         return order === 'desc' ? comparison * -1 : comparison;
       });
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [SHOW_PREVIEW_MODAL](state, data) {
+    state.view.folders.previewModal.show = true;
+    state.view.folders.previewModal.files = data.files;
+    state.view.folders.previewModal.activeFile = data.activeFile;
+  },
+  /**
+   *
+   * @param state
+   */
+  [HIDE_PREVIEW_MODAL](state) {
+    state.view.folders.previewModal.show = false;
+  },
+  /**
+   *
+   * @param state
+   * @param index
+   */
+  [CHANGE_CAROUSEL](state, index) {
+    state.view.folders.previewModal.activeFile = index;
   },
 
 };

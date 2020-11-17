@@ -36,3 +36,6 @@ export const GET_CURRENT_FOLDER = 'workspace/GET_CURRENT_FOLDER';
 export const SHOW_EDIT_LABEL_DIALOG = 'workspace/SHOW_EDIT_LABEL_DIALOG';
 export const HIDE_EDIT_LABEL_DIALOG = 'workspace/HIDE_EDIT_LABEL_DIALOG';
 export const SORT_FILES = 'workspace/SORT_FILES';
+export const SHOW_PREVIEW_MODAL = 'workspace/SHOW_PREVIEW_MODAL';
+export const HIDE_PREVIEW_MODAL = 'workspace/HIDE_PREVIEW_MODAL';
+export const CHANGE_CAROUSEL = 'workspace/CHANGE_CAROUSEL';

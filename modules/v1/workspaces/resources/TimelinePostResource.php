@@ -164,7 +164,7 @@ class TimelinePostResource extends TimelinePost
             }
             $folder->parent_id = $parentFolder->id;
 
-            if (!$folder->uploadFile($this->file)) {
+            if (!$folder->uploadFile($this->file, $folder->workspace_id)) {
                 throw new ValidationException(Yii::t('app', 'Unable to upload attachment'));
             }
 
