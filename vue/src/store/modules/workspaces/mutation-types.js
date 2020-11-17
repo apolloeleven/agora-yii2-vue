@@ -39,3 +39,6 @@ export const SORT_FILES = 'workspace/SORT_FILES';
 export const SHOW_PREVIEW_MODAL = 'workspace/SHOW_PREVIEW_MODAL';
 export const HIDE_PREVIEW_MODAL = 'workspace/HIDE_PREVIEW_MODAL';
 export const CHANGE_CAROUSEL = 'workspace/CHANGE_CAROUSEL';
+
+export const SHOW_INVITE_MODAL = 'workspace/SHOW_INVITE_MODAL';
+export const HIDE_INVITE_MODAL = 'workspace/HIDE_INVITE_MODAL';

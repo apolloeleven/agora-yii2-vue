@@ -19,12 +19,14 @@ import {
   GET_WORKSPACES,
   HIDE_ARTICLE_MODAL,
   HIDE_FOLDER_MODAL,
+  HIDE_INVITE_MODAL,
   HIDE_PREVIEW_MODAL,
   HIDE_TIMELINE_MODAL,
   HIDE_WORKSPACE_MODAL,
   REMOVE_ARTICLE,
   SHOW_ARTICLE_MODAL,
   SHOW_FOLDER_MODAL,
+  SHOW_INVITE_MODAL,
   SHOW_PREVIEW_MODAL,
   SHOW_TIMELINE_MODAL,
   SHOW_WORKSPACE_MODAL,
@@ -561,4 +563,24 @@ export function hidePreviewModal({commit}) {
  */
 export function changeCarousel({commit}, index) {
   commit(CHANGE_CAROUSEL, index);
+}
+
+/**
+ * Open invite modal
+ *
+ * @param commit
+ * @param data
+ */
+export function showInviteModal({commit}) {
+  commit(SHOW_INVITE_MODAL)
+}
+
+/**
+ * Close invite modal
+ *
+ * @param commit
+ * @param data
+ */
+export function hideInviteModal({commit}) {
+  commit(HIDE_INVITE_MODAL)
 }

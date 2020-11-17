@@ -24,6 +24,10 @@
             </b-nav-item>
             <div class="ml-auto d-flex align-items-center pr-3">
               <slot name="right-placeholder"></slot>
+              <b-button @click="onInviteClick" variant="info">
+                <i class="fas fa-plus-circle"/>
+                {{ $t('Invite') }}
+              </b-button>
             </div>
           </b-nav>
         </div>
@@ -139,18 +143,20 @@
         </b-card>
       </div>
     </div>
+    <WorkspaceInviteModal/>
   </div>
 </template>
 
 <script>
 import {createNamespacedHelpers} from "vuex";
 import ContentSpinner from "@/core/components/ContentSpinner";
+import WorkspaceInviteModal from "./view/invite/WorkspaceInviteModal";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace')
 
 export default {
   name: "WorkspaceView",
-  components: {ContentSpinner},
+  components: {WorkspaceInviteModal, ContentSpinner},
   data() {
     return {
       headerFixed: false,
@@ -176,7 +182,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace']),
+    ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace', 'showInviteModal']),
     initBreadcrumbs() {
       this.breadcrumbs = [
         {text: this.$i18n.t('My Workspaces'), to: {name: 'workspace'}},
@@ -204,7 +210,10 @@ export default {
         this.headerFixed = false;
         this.$refs.headerNav.style.position = 'static';
       }
-    }
+    },
+    onInviteClick() {
+      this.showInviteModal();
+    },
   },
   async beforeMount() {
     await this.getCurrentWorkspace(this.$route.params.id);
@@ -300,6 +309,7 @@ export default {
 
       &.header-fixed {
         padding-top: 50px;
+
         > .nav {
           .workspace-img-container {
             position: static;
