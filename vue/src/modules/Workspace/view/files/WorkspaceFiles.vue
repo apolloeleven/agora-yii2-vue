@@ -71,6 +71,10 @@
                 <i class="far fa-trash-alt mr-2"/>
                 {{ $t('Remove') }}
               </b-dropdown-item>
+              <b-dropdown-item v-if="isFile(item)" @click="onDownloadClick(item)">
+                <i class="fas fa-download"/>
+                {{ $t('Download') }}
+              </b-dropdown-item>
             </b-dropdown>
           </template>
         </b-table>
@@ -85,6 +89,8 @@
 import {createNamespacedHelpers} from "vuex";
 import FolderForm from "./FolderForm";
 import ContentSpinner from "@/core/components/ContentSpinner";
+import {AppSettings} from "../../../../shared/AppSettings";
+import authService from "../../../../core/services/authService";
 
 const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
@@ -139,6 +145,9 @@ export default {
     },
     onRemoveClick(e) {
       this.showDeleteConfirmation([e.id])
+    },
+    onDownloadClick(e) {
+      window.location.href = `${AppSettings.url()}/v1/workspaces/folder/download-file/${e.id}?access-token=${authService.getToken()}`;
     },
     async showDeleteConfirmation(fileIds) {
       const result = await this.$confirm(

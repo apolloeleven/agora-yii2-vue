@@ -8,6 +8,7 @@ use app\rest\ActiveController;
 use app\rest\ValidationException;
 use Yii;
 use yii\base\Exception;
+use yii\console\Response;
 use yii\web\UploadedFile;
 
 /**
@@ -166,5 +167,23 @@ class FolderController extends ActiveController
             $folder->deleteWithChildren();
         }
         $dbTransaction->commit();
+    }
+
+    /**
+     * Download file
+     *
+     * @param $id
+     * @return Response|\yii\web\Response
+     * @throws ValidationException
+     */
+    public function actionDownloadFile($id)
+    {
+        $file = FolderResource::findOne(['id' => $id]);
+
+        if (!$file) {
+            throw new ValidationException(Yii::t('app', 'File does not exist'));
+        }
+
+        return Yii::$app->response->sendFile($file->getFullPath(), $file->name);
     }
 }

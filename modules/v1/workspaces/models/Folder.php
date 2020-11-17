@@ -191,6 +191,16 @@ class Folder extends ActiveRecord
     }
 
     /**
+     * Get full path
+     *
+     * @return bool|string
+     */
+    public function getFullPath()
+    {
+        return Yii::getAlias('@storage' . $this->file_path);
+    }
+
+    /**
      * Upload file
      *
      * @param UploadedFile $file
