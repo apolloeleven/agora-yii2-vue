@@ -54,6 +54,7 @@ export default {
       if (this.model.allUser.length > 0) {
         this.model.allUser = this.model.allUser.map(a => a.id)
       }
+      this.model.workspace_id = this.$route.params.id;
       const res = await this.inviteUsers({...this.model.toJSON()});
       if (res.success) {
         this.$toast(this.$t(`Users invited successfully`));
