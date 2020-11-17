@@ -37,8 +37,7 @@
               <i class="fas fa-folder-open"/>
               {{ files.item.name }}
             </router-link>
-            <!--TODO attachment preview-->
-            <a v-else class="file-name">
+            <a v-else class="file-name" @click="onFileClick(files.item)">
               <i class="far fa-file-alt"/>
               {{ files.item.name }}
             </a>
@@ -81,6 +80,7 @@
       </b-card-body>
     </b-card>
     <FolderForm/>
+    <FilePreviewModal/>
   </div>
 </template>
 
@@ -89,14 +89,15 @@
 import {createNamespacedHelpers} from "vuex";
 import FolderForm from "./FolderForm";
 import ContentSpinner from "@/core/components/ContentSpinner";
-import {AppSettings} from "../../../../shared/AppSettings";
-import authService from "../../../../core/services/authService";
+import {AppSettings} from "@/shared/AppSettings";
+import authService from "@/core/services/authService";
+import FilePreviewModal from "./FilePreviewModal";
 
 const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "WorkspaceFiles",
-  components: {ContentSpinner, FolderForm},
+  components: {FilePreviewModal, ContentSpinner, FolderForm},
   data() {
     return {
       sortBy: null,
@@ -133,7 +134,7 @@ export default {
   },
   methods: {
     ...mapWorkspaceActions(['showFolderModal', 'getFoldersByParent', 'attachFiles', 'getAttachConfig',
-      'getCurrentFolder', 'deleteFolder', 'destroyedCurrentFolder', 'sortFiles']),
+      'getCurrentFolder', 'deleteFolder', 'destroyedCurrentFolder', 'sortFiles', 'showPreviewModal']),
     onShowModal() {
       this.showFolderModal(null)
     },
@@ -148,6 +149,12 @@ export default {
     },
     onDownloadClick(e) {
       window.location.href = `${AppSettings.url()}/v1/workspaces/folder/download-file/${e.id}?access-token=${authService.getToken()}`;
+    },
+    onFileClick(e) {
+      let files = this.foldersAndFiles.filter(f => f.is_file === 1);
+      let index = files.findIndex(f => f.id === e.id);
+
+      this.showPreviewModal({activeFile: index, files: files});
     },
     async showDeleteConfirmation(fileIds) {
       const result = await this.$confirm(

@@ -1,6 +1,6 @@
 import {
   ADD_ATTACH_FILES,
-  ADD_TIMELINE_POST,
+  ADD_TIMELINE_POST, CHANGE_CAROUSEL,
   CHANGE_TIMELINE_LOADING,
   CHANGE_TIMELINE_MODAL_LOADING,
   CHANGE_WORKSPACE_LOADING,
@@ -17,17 +17,19 @@ import {
   GET_TIMELINE_DATA,
   GET_WORKSPACES,
   HIDE_ARTICLE_MODAL,
-  HIDE_FOLDER_MODAL,
+  HIDE_FOLDER_MODAL, HIDE_PREVIEW_MODAL,
   HIDE_TIMELINE_MODAL,
   HIDE_WORKSPACE_MODAL,
   REMOVE_ARTICLE,
   SHOW_ARTICLE_MODAL,
   SHOW_FOLDER_MODAL,
+  SHOW_PREVIEW_MODAL,
   SHOW_TIMELINE_MODAL,
   SHOW_WORKSPACE_MODAL,
   SORT_FILES,
   TOGGLE_ARTICLE_VIEW_LOADING,
-  TOGGLE_ARTICLES_LOADING, TOGGLE_FOLDERS_LOADING,
+  TOGGLE_ARTICLES_LOADING,
+  TOGGLE_FOLDERS_LOADING,
   TOGGLE_VIEW_LOADING,
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
@@ -528,4 +530,33 @@ export function prepareFiles(data) {
   }
   data = tmp;
   return data;
+}
+
+/**
+ * Open file preview modal
+ *
+ * @param commit
+ * @param data
+ */
+export function showPreviewModal({commit}, data) {
+  commit(SHOW_PREVIEW_MODAL, data)
+}
+
+/**
+ * Close file preview modal
+ *
+ * @param commit
+ */
+export function hidePreviewModal({commit}) {
+  commit(HIDE_PREVIEW_MODAL)
+}
+
+/**
+ * Change file preview
+ *
+ * @param commit
+ * @param index
+ */
+export function changeCarousel({commit}, index) {
+  commit(CHANGE_CAROUSEL, index);
 }
