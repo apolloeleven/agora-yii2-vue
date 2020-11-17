@@ -2,7 +2,7 @@
   <div v-if="loading">
     <content-spinner show/>
   </div>
-  <div v-else class="articles-wrapper">
+  <div v-else class="workspace-articles">
     <div class="card">
       <div class="card-header d-flex align-items-center">
         <h5 class="mb-0">{{ articles.length }} {{ $t('article(s)') }}</h5>
@@ -87,5 +87,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  .workspace-articles {
+    width: 680px;
+    margin: 0 auto;
+  }
 </style>
