@@ -66,19 +66,32 @@ class FolderController extends ActiveController
     {
         $request = Yii::$app->request;
         $folderId = $request->post('folder_id');
-        $workspaceId = $request->post('workspace_id');
         $isFile = $request->post('isFile');
 
-        $parentFolder = null;
-        if ($folderId) {
-            $parentFolder = FolderResource::findOne($folderId);
-            if (!$parentFolder) {
-                return $this->validationError(Yii::t('app', 'Unable to find parent folder'));
-            }
-            $workspaceId = $parentFolder->workspace_id;
+        $parentFolder = FolderResource::findOne($folderId);
+        if (!$parentFolder) {
+            return $this->validationError(Yii::t('app', 'Unable to find parent folder'));
         }
+        $workspaceId = $parentFolder->workspace_id;
 
-        if ($isFile) {
+
+        if (!$isFile) {
+            $folder = new FolderResource();
+            $folder->name = $request->post('name');
+            $folder->workspace_id = $workspaceId;
+            $folder->is_file = 0;
+
+            if ((!$folder->load($request->post(), '')) || !$folder->validate()) {
+                return $this->validationError($folder->getFirstErrors());
+            }
+
+            $folder->parent_id = $folderId;
+            if (!$folder->appendTo($parentFolder)) {
+                return $this->validationError($folder->getFirstErrors());
+            }
+
+            return $this->response($folder, 201);
+        } else {
             $attachFiles = UploadedFile::getInstancesByName('files');
             if (!$attachFiles) {
                 throw new ValidationException(Yii::t('app', 'Unable to find files'));
@@ -87,74 +100,32 @@ class FolderController extends ActiveController
             $attachments = [];
 
             foreach ($attachFiles as $attachFile) {
-                if ($folderId) {
-                    $folder = FolderResource::find()
-                        ->byParentId($folderId)
-                        ->byName($attachFile->name)
-                        ->isFile()
-                        ->one();
-                    $fileExist = true;
-                } else {
-                    $folder = FolderResource::find()
-                        ->byWorkspaceId($workspaceId)
-                        ->byName($attachFile->name)
-                        ->isFile()
-                        ->one();
-                    $fileExist = true;
-                }
+                $folder = FolderResource::find()
+                    ->byParentId($folderId)
+                    ->byName($attachFile->name)
+                    ->isFile()
+                    ->one();
 
                 // if exist same name file overwrite
                 if (!$folder) {
-                    $fileExist = false;
                     $folder = new FolderResource();
                     $folder->is_file = 1;
                     $folder->workspace_id = $workspaceId;
                 }
 
-                if (!$folder->uploadFile($attachFile)) {
-                    throw new ValidationException(Yii::t('app', 'Unable to upload attachment'));
-                }
+                $folder->uploadFile($attachFile);
 
-                if ($fileExist && !$folder->save()) {
+                if ($folder->id && !$folder->save()) {
                     return $this->validationError($folder->getFirstErrors());
                 } else {
-                    $this->nestedSetModel($folderId, $folder, $parentFolder);
+                    $folder->parent_id = $folderId;
+                    if (!$folder->appendTo($parentFolder)) {
+                        return $this->validationError($folder->getFirstErrors());
+                    }
                 }
                 $attachments[] = $folder;
             }
             return $this->response($attachments, 201);
-        } else {
-            $folder = new FolderResource();
-            $folder->name = $request->post('name');
-            $folder->workspace_id = $workspaceId;
-            $folder->is_file = $isFile ? 1 : 0;
-
-            if ((!$folder->load($request->post(), '')) && !$folder->validate()) {
-                return $this->validationError($folder->getFirstErrors());
-            }
-
-            $this->nestedSetModel($folderId, $folder, $parentFolder);
-
-            return $this->response($folder, 201);
-        }
-    }
-
-    /**
-     *
-     *
-     * @param $folderId
-     * @param $folder
-     * @param $parentFolder
-     */
-    private function nestedSetModel($folderId, $folder, $parentFolder)
-    {
-        if (!$folderId && !$folder->makeRoot()) {
-            $this->validationError($folder->getFirstErrors());
-        } else {
-            $folder->parent_id = $folderId;
-            if (!$folder->appendTo($parentFolder)) {
-                $this->validationError($folder->getFirstErrors());
-            }
         }
     }
 
