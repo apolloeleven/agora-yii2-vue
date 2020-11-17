@@ -5,19 +5,19 @@
   <div v-else class="workspace-view page">
     <div @scroll="onScroll" ref="workspaceContent" class="workspace-content">
       <div ref="workspaceHeader" class="workspace-header">
-        <div ref="banner" class="banner">
-        </div>
-        <div class="workspace-name-container">
-          <h1 class="m-0">{{ workspace.name }}</h1>
-        </div>
-        <div class="workspace-img-container">
-          <b-img :src="workspace.image_url || '/assets/logo.png'" fluid class="rounded-0"/>
+        <div ref="banner" class="banner d-flex flex-column align-items-center justify-content-center">
+          <div class="workspace-img-container">
+            <b-img :src="workspace.image_url || '/assets/logo.png'" fluid class="rounded-0"/>
+          </div>
+          <div class="workspace-name-container">
+            <h1 class="m-0">{{ workspace.name }}</h1>
+          </div>
         </div>
         <div class="menu-container" :class="{'header-fixed': headerFixed}">
           <b-nav ref="headerNav" tabs>
-            <b-nav-item class="workspace-img-container">
-              <b-img :src="workspace.image_url || '/assets/logo.png'" fluid class="rounded-0"/>
-            </b-nav-item>
+<!--            <b-nav-item class="workspace-img-container">-->
+<!--              <b-img :src="workspace.image_url || '/assets/logo.png'" fluid class="rounded-0"/>-->
+<!--            </b-nav-item>-->
             <b-nav-item :active="isActive(item)" v-for="(item, index) in items" :to="item.to" active-class="active"
                         :key="`workspace-tab-${index}`">
               <i v-if="item.icon" :class="item.icon" class="mr-2"></i>{{ $t(item.title) }}
@@ -37,112 +37,108 @@
       </div>
     </div>
 
-    <div class="workspace-sidebar">
-      <div class="right-side-bar">
-        <b-card :title="$t('Contacts')" no-body>
-          <b-card-body>
-            <h3 class="card-title mb-0">{{ $t('Contacts') }}</h3>
-          </b-card-body>
-          <b-list-group style="max-width: 300px;">
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar class="mr-3"></b-avatar>
-              <span class="mr-auto">J. Circlehead</span>
-              <b-badge>5</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="primary" text="BV" class="mr-3"></b-avatar>
-              <span class="mr-auto">BootstrapVue</span>
-              <b-badge>12</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="info" src="https://placekitten.com/300/300" class="mr-3"></b-avatar>
-              <span class="mr-auto">Super Kitty</span>
-              <b-badge>9</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex align-items-center">
-              <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
-              <span class="mr-auto">ACME group</span>
-              <b-badge>7</b-badge>
-            </b-list-group-item>
-          </b-list-group>
-        </b-card>
-      </div>
-    </div>
+    <b-card class="workspace-sidebar" :title="$t('Contacts')" no-body>
+      <b-card-body>
+        <h3 class="card-title mb-0">{{ $t('Contacts') }}</h3>
+      </b-card-body>
+      <b-list-group style="max-width: 300px;">
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar class="mr-3"></b-avatar>
+          <span class="mr-auto">J. Circlehead</span>
+          <b-badge>5</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="primary" text="BV" class="mr-3"></b-avatar>
+          <span class="mr-auto">BootstrapVue</span>
+          <b-badge>12</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="info" src="https://placekitten.com/300/300" class="mr-3"></b-avatar>
+          <span class="mr-auto">Super Kitty</span>
+          <b-badge>9</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center">
+          <b-avatar variant="success" icon="people-fill" class="mr-3"></b-avatar>
+          <span class="mr-auto">ACME group</span>
+          <b-badge>7</b-badge>
+        </b-list-group-item>
+      </b-list-group>
+    </b-card>
     <WorkspaceInviteModal/>
   </div>
 </template>
@@ -170,13 +166,16 @@ export default {
     }),
     items() {
       return [
-        {title: this.$i18n.t('Timeline'), to: {name: 'workspace.timeline'}, icon: 'fa fa-bars'},
+        {title: this.$i18n.t('Timeline'), to: {name: 'workspace.timeline'}, icon: 'fas fa-stream'},
         {
           title: this.$i18n.t('Files'),
           to: {name: 'workspace.files', params: {folderId: this.workspace.rootFolder.id}},
           icon: 'fa fa-folder'
         },
         {title: this.$i18n.t('Articles'), to: {name: 'workspace.articles'}, icon: 'fa fa-book'},
+        {title: this.$i18n.t('Users'), to: {name: 'workspace.users'}, icon: 'fas fa-users'},
+        {title: this.$i18n.t('Polls'), to: {name: 'workspace.polls'}, icon: 'fas fa-poll-h'},
+        {title: this.$i18n.t('Activity'), to: {name: 'workspace.activity'}, icon: 'fas fa-list'},
         {title: this.$i18n.t('About'), to: {name: 'workspace.about'}, icon: 'fa fa-info-circle'},
       ]
     },
@@ -190,6 +189,7 @@ export default {
       ];
     },
     isActive(item) {
+      console.log(item.to.name === this.$route.name);
       if (typeof item.to === 'string') {
         return item.to === this.$route.name;
       } else if (typeof item.to === 'object') {
@@ -208,7 +208,8 @@ export default {
         this.$refs.headerNav.style.background = '#FFF';
       } else {
         this.headerFixed = false;
-        this.$refs.headerNav.style.position = 'static';
+        this.$refs.headerNav.style.position = '';
+        this.$refs.headerNav.style.width = '';
       }
     },
     onInviteClick() {
@@ -245,24 +246,56 @@ export default {
 
   .workspace-sidebar {
     overflow-y: auto;
+    width: 300px;
+
+    .list-group-item {
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border: none;
+      background-color: transparent;
+      transition: background-color 0.1s;
+
+      &:hover {
+        background-color: #eeeeee;
+      }
+    }
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background-color: #d6d6d6;
+      border-radius: 10px;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.4);;
+    }
   }
 
-  .workspace-sidebar {
-    width: 300px;
-  }
 
   .workspace-header {
     position: relative;
+    text-align: center;
 
     .banner {
       background-color: #3989c6;
       background-image: linear-gradient(#c6e3fc, #3989c6);
-      height: 7rem;
+      height: 15rem;
       z-index: 1;
     }
 
     .workspace-name-container {
-      position: absolute;
+      //position: absolute;
       left: 10rem;
       top: 3.5rem;
       color: white;
@@ -272,21 +305,23 @@ export default {
       background-color: white;
       z-index: 2;
       border: 3px solid white;
-      border-top-left-radius: 5px;
-      border-top-right-radius: 5px;
+      border-radius: 50%;
+      padding: 20px;
       top: 1.25rem;
       left: 1rem;
-      position: absolute;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+      //position: absolute;
 
       width: 8rem;
       height: 8rem;
     }
 
     .menu-container {
-      padding-left: 9rem;
+      //padding-left: 9rem;
       background-color: white;
 
       .nav {
+        display: inline-flex;
         border-bottom: none;
 
         .nav-item {
@@ -312,6 +347,8 @@ export default {
         padding-top: 50px;
 
         > .nav {
+          justify-content: center;
+          box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
           .workspace-img-container {
             position: static;
             width: auto;

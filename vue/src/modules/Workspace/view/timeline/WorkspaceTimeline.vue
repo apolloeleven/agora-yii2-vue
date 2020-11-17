@@ -53,6 +53,7 @@ export default {
 <style lang="scss" scoped>
   .workspace-timeline {
     max-width: 680px;
+    margin: 0 auto;
     overflow: auto;
     height: 100%;
   }
