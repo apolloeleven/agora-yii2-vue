@@ -113,7 +113,7 @@ class FolderController extends ActiveController
                     $folder->workspace_id = $workspaceId;
                 }
 
-                $folder->uploadFile($attachFile);
+                $folder->uploadFile($attachFile, $workspaceId);
 
                 if ($folder->id && !$folder->save()) {
                     return $this->validationError($folder->getFirstErrors());
