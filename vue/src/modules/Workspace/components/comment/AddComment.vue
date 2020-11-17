@@ -1,5 +1,5 @@
 <template>
-  <b-card-body :class="!parent_id ? 'bg-light' : ''">
+  <b-card-body class="pt-1" :class="!parent_id ? 'bg-light' : ''">
     <b-media>
       <template v-slot:aside>
         <b-img rounded="0" :src="'/assets/img/avatar.svg'" height="32" width="32"/>

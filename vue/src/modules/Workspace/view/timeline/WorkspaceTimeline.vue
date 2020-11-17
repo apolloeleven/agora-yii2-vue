@@ -2,23 +2,21 @@
   <div v-if="loading">
     <content-spinner show/>
   </div>
-  <div v-else class="row">
-    <div class="col-md-12">
-      <div class="card mb-3">
-        <div class="card-header border-bottom-0 text-right">
-          <b-button @click="showTimelineForm" size="sm" variant="primary">
-            <i class="fas fa-plus-circle"/>
-            {{ $t('Write on timeline') }}
-          </b-button>
-        </div>
+  <div v-else class="workspace-timeline">
+    <div class="card mb-3">
+      <div class="card-header border-bottom-0 text-right">
+        <b-button @click="showTimelineForm" size="sm" variant="primary">
+          <i class="fas fa-plus-circle"/>
+          {{ $t('Write on timeline') }}
+        </b-button>
       </div>
-      <div class="timeline-records">
-        <no-data :model="timelineData" :loading="loading" :text="$t('Nothing is shared on timeline')"></no-data>
-        <template v-if="!loading">
-          <TimelineItem v-for="(timeline, index) in timelineData" :timeline="timeline"
-                        :index="index" :key="`timeline-post-${timeline.id}`"/>
-        </template>
-      </div>
+    </div>
+    <div class="timeline-records">
+      <no-data :model="timelineData" :loading="loading" :text="$t('Nothing is shared on timeline')"></no-data>
+      <template v-if="!loading">
+        <TimelineItem v-for="(timeline, index) in timelineData" :timeline="timeline"
+                      :index="index" :key="`timeline-post-${timeline.id}`"/>
+      </template>
     </div>
   </div>
 </template>
@@ -52,6 +50,10 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  .workspace-timeline {
+    max-width: 680px;
+    overflow: auto;
+    height: 100%;
+  }
 </style>
