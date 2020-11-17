@@ -72,7 +72,7 @@ export default {
         this.$toast(this.$t(`The folder '{title}' was successfully ${action}`, {title: this.model.name}));
         this.hideModal()
       } else {
-        this.model.setMultipleErrors(res.body);
+        this.model.setMultipleErrors([{field: 'name', message: res.body}]);
       }
     },
     hideModal() {

@@ -68,13 +68,18 @@ class FolderController extends ActiveController
         $request = Yii::$app->request;
         $folderId = $request->post('folder_id');
         $isFile = $request->post('isFile');
+        $folderName = $request->post('name');
+
+        $folderModel = FolderResource::find()->byName($folderName)->byParentId($folderId)->isFolder()->one();
+        if ($folderModel) {
+            return $this->validationError(Yii::t('app', 'This folder name already exist'));
+        }
 
         $parentFolder = FolderResource::findOne($folderId);
         if (!$parentFolder) {
             return $this->validationError(Yii::t('app', 'Unable to find parent folder'));
         }
         $workspaceId = $parentFolder->workspace_id;
-
 
         if (!$isFile) {
             $folder = new FolderResource();

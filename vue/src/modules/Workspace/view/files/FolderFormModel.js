@@ -9,7 +9,7 @@ export default class FolderFormModel extends BaseModel {
   };
 
   attributeLabels = {
-    name: i18n.t('Title'),
+    name: i18n.t('Name'),
   };
 
   constructor(data = {}) {
