@@ -29,6 +29,19 @@ const STATE = {
         object: null,
       }
     },
+    folders: {
+      loading: false,
+      folderAndFiles: [],
+      breadcrumb: [],
+      folder: {},
+      data: [],
+      modal: {
+        show: false,
+        object: null,
+        isFile: false,
+      },
+      attachConfig: {},
+    },
   }
 };
 

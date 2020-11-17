@@ -6,14 +6,9 @@ export default class WorkspaceFormModel extends BaseModel {
   abbreviation = '';
   description = '';
   image = null;
-  folder_in_folder = false;
 
   rules = {
     name: 'required',
-    abbreviation: '',
-    description: '',
-    image: '',
-    folder_in_folder: ''
   };
 
   attributeLabels = {
@@ -21,7 +16,6 @@ export default class WorkspaceFormModel extends BaseModel {
     abbreviation: i18n.t('Abbreviation'),
     description: i18n.t('Description'),
     image: i18n.t('Upload Image'),
-    folder_in_folder: i18n.t('Enable creating folders inside folders'),
   };
 
   constructor(data = {}) {

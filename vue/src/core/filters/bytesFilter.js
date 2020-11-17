@@ -2,7 +2,7 @@ import Vue from 'vue';
 
 Vue.filter('prettyBytes', function (num) {
   if (typeof num !== 'number' || isNaN(num)) {
-    throw new TypeError('Expected a number');
+    return '-';
   }
 
   let exponent;

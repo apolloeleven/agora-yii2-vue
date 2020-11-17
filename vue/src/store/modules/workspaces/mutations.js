@@ -1,6 +1,5 @@
 import {
-  ADD_TIMELINE_CHILD_COMMENT,
-  ADD_TIMELINE_COMMENT,
+  ADD_ATTACH_FILES,
   ADD_TIMELINE_POST,
   CHANGE_TIMELINE_LOADING,
   CHANGE_TIMELINE_MODAL_LOADING,
@@ -8,22 +7,27 @@ import {
   CREATE_ARTICLE,
   TOGGLE_ARTICLE_VIEW_LOADING,
   GET_ARTICLE,
-  DELETE_TIMELINE_CHILD_COMMENT,
-  DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
+  FOLDER_DELETED,
+  TOGGLE_FOLDERS_LOADING,
+  GET_ALL_FOLDERS,
   GET_ARTICLES,
+  GET_ATTACH_CONFIG,
+  GET_BREAD_CRUMB,
+  GET_CURRENT_FOLDER,
   GET_CURRENT_WORKSPACE,
   GET_TIMELINE_DATA,
   GET_WORKSPACES,
   HIDE_ARTICLE_MODAL,
+  HIDE_FOLDER_MODAL,
   HIDE_TIMELINE_MODAL,
   HIDE_WORKSPACE_MODAL,
   REMOVE_ARTICLE,
   SHOW_ARTICLE_MODAL,
+  SHOW_FOLDER_MODAL,
   SHOW_TIMELINE_MODAL,
   SHOW_WORKSPACE_MODAL,
-  TIMELINE_LIKE,
-  TIMELINE_UNLIKE,
+  SORT_FILES,
   TOGGLE_ARTICLES_LOADING,
   TOGGLE_VIEW_LOADING,
   UPDATE_ARTICLE,
@@ -223,66 +227,128 @@ export default {
   /**
    *
    * @param state
-   * @param data
-   */
-  [ADD_TIMELINE_COMMENT](state, data) {
-    state.view.timeline.data.filter(t => t.id === data.timeline_post_id).forEach(t => t.timelineComments.unshift(data));
-  },
-  /**
-   *
-   * @param state
-   * @param data
-   */
-  [DELETE_TIMELINE_COMMENT](state, data) {
-    state.view.timeline.data.forEach(t => t.timelineComments = t.timelineComments.filter(c => c.id !== data.id));
-  },
-  /**
-   *
-   * @param state
-   * @param data
-   */
-  [ADD_TIMELINE_CHILD_COMMENT](state, data) {
-    state.view.timeline.data.filter(t => t.id === data.parent.timeline_post_id)
-      .forEach(t => t.timelineComments.filter(tc => tc.id === data.parent_id)
-        .forEach(tc => tc.childrenComments.unshift(data)));
-  },
-  /**
-   *
-   * @param state
-   * @param data
-   */
-  [DELETE_TIMELINE_CHILD_COMMENT](state, data) {
-    state.view.timeline.data
-      .forEach(t => t.timelineComments
-        .forEach(t => t.childrenComments = t.childrenComments.filter(c => c.id !== data.id)));
-  },
-  /**
-   *
-   * @param state
-   * @param data
-   */
-  [TIMELINE_LIKE](state, data) {
-    const timelinePost = state.view.timeline.data.filter(t => t.id === data.timeline_post_id);
-    timelinePost.forEach(t => t.userLikes.unshift(data));
-    timelinePost.forEach(t => t.myLikes.unshift(data));
-  },
-  /**
-   *
-   * @param state
-   * @param data
-   */
-  [TIMELINE_UNLIKE](state, data) {
-    const timelinePost = state.view.timeline.data.filter(t => t.id === data.timeline_post_id);
-    timelinePost.forEach(t => t.myLikes = []);
-    timelinePost.forEach(t => t.userLikes = t.userLikes.filter(l => l.id !== data.id));
-  },
-  /**
-   *
-   * @param state
    * @param loading
    */
   [CHANGE_TIMELINE_MODAL_LOADING](state, loading) {
     state.view.timeline.modal.loading = loading
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_ATTACH_CONFIG](state, data) {
+    state.view.folders.attachConfig = data
+  },
+  /**
+   * @param state
+   * @param { Object } data
+   */
+  [SHOW_FOLDER_MODAL](state, data) {
+    state.view.folders.modal.show = true;
+    state.view.folders.modal.object = data;
+  },
+  /**
+   * @param state
+   */
+  [HIDE_FOLDER_MODAL](state) {
+    state.view.folders.modal.show = false;
+    state.view.folders.modal.object = null;
+  },
+  /**
+   * @param state
+   * @param data
+   */
+  [GET_ALL_FOLDERS](state, data) {
+    state.view.folders.folderAndFiles = data;
+  },
+  /**
+   * @param state
+   * @param data
+   */
+  [TOGGLE_FOLDERS_LOADING](state, data) {
+    state.view.folders.loading = data;
+  },
+  /**
+   * @param state
+   * @param breadcrumbData
+   * @param folder
+   */
+  [GET_BREAD_CRUMB](state, {breadcrumbData, folder}) {
+    state.view.folders.breadcrumb = breadcrumbData.map(bc => (
+      {text: bc.name, to: {name: 'workspace.files', params: {folderId: bc.id}}}
+    ));
+    state.view.folders.breadcrumb.push({text: folder.name})
+  },
+  /**
+   * @param state
+   * @param ids
+   */
+  [FOLDER_DELETED](state, ids) {
+    state.view.folders.folderAndFiles = state.view.folders.folderAndFiles.filter(a => !ids.includes(a.id))
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_CURRENT_FOLDER](state, data) {
+    state.view.folders.folder = data || {}
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [ADD_ATTACH_FILES](state, data) {
+    const fileIds = state.view.folders.folderAndFiles.map(d => d.id);
+    state.view.folders.folderAndFiles = state.view.folders.folderAndFiles
+      .concat(data.filter(d => !fileIds.includes(d.id)))
+
+  },
+  /**
+   *
+   * @param state
+   * @param column
+   */
+  [SORT_FILES](state, column) {
+    state.view.folders.folderAndFiles = state.view.folders.folderAndFiles
+      .sort((nextFile, prevFile) => {
+        let next;
+        let prev;
+        let comparison = 0;
+        let sortBy = column.sortBy;
+        let order = column.sortDesc ? 'desc' : 'asc';
+
+        if (sortBy !== 'updatedBy.displayName') {
+          if (!nextFile.hasOwnProperty(sortBy) || !prevFile.hasOwnProperty(sortBy)) {
+            return comparison;
+          }
+          let nextSortKey = sortBy, prevSortKey = sortBy;
+
+          if (sortBy === 'name') {
+            nextSortKey = nextFile['label'] ? 'label' : sortBy;
+            prevSortKey = prevFile['label'] ? 'label' : sortBy;
+          }
+          next = typeof nextFile[nextSortKey] === 'string' ? nextFile[nextSortKey].toUpperCase() : nextFile[nextSortKey];
+          prev = typeof prevFile[prevSortKey] === 'string' ? prevFile[prevSortKey].toUpperCase() : prevFile[prevSortKey];
+        } else {
+          let firstKey = 'updatedBy';
+          let secondKey = 'displayName';
+          if (!nextFile[firstKey].hasOwnProperty(secondKey) || !prevFile[firstKey].hasOwnProperty(secondKey)) {
+            return comparison;
+          }
+          next = typeof nextFile[firstKey][secondKey] === 'string' ? nextFile[firstKey][secondKey].toUpperCase() : nextFile[firstKey][secondKey];
+          prev = typeof prevFile[firstKey][secondKey] === 'string' ? prevFile[firstKey][secondKey].toUpperCase() : prevFile[firstKey][secondKey];
+        }
+
+        if (next > prev) {
+          comparison = 1;
+        } else if (next < prev) {
+          comparison = -1;
+        }
+        return order === 'desc' ? comparison * -1 : comparison;
+      });
   },
 
 };

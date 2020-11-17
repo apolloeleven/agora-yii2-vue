@@ -1,40 +1,44 @@
 import {
-  ADD_TIMELINE_CHILD_COMMENT,
-  ADD_TIMELINE_COMMENT,
+  ADD_ATTACH_FILES,
   ADD_TIMELINE_POST,
   CHANGE_TIMELINE_LOADING,
   CHANGE_TIMELINE_MODAL_LOADING,
   CHANGE_WORKSPACE_LOADING,
   CREATE_ARTICLE,
-  DELETE_TIMELINE_CHILD_COMMENT,
-  DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
+  FOLDER_DELETED,
+  GET_ALL_FOLDERS,
+  GET_ARTICLE,
   GET_ARTICLES,
+  GET_ATTACH_CONFIG,
+  GET_BREAD_CRUMB,
+  GET_CURRENT_FOLDER,
   GET_CURRENT_WORKSPACE,
   GET_TIMELINE_DATA,
   GET_WORKSPACES,
   HIDE_ARTICLE_MODAL,
+  HIDE_FOLDER_MODAL,
   HIDE_TIMELINE_MODAL,
   HIDE_WORKSPACE_MODAL,
   REMOVE_ARTICLE,
   SHOW_ARTICLE_MODAL,
+  SHOW_FOLDER_MODAL,
   SHOW_TIMELINE_MODAL,
   SHOW_WORKSPACE_MODAL,
-  TIMELINE_LIKE,
-  TIMELINE_UNLIKE,
-  TOGGLE_ARTICLES_LOADING,
+  SORT_FILES,
+  TOGGLE_ARTICLE_VIEW_LOADING,
+  TOGGLE_ARTICLES_LOADING, TOGGLE_FOLDERS_LOADING,
   TOGGLE_VIEW_LOADING,
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
-  TOGGLE_ARTICLE_VIEW_LOADING,
-  GET_ARTICLE,
 } from './mutation-types';
 import httpService from "../../../core/services/httpService";
 
 const url = '/v1/workspaces/workspace';
 const articlesUrl = '/v1/workspaces/article';
 const timelineUrl = '/v1/workspaces/timeline';
+const folderUrl = '/v1/workspaces/folder';
 
 const timelineExpand = `expand=article,createdBy,timelineComments.createdBy,timelineComments.childrenComments.createdBy,
 timelineComments.childrenComments.parent,userLikes,myLikes&sort=-created_at`
@@ -124,7 +128,7 @@ export async function deleteWorkspace({commit, dispatch}, data) {
 export async function getCurrentWorkspace({commit}, workspaceId) {
   commit(TOGGLE_VIEW_LOADING, true);
   const response = await httpService.get(`${url}/${workspaceId}`, {
-    params: {expand: 'createdBy'}
+    params: {expand: 'createdBy,rootFolder'}
   })
   if (response.success) {
     commit(GET_CURRENT_WORKSPACE, response.body);
@@ -169,7 +173,7 @@ export function prepareData(data) {
     const tmp = new FormData();
     for (let key in data) {
       if (data.hasOwnProperty(key)) {
-        if (key === 'folder_in_folder') {
+        if (key === 'depth' || key === 'is_file') {
           tmp.append(key, data[key]);
         } else {
           tmp.append(key, data[key] || '');
@@ -349,8 +353,8 @@ export async function postOnTimeline({commit}, {data, config}) {
   const res = await httpService.post(`${timelineUrl}?${timelineExpand}`, prepareTimelineData(data), config);
   if (res.success) {
     commit(ADD_TIMELINE_POST, res.body);
-    commit(CHANGE_TIMELINE_MODAL_LOADING, false)
   }
+  commit(CHANGE_TIMELINE_MODAL_LOADING, false)
   return res;
 }
 
@@ -373,63 +377,155 @@ export function prepareTimelineData(data) {
 }
 
 /**
+ * Get attachment config data
+ *
+ * @param commit
+ * @returns {Promise<void>}
+ */
+export async function getAttachConfig({commit}) {
+  const {success, body} = await httpService.get(`${folderUrl}/get-attach-config`)
+  if (success) {
+    commit(GET_ATTACH_CONFIG, body)
+  }
+}
+
+/**
+ * Show folder form modal
+ *
  * @param commit
  * @param data
+ */
+export function showFolderModal({commit}, data) {
+  commit(SHOW_FOLDER_MODAL, data);
+}
+
+/**
+ * Hide folder form modal
+ *
+ * @param { function } commit
+ * @param { bool } hideModal
+ */
+export function hideFolderModal({commit}, hideModal) {
+  commit(HIDE_FOLDER_MODAL, hideModal);
+}
+
+/**
+ * @param commit
+ * @returns {Promise<unknown>}
+ * @param { Object } data
+ */
+export async function createFolder({commit}, data) {
+  return await httpService.post(folderUrl, data);
+}
+
+/**
+ * @param commit
+ * @param { Object } data
  * @returns {Promise<unknown>}
  */
-export async function addComment({commit}, data) {
-  const res = await httpService.post(`/v1/workspaces/user-comment?expand=createdBy,childrenComments,parent`, data);
+export async function updateFolder({commit}, data) {
+  return await httpService.put(`${folderUrl}/${data.id}`, data);
+}
+
+/**
+ * @param commit
+ * @param fileIds
+ * @returns {Promise<unknown>}
+ */
+export async function deleteFolder({commit}, fileIds) {
+  const res = await httpService.post(`${folderUrl}/delete-folders`, {fileIds: fileIds});
   if (res.success) {
-    if (data.parent_id) {
-      commit(ADD_TIMELINE_CHILD_COMMENT, res.body)
-    } else {
-      commit(ADD_TIMELINE_COMMENT, res.body)
-    }
+    commit(FOLDER_DELETED, fileIds)
   }
   return res;
 }
 
 /**
+ * Get current article
+ *
  * @param commit
+ * @param { int } folderId
+ * @returns {Promise<void>}
+ */
+export async function getCurrentFolder({commit}, folderId) {
+  const {success, body} = await httpService.get(`${folderUrl}/${folderId}?expand=workspace,createdBy`)
+  if (success) {
+    commit(GET_CURRENT_FOLDER, body);
+  }
+}
+
+/**
+ * Get folders by parent id for article view page
+ *
+ * @param commit
+ * @param { int } parentId
+ * @returns {Promise<void>}
+ */
+export async function getFoldersByParent({commit}, parentId) {
+  commit(TOGGLE_FOLDERS_LOADING, true);
+  const {success, body} = await httpService.get(`${folderUrl}?parent_id=${parentId}&expand=updatedBy&sort=title`)
+  if (success) {
+    commit(GET_ALL_FOLDERS, body.data)
+    commit(GET_BREAD_CRUMB, {breadcrumbData: body.breadcrumbData, folder: body.currentFolder})
+  }
+  commit(TOGGLE_FOLDERS_LOADING, false);
+}
+
+/**
+ * Upload files
+ *
+ * @param commit
+ * @param payload
  * @param data
+ * @param config
  * @returns {Promise<unknown>}
  */
-export async function deleteComment({commit}, data) {
-  const res = await httpService.delete(`/v1/workspaces/user-comment/${data.id}`);
+export async function attachFiles({commit}, {data, config}) {
+  const res = await httpService.post(folderUrl, prepareFiles(data), config)
   if (res.success) {
-    if (data.parent_id) {
-      commit(DELETE_TIMELINE_CHILD_COMMENT, data)
-    } else {
-      commit(DELETE_TIMELINE_COMMENT, data)
-    }
+    commit(ADD_ATTACH_FILES, res.body)
   }
   return res;
 }
 
 /**
- * Like article or timeline post
  *
  * @param commit
- * @param data
+ * @param folder
  * @returns {Promise<void>}
  */
-export async function like({commit}, data) {
-  const {success, body} = await httpService.post(`/v1/workspaces/user-like`, data)
-  if (success) {
-    commit(TIMELINE_LIKE, body)
-  }
+export async function destroyedCurrentFolder({commit}, folder) {
+  commit(GET_CURRENT_FOLDER, folder)
 }
 
 /**
- * Unlike article or timeline post
+ * Sort File rows
  *
  * @param commit
- * @param data
- * @returns {Promise<void>}
+ * @param column
  */
-export async function unlike({commit}, data) {
-  const {success} = await httpService.delete(`/v1/workspaces/user-like/${data.id}`)
-  if (success) {
-    commit(TIMELINE_UNLIKE, data)
+export function sortFiles({commit}, column) {
+  commit(SORT_FILES, column);
+}
+
+/**
+ * Prepare file to upload
+ *
+ * @param data
+ * @returns {FormData}
+ */
+export function prepareFiles(data) {
+  const tmp = new FormData();
+  for (let key in data.files) {
+    if (data.files.hasOwnProperty(key)) {
+      tmp.append('files[]', data.files[key], data.files.name);
+    }
   }
+  for (let key in data) {
+    if (data.hasOwnProperty(key) && data[key] !== 'files') {
+      tmp.append(key, data[key]);
+    }
+  }
+  data = tmp;
+  return data;
 }

@@ -33,8 +33,8 @@ class m201109_113741_alter_table_timeline_posts_add_column_workspace_id extends 
      */
     public function safeDown()
     {
-        $this->dropIndex('{{%idx-timeline_posts_workspace_id}}', '{{%timeline_posts}}');
         $this->dropForeignKey('fk_timeline_posts_workspace', '{{%timeline_posts}}');
+        $this->dropIndex('{{%idx-timeline_posts_workspace_id}}', '{{%timeline_posts}}');
         $this->dropColumn('{{%timeline_posts}}', 'workspace_id');
     }
 

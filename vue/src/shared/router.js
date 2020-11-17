@@ -83,7 +83,7 @@ const router = new Router({
           meta: {requiresAuth: true},
           children: [
             {path: 'timeline', name: 'workspace.timeline', component: WorkspaceTimeline},
-            {path: 'files', name: 'workspace.files', component: WorkspaceFiles},
+            {path: 'files/:folderId', name: 'workspace.files', component: WorkspaceFiles},
             {path: 'articles', name: 'workspace.articles', component: WorkspaceArticles},
             {path: 'articles/new', name: 'workspace.articles.view_create', component: ArticleView},
             {path: 'articles/:articleId', name: 'workspace.articles.view_update', component: ArticleView},

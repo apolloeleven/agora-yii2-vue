@@ -18,7 +18,7 @@
             <b-nav-item class="workspace-img-container">
               <b-img :src="workspace.image_url || '/assets/logo.png'" fluid class="rounded-0"/>
             </b-nav-item>
-            <b-nav-item v-for="(item, index) in items" :to="item.to" active-class="active"
+            <b-nav-item :active="isActive(item)" v-for="(item, index) in items" :to="item.to" active-class="active"
                         :key="`workspace-tab-${index}`">
               <i v-if="item.icon" :class="item.icon" class="mr-2"></i>{{ $t(item.title) }}
             </b-nav-item>
@@ -155,12 +155,6 @@ export default {
     return {
       headerFixed: false,
       breadcrumbs: [],
-      items: [
-        {title: this.$i18n.t('Timeline'), to: {name: 'workspace.timeline'}, icon: 'fa fa-bars'},
-        {title: this.$i18n.t('Files'), to: {name: 'workspace.files'}, icon: 'fa fa-folder'},
-        {title: this.$i18n.t('Articles'), to: {name: 'workspace.articles'}, icon: 'fa fa-book'},
-        {title: this.$i18n.t('About'), to: {name: 'workspace.about'}, icon: 'fa fa-info-circle'},
-      ]
     }
   },
   computed: {
@@ -168,6 +162,18 @@ export default {
       workspace: state => state.view.workspace,
       loading: state => state.view.loading,
     }),
+    items() {
+      return [
+        {title: this.$i18n.t('Timeline'), to: {name: 'workspace.timeline'}, icon: 'fa fa-bars'},
+        {
+          title: this.$i18n.t('Files'),
+          to: {name: 'workspace.files', params: {folderId: this.workspace.rootFolder.id}},
+          icon: 'fa fa-folder'
+        },
+        {title: this.$i18n.t('Articles'), to: {name: 'workspace.articles'}, icon: 'fa fa-book'},
+        {title: this.$i18n.t('About'), to: {name: 'workspace.about'}, icon: 'fa fa-info-circle'},
+      ]
+    },
   },
   methods: {
     ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace']),
@@ -177,8 +183,15 @@ export default {
         {text: this.workspace.abbreviation || this.workspace.name, active: true}
       ];
     },
+    isActive(item) {
+      if (typeof item.to === 'string') {
+        return item.to === this.$route.name;
+      } else if (typeof item.to === 'object') {
+        return item.to.name === this.$route.name;
+      }
+      return false;
+    },
     onScroll() {
-      console.log(this.$refs.workspaceContent.scrollTop, this.$refs.headerNav.offsetTop);
       if (this.$refs.workspaceContent.scrollTop >= this.$refs.banner.offsetTop + this.$refs.banner.offsetHeight) {
         this.headerFixed = true;
         this.$refs.headerNav.style.position = 'absolute';
