@@ -4,7 +4,7 @@
       <b-card-body>
         <div class="d-flex justify-content-between align-items-center mb-2">
           <b-breadcrumb :items="breadcrumb" class="d-none d-sm-flex mb-0"/>
-          <div v-if="!isDefaultFolder">
+          <div v-if="!isTimelineFolder()">
             <div class="file-manager-btn-wrapper">
               <b-button variant="success" size="sm">
                 <i class="fas fa-cloud-upload-alt"/>
@@ -45,7 +45,7 @@
           </template>
           <template v-slot:cell(checkbox)="{item}">
             <b-form-checkbox
-              v-if="!isDefault(item) && !isDefaultFolder" v-model="item.selected" value="1" unchecked-value="0">
+              v-if="!isTimelineFolder(item)" v-model="item.selected" value="1" unchecked-value="0">
             </b-form-checkbox>
           </template>
           <template v-slot:cell(size)="{item}">
@@ -63,11 +63,11 @@
                 <i class="far fa-copy mr-2"/>
                 {{ $t('Copy') }}
               </b-dropdown-item>
-              <b-dropdown-item v-if="!isFile(item) && !isDefault(item)" @click="onEditClick(item)">
+              <b-dropdown-item v-if="!isFile(item) && !isTimelineFolder(item)" @click="onEditClick(item)">
                 <i class="fas fa-pencil-alt mr-2"/>
                 {{ $t('Edit') }}
               </b-dropdown-item>
-              <b-dropdown-item v-if="!isFile(item) && !isDefault(item)" @click="onRemoveClick(item)">
+              <b-dropdown-item v-if="!isTimelineFolder(item)" @click="onRemoveClick(item)">
                 <i class="far fa-trash-alt mr-2"/>
                 {{ $t('Remove') }}
               </b-dropdown-item>
@@ -117,12 +117,6 @@ export default {
     },
     selected() {
       return this.foldersAndFiles.filter(a => a.selected === '1')
-    },
-    isDefaultFolder() {
-      if (this.currentFolder) {
-        return this.currentFolder.is_timeline_folder === 1
-      }
-      return false;
     },
   },
   watch: {
@@ -241,8 +235,13 @@ export default {
       this.sortDesc = e.sortDesc;
       this.sortFiles({sortBy: this.sortBy, sortDesc: this.sortDesc});
     },
-    isDefault(item) {
-      return item.is_timeline_folder === 1;
+    isTimelineFolder(item = null) {
+      if (item) {
+        return item.timeline_post_id || item.is_timeline_folder === 1;
+      } else if (this.currentFolder) {
+        return this.currentFolder.timeline_post_id || this.currentFolder.is_timeline_folder === 1;
+      }
+      return false;
     },
     isFile(item) {
       return item.is_file === 1;

@@ -23,6 +23,7 @@ class FolderResource extends Folder
             'id',
             'parent_id',
             'workspace_id',
+            'timeline_post_id',
             'name',
             'label',
             'depth',
