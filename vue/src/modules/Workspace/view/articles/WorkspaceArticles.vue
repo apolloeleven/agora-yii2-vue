@@ -35,7 +35,7 @@
                        :target="`copy-tooltip-${article.id}`" placement="auto">
               <span class="text-sm p-2">{{ $t('Copied!') }}</span>
             </b-tooltip>
-            <i :id="`copy-tooltip-${article.id}`" class="mr-3 far fa-copy text-primary hover-pointer p-0 p-lg-2 py-2"
+            <i :id="`copy-tooltip-${article.id}`" class="mr-3 far fa-copy text-primary hover-pointer p-2"
                @click="onCopyUrlClick(article)"></i>
             <b-tooltip :show.sync="article.hasCopyClicked"
                        :target="`copy-tooltip-${article.id}`">
