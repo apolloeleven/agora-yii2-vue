@@ -37,7 +37,7 @@ export default {
       orgchart: null,
       defaultOptions: {
         chartContainer: '#chart-container',
-        createNode: function(node, data) {
+        createNode: function(node) {
           node.id = getId()
         }
       },

@@ -83,17 +83,14 @@
 import {createNamespacedHelpers} from 'vuex';
 import UserModel from "@/modules/User/UserModel";
 import InputWidget from "@/core/components/input-widget/InputWidget";
-import ContentSpinner from "@/core/components/ContentSpinner";
 import ImageUploader from "@/core/components/ImageUploader";
-import PageHeader from "@/core/components/PageHeader";
-import PageFooter from "@/core/components/PageFooter";
 import PasswordResetModel from "@/modules/User/PasswordResetModel";
 import i18n from "@/shared/i18n";
 
 const {mapState, mapActions} = createNamespacedHelpers('user');
 export default {
   name: "Profile",
-  components: {InputWidget, ContentSpinner, ImageUploader},
+  components: {InputWidget, ImageUploader},
   data() {
     return {
       userModel: new UserModel(),

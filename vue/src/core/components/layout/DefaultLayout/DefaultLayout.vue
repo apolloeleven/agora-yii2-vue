@@ -5,7 +5,7 @@
     <div id="menu-content-wrapper">
       <Sidebar/>
       <div id="content">
-        <router-view :key="$route.fullPath"/>
+        <router-view/>
       </div>
     </div>
     <employee-form-modal/>
@@ -19,14 +19,14 @@
 <script>
 import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
-import WorkspaceForm from "@/modules/Workspace/workspace/WorkspaceForm";
-import ArticleForm from "@/modules/Workspace/article/ArticleForm";
+import WorkspaceForm from "@/modules/Workspace/WorkspaceForm";
 import {mapState, createNamespacedHelpers, mapActions} from 'vuex';
 import MenuService from "../../sidebar/MenuService";
 import MenuItem from "../../sidebar/MenuItem";
 import EmployeeFormModal from "@/modules/setup/employees/EmployeeFormModal";
-import TimelineForm from "@/modules/Timeline/TimelineForm";
-import TimelineShare from "@/modules/Timeline/TimelineShare";
+import TimelineForm from "@/modules/Workspace/view/timeline/TimelineForm";
+import TimelineShare from "@/modules/Workspace/view/timeline/TimelineShare";
+import ArticleForm from "@/modules/Workspace/view/articles/ArticleForm";
 
 const {mapActions: userMapActions} = createNamespacedHelpers('user');
 const {mapState: mapStateWorkspace, mapActions: mapActionsWorkspace} = createNamespacedHelpers('workspace');
@@ -34,13 +34,13 @@ const {mapState: mapStateWorkspace, mapActions: mapActionsWorkspace} = createNam
 export default {
   name: "DefaultLayout",
   components: {
+    ArticleForm,
     TimelineShare,
     TimelineForm,
     EmployeeFormModal,
     Sidebar,
     Navbar,
     WorkspaceForm,
-    ArticleForm,
   },
   computed: {
     ...mapState([

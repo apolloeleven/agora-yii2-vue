@@ -23,62 +23,15 @@ class ArticleController extends ActiveController
     {
         $actions = parent::actions();
         $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
-        unset($actions['create']);
-
         return $actions;
     }
 
     public function prepareDataProvider()
     {
-        $request = Yii::$app->request;
-        $workspaceId = $request->get('workspace_id');
-
-        $query = ArticleResource::find()->byWorkspaceId($workspaceId)->roots();
-
+        $query = ArticleResource::find()->byWorkspaceId( Yii::$app->request->get('workspace_id'));
         return new ActiveDataProvider([
             'query' => $query
         ]);
-    }
-
-    public function actionCreate()
-    {
-        $request = Yii::$app->request;
-        $articleId = $request->post('article_id');
-        $workspaceId = $request->post('workspace_id');
-        $isArticle = $request->post('isArticle');
-
-        $parentFolder = null;
-        if ($articleId) {
-            $parentFolder = ArticleResource::findOne($articleId);
-            if (!$parentFolder) {
-                return $this->validationError(Yii::t('app', 'Unable to find parent folder'));
-            }
-            $workspaceId = $parentFolder->workspace_id;
-        }
-
-        $article = new ArticleResource();
-
-        $article->title = $request->post('title');
-        $article->body = $request->post('body');
-        $article->workspace_id = $workspaceId;
-        $article->is_folder = $isArticle ? 0 : 1;
-
-        if ((!$article->load($request->post(), '')) && !$article->validate()) {
-            return $this->validationError($article->getFirstErrors());
-        }
-
-        if (!$articleId) {
-            if (!$article->makeRoot()) {
-                $this->validationError($article->getFirstErrors());
-            }
-        } else {
-            $article->parent_id = $articleId;
-            if (!$article->appendTo($parentFolder)) {
-                $this->validationError($article->getFirstErrors());
-            }
-        }
-
-        return $this->response($article, 201);
     }
 
     /**
@@ -114,39 +67,11 @@ class ArticleController extends ActiveController
             ]
         ];
 
-        $parents = $article->parents()->all();
-
-        foreach ($parents as $parent) {
-            $breadCrumb[] = [
-                'text' => $parent->title,
-                'to' => [
-                    'name' => 'article.view',
-                    'params' => [
-                        'id' => $parent->id
-                    ]
-                ]
-            ];
-        }
         $breadCrumb[] = [
             'text' => $article->title
         ];
 
         return $breadCrumb;
-    }
-
-    /**
-     * Get articles by parent
-     *
-     * @param $articleId
-     * @return ActiveDataProvider
-     */
-    public function actionByParent($articleId)
-    {
-        $query = ArticleResource::find()->byParentId($articleId);
-
-        return new ActiveDataProvider([
-            'query' => $query
-        ]);
     }
 
     /**
