@@ -181,7 +181,6 @@ export default {
       ];
     },
     isActive(item) {
-      console.log(item.to.name === this.$route.name);
       if (typeof item.to === 'string') {
         return item.to === this.$route.name;
       } else if (typeof item.to === 'object') {
