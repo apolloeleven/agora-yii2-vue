@@ -53,8 +53,7 @@ class ModelHelper
         if (!$filePath) {
             return false;
         }
-        FileHelper::unlink(Yii::getAlias("@storage/$filePath"));
 
-        return true;
+        return FileHelper::unlink(Yii::getAlias("@storage/$filePath"));
     }
 }
