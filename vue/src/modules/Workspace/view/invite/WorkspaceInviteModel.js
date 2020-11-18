@@ -8,7 +8,7 @@ export default class WorkspaceInviteModel extends BaseModel {
   rules = {};
 
   attributeLabels = {
-    selectedUsers: i18n.t('Invite User'),
+    selectedUsers: i18n.t('Invites'),
     allUser: i18n.t('Select all registered users'),
   };
 

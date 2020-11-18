@@ -1,11 +1,11 @@
 <template>
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal modal-class="workspace-invite" id="invite-modal" :visible="showModal" ref="inviteModal"
-             :title='$t(`New Workspace Invitation`)' @hidden="onHideModal" @ok.prevent="handleSubmit(onSubmit)"
-             :ok-title="$t('Submit')" :ok-disabled="!selected" scrollable>
+             :title='$t(`Invite members`)' @hidden="onHideModal" @ok.prevent="handleSubmit(onSubmit)"
+             :ok-title="$t('Submit')" :ok-disabled="!selected" ok-only scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
         <input-widget :model="model" :disabled="isDisabled" attribute="selectedUsers" type="multiselect"
-                      :multiselect-options="userOptions" :placeholder="$t('Invite Users')">
+                      :multiselect-options="userOptions" :placeholder="$t('Add more...')">
         </input-widget>
         <input-widget :model="model" attribute="allUser" type="checkbox" @change="onCheckboxClick"/>
       </b-form>
