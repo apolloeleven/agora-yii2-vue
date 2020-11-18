@@ -164,7 +164,7 @@ export default {
       if (result) {
         const res = await this.deleteFolder(fileIds);
         if (res.success) {
-          this.$toast(this.$t(`{count} file(s) and folder(s) were successfully deleted`, {count: fileIds.length}));
+          this.$toast(this.$t(`file(s) were successfully deleted`));
         } else {
           this.$toast(res.body.message, 'danger');
         }
