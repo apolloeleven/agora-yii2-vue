@@ -419,7 +419,7 @@ export function hideFolderModal({commit}, hideModal) {
  * @param { Object } data
  */
 export async function createFolder({commit}, data) {
-  return await httpService.post(folderUrl, data);
+  return await httpService.post(`${folderUrl}?expand=updatedBy`, data);
 }
 
 /**
@@ -485,7 +485,7 @@ export async function getFoldersByParent({commit}, parentId) {
  * @returns {Promise<unknown>}
  */
 export async function attachFiles({commit}, {data, config}) {
-  const res = await httpService.post(folderUrl, prepareFiles(data), config)
+  const res = await httpService.post(`${folderUrl}?expand=updatedBy`, prepareFiles(data), config)
   if (res.success) {
     commit(ADD_ATTACH_FILES, res.body)
   }
