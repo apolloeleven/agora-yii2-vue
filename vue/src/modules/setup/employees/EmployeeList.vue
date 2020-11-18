@@ -49,19 +49,8 @@
                                @change="verifiedUser(data.item)"/>
             </template>
             <template v-slot:cell(actions)="data">
-              <b-dropdown variant="transparent text-dark p-0" right no-caret>
-                <template slot="button-content">
-                  <i class="fas fa-ellipsis-v"></i>
-                </template>
-                <b-dropdown-item @click="editUser(data.item)">
-                  <i class="fas fa-pencil-alt"></i>
-                  {{ $t('Edit') }}
-                </b-dropdown-item>
-                <b-dropdown-item @click="deleteUser(data.item)">
-                  <i class="far fa-trash-alt"></i>
-                  {{ $t('Delete') }}
-                </b-dropdown-item>
-              </b-dropdown>
+              <i class="fas fa-pencil-alt mr-3 text-primary hover-pointer" @click="editUser(data.item)"/>
+              <i class="far fa-trash-alt mr-3 text-danger hover-pointer" @click="deleteUser(data.item)"/>
             </template>
           </b-table>
         </b-card>
