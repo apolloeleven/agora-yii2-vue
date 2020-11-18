@@ -34,7 +34,7 @@ export default {
     }),
     modalTitle() {
       if (this.modalFolder) {
-        return this.$t(`Update folder '{name}'`, {name: this.modalFolder.title});
+        return this.$t(`Update folder '{name}'`, {name: this.modalFolder.name});
       }
       return this.$t(`Create new folder`);
     },
