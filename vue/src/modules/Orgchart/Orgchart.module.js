@@ -6,5 +6,5 @@ MenuService.addItem(new MenuItem('orgchart', {
   text: i18n.t('Org Chart'),
   path: '/orgchart',
   weight: 2,
-  icon: 'fas fa-tachometer-alt'
+  icon: 'fas fa-sitemap'
 }));
