@@ -6,7 +6,6 @@ namespace app\modules\v1\workspaces\resources;
 
 use app\helpers\ModelHelper;
 use app\modules\v1\users\resources\UserResource;
-use app\modules\v1\workspaces\models\Folder;
 use app\modules\v1\workspaces\models\UserWorkspace;
 use app\modules\v1\workspaces\models\Workspace;
 use app\rest\ValidationException;
@@ -102,7 +101,7 @@ class WorkspaceResource extends Workspace
                 throw new ValidationException(Yii::t('app', 'Unable to create user workspace'));
             }
 
-            $workspaceRootFolder = new Folder();
+            $workspaceRootFolder = new FolderResource();
             $workspaceRootFolder->name = 'Files';
             $workspaceRootFolder->workspace_id = $this->id;
 
@@ -110,7 +109,7 @@ class WorkspaceResource extends Workspace
                 throw new ValidationException(Yii::t('app', 'Unable to create root folder'));
             }
 
-            $childFolder = new Folder();
+            $childFolder = new FolderResource();
             $childFolder->workspace_id = $this->id;
             $childFolder->is_timeline_folder = 1;
             $childFolder->parent_id = $workspaceRootFolder->id;

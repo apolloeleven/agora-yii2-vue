@@ -3,10 +3,12 @@
 
 namespace app\modules\v1\workspaces\controllers;
 
+use app\helpers\ModelHelper;
 use app\modules\v1\workspaces\resources\FolderResource;
 use app\rest\ActiveController;
 use app\rest\ValidationException;
 use Yii;
+use yii\base\ErrorException;
 use yii\base\Exception;
 use yii\console\Response;
 use yii\web\UploadedFile;
@@ -156,6 +158,7 @@ class FolderController extends ActiveController
      * @return void
      * @throws ValidationException
      * @throws \yii\db\Exception
+     * @throws ErrorException
      */
     public function actionDeleteFolders()
     {
@@ -168,6 +171,10 @@ class FolderController extends ActiveController
             if ($folder->getChildren()->count()) {
                 $dbTransaction->rollBack();
                 throw new ValidationException(Yii::t('app', 'You can\'t delete this folder because it has sub-folders or files'));
+            }
+            if ($folder->is_file && !ModelHelper::deleteFile($folder->file_path)) {
+                $dbTransaction->rollBack();
+                throw new ValidationException(Yii::t('app', 'Unable to delete file'));
             }
             $folder->deleteWithChildren();
         }
