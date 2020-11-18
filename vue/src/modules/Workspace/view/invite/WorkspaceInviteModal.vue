@@ -64,7 +64,7 @@ export default {
         this.$toast(this.$t(`Users invited successfully`));
         this.onHideModal();
       } else {
-        this.model.setMultipleErrors(res.body);
+        this.$toast(res.body, 'danger');
       }
     },
     onCheckboxClick() {
