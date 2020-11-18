@@ -34,7 +34,11 @@ export default {
       users: state => state.view.invite.modal.users,
     }),
     userOptions() {
-      return this.users.map(u => ({text: u.displayName, value: u.id}))
+      return this.users.map(u => ({
+        text: u.displayName,
+        value: u.id,
+        img: u.image_url ? u.image_url : '/assets/img/avatar.svg'
+      }))
     },
     selected() {
       return this.model.allUser.length > 0 || this.model.selectedUsers.length > 0;

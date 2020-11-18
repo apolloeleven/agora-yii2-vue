@@ -71,9 +71,18 @@
           <span slot="noOptions">{{ $t('List is empty.') }}</span>
           <template slot="tag" slot-scope="{ option, remove }">
             <span class="multiselect__tag">
+              <b-img v-if="option.img" class="option__image mr-2" rounded="circle" :src="option.img"
+                     :alt="`multiselect-image-${option.img}`">
+              </b-img>
               <span>{{ $t(option.text) }}</span>
-              <span class="multiselect__tag-icon" @click="remove(option)"></span>
+              <span class="multiselect__tag-icon" @click="remove(option)"/>
             </span>
+          </template>
+          <template slot="option" slot-scope="{ option }">
+            <b-img v-if="option.img" class="option__image mr-2" rounded="circle" :src="option.img"
+                   :alt="`multiselect-image-${option.img}`">
+            </b-img>
+            <span>{{ $t(option.text) }}</span>
           </template>
         </Multiselect>
 
@@ -363,5 +372,10 @@ export default {
 <style lang="scss">
 .ck.ck-reset.ck-editor.ck-rounded-corners {
   width: 100%;
+}
+
+.option__image {
+  width: 30px;
+  height: 30px;
 }
 </style>
