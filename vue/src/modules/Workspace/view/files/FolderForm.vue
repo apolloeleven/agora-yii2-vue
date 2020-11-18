@@ -1,7 +1,7 @@
 <template>
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal
-      :visible="showModal" id="article-form" ref="modal" size="lg" :title="modalTitle"
+      :visible="showModal" id="article-form" ref="modal" :title="modalTitle"
       @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-title="$t('Submit')" scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
         <input-widget :model="model" attribute="name"/>
