@@ -36,7 +36,7 @@
       </b-card-header>
 
       <div class="p-3">
-        <b-input-group >
+        <b-input-group>
           <b-input-group-prepend is-text>
             <i class="fas fa-search"></i>
           </b-input-group-prepend>
@@ -165,6 +165,11 @@ export default {
         {title: this.$i18n.t('Activity'), to: {name: 'workspace.activity'}, icon: 'fas fa-list'},
         {title: this.$i18n.t('About'), to: {name: 'workspace.about'}, icon: 'fa fa-info-circle'},
       ]
+    },
+  },
+  watch: {
+    '$route.params.id': function (id) {
+      this.getCurrentWorkspace(id);
     },
   },
   methods: {
