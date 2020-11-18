@@ -249,7 +249,7 @@ export default {
    */
   [SHOW_FOLDER_MODAL](state, data) {
     state.view.folders.modal.show = true;
-    state.view.folders.modal.object = data;
+    state.view.folders.modal.object = _.cloneDeep(data);
   },
   /**
    * @param state
