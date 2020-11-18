@@ -32,10 +32,21 @@
           </div>
           <div class="ml-auto">
             <b-tooltip :show.sync="article.showTooltip" triggers=""
-                       :target="`copy-tooltip-${article.id}`" :title="$t('Copied!')" placement="auto"></b-tooltip>
-            <i :id="`copy-tooltip-${article.id}`" class="mr-3 far fa-copy text-primary hover-pointer"
+                       :target="`copy-tooltip-${article.id}`" placement="auto">
+              <span class="text-sm p-2">{{ $t('Copied!') }}</span>
+            </b-tooltip>
+            <i :id="`copy-tooltip-${article.id}`" class="mr-3 far fa-copy text-primary hover-pointer p-0 p-lg-2 py-2"
                @click="onCopyUrlClick(article)"></i>
-            <i class="far fa-trash-alt text-danger hover-pointer" @click="onRemoveClicked(article)"></i>
+            <b-tooltip :show.sync="article.hasCopyClicked"
+                       :target="`copy-tooltip-${article.id}`">
+              <span class="text-sm px-2">{{ $t('Copy article link') }}</span>
+            </b-tooltip>
+            <i class="far fa-trash-alt text-danger hover-pointer mr-3 py-2" :id="`article-delete-button-${article.id}`"
+               @click="onRemoveClicked(article)"></i>
+            <b-tooltip
+              :target="`article-delete-button-${article.id}`">
+              <span class="text-sm px-2">{{ $t('Delete article') }}</span>
+            </b-tooltip>
           </div>
         </div>
       </div>
@@ -74,6 +85,7 @@ export default {
       }
     },
     onCopyUrlClick(article) {
+      article.hasCopyClicked = false;
       article.showTooltip = true;
       this.$copyText(`${window.location.origin}/workspace/${this.workspace.id}/articles/${article.id}`);
       setTimeout(() => {
@@ -88,8 +100,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .workspace-articles {
-    width: 680px;
-    margin: 0 auto;
-  }
+.workspace-articles {
+  width: 680px;
+  margin: 0 auto;
+}
+
+.tooltip {
+  top: 0;
+}
+
+.text-sm {
+  font-size: .7rem;
+}
 </style>
