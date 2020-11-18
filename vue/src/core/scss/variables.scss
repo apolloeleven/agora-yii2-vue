@@ -99,14 +99,14 @@ $ribbon-fixed-z-index: 900;
 $body-bg-color: #f7f7f7;
 $font-size-base: 13px;
 
-$menu-width: 220px;
+$menu-width: 300px;
 //navbar
 $navbar-height: 54px;
-$navbar-bg: darken($info, 5%);
-$navbar-items-color: $gray-lighter;
+$navbar-bg: #FFF;
+$navbar-items-color: $gray-dark;
 $navbar-items-hover-bg: rgba(0, 0, 0, 0.07);
 $navbar-items-hover-color: lighten($navbar-items-color, 10%);
-$navbar-links-padding-horizontal: 18px;
+$navbar-links-padding-horizontal: 24px;
 $navbar-links-padding-horizontal-mobile: 15px;
 $navbar-menu-toggle-btn-width: $navbar-height;
 $navbar-brand-width: $menu-width - $navbar-menu-toggle-btn-width;
@@ -121,10 +121,10 @@ $navbar-search-full-screen-bg: #FFF;
 
 
 //nav menu
-$menu-bg: #FFF;
-$menu-color: $gray;
-$menu-border-color: darken($menu-bg, 14%);
-$menu-width-collapsed: 50px;
+$menu-bg: #283349;
+$menu-color: #d4d4d4;
+$menu-border-color: transparent;
+$menu-width-collapsed: 70px;
 $menu-partial-hidden-width: 10px;
 //$menu-margin-top: $navbar-height;
 
@@ -142,21 +142,23 @@ $menu-collapse-line-btn-hover-color: darken($menu-collapse-line-btn-color, 25%);
 
 $nav-menu-item-border-color: lighten($menu-border-color, 7%);
 $nav-menu-item-padding-vertical: 10px;
-$nav-menu-item-padding-horizontal: 15px;
+$nav-menu-item-padding-horizontal: 24px;
 $nav-menu-item-font-size: 13px;
 $nav-menu-item-line-height: 22px;
 $nav-menu-item-color: $menu-color;
-$nav-menu-item-hover-color: darken($nav-menu-item-color, 35%);
-$nav-menu-item-active-color: $info;
-$nav-menu-item-active-arrow-color: $info;
+$nav-menu-item-bg: transparent;
+$nav-menu-item-hover-color: #FFF;
+$nav-menu-item-hover-bg-color: rgba(0, 0, 0, 0.2);
+$nav-menu-item-active-color: #FFF;
+$nav-menu-item-active-arrow-color: #FFF;
+$nav-menu-item-active-bg: rgba(255, 255, 255, 0.1);
 $nav-menu-item-opened-border-right-width: 3px;
 $nav-menu-item-opened-border-right-color: $info;
 
 $nav-menu-item-icon-font-size: 16px;
 $nav-menu-submenu-item-icon-font-size: 14px;
 $nav-menu-item-icon-margin-right: 10px;
-$nav-menu-item-bg: darken($menu-bg, 3%);
-$nav-menu-item-active-bg: darken($nav-menu-item-bg, 4%);
+
 $nav-menu-item-hover-text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 $nav-menu-item-active-text-shadow: $nav-menu-item-hover-text-shadow;
 $nav-menu-item-opened-text-shadow: $nav-menu-item-hover-text-shadow;

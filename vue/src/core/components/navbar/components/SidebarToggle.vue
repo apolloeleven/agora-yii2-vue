@@ -37,7 +37,7 @@
     //line-height: $navbar-height;
     width: $navbar-menu-toggle-btn-width;
     background-color: transparent;
-    color: white;
+    color: $navbar-items-color;
     font-size: 18px;
 
     &:hover {

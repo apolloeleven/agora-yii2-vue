@@ -1,11 +1,11 @@
 <template>
   <div id="app" class="header-fixed menu-fixed page-header-fixed"
        :class="{'menu-collapsed': this.menuCollapsed, 'menu-hidden': this.menuHidden}">
-    <Navbar/>
+    <Sidebar/>
     <div id="menu-content-wrapper">
-      <Sidebar/>
+      <Navbar/>
       <div id="content">
-        <router-view :key="$route.fullPath"/>
+        <router-view/>
       </div>
     </div>
     <employee-form-modal/>
@@ -19,14 +19,15 @@
 <script>
 import Navbar from './../../navbar/Navbar';
 import Sidebar from "./../../sidebar/Sidebar";
-import WorkspaceForm from "@/modules/Workspace/workspace/WorkspaceForm";
-import ArticleForm from "@/modules/Workspace/article/ArticleForm";
+import WorkspaceForm from "@/modules/Workspace/WorkspaceForm";
 import {mapState, createNamespacedHelpers, mapActions} from 'vuex';
 import MenuService from "../../sidebar/MenuService";
 import MenuItem from "../../sidebar/MenuItem";
 import EmployeeFormModal from "@/modules/setup/employees/EmployeeFormModal";
-import TimelineForm from "@/modules/Timeline/TimelineForm";
-import TimelineShare from "@/modules/Timeline/TimelineShare";
+import TimelineForm from "@/modules/Workspace/view/timeline/TimelineForm";
+import TimelineShare from "@/modules/Workspace/view/timeline/TimelineShare";
+import ArticleForm from "@/modules/Workspace/view/articles/ArticleForm";
+import i18n from "@/shared/i18n";
 
 const {mapActions: userMapActions} = createNamespacedHelpers('user');
 const {mapState: mapStateWorkspace, mapActions: mapActionsWorkspace} = createNamespacedHelpers('workspace');
@@ -34,13 +35,13 @@ const {mapState: mapStateWorkspace, mapActions: mapActionsWorkspace} = createNam
 export default {
   name: "DefaultLayout",
   components: {
+    ArticleForm,
     TimelineShare,
     TimelineForm,
     EmployeeFormModal,
     Sidebar,
     Navbar,
     WorkspaceForm,
-    ArticleForm,
   },
   computed: {
     ...mapState([
@@ -51,6 +52,13 @@ export default {
   },
   watch: {
     workspaces() {
+      MenuService.addItem(new MenuItem('allWorkspaces', {
+        text: i18n.t('Workspaces'),
+        weight: 90,
+        isGroup: true,
+        buttonText: '<i class="fas fa-plus"></i> ' + i18n.t('New'),
+        onClick: () => this.showModal()
+      }));
       const menuItems = MenuService.getItems();
       menuItems.forEach(menuItem => {
         if (menuItem.name.indexOf('workspace-') === 0) {
@@ -64,17 +72,17 @@ export default {
           path: `/workspace/${w.id}`,
           weight: 100 + i,
           icon: 'fas fa-home',
-          linkOptions: {
-            'class': 'pl-4'
-          }
         }))
       })
     },
   },
   methods: {
     ...userMapActions(['getProfile']),
-    ...mapActionsWorkspace(['getWorkspaces']),
-    ...mapActions(['initGlobals'])
+    ...mapActionsWorkspace(['getWorkspaces', 'showWorkspaceModal']),
+    ...mapActions(['initGlobals']),
+    showModal() {
+      this.showWorkspaceModal(null)
+    },
   },
   created() {
     this.getWorkspaces();
@@ -94,13 +102,14 @@ export default {
 #app {
   height: 100%;
   display: flex;
-  flex-direction: column;
+  //flex-direction: column;
   overflow: hidden;
 }
 
 #menu-content-wrapper {
   flex: 1;
   display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 

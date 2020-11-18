@@ -6,3 +6,4 @@ import './alert-dialog';
 import './notification';
 import './toaster';
 import './ckeditor';
+import './vue-clipboard2';

@@ -64,8 +64,8 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 [
-                    'pattern' => 'v1/workspaces/article-file/download-attachment/<id:\d+>',
-                    'route' => 'v1/workspaces/article-file/download-attachment'
+                    'pattern' => 'v1/workspaces/folder/download-file/<id:\d+>',
+                    'route' => 'v1/workspaces/folder/download-file'
                 ],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/department'],
@@ -83,6 +83,7 @@ $config = [
                         'v1/workspaces/article-file',
                         'v1/workspaces/user-comment',
                         'v1/workspaces/user-like',
+                        'v1/workspaces/folder',
                     ]
                 ]
             ],
