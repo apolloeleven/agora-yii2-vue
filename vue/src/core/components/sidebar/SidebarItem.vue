@@ -1,11 +1,15 @@
 <template>
   <li v-if="isGroup" class="menu-items-header">
-    <sidebar-item-content :icon="icon" :name="name" :badge="badge"
-                          :badge-classes="badgeClasses"></sidebar-item-content>
+    <div>
+      <i v-if="icon" class="menu-item-icon" :class="icon"></i>
+      <span class="inner-text">{{ text }}</span>
+    </div>
+    <span class="btn" v-if="buttonText" @click="onClick" v-html="buttonText">
+    </span>
   </li>
-  <router-link v-else :to="to || '#'" tag="li" active-class="active" :exact="true" :class="{opened: opened}">
+  <router-link v-else :to="to || '#'" tag="li" active-class="active" :class="{opened: opened}">
     <a :class="linkOptions.class" @click="onMenuItemClick">
-      <sidebar-item-content :image="image" :icon="icon" :name="name" :badge="badge"
+      <sidebar-item-content :image="image" :icon="icon" :text="text" :name="name" :badge="badge"
                             :badge-classes="badgeClasses"></sidebar-item-content>
       <span v-if="children && children.length" class="menu-item-toggle-icon " @click="toggleItem($event)">
           <i v-if="level === 1" class="fa fa-chevron-circle-right"></i>
@@ -18,11 +22,14 @@
                     :to="childItem.path || false"
                     :is-group="childItem.isGroup"
                     :name="childItem.name"
+                    :text="childItem.text"
                     :icon="childItem.icon"
                     :image="childItem.image"
                     :link-options="childItem.linkOptions"
                     :badge="childItem.badge"
                     :badge-classes="childItem.badgeClasses"
+                    :button-text="buttonText"
+                    :on-click="onClick"
                     :children="childItem.children"
                     :level="childItem.level + 1"
                     :key="i"
@@ -44,6 +51,10 @@ export default {
       type: String,
       required: true
     },
+    text: {
+      type: String,
+      required: true
+    },
     level: {
       type: Number,
       default: 1
@@ -59,7 +70,11 @@ export default {
     badge: Number,
     badgeClasses: [String, Array],
     children: Array,
-    isGroup: Boolean
+    isGroup: Boolean,
+    buttonText: String,
+    onClick: {
+      type: [Function, null]
+    },
   },
   components: {
     SidebarItemContent

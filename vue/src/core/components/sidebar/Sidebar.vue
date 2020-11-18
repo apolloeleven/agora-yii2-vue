@@ -1,16 +1,23 @@
 <template>
   <div class="menu">
+    <div class="sidebar-header">
+      <img class="menu-heading" src="/assets/img/product_logo.png"/>
+      Agora Intranet
+    </div>
     <nav>
       <ul>
         <sidebar-item v-for="menuItem in menuItems"
                       :to="menuItem.path || false"
-                      :name="menuItem.text"
+                      :name="menuItem.name"
+                      :text="menuItem.text"
                       :is-group="menuItem.isGroup"
                       :icon="menuItem.icon"
                       :image="menuItem.image"
                       :link-options="menuItem.linkOptions"
                       :badge="menuItem.badge"
                       :badge-classes="menuItem.badgeClasses"
+                      :button-text="menuItem.buttonText"
+                      :on-click="menuItem.onClick"
                       :children="menuItem.children"
                       :key="menuItem.path"
         ></sidebar-item>
