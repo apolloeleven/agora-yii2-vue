@@ -18,37 +18,9 @@
     background-color: darken($menu-bg, 5%);
   }
 
-  .menu-heading {
-    border-radius: 0;
-    border: none;
-    position: relative;
-    border-bottom: 1px solid $menu-border-color;
-    height: $menu-header-height;
-    padding-left: ($menu-width-collapsed - $menu-header-btn-size) / 2;
-    padding-right: ($menu-width-collapsed - $menu-header-btn-size) / 2;
-
-    .menu-header-buttons-wrapper {
-      position: relative;
-      padding-top: ($menu-header-height - $menu-header-btn-size) / 2;
-      padding-bottom: ($menu-header-height - $menu-header-btn-size) / 2;
-
-      .btn-menu-header-collapse {
-        display: none;
-      }
-
-      .menu-header-buttons {
-        overflow: hidden;
-        white-space: nowrap;
-        text-align: center;
-      }
-    }
-
-    .btn {
-      text-align: center;
-      padding: 0;
-      line-height: $menu-header-btn-size;
-      @include square($menu-header-btn-size);
-    }
+  .product-logo {
+    height: 100%;
+    margin-right: 10px;
   }
 
   .menu-items-header {
@@ -307,6 +279,18 @@
 
 #app {
   &.menu-collapsed {
+    .sidebar-header {
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .product-logo {
+      margin-right: 0;
+    }
+    .product-name {
+      display: none;
+    }
     .show-hide-menu {
       visibility: hidden;
     }
@@ -318,37 +302,6 @@
     .menu {
       overflow: visible;
       width: $menu-width-collapsed;
-
-      .menu-heading {
-        .menu-header-buttons-wrapper {
-          .btn-menu-header-collapse {
-            display: inline-block;
-          }
-
-          .menu-header-buttons {
-            display: inline-block;
-            position: absolute;
-            width: 0;
-            top: 0;
-            height: 100%;
-            left: 100%;
-            padding: inherit;
-            @include transition(all $transition-duration);
-            @include box-shadow(2px 2px 5px rgba(0, 0, 0, 0.1));
-          }
-
-          &:hover {
-            .btn-menu-header-collapse {
-              float: left;
-            }
-
-            .menu-header-buttons {
-              min-width: $menu-width;
-              background-color: $menu-bg;
-            }
-          }
-        }
-      }
 
       .menu-items-header {
         opacity: 0;

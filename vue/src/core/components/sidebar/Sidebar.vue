@@ -1,8 +1,8 @@
 <template>
   <div class="menu">
     <div class="sidebar-header">
-      <img class="menu-heading" src="/assets/img/product_logo.png"/>
-      Agora Intranet
+      <img class="product-logo" src="/assets/img/product_logo.png"/>
+      <span class="product-name">Agora Intranet</span>
     </div>
     <nav>
       <ul>
