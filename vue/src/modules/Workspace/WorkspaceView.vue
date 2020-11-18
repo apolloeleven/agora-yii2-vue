@@ -36,7 +36,7 @@
       </b-card-header>
 
       <div class="p-3">
-        <b-input-group >
+        <b-input-group>
           <b-input-group-prepend is-text>
             <i class="fas fa-search"></i>
           </b-input-group-prepend>
@@ -167,6 +167,11 @@ export default {
       ]
     },
   },
+  watch: {
+    '$route.params.id': function (id) {
+      this.getCurrentWorkspace(id);
+    },
+  },
   methods: {
     ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace']),
     initBreadcrumbs() {
@@ -176,7 +181,6 @@ export default {
       ];
     },
     isActive(item) {
-      console.log(item.to.name === this.$route.name);
       if (typeof item.to === 'string') {
         return item.to === this.$route.name;
       } else if (typeof item.to === 'object') {
