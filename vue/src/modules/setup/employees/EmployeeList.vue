@@ -12,6 +12,9 @@
                 <strong>{{ $t('Loading...') }}</strong>
               </div>
             </template>
+            <template v-slot:cell(avatar)="data">
+              <b-img :src="data.item.image_url || '/assets/img/avatar.svg'" rounded="circle" width="32" height="32"/>
+            </template>
             <template v-slot:cell(fullName)="data">
               <div style="width: 100%">
                 {{ data.item.displayName }}
@@ -86,11 +89,9 @@ export default {
     fields() {
       return [
         {key: 'id', label: this.$t('ID')},
+        {key: 'avatar', label: this.$t('Image')},
         {key: 'fullName', label: this.$t('Full Name')},
         {key: 'email', label: this.$t('Email')},
-        {key: 'departments', label: this.$t('Departments')},
-        {key: 'country', label: this.$t('Country')},
-        {key: 'position', label: this.$t('Position')},
         {key: 'verified', label: this.$t('Verified')},
         {key: 'actions', label: this.$t('Actions')},
       ]
