@@ -22,6 +22,7 @@ import {
   HIDE_PREVIEW_MODAL,
   HIDE_TIMELINE_MODAL,
   HIDE_WORKSPACE_MODAL,
+  LIKE_TIMELINE_POST,
   REMOVE_ARTICLE,
   SHOW_ARTICLE_MODAL,
   SHOW_FOLDER_MODAL,
@@ -33,6 +34,7 @@ import {
   TOGGLE_ARTICLES_LOADING,
   TOGGLE_FOLDERS_LOADING,
   TOGGLE_VIEW_LOADING,
+  UNLIKE_TIMELINE_POST,
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
@@ -43,6 +45,7 @@ const url = '/v1/workspaces/workspace';
 const articlesUrl = '/v1/workspaces/article';
 const timelineUrl = '/v1/workspaces/timeline';
 const folderUrl = '/v1/workspaces/folder';
+const userLikeUrl = '/v1/workspaces/user-like';
 
 const timelineExpand = `expand=article,createdBy,timelineComments.createdBy,timelineComments.childrenComments.createdBy,
 timelineComments.childrenComments.parent,userLikes,myLikes&sort=-created_at`
@@ -561,4 +564,30 @@ export function hidePreviewModal({commit}) {
  */
 export function changeCarousel({commit}, index) {
   commit(CHANGE_CAROUSEL, index);
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<void>}
+ */
+export async function like({commit}, data) {
+  const {success, body} = await httpService.post(`${userLikeUrl}`, data)
+  if (success) {
+    commit(LIKE_TIMELINE_POST, body)
+  }
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<void>}
+ */
+export async function unlike({commit}, data) {
+  const {success} = await httpService.delete(`${userLikeUrl}/${data.id}`)
+  if (success) {
+    commit(UNLIKE_TIMELINE_POST, data)
+  }
 }

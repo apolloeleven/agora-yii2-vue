@@ -22,6 +22,7 @@ import {
   HIDE_PREVIEW_MODAL,
   HIDE_TIMELINE_MODAL,
   HIDE_WORKSPACE_MODAL,
+  LIKE_TIMELINE_POST,
   REMOVE_ARTICLE,
   SHOW_ARTICLE_MODAL,
   SHOW_FOLDER_MODAL,
@@ -33,6 +34,7 @@ import {
   TOGGLE_ARTICLES_LOADING,
   TOGGLE_FOLDERS_LOADING,
   TOGGLE_VIEW_LOADING,
+  UNLIKE_TIMELINE_POST,
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
@@ -377,6 +379,26 @@ export default {
    */
   [CHANGE_CAROUSEL](state, index) {
     state.view.folders.previewModal.activeFile = index;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [LIKE_TIMELINE_POST](state, data) {
+    const timelinePost = state.view.timeline.data.filter(t => t.id === data.timeline_post_id);
+    timelinePost.forEach(t => t.userLikes.unshift(data));
+    timelinePost.forEach(t => t.myLikes.unshift(data));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [UNLIKE_TIMELINE_POST](state, data) {
+    const timelinePost = state.view.timeline.data.filter(t => t.id === data.timeline_post_id);
+    timelinePost.forEach(t => t.myLikes = []);
+    timelinePost.forEach(t => t.userLikes = t.userLikes.filter(l => l.id !== data.id));
   },
 
 };
