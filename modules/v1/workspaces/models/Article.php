@@ -3,6 +3,7 @@
 namespace app\modules\v1\workspaces\models;
 
 use app\modules\v1\users\models\User;
+use app\modules\v1\workspaces\behaviors\ActivityBehavior;
 use app\modules\v1\workspaces\models\query\ArticleQuery;
 use Yii;
 use yii\behaviors\BlameableBehavior;
@@ -49,6 +50,14 @@ class Article extends ActiveRecord
         return array_merge(parent::behaviors(), [
             TimestampBehavior::class,
             BlameableBehavior::class,
+
+            [
+                'class' => ActivityBehavior::class,
+                'workspaceIdAttribute' => 'workspace_id',
+                'tableNameAttribute' => TimelinePost::tableName(),
+                'contentIdAttribute' => 'id',
+                'descriptionAttribute' => 'title',
+            ]
         ]);
     }
 
