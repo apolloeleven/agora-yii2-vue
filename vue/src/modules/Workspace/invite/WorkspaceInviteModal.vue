@@ -61,7 +61,7 @@ export default {
       this.model.workspace_id = this.$route.params.id;
       const res = await this.inviteUsers({...this.model.toJSON()});
       if (res.success) {
-        this.$toast(this.$t(`Users invited successfully`));
+        this.$toast(this.$t(`User(s) invited successfully`));
         this.onHideModal();
       } else {
         this.$toast(res.body, 'danger');
