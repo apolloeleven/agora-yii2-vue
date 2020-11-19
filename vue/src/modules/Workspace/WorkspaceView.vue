@@ -22,6 +22,15 @@
                         :key="`workspace-tab-${index}`">
               <i v-if="item.icon" :class="item.icon" class="mr-2"></i>{{ $t(item.title) }}
             </b-nav-item>
+            <b-nav-item-dropdown right no-caret>
+              <template slot="button-content">
+                <i class="fas fa-ellipsis-v"></i>
+              </template>
+              <b-dropdown-item @click="onInviteClick">
+                <i class="fas fa-paper-plane mr-2"/>
+                {{ $t('Invite') }}
+              </b-dropdown-item>
+            </b-nav-item-dropdown>
           </b-nav>
         </div>
       </div>
@@ -62,18 +71,20 @@
         </b-list-group-item>
       </b-list-group>
     </b-card>
+    <WorkspaceInviteModal/>
   </div>
 </template>
 
 <script>
 import {createNamespacedHelpers} from "vuex";
 import ContentSpinner from "@/core/components/ContentSpinner";
+import WorkspaceInviteModal from "./invite/WorkspaceInviteModal";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace')
 
 export default {
   name: "WorkspaceView",
-  components: {ContentSpinner},
+  components: {WorkspaceInviteModal, ContentSpinner},
   data() {
     return {
       headerFixed: false,
@@ -173,7 +184,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace']),
+    ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace', 'showInviteModal', 'getActiveUsers']),
     initBreadcrumbs() {
       this.breadcrumbs = [
         {text: this.$i18n.t('My Workspaces'), to: {name: 'workspace'}},
@@ -202,11 +213,15 @@ export default {
         this.$refs.headerNav.style.position = '';
         this.$refs.headerNav.style.width = '';
       }
-    }
+    },
+    onInviteClick() {
+      this.showInviteModal();
+    },
   },
   async beforeMount() {
     await this.getCurrentWorkspace(this.$route.params.id);
     this.initBreadcrumbs();
+    this.getActiveUsers();
   },
   destroyed() {
     this.destroyCurrentWorkspace({});
@@ -322,7 +337,7 @@ export default {
       //padding-left: 9rem;
       background-color: white;
 
-      .nav {
+      /deep/ .nav {
         display: inline-flex;
         border-bottom: none;
 
