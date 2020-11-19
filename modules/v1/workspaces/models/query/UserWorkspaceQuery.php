@@ -44,6 +44,17 @@ class UserWorkspaceQuery extends ActiveQuery
     }
 
     /**
+     * Get records by user ids
+     *
+     * @param $userIds
+     * @return UserWorkspaceQuery
+     */
+    public function byUserIds($userIds)
+    {
+        return $this->andWhere(['IN', UserWorkspace::tableName() . '.user_id', $userIds]);
+    }
+
+    /**
      * Get records by workspace id
      *
      * @param $workspaceId
