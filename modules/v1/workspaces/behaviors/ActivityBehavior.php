@@ -18,19 +18,35 @@ class ActivityBehavior extends Behavior
     public function events()
     {
         return [
-            ActiveRecord::EVENT_BEFORE_INSERT => 'beforeInsert',
-            ActiveRecord::EVENT_BEFORE_UPDATE => 'beforeUpdate'
+            ActiveRecord::EVENT_AFTER_INSERT => 'afterInsert',
+            ActiveRecord::EVENT_AFTER_UPDATE => 'afterUpdate',
+            ActiveRecord::EVENT_BEFORE_DELETE => 'beforeDelete'
         ];
     }
 
-    public function beforeInsert()
+    public function appendAction($action)
     {
         $userActivity = new UserActivity();
         $userActivity->workspace_id = $this->owner->{$this->workspaceIdAttribute};
         $userActivity->table_name = $this->tableNameAttribute;
         $userActivity->content_id = $this->owner->{$this->contentIdAttribute};
-        $userActivity->action = $this->owner->{$this->actionAttribute};
+        $userActivity->action = $action;
         $userActivity->description = strip_tags($this->owner->{$this->descriptionAttribute});
         $userActivity->save();
+    }
+
+    public function afterInsert()
+    {
+        $this->appendAction('Insert');
+    }
+
+    public function afterUpdate()
+    {
+        $this->appendAction('Update');
+    }
+
+    public function beforeDelete()
+    {
+        $this->appendAction('Delete');
     }
 }
