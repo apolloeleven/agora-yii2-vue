@@ -25,7 +25,7 @@
             <div class="ml-auto d-flex align-items-center pr-3">
               <slot name="right-placeholder"></slot>
               <b-button @click="onInviteClick" variant="info" size="sm">
-                <i class="fas fa-plus-circle"/>
+                <i class="fas fa-paper-plane"/>
                 {{ $t('Invite') }}
               </b-button>
             </div>
@@ -76,7 +76,7 @@
 <script>
 import {createNamespacedHelpers} from "vuex";
 import ContentSpinner from "@/core/components/ContentSpinner";
-import WorkspaceInviteModal from "./view/invite/WorkspaceInviteModal";
+import WorkspaceInviteModal from "./invite/WorkspaceInviteModal";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace')
 
@@ -182,7 +182,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace', 'showInviteModal', 'getAllUser']),
+    ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace', 'showInviteModal', 'getActiveUsers']),
     initBreadcrumbs() {
       this.breadcrumbs = [
         {text: this.$i18n.t('My Workspaces'), to: {name: 'workspace'}},
@@ -219,7 +219,7 @@ export default {
   async beforeMount() {
     await this.getCurrentWorkspace(this.$route.params.id);
     this.initBreadcrumbs();
-    this.getAllUser();
+    this.getActiveUsers();
   },
   destroyed() {
     this.destroyCurrentWorkspace({});

@@ -15,7 +15,7 @@
 
 <script>
 import {createNamespacedHelpers} from "vuex";
-import InputWidget from "../../../../core/components/input-widget/InputWidget";
+import InputWidget from "../../../core/components/input-widget/InputWidget";
 import WorkspaceInviteModel from "./WorkspaceInviteModel";
 
 const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace')
@@ -35,7 +35,7 @@ export default {
     }),
     userOptions() {
       return this.users.map(u => ({
-        text: u.displayName,
+        text: u.display_name,
         value: u.id,
         img: u.image_url ? u.image_url : '/assets/img/avatar.svg'
       }))

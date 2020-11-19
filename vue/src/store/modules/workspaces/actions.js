@@ -12,8 +12,8 @@ import {
   DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
   FOLDER_DELETED,
+  GET_ACTIVE_USERS,
   GET_ALL_FOLDERS,
-  GET_ALL_USER,
   GET_ARTICLE,
   GET_ARTICLES,
   GET_ATTACH_CONFIG,
@@ -52,6 +52,7 @@ const url = '/v1/workspaces/workspace';
 const articlesUrl = '/v1/workspaces/article';
 const timelineUrl = '/v1/workspaces/timeline';
 const folderUrl = '/v1/workspaces/folder';
+const userUrl = '/v1/users/user';
 const userLikeUrl = '/v1/workspaces/user-like';
 const userCommentUrl = '/v1/workspaces/user-comment';
 
@@ -660,10 +661,10 @@ export function hideInviteModal({commit}) {
  * @param commit
  * @returns {Promise<unknown>}
  */
-export async function getAllUser({commit}) {
-  const {success, body} = await httpService.get(`${url}/get-all-user`)
+export async function getActiveUsers({commit}) {
+  const {success, body} = await httpService.get(`${userUrl}/active-users`)
   if (success) {
-    commit(GET_ALL_USER, body)
+    commit(GET_ACTIVE_USERS, body)
   }
 }
 

@@ -48,4 +48,4 @@ export const CHANGE_CAROUSEL = 'workspace/CHANGE_CAROUSEL';
 
 export const SHOW_INVITE_MODAL = 'workspace/SHOW_INVITE_MODAL';
 export const HIDE_INVITE_MODAL = 'workspace/HIDE_INVITE_MODAL';
-export const GET_ALL_USER = 'workspace/GET_ALL_USER';
+export const GET_ACTIVE_USERS = 'workspace/GET_ACTIVE_USERS';

@@ -34,20 +34,6 @@ class WorkspaceController extends ActiveController
     }
 
     /**
-     * Get all users for workspace invitation
-     *
-     * @return ActiveDataProvider
-     */
-    public function actionGetAllUser()
-    {
-        $query = UserResource::find()->active();
-
-        return new ActiveDataProvider([
-            'query' => $query,
-        ]);
-    }
-
-    /**
      *
      */
     public function actionInviteUsers()

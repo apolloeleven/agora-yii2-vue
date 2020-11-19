@@ -12,8 +12,8 @@ import {
   DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
   FOLDER_DELETED,
+  GET_ACTIVE_USERS,
   GET_ALL_FOLDERS,
-  GET_ALL_USER,
   GET_ARTICLE,
   GET_ARTICLES,
   GET_ATTACH_CONFIG,
@@ -462,7 +462,7 @@ export default {
    * @param state
    * @param data
    */
-  [GET_ALL_USER](state, data) {
+  [GET_ACTIVE_USERS](state, data) {
     state.view.invite.modal.users = data
   },
 
