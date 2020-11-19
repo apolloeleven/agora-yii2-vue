@@ -4,6 +4,7 @@ namespace app\modules\v1\users\controllers;
 
 use app\modules\v1\users\models\ChangePassword;
 use app\modules\v1\setup\resources\UserResource;
+use app\modules\v1\users\resources\UserResource as UserResources;
 use app\rest\ActiveController;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -64,7 +65,7 @@ class UserController extends ActiveController
      */
     public function actionActiveUsers()
     {
-        $query = UserResource::find()->active();
+        $query = UserResources::find()->active();
 
         return new ActiveDataProvider([
             'query' => $query,

@@ -448,14 +448,14 @@ export default {
    * @param state
    */
   [SHOW_INVITE_MODAL](state) {
-    state.view.invite.modal.show = true;
+    state.view.inviteModal.show = true;
   },
   /**
    *
    * @param state
    */
   [HIDE_INVITE_MODAL](state) {
-    state.view.invite.modal.show = false;
+    state.view.inviteModal.show = false;
   },
   /**
    *
@@ -463,7 +463,7 @@ export default {
    * @param data
    */
   [GET_ACTIVE_USERS](state, data) {
-    state.view.invite.modal.users = data
+    state.view.inviteModal.users = data
   },
 
 };

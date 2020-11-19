@@ -30,12 +30,12 @@ export default {
   },
   computed: {
     ...mapWorkspaceState({
-      showModal: state => state.view.invite.modal.show,
-      users: state => state.view.invite.modal.users,
+      showModal: state => state.view.inviteModal.show,
+      users: state => state.view.inviteModal.users,
     }),
     userOptions() {
       return this.users.map(u => ({
-        text: u.display_name,
+        text: u.displayName,
         value: u.id,
         img: u.image_url ? u.image_url : '/assets/img/avatar.svg'
       }))
