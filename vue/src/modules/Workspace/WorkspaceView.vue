@@ -22,13 +22,15 @@
                         :key="`workspace-tab-${index}`">
               <i v-if="item.icon" :class="item.icon" class="mr-2"></i>{{ $t(item.title) }}
             </b-nav-item>
-            <div class="ml-auto d-flex align-items-center pr-3">
-              <slot name="right-placeholder"></slot>
-              <b-button @click="onInviteClick" variant="info" size="sm">
-                <i class="fas fa-paper-plane"/>
+            <b-nav-item-dropdown right no-caret>
+              <template slot="button-content">
+                <i class="fas fa-ellipsis-v"></i>
+              </template>
+              <b-dropdown-item @click="onInviteClick">
+                <i class="fas fa-paper-plane mr-2"/>
                 {{ $t('Invite') }}
-              </b-button>
-            </div>
+              </b-dropdown-item>
+            </b-nav-item-dropdown>
           </b-nav>
         </div>
       </div>
@@ -335,7 +337,7 @@ export default {
       //padding-left: 9rem;
       background-color: white;
 
-      .nav {
+      /deep/ .nav {
         display: inline-flex;
         border-bottom: none;
 
