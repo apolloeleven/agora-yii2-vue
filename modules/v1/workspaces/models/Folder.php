@@ -3,6 +3,7 @@
 namespace app\modules\v1\workspaces\models;
 
 use app\modules\v1\users\models\User;
+use app\modules\v1\workspaces\behaviors\ActivityBehavior;
 use app\modules\v1\workspaces\models\query\FolderQuery;
 use app\rest\ValidationException;
 use creocoder\nestedsets\NestedSetsBehavior;
@@ -71,6 +72,13 @@ class Folder extends ActiveRecord
                 'class' => NestedSetsBehavior::class,
                 'treeAttribute' => 'tree',
             ],
+            [
+                'class' => ActivityBehavior::class,
+                'workspaceIdAttribute' => 'workspace_id',
+                'tableNameAttribute' => TimelinePost::tableName(),
+                'contentIdAttribute' => 'id',
+                'descriptionAttribute' => 'name',
+            ]
         ]);
     }
 
