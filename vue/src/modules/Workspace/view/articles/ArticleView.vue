@@ -10,7 +10,7 @@
       <div class="card-body">
         <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
           <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
-            <input-widget :model="model" attribute="title"></input-widget>
+            <input-widget :model="model" attribute="title" :autofocus="true"></input-widget>
             <input-widget :model="model" attribute="body" type="richtext"></input-widget>
             <submit-button :disabled="submitLoading" :show-loader="submitLoading"/>
           </b-form>

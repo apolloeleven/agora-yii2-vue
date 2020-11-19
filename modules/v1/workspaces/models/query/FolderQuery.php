@@ -126,4 +126,14 @@ class FolderQuery extends ActiveQuery
     {
         return $this->andWhere([Folder::tableName() . '.timeline_post_id' => null]);
     }
+
+
+    /**
+     * @param $timelineId
+     * @return FolderQuery
+     */
+    public function byTimelineId($timelineId)
+    {
+        return $this->andWhere([Folder::tableName() . '.timeline_post_id' => $timelineId]);
+    }
 }

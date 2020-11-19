@@ -1,11 +1,15 @@
 import {
   ADD_ATTACH_FILES,
+  ADD_TIMELINE_CHILD_COMMENT,
+  ADD_TIMELINE_COMMENT,
   ADD_TIMELINE_POST,
   CHANGE_CAROUSEL,
   CHANGE_TIMELINE_LOADING,
   CHANGE_TIMELINE_MODAL_LOADING,
   CHANGE_WORKSPACE_LOADING,
   CREATE_ARTICLE,
+  DELETE_TIMELINE_CHILD_COMMENT,
+  DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
   FOLDER_DELETED,
   GET_ALL_FOLDERS,
@@ -24,6 +28,7 @@ import {
   HIDE_PREVIEW_MODAL,
   HIDE_TIMELINE_MODAL,
   HIDE_WORKSPACE_MODAL,
+  LIKE_TIMELINE_POST,
   REMOVE_ARTICLE,
   SHOW_ARTICLE_MODAL,
   SHOW_FOLDER_MODAL,
@@ -36,6 +41,7 @@ import {
   TOGGLE_ARTICLES_LOADING,
   TOGGLE_FOLDERS_LOADING,
   TOGGLE_VIEW_LOADING,
+  UNLIKE_TIMELINE_POST,
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
@@ -46,6 +52,8 @@ const url = '/v1/workspaces/workspace';
 const articlesUrl = '/v1/workspaces/article';
 const timelineUrl = '/v1/workspaces/timeline';
 const folderUrl = '/v1/workspaces/folder';
+const userLikeUrl = '/v1/workspaces/user-like';
+const userCommentUrl = '/v1/workspaces/user-comment';
 
 const timelineExpand = `expand=article,createdBy,timelineComments.createdBy,timelineComments.childrenComments.createdBy,
 timelineComments.childrenComments.parent,userLikes,myLikes&sort=-created_at`
@@ -422,7 +430,7 @@ export function hideFolderModal({commit}, hideModal) {
  * @param { Object } data
  */
 export async function createFolder({commit}, data) {
-  return await httpService.post(folderUrl, data);
+  return await httpService.post(`${folderUrl}?expand=updatedBy`, data);
 }
 
 /**
@@ -488,7 +496,7 @@ export async function getFoldersByParent({commit}, parentId) {
  * @returns {Promise<unknown>}
  */
 export async function attachFiles({commit}, {data, config}) {
-  const res = await httpService.post(folderUrl, prepareFiles(data), config)
+  const res = await httpService.post(`${folderUrl}?expand=updatedBy`, prepareFiles(data), config)
   if (res.success) {
     commit(ADD_ATTACH_FILES, res.body)
   }
@@ -564,6 +572,67 @@ export function hidePreviewModal({commit}) {
  */
 export function changeCarousel({commit}, index) {
   commit(CHANGE_CAROUSEL, index);
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<void>}
+ */
+export async function like({commit}, data) {
+  const {success, body} = await httpService.post(`${userLikeUrl}`, data)
+  if (success) {
+    commit(LIKE_TIMELINE_POST, body)
+  }
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<void>}
+ */
+export async function unlike({commit}, data) {
+  const {success} = await httpService.delete(`${userLikeUrl}/${data.id}`)
+  if (success) {
+    commit(UNLIKE_TIMELINE_POST, data)
+  }
+}
+
+
+/**
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function addComment({commit}, data) {
+  const res = await httpService.post(`${userCommentUrl}?expand=createdBy,childrenComments,parent`, data);
+  if (res.success) {
+    if (data.parent_id) {
+      commit(ADD_TIMELINE_CHILD_COMMENT, res.body)
+    }
+    commit(ADD_TIMELINE_COMMENT, res.body)
+
+  }
+  return res;
+}
+
+/**
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function deleteComment({commit}, data) {
+  const res = await httpService.delete(`${userCommentUrl}/${data.id}`);
+  if (res.success) {
+    if (data.parent_id) {
+      commit(DELETE_TIMELINE_CHILD_COMMENT, data)
+    }
+    commit(DELETE_TIMELINE_COMMENT, data)
+
+  }
+  return res;
 }
 
 /**

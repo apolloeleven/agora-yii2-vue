@@ -41,4 +41,19 @@ class ModelHelper
 
         return true;
     }
+
+    /**
+     * Delete file
+     *
+     * @param $filePath
+     * @return bool
+     */
+    public static function deleteFile($filePath)
+    {
+        if (!$filePath) {
+            return false;
+        }
+
+        return FileHelper::unlink(Yii::getAlias("@storage/$filePath"));
+    }
 }

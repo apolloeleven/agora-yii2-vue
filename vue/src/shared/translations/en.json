@@ -21,6 +21,6 @@
   "You are about to delete {count} item(s). Are you sure you want to continue?": "You are about to delete {count} item(s). Are you sure you want to continue?",
   "This operation can not be undone": "This operation can not be undone",
   " Are you sure you want to continue?": " Are you sure you want to continue?",
-  "{count} file(s) and folder(s) were successfully deleted": "{count} file(s) and folder(s) were successfully deleted",
+  "File(s) were successfully deleted": "File(s) were successfully deleted",
   "{count} file(s) were successfully uploaded": "{count} file(s) were successfully uploaded"
 }

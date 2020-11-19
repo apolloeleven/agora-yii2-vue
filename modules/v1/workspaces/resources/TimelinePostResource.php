@@ -8,9 +8,9 @@
 namespace app\modules\v1\workspaces\resources;
 
 
+use app\helpers\ModelHelper;
 use app\modules\v1\users\models\query\UserQuery;
 use app\modules\v1\users\resources\UserResource;
-use app\modules\v1\workspaces\models\Folder;
 use app\modules\v1\workspaces\models\TimelinePost;
 use app\rest\ValidationException;
 use Yii;
@@ -152,12 +152,12 @@ class TimelinePostResource extends TimelinePost
     {
         parent::afterSave($insert, $changedAttributes);
         if ($insert && $this->file) {
-            $folder = new Folder();
+            $folder = new FolderResource();
             $folder->workspace_id = $this->workspace_id;
             $folder->timeline_post_id = $this->id;
             $folder->is_file = 1;
 
-            $parentFolder = Folder::find()->byWorkspaceId($folder->workspace_id)->isTimelineFolder()->one();
+            $parentFolder = FolderResource::find()->byWorkspaceId($folder->workspace_id)->isTimelineFolder()->one();
 
             if (!$parentFolder) {
                 throw new ValidationException(Yii::t('app', 'Unable to find parent folder'));
@@ -172,5 +172,26 @@ class TimelinePostResource extends TimelinePost
                 throw new ValidationException(Yii::t('app', 'Unable to upload file'));
             }
         }
+    }
+
+    /**
+     * Before delete timeline post delete file from storage
+     *
+     * @return bool
+     * @throws ValidationException
+     */
+    public function beforeDelete()
+    {
+        $folder = FolderResource::find()->byTimelineId($this->id)->one();
+
+        if (!$folder) {
+            return parent::beforeDelete();
+        }
+
+        if (!ModelHelper::deleteFile($folder->file_path)) {
+            throw new ValidationException(Yii::t('app', 'Unable to delete timeline file'));
+        }
+
+        return parent::beforeDelete();
     }
 }

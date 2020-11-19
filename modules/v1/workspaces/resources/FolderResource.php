@@ -95,6 +95,6 @@ class FolderResource extends Folder
      */
     public function getFileUrl()
     {
-        return Yii::getAlias('@storageUrl' . $this->file_path);
+        return $this->file_path ? Yii::getAlias('@storageUrl' . $this->file_path) : '';
     }
 }
