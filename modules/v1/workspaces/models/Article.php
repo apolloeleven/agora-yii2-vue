@@ -53,10 +53,15 @@ class Article extends ActiveRecord
 
             [
                 'class' => ActivityBehavior::class,
-                'workspaceIdAttribute' => 'workspace_id',
-                'tableNameAttribute' => TimelinePost::tableName(),
-                'contentIdAttribute' => 'id',
-                'descriptionAttribute' => 'title',
+                'workspace_id' => function() {
+                    return $this->workspace_id;
+                },
+                'description' => '{user} {action} article "{content}"',
+                'data' => function(){
+                    return [
+                        'content' => $this->toArray()
+                    ];
+                }
             ]
         ]);
     }
