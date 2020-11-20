@@ -20,6 +20,7 @@ use yii\db\ActiveQuery;
  * @property int|null $content_id
  * @property string|null $action
  * @property string|null $description
+ * @property string|null $data
  * @property int|null $created_at
  * @property int|null $created_by
  *
@@ -28,6 +29,10 @@ use yii\db\ActiveQuery;
  */
 class UserActivity extends \yii\db\ActiveRecord
 {
+    public const ACTION_INSERT = 'insert';
+    public const ACTION_UPDATE = 'update';
+    public const ACTION_DELETE = 'delete';
+
     /**
      * {@inheritdoc}
      */
@@ -60,6 +65,7 @@ class UserActivity extends \yii\db\ActiveRecord
             [['workspace_id', 'content_id', 'created_at', 'created_by'], 'integer'],
             [['description'], 'string'],
             [['table_name', 'action'], 'string', 'max' => 128],
+            [['data', ], 'string',],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['workspace_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workspace::className(), 'targetAttribute' => ['workspace_id' => 'id']],
         ];
@@ -77,6 +83,7 @@ class UserActivity extends \yii\db\ActiveRecord
             'content_id' => 'Content ID',
             'action' => 'Action',
             'description' => 'Description',
+            'data' => 'Data',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
         ];
