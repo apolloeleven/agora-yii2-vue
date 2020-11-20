@@ -4,7 +4,7 @@
       <b-card-body>
         <div class="d-flex justify-content-between align-items-center mb-2">
           <b-breadcrumb :items="breadcrumb" class="d-none d-sm-flex mb-0"/>
-          <div v-if="!isDefaultFolder">
+          <div v-if="!isTimelineFolder()">
             <div class="file-manager-btn-wrapper">
               <b-button variant="success" size="sm">
                 <i class="fas fa-cloud-upload-alt"/>
@@ -37,15 +37,14 @@
               <i class="fas fa-folder-open"/>
               {{ files.item.name }}
             </router-link>
-            <!--TODO attachment preview-->
-            <a v-else class="file-name">
+            <a v-else class="file-name" @click="onFileClick(files.item)">
               <i class="far fa-file-alt"/>
               {{ files.item.name }}
             </a>
           </template>
           <template v-slot:cell(checkbox)="{item}">
             <b-form-checkbox
-              v-if="!isDefault(item) && !isDefaultFolder" v-model="item.selected" value="1" unchecked-value="0">
+              v-if="!isTimelineFolder(item)" v-model="item.selected" value="1" unchecked-value="0">
             </b-form-checkbox>
           </template>
           <template v-slot:cell(size)="{item}">
@@ -63,13 +62,17 @@
                 <i class="far fa-copy mr-2"/>
                 {{ $t('Copy') }}
               </b-dropdown-item>
-              <b-dropdown-item v-if="!isFile(item) && !isDefault(item)" @click="onEditClick(item)">
+              <b-dropdown-item v-if="!isFile(item) && !isTimelineFolder(item)" @click="onEditClick(item)">
                 <i class="fas fa-pencil-alt mr-2"/>
                 {{ $t('Edit') }}
               </b-dropdown-item>
-              <b-dropdown-item v-if="!isFile(item) && !isDefault(item)" @click="onRemoveClick(item)">
+              <b-dropdown-item v-if="!isTimelineFolder(item)" @click="onRemoveClick(item)">
                 <i class="far fa-trash-alt mr-2"/>
                 {{ $t('Remove') }}
+              </b-dropdown-item>
+              <b-dropdown-item v-if="isFile(item)" @click="onDownloadClick(item)">
+                <i class="fas fa-download"/>
+                {{ $t('Download') }}
               </b-dropdown-item>
             </b-dropdown>
           </template>
@@ -77,6 +80,7 @@
       </b-card-body>
     </b-card>
     <FolderForm/>
+    <FilePreviewModal/>
   </div>
 </template>
 
@@ -85,12 +89,15 @@
 import {createNamespacedHelpers} from "vuex";
 import FolderForm from "./FolderForm";
 import ContentSpinner from "@/core/components/ContentSpinner";
+import {AppSettings} from "@/shared/AppSettings";
+import authService from "@/core/services/authService";
+import FilePreviewModal from "./FilePreviewModal";
 
 const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "WorkspaceFiles",
-  components: {ContentSpinner, FolderForm},
+  components: {FilePreviewModal, ContentSpinner, FolderForm},
   data() {
     return {
       sortBy: null,
@@ -118,12 +125,6 @@ export default {
     selected() {
       return this.foldersAndFiles.filter(a => a.selected === '1')
     },
-    isDefaultFolder() {
-      if (this.currentFolder) {
-        return this.currentFolder.is_timeline_folder === 1
-      }
-      return false;
-    },
   },
   watch: {
     '$route.params.folderId': function (id) {
@@ -133,7 +134,7 @@ export default {
   },
   methods: {
     ...mapWorkspaceActions(['showFolderModal', 'getFoldersByParent', 'attachFiles', 'getAttachConfig',
-      'getCurrentFolder', 'deleteFolder', 'destroyedCurrentFolder', 'sortFiles']),
+      'getCurrentFolder', 'deleteFolder', 'destroyedCurrentFolder', 'sortFiles', 'showPreviewModal']),
     onShowModal() {
       this.showFolderModal(null)
     },
@@ -146,6 +147,15 @@ export default {
     onRemoveClick(e) {
       this.showDeleteConfirmation([e.id])
     },
+    onDownloadClick(e) {
+      window.location.href = `${AppSettings.url()}/v1/workspaces/folder/download-file/${e.id}?access-token=${authService.getToken()}`;
+    },
+    onFileClick(e) {
+      let files = this.foldersAndFiles.filter(f => f.is_file === 1);
+      let index = files.findIndex(f => f.id === e.id);
+
+      this.showPreviewModal({activeFile: index, files: files});
+    },
     async showDeleteConfirmation(fileIds) {
       const result = await this.$confirm(
         this.$t('You are about to delete {count} item(s). Are you sure you want to continue?', {count: fileIds.length}),
@@ -154,7 +164,7 @@ export default {
       if (result) {
         const res = await this.deleteFolder(fileIds);
         if (res.success) {
-          this.$toast(this.$t(`{count} file(s) and folder(s) were successfully deleted`, {count: fileIds.length}));
+          this.$toast(this.$t(`File(s) were successfully deleted`));
         } else {
           this.$toast(res.body.message, 'danger');
         }
@@ -241,8 +251,13 @@ export default {
       this.sortDesc = e.sortDesc;
       this.sortFiles({sortBy: this.sortBy, sortDesc: this.sortDesc});
     },
-    isDefault(item) {
-      return item.is_timeline_folder === 1;
+    isTimelineFolder(item = null) {
+      if (item) {
+        return item.timeline_post_id || item.is_timeline_folder === 1;
+      } else if (this.currentFolder) {
+        return this.currentFolder.timeline_post_id || this.currentFolder.is_timeline_folder === 1;
+      }
+      return false;
     },
     isFile(item) {
       return item.is_file === 1;

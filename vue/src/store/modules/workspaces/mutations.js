@@ -1,16 +1,20 @@
 import {
   ADD_ATTACH_FILES,
+  ADD_TIMELINE_CHILD_COMMENT,
+  ADD_TIMELINE_COMMENT,
   ADD_TIMELINE_POST,
+  CHANGE_CAROUSEL,
   CHANGE_TIMELINE_LOADING,
   CHANGE_TIMELINE_MODAL_LOADING,
   CHANGE_WORKSPACE_LOADING,
   CREATE_ARTICLE,
-  TOGGLE_ARTICLE_VIEW_LOADING,
-  GET_ARTICLE,
+  DELETE_TIMELINE_CHILD_COMMENT,
+  DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
   FOLDER_DELETED,
-  TOGGLE_FOLDERS_LOADING,
+  GET_ACTIVE_USERS,
   GET_ALL_FOLDERS,
+  GET_ARTICLE,
   GET_ARTICLES,
   GET_ATTACH_CONFIG,
   GET_BREAD_CRUMB,
@@ -20,16 +24,24 @@ import {
   GET_WORKSPACES,
   HIDE_ARTICLE_MODAL,
   HIDE_FOLDER_MODAL,
+  HIDE_INVITE_MODAL,
+  HIDE_PREVIEW_MODAL,
   HIDE_TIMELINE_MODAL,
   HIDE_WORKSPACE_MODAL,
+  LIKE_TIMELINE_POST,
   REMOVE_ARTICLE,
   SHOW_ARTICLE_MODAL,
   SHOW_FOLDER_MODAL,
+  SHOW_INVITE_MODAL,
+  SHOW_PREVIEW_MODAL,
   SHOW_TIMELINE_MODAL,
   SHOW_WORKSPACE_MODAL,
   SORT_FILES,
+  TOGGLE_ARTICLE_VIEW_LOADING,
   TOGGLE_ARTICLES_LOADING,
+  TOGGLE_FOLDERS_LOADING,
   TOGGLE_VIEW_LOADING,
+  UNLIKE_TIMELINE_POST,
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
@@ -246,7 +258,7 @@ export default {
    */
   [SHOW_FOLDER_MODAL](state, data) {
     state.view.folders.modal.show = true;
-    state.view.folders.modal.object = data;
+    state.view.folders.modal.object = _.cloneDeep(data);
   },
   /**
    * @param state
@@ -349,6 +361,109 @@ export default {
         }
         return order === 'desc' ? comparison * -1 : comparison;
       });
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [SHOW_PREVIEW_MODAL](state, data) {
+    state.view.folders.previewModal.show = true;
+    state.view.folders.previewModal.files = data.files;
+    state.view.folders.previewModal.activeFile = data.activeFile;
+  },
+  /**
+   *
+   * @param state
+   */
+  [HIDE_PREVIEW_MODAL](state) {
+    state.view.folders.previewModal.show = false;
+  },
+  /**
+   *
+   * @param state
+   * @param index
+   */
+  [CHANGE_CAROUSEL](state, index) {
+    state.view.folders.previewModal.activeFile = index;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [LIKE_TIMELINE_POST](state, data) {
+    const timelinePost = state.view.timeline.data.filter(t => t.id === data.timeline_post_id);
+    timelinePost.forEach(t => t.userLikes.unshift(data));
+    timelinePost.forEach(t => t.myLikes.unshift(data));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [UNLIKE_TIMELINE_POST](state, data) {
+    const timelinePost = state.view.timeline.data.filter(t => t.id === data.timeline_post_id);
+    timelinePost.forEach(t => t.myLikes = []);
+    timelinePost.forEach(t => t.userLikes = t.userLikes.filter(l => l.id !== data.id));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [ADD_TIMELINE_COMMENT](state, data) {
+    state.view.timeline.data.filter(t => t.id === data.timeline_post_id).forEach(t => t.timelineComments.unshift(data));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [DELETE_TIMELINE_COMMENT](state, data) {
+    state.view.timeline.data.forEach(t => t.timelineComments = t.timelineComments.filter(c => c.id !== data.id));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [ADD_TIMELINE_CHILD_COMMENT](state, data) {
+    state.view.timeline.data.filter(t => t.id === data.parent.timeline_post_id)
+      .forEach(t => t.timelineComments.filter(tc => tc.id === data.parent_id)
+        .forEach(tc => tc.childrenComments.unshift(data)));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [DELETE_TIMELINE_CHILD_COMMENT](state, data) {
+    state.view.timeline.data
+      .forEach(t => t.timelineComments
+        .forEach(t => t.childrenComments = t.childrenComments.filter(c => c.id !== data.id)));
+  },
+  /**
+   *
+   * @param state
+   */
+  [SHOW_INVITE_MODAL](state) {
+    state.view.inviteModal.show = true;
+  },
+  /**
+   *
+   * @param state
+   */
+  [HIDE_INVITE_MODAL](state) {
+    state.view.inviteModal.show = false;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_ACTIVE_USERS](state, data) {
+    state.view.inviteModal.users = data
   },
 
 };

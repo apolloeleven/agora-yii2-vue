@@ -6,6 +6,7 @@ namespace app\modules\v1\workspaces\resources;
 
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\Folder;
+use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -23,13 +24,16 @@ class FolderResource extends Folder
             'id',
             'parent_id',
             'workspace_id',
+            'timeline_post_id',
             'name',
             'label',
             'depth',
             'size',
             'is_file',
             'is_timeline_folder',
-            'file_path',
+            'file_path' => function () {
+                return $this->getFileUrl();
+            },
             'mime' => function () {
                 return $this->getMime();
             },
@@ -82,5 +86,15 @@ class FolderResource extends Folder
     {
         $mime = explode('/', $this->mime)[0];
         return $mime == self::VIDEO ? $mime : $this->mime;
+    }
+
+    /**
+     * Get file url
+     *
+     * @return bool|string
+     */
+    public function getFileUrl()
+    {
+        return $this->file_path ? Yii::getAlias('@storageUrl' . $this->file_path) : '';
     }
 }

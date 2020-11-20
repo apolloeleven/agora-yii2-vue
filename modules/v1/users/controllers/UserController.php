@@ -4,8 +4,10 @@ namespace app\modules\v1\users\controllers;
 
 use app\modules\v1\users\models\ChangePassword;
 use app\modules\v1\setup\resources\UserResource;
+use app\modules\v1\users\resources\UserResource as UserResources;
 use app\rest\ActiveController;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\web\UploadedFile;
 
 class UserController extends ActiveController
@@ -17,6 +19,7 @@ class UserController extends ActiveController
     {
         $verbs = parent::verbs();
         $verbs['profile'] = ['GET', 'HEAD', 'OPTIONS'];
+        $verbs['active-users'] = ['GET', 'HEAD', 'OPTIONS'];
         $verbs['update-profile'] = ['PUT', 'OPTIONS'];
         $verbs['change-password'] = ['PUT', 'OPTIONS'];
 
@@ -53,5 +56,19 @@ class UserController extends ActiveController
         }
 
         return $this->validationError($model->getFirstErrors());
+    }
+
+    /**
+     * Get all users for workspace invitation
+     *
+     * @return ActiveDataProvider
+     */
+    public function actionActiveUsers()
+    {
+        $query = UserResources::find()->active();
+
+        return new ActiveDataProvider([
+            'query' => $query,
+        ]);
     }
 }

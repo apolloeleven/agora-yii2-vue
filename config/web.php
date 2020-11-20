@@ -64,8 +64,8 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 [
-                    'pattern' => 'v1/workspaces/article-file/download-attachment/<id:\d+>',
-                    'route' => 'v1/workspaces/article-file/download-attachment'
+                    'pattern' => 'v1/workspaces/folder/download-file/<id:\d+>',
+                    'route' => 'v1/workspaces/folder/download-file'
                 ],
                 [
                     'pattern' => 'v1/workspaces/user-activity/<workspaceId:\d+>',

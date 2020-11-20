@@ -23,6 +23,12 @@ export const GET_TIMELINE_DATA = 'workspace/GET_TIMELINE_DATA';
 export const ADD_TIMELINE_POST = 'workspace/ADD_TIMELINE_POST';
 export const UPDATE_TIMELINE_POST = 'workspace/UPDATE_TIMELINE_POST';
 export const DELETED_TIMELINE_POST = 'workspace/DELETED_TIMELINE_POST';
+export const ADD_TIMELINE_COMMENT = 'workspace/ADD_TIMELINE_COMMENT';
+export const ADD_TIMELINE_CHILD_COMMENT = 'workspace/ADD_TIMELINE_CHILD_COMMENT';
+export const DELETE_TIMELINE_COMMENT = 'workspace/DELETE_TIMELINE_COMMENT';
+export const DELETE_TIMELINE_CHILD_COMMENT = 'workspace/DELETE_TIMELINE_CHILD_COMMENT';
+export const LIKE_TIMELINE_POST = 'workspace/LIKE_TIMELINE_POST';
+export const UNLIKE_TIMELINE_POST = 'workspace/UNLIKE_TIMELINE_POST';
 
 export const GET_ATTACH_CONFIG = 'workspace/GET_ATTACH_CONFIG';
 export const ADD_ATTACH_FILES = 'workspace/ADD_ATTACH_FILES';
@@ -36,3 +42,10 @@ export const GET_CURRENT_FOLDER = 'workspace/GET_CURRENT_FOLDER';
 export const SHOW_EDIT_LABEL_DIALOG = 'workspace/SHOW_EDIT_LABEL_DIALOG';
 export const HIDE_EDIT_LABEL_DIALOG = 'workspace/HIDE_EDIT_LABEL_DIALOG';
 export const SORT_FILES = 'workspace/SORT_FILES';
+export const SHOW_PREVIEW_MODAL = 'workspace/SHOW_PREVIEW_MODAL';
+export const HIDE_PREVIEW_MODAL = 'workspace/HIDE_PREVIEW_MODAL';
+export const CHANGE_CAROUSEL = 'workspace/CHANGE_CAROUSEL';
+
+export const SHOW_INVITE_MODAL = 'workspace/SHOW_INVITE_MODAL';
+export const HIDE_INVITE_MODAL = 'workspace/HIDE_INVITE_MODAL';
+export const GET_ACTIVE_USERS = 'workspace/GET_ACTIVE_USERS';

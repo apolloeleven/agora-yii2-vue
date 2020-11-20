@@ -10,6 +10,8 @@ export default class MenuItem {
     children = [],
     isGroup = false,
     favourite = false,
+    buttonText = '',
+    onClick = () => {}
   }) {
     if (!name) {
       throw new Error("Please provide name in MenuItem constructor");
@@ -24,5 +26,7 @@ export default class MenuItem {
     this.children = children.map(child => new MenuItem(child.name || child.text, child));
     this.favourite = favourite;
     this.name = name;
+    this.buttonText = buttonText;
+    this.onClick = onClick;
   }
 }

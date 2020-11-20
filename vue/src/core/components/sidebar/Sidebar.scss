@@ -1,23 +1,48 @@
 @import "../../../core/scss/variables";
 
 .menu {
-  //display: block;
-  //position: absolute;
-  left: 0;
-  //top: $menu-margin-top;
+  display: flex;
+  flex-direction: column;
   border-right: 1px solid $menu-border-color;
-  //min-height: calc(#{"100% - " + $menu-margin-top});
-  //z-index: $menu-z-index;
   width: $menu-width;
   background-color: $menu-bg;
   @include transition(all $menu-toggle-transition-duration);
 
+  .sidebar-header {
+    height: $navbar-height;
+    padding: 0.5rem 2rem;
+    color: #FFF;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    background-color: darken($menu-bg, 5%);
+  }
+
+  .product-logo {
+    height: 100%;
+    margin-right: 10px;
+  }
+
   .menu-items-header {
-    padding: 12px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px $nav-menu-item-padding-horizontal 8px;
     font-size: 15px;
     font-weight: bold;
     opacity: 0.8;
-    color: $info;
+    color: rgba(255, 255, 255, 0.5);
+
+    .btn {
+      padding: 0;
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      cursor: pointer;
+
+      &:hover {
+        color: #FFF;
+      }
+    }
 
     .menu-item-icon {
       margin-right: 10px;
@@ -25,40 +50,10 @@
     }
   }
 
-  .menu-heading {
-    border-radius: 0;
-    border: none;
-    position: relative;
-    border-bottom: 1px solid $menu-border-color;
-    height: $menu-header-height;
-    padding-left: ($menu-width-collapsed - $menu-header-btn-size) / 2;
-    padding-right: ($menu-width-collapsed - $menu-header-btn-size) / 2;
-
-    .menu-header-buttons-wrapper {
-      position: relative;
-      padding-top: ($menu-header-height - $menu-header-btn-size) / 2;
-      padding-bottom: ($menu-header-height - $menu-header-btn-size) / 2;
-
-      .btn-menu-header-collapse {
-        display: none;
-      }
-
-      .menu-header-buttons {
-        overflow: hidden;
-        white-space: nowrap;
-        text-align: center;
-      }
-    }
-
-    .btn {
-      text-align: center;
-      padding: 0;
-      line-height: $menu-header-btn-size;
-      @include square($menu-header-btn-size);
-    }
-  }
-
   nav {
+    overflow-y: auto;
+    overflow-x: hidden;
+
     ul {
       display: none;
       list-style: none;
@@ -80,8 +75,20 @@
 
           .menu-item-icon {
             margin-top: 2px;
+            color: rgba(255, 255, 255, 0.5);
             font-size: $nav-menu-item-icon-font-size;
             margin-right: $nav-menu-item-icon-margin-right;
+          }
+
+          .sidebar-item-content {
+            width: 100%;
+            display: flex;
+
+            .inner-text {
+              flex: 1;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
           }
 
           .menu-item-toggle-icon {
@@ -105,7 +112,12 @@
           &:hover {
             font-weight: 500;
             color: $nav-menu-item-hover-color;
-            text-shadow: $nav-menu-item-hover-text-shadow;
+            background-color: $nav-menu-item-hover-bg-color;
+            //text-shadow: $nav-menu-item-hover-text-shadow;
+
+            .menu-item-icon {
+              color: #FFF;
+            }
           }
         }
 
@@ -147,6 +159,7 @@
 
       > li {
         > a {
+          text-overflow: ellipsis;
           line-height: $nav-menu-item-line-height;
           border-bottom: 1px solid $nav-menu-item-border-color;
           padding: $nav-menu-item-padding-vertical $nav-menu-item-padding-horizontal;
@@ -245,7 +258,7 @@
       cursor: pointer;
       font-size: $menu-collapse-line-btn-font-size;
       line-height: 22px;
-      color: white;
+      color: $menu-bg;
       border-radius: 50%;
       background-color: $menu-color;
       @include transition(0.3s transform);
@@ -266,6 +279,18 @@
 
 #app {
   &.menu-collapsed {
+    .sidebar-header {
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .product-logo {
+      margin-right: 0;
+    }
+    .product-name {
+      display: none;
+    }
     .show-hide-menu {
       visibility: hidden;
     }
@@ -278,35 +303,9 @@
       overflow: visible;
       width: $menu-width-collapsed;
 
-      .menu-heading {
-        .menu-header-buttons-wrapper {
-          .btn-menu-header-collapse {
-            display: inline-block;
-          }
-
-          .menu-header-buttons {
-            display: inline-block;
-            position: absolute;
-            width: 0;
-            top: 0;
-            height: 100%;
-            left: 100%;
-            padding: inherit;
-            @include transition(all $transition-duration);
-            @include box-shadow(2px 2px 5px rgba(0, 0, 0, 0.1));
-          }
-
-          &:hover {
-            .btn-menu-header-collapse {
-              float: left;
-            }
-
-            .menu-header-buttons {
-              min-width: $menu-width;
-              background-color: $menu-bg;
-            }
-          }
-        }
+      .menu-items-header {
+        opacity: 0;
+        white-space: nowrap;
       }
 
       nav {

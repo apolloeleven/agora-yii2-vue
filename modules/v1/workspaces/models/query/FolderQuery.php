@@ -94,6 +94,14 @@ class FolderQuery extends ActiveQuery
     /**
      * @return FolderQuery
      */
+    public function isFolder()
+    {
+        return $this->andWhere([Folder::tableName() . '.is_file' => 0]);
+    }
+
+    /**
+     * @return FolderQuery
+     */
     public function isTimelineFolder()
     {
         return $this->andWhere([Folder::tableName() . '.is_timeline_folder' => 1]);
@@ -117,5 +125,15 @@ class FolderQuery extends ActiveQuery
     public function hasNoTimelineFile()
     {
         return $this->andWhere([Folder::tableName() . '.timeline_post_id' => null]);
+    }
+
+
+    /**
+     * @param $timelineId
+     * @return FolderQuery
+     */
+    public function byTimelineId($timelineId)
+    {
+        return $this->andWhere([Folder::tableName() . '.timeline_post_id' => $timelineId]);
     }
 }

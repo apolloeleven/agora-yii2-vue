@@ -199,15 +199,27 @@ class Folder extends ActiveRecord
     }
 
     /**
+     * Get full path
+     *
+     * @return bool|string
+     */
+    public function getFullPath()
+    {
+        return Yii::getAlias('@storage' . $this->file_path);
+    }
+
+    /**
      * Upload file
      *
      * @param UploadedFile $file
+     * @param $workspaceId
      * @return bool
      * @throws Exception
+     * @throws ValidationException
      */
-    public function uploadFile(UploadedFile $file)
+    public function uploadFile(UploadedFile $file, $workspaceId)
     {
-        $path = '/files';
+        $path = "/file-manager/$workspaceId/" . date('dmY', time());
         $fullPath = Yii::getAlias('@storage' . $path);
 
         if (!file_exists($fullPath) && !FileHelper::createDirectory($fullPath)) {

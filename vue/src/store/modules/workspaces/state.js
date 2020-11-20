@@ -40,7 +40,16 @@ const STATE = {
         object: null,
         isFile: false,
       },
+      previewModal: {
+        show: false,
+        files: [],
+        activeFile: null,
+      },
       attachConfig: {},
+    },
+    inviteModal: {
+      show: false,
+      users: [],
     },
   }
 };
