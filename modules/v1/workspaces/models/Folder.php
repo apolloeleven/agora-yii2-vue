@@ -72,13 +72,13 @@ class Folder extends ActiveRecord
                 'class' => NestedSetsBehavior::class,
                 'treeAttribute' => 'tree',
             ],
-            [
-                'class' => ActivityBehavior::class,
-                'workspaceIdAttribute' => 'workspace_id',
-                'tableNameAttribute' => TimelinePost::tableName(),
-                'contentIdAttribute' => 'id',
-                'descriptionAttribute' => 'name',
-            ]
+//            [
+//                'class' => ActivityBehavior::class,
+//                'workspaceIdAttribute' => 'workspace_id',
+//                'tableNameAttribute' => TimelinePost::tableName(),
+//                'contentIdAttribute' => 'id',
+//                'descriptionAttribute' => 'name',
+//            ]
         ]);
     }
 
