@@ -2,14 +2,14 @@
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal modal-class="workspace-invite" id="invite-modal" :visible="showModal" ref="inviteModal"
              :title='$t(`Invite members`)' @hidden="onHideModal" @ok.prevent="handleSubmit(onSubmit)"
-             :ok-title="$t('Submit')" :ok-disabled="!isSelectedUser && !isSelectedCheckbox" ok-only scrollable>
+             :ok-title="$t('Submit')" :ok-disabled="!isSelectedUsers && !isSelectedCheckbox" ok-only scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
         <div class="p-2">
           <b-form-input
             :disabled="isSelectedCheckbox" v-model="usersFilterKeyword" :placeholder="$t('Type to search user')">
           </b-form-input>
         </div>
-        <b-card-body class="pb-0" v-if="isSelectedUser">
+        <b-card-body class="pb-0" v-if="isSelectedUsers">
           <b-row>
             <b-col v-for="user in selectedUsers" class="col-2 pl-0 pr-0 text-center">
               <span class="close-button hover-pointer" @click="onRemoveClick(user)">&times;</span>
@@ -19,7 +19,7 @@
             </b-col>
           </b-row>
         </b-card-body>
-        <b-card-body class="pl-0" v-if="usersFilterKeyword && !isSelectedCheckbox && noFoundUsers">
+        <b-card-body class="pl-0" v-if="usersFilterKeyword && !isSelectedCheckbox && isFilteredUsers">
           <b-media @click="onUserClick(user)" class="user hover-pointer" v-for="(user, index) in filteredUsers"
                    :key="`workspace-users-${index}`">
             <template v-slot:aside>
@@ -28,7 +28,7 @@
             <h5 class="mt-0">{{ user.displayName }}</h5>
           </b-media>
         </b-card-body>
-        <NoDataAvailable v-if="usersFilterKeyword && !noFoundUsers"/>
+        <NoDataAvailable v-if="usersFilterKeyword && !isFilteredUsers"/>
         <input-widget class=" mt-2" :model="model" attribute="allUser" type="checkbox" @change="onCheckboxClick"/>
       </b-form>
     </b-modal>
@@ -58,13 +58,13 @@ export default {
       showModal: state => state.view.inviteModal.show,
       users: state => state.view.inviteModal.users,
     }),
-    isSelectedUser() {
+    isSelectedUsers() {
       return Object.keys(this.selectedUsers).length > 0;
     },
     isSelectedCheckbox() {
       return this.model.allUser.length > 0
     },
-    noFoundUsers() {
+    isFilteredUsers() {
       return this.filteredUsers.length > 0
     },
     filteredUsers() {
@@ -88,7 +88,7 @@ export default {
       this.model = new WorkspaceInviteModel();
     },
     async onSubmit() {
-      if (this.isSelectedUser) {
+      if (this.isSelectedUsers) {
         this.model.selectedUsers = Object.keys(this.selectedUsers)
       }
       if (this.model.allUser.length > 0) {
