@@ -4,7 +4,7 @@
   </div>
   <div v-else class="workspace-users">
     <b-card class="partial-shadow border-0 rounded-0">
-      <no-data-available v-if="users.length === 0" height="100"/>
+      <no-data-available v-if="pagination.getData().length === 0" height="100"/>
       <table class="table" v-else>
         <tr>
           <td class="title pl-5 border-0">
@@ -14,7 +14,7 @@
             #Roles
           </td>
         </tr>
-        <tr v-for="(user,index) in users" v-bind:key="user.id">
+        <tr v-for="(user,index) in pagination.getData()" v-bind:key="user.id">
           <td :class="{'border-top-0': index === 0}" style="width: 60%">
             <b-media class="pb-3 mt-3">
               <template #aside>
@@ -25,12 +25,26 @@
             </b-media>
           </td>
           <td class="text-center align-middle role-font" :class="{'border-top-0': index === 0}">
-          <span v-for="role in user.roles" :class="roleClasses[role] || 'user-role'">
+          <span v-for="role in user.roles" :class="roleClasses[role] ? roleClasses[role] : 'default-user'">
               #{{ role }}
           </span>
           </td>
         </tr>
       </table>
+      <div class="my-4" v-if="!pagination.hasOnePage()">
+        <b-pagination
+          v-model="pagination.currentPage"
+          :total-rows="pagination.totalRows"
+          :per-page="pagination.perPage"
+          first-number
+          pills
+        >
+          <template #page="{ page, active }">
+            <b v-if="active">{{ page }}</b>
+            <i v-else>{{ page }}</i>
+          </template>
+        </b-pagination>
+      </div>
     </b-card>
   </div>
 </template>
@@ -39,6 +53,7 @@
 import httpService from "@/core/services/httpService";
 import ContentSpinner from "@/core/components/ContentSpinner";
 import NoDataAvailable from "@/core/components/NoDataAvailable";
+import Pagination from "./Pagination"
 
 export default {
   name: "WorkspaceUsers",
@@ -52,6 +67,12 @@ export default {
         'workspaceAdmin': 'role-workspace-admin',
         'user': 'role-user',
       },
+      pagination: null
+    }
+  },
+  watch: {
+    ['pagination.currentPage']() {
+      this.pagination.selectData()
     }
   },
   async beforeMount() {
@@ -59,6 +80,7 @@ export default {
     let {success, body} = await httpService.get('v1/workspaces/workspace/get-users?id=' + workspaceId)
     if (success) {
       this.users = body
+      this.pagination = new Pagination(this.users)
     }
     this.loading = false;
   },
@@ -66,6 +88,11 @@ export default {
 </script>
 
 <style scoped>
+
+.pagination {
+  display: flex;
+  justify-content: center;
+}
 
 .workspace-users {
   width: 680px;
@@ -92,6 +119,10 @@ export default {
 
 .role-user {
   color: #58a05e;
+}
+
+.default-user {
+  color: #8d8f92;
 }
 
 .roles {
