@@ -4,7 +4,8 @@
              :title='$t(`Invite members`)' @hidden="onHideModal" @ok.prevent="handleSubmit(onSubmit)"
              :ok-title="$t('Submit')" :ok-disabled="!isSelectedUsers && !isSelectedCheckbox" ok-only scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
-        <div class="p-2">
+        <div class="pb-2">
+          <label>{{ $t('Invites') }}</label>
           <b-form-input
             :disabled="isSelectedCheckbox" v-model="usersFilterKeyword" :placeholder="$t('Type to search user')">
           </b-form-input>
