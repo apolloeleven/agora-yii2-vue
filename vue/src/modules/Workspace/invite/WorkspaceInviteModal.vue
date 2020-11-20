@@ -2,12 +2,34 @@
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal modal-class="workspace-invite" id="invite-modal" :visible="showModal" ref="inviteModal"
              :title='$t(`Invite members`)' @hidden="onHideModal" @ok.prevent="handleSubmit(onSubmit)"
-             :ok-title="$t('Submit')" :ok-disabled="!selected" ok-only scrollable>
+             :ok-title="$t('Submit')" :ok-disabled="!isSelectedUser && !isSelectedCheckbox" ok-only scrollable>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
-        <input-widget :model="model" :disabled="isDisabled" attribute="selectedUsers" type="multiselect"
-                      :multiselect-options="userOptions" :placeholder="$t('Add more...')">
-        </input-widget>
-        <input-widget :model="model" attribute="allUser" type="checkbox" @change="onCheckboxClick"/>
+        <div class="p-2">
+          <b-form-input
+            :disabled="isSelectedCheckbox" v-model="usersFilterKeyword" :placeholder="$t('Type to search user')">
+          </b-form-input>
+        </div>
+        <b-card-body class="pb-0" v-if="isSelectedUser">
+          <b-row>
+            <b-col v-for="user in selectedUsers" class="col-2 pl-0 pr-0 text-center">
+              <span class="close-button hover-pointer" @click="onRemoveClick(user)">&times;</span>
+              <b-img rounded="circle" :src="user.image_url || '/assets/img/avatar.svg'" height="42" width="42"/>
+              <h6 class="mb-0 user-name">{{ user.first_name }}</h6>
+              <h6 class="mt-0 user-name">{{ user.last_name }}</h6>
+            </b-col>
+          </b-row>
+        </b-card-body>
+        <b-card-body class="pl-0" v-if="usersFilterKeyword && !isSelectedCheckbox && noFindUsers">
+          <b-media @click="onUserClick(user)" class="user hover-pointer" v-for="(user, index) in filteredUsers"
+                   :key="`workspace-users-${index}`">
+            <template v-slot:aside>
+              <b-img rounded="circle" :src="user.image_url || '/assets/img/avatar.svg'" height="30" width="30"/>
+            </template>
+            <h5 class="mt-0">{{ user.displayName }}</h5>
+          </b-media>
+        </b-card-body>
+        <NoDataAvailable v-if="usersFilterKeyword && !noFindUsers"/>
+        <input-widget class=" mt-2" :model="model" attribute="allUser" type="checkbox" @change="onCheckboxClick"/>
       </b-form>
     </b-modal>
   </ValidationObserver>
@@ -17,15 +39,18 @@
 import {createNamespacedHelpers} from "vuex";
 import InputWidget from "../../../core/components/input-widget/InputWidget";
 import WorkspaceInviteModel from "./WorkspaceInviteModel";
+import NoDataAvailable from "../../../core/components/NoDataAvailable";
 
 const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace')
 export default {
   name: "WorkspaceInviteModal",
-  components: {InputWidget},
+  components: {NoDataAvailable, InputWidget},
   data() {
     return {
       model: new WorkspaceInviteModel(),
       isDisabled: false,
+      usersFilterKeyword: '',
+      selectedUsers: {},
     }
   },
   computed: {
@@ -40,20 +65,37 @@ export default {
         img: u.image_url ? u.image_url : '/assets/img/avatar.svg'
       }))
     },
-    selected() {
-      return this.model.allUser.length > 0 || this.model.selectedUsers.length > 0;
+    isSelectedUser() {
+      return Object.keys(this.selectedUsers).length > 0;
     },
+    isSelectedCheckbox() {
+      return this.model.allUser.length > 0
+    },
+    noFindUsers() {
+      return this.filteredUsers.length > 0
+    },
+    filteredUsers() {
+      if (!this.usersFilterKeyword || this.isSelectedCheckbox) {
+        return [];
+      }
+      const keyword = this.usersFilterKeyword.toLowerCase();
+      return this.users.filter(c => {
+        return c.email.toLowerCase().includes(keyword) || c.displayName.toLowerCase().includes(keyword)
+      });
+    }
   },
   methods: {
     ...mapWorkspaceActions(['hideInviteModal', 'inviteUsers']),
     onHideModal() {
       this.hideInviteModal();
       this.isDisabled = false;
+      this.selectedUsers = {};
+      this.usersFilterKeyword = '';
       this.model = new WorkspaceInviteModel();
     },
     async onSubmit() {
-      if (this.model.selectedUsers.length > 0) {
-        this.model.selectedUsers = this.model.selectedUsers.map(s => s.value)
+      if (this.isSelectedUser) {
+        this.model.selectedUsers = Object.keys(this.selectedUsers)
       }
       if (this.model.allUser.length > 0) {
         this.model.allUser = this.model.allUser.map(a => a.id)
@@ -69,13 +111,39 @@ export default {
     },
     onCheckboxClick() {
       this.isDisabled = !this.isDisabled;
-      this.model.selectedUsers = [];
+      this.selectedUsers = {};
+      this.usersFilterKeyword = '';
       this.model.allUser = this.isDisabled ? this.users : [];
     },
+    onUserClick(user) {
+      this.selectedUsers = {
+        ...this.selectedUsers,
+        [user.id]: user
+      };
+    },
+    onRemoveClick(user) {
+      delete this.selectedUsers[user.id];
+      this.selectedUsers = {...this.selectedUsers};
+    }
   },
 }
 </script>
 
 <style lang="scss" scoped>
+@import '../../../core/scss/variables';
 
+.user {
+  padding: 0.5rem 1rem;
+}
+
+.user-name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.close-button {
+  position: absolute;
+  top: -5px;
+  right: 10px;
+}
 </style>
