@@ -71,12 +71,10 @@ export default {
       if (!this.usersFilterKeyword || this.isSelectedCheckbox) {
         return [];
       }
-      console.log()
       const keyword = this.usersFilterKeyword.toLowerCase();
-      return this.users.filter(c =>
-        (c.email.toLowerCase().includes(keyword) ||
-          c.displayName.toLowerCase().includes(keyword)) &&
-        !Object.keys(this.selectedUsers).includes(c.id.toString())
+      return this.users.filter(u =>
+        u.displayName.toLowerCase().includes(keyword) &&
+        !Object.keys(this.selectedUsers).includes(u.id.toString())
       );
     }
   },
