@@ -21,6 +21,7 @@ import WorkspaceFiles from "@/modules/Workspace/view/files/WorkspaceFiles";
 import WorkspaceArticles from "@/modules/Workspace/view/articles/WorkspaceArticles";
 import WorkspaceAbout from "@/modules/Workspace/view/about/WorkspaceAbout";
 import ArticleView from "@/modules/Workspace/view/articles/ArticleView";
+import WorkspaceUsers from "@/modules/Workspace/view/users/WorkspaceUsers";
 
 Vue.use(Router);
 
@@ -88,6 +89,7 @@ const router = new Router({
             {path: 'articles/new', name: 'workspace.articles.view_create', component: ArticleView},
             {path: 'articles/:articleId', name: 'workspace.articles.view_update', component: ArticleView},
             {path: 'about', name: 'workspace.about', component: WorkspaceAbout},
+            {path: 'users', name: 'workspace.users', component: WorkspaceUsers}
           ]
         },
       ]
