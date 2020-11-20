@@ -19,7 +19,7 @@
             </b-col>
           </b-row>
         </b-card-body>
-        <b-card-body class="pl-0" v-if="usersFilterKeyword && !isSelectedCheckbox && noFindUsers">
+        <b-card-body class="pl-0" v-if="usersFilterKeyword && !isSelectedCheckbox && noFoundUsers">
           <b-media @click="onUserClick(user)" class="user hover-pointer" v-for="(user, index) in filteredUsers"
                    :key="`workspace-users-${index}`">
             <template v-slot:aside>
@@ -28,7 +28,7 @@
             <h5 class="mt-0">{{ user.displayName }}</h5>
           </b-media>
         </b-card-body>
-        <NoDataAvailable v-if="usersFilterKeyword && !noFindUsers"/>
+        <NoDataAvailable v-if="usersFilterKeyword && !noFoundUsers"/>
         <input-widget class=" mt-2" :model="model" attribute="allUser" type="checkbox" @change="onCheckboxClick"/>
       </b-form>
     </b-modal>
@@ -58,30 +58,26 @@ export default {
       showModal: state => state.view.inviteModal.show,
       users: state => state.view.inviteModal.users,
     }),
-    userOptions() {
-      return this.users.map(u => ({
-        text: u.displayName,
-        value: u.id,
-        img: u.image_url ? u.image_url : '/assets/img/avatar.svg'
-      }))
-    },
     isSelectedUser() {
       return Object.keys(this.selectedUsers).length > 0;
     },
     isSelectedCheckbox() {
       return this.model.allUser.length > 0
     },
-    noFindUsers() {
+    noFoundUsers() {
       return this.filteredUsers.length > 0
     },
     filteredUsers() {
       if (!this.usersFilterKeyword || this.isSelectedCheckbox) {
         return [];
       }
+      console.log()
       const keyword = this.usersFilterKeyword.toLowerCase();
-      return this.users.filter(c => {
-        return c.email.toLowerCase().includes(keyword) || c.displayName.toLowerCase().includes(keyword)
-      });
+      return this.users.filter(c =>
+        (c.email.toLowerCase().includes(keyword) ||
+          c.displayName.toLowerCase().includes(keyword)) &&
+        !Object.keys(this.selectedUsers).includes(c.id.toString())
+      );
     }
   },
   methods: {
