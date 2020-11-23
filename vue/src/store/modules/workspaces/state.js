@@ -47,6 +47,10 @@ const STATE = {
       },
       attachConfig: {},
     },
+    inviteModal: {
+      show: false,
+      users: [],
+    },
   }
 };
 

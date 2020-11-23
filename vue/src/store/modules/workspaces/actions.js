@@ -12,6 +12,7 @@ import {
   DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
   FOLDER_DELETED,
+  GET_ACTIVE_USERS,
   GET_ALL_FOLDERS,
   GET_ARTICLE,
   GET_ARTICLES,
@@ -23,6 +24,7 @@ import {
   GET_WORKSPACES,
   HIDE_ARTICLE_MODAL,
   HIDE_FOLDER_MODAL,
+  HIDE_INVITE_MODAL,
   HIDE_PREVIEW_MODAL,
   HIDE_TIMELINE_MODAL,
   HIDE_WORKSPACE_MODAL,
@@ -30,6 +32,7 @@ import {
   REMOVE_ARTICLE,
   SHOW_ARTICLE_MODAL,
   SHOW_FOLDER_MODAL,
+  SHOW_INVITE_MODAL,
   SHOW_PREVIEW_MODAL,
   SHOW_TIMELINE_MODAL,
   SHOW_WORKSPACE_MODAL,
@@ -49,6 +52,7 @@ const url = '/v1/workspaces/workspace';
 const articlesUrl = '/v1/workspaces/article';
 const timelineUrl = '/v1/workspaces/timeline';
 const folderUrl = '/v1/workspaces/folder';
+const userUrl = '/v1/users/user';
 const userLikeUrl = '/v1/workspaces/user-like';
 const userCommentUrl = '/v1/workspaces/user-comment';
 
@@ -630,4 +634,46 @@ export async function deleteComment({commit}, data) {
 
   }
   return res;
+}
+
+/**
+ * Open invite modal
+ *
+ * @param commit
+ * @param data
+ */
+export function showInviteModal({commit}) {
+  commit(SHOW_INVITE_MODAL)
+}
+
+/**
+ * Close invite modal
+ *
+ * @param commit
+ * @param data
+ */
+export function hideInviteModal({commit}) {
+  commit(HIDE_INVITE_MODAL)
+}
+
+/**
+ *
+ * @param commit
+ * @returns {Promise<unknown>}
+ */
+export async function getActiveUsers({commit}) {
+  const {success, body} = await httpService.get(`${userUrl}/active-users`)
+  if (success) {
+    commit(GET_ACTIVE_USERS, body)
+  }
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<void>}
+ */
+export async function inviteUsers({commit}, data) {
+  return await httpService.post(`${url}/invite-users`, data)
 }
