@@ -60,6 +60,7 @@ export default {
   methods: {
     ...mapWorkspaceActions(['hideTimelineModal', 'postOnTimeline', 'updateTimelinePost']),
     async onSubmit() {
+      this.displayUrl();
       this.model.workspace_id = this.$route.params.id;
 
       let res;
@@ -94,6 +95,22 @@ export default {
     hideModal() {
       this.hideTimelineModal();
       this.model = new TimelineFormModel()
+    },
+    displayUrl() {
+      let description = this.model.description;
+      if(description === '') {
+        return;
+      }
+      description = description.replace(/<[^>]*>/g, '\n'); //strip html tags and add \n for every tag
+      let descriptions = description.split(/[\n\s,]+/g);
+
+      const regex = /https?:\/\/[^\s]+/;
+      for(let i of descriptions) {
+        const match = regex.exec(i);
+        if(match !== null) {
+          this.model.description = this.model.description.replace(i, `<a href="${i}">${i}</a>`);
+        }
+      }
     }
   }
 }
