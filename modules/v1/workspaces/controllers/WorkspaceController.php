@@ -113,21 +113,21 @@ class WorkspaceController extends ActiveController
             return new ValidationException('Please, provide the workspace id');
         }
 
-        $roles = [];
-        $userIds = [];
-        $relations = UserWorkspaceResource::find()->byWorkspaceId($workspaceId)->all();
+        $users = [];
+        $userWorkspaces = UserWorkspaceResource::find()
+            ->byWorkspaceId($workspaceId)
+            ->with(['user'])
+            ->all();
 
-        foreach ($relations as $relation) {
-            if (!isset($roles[$relation->user_id])) {
-                $userIds[] = $relation->user_id;
+        foreach ($userWorkspaces as $userWorkspace) {
+            $id = $userWorkspace->user->id;
+
+            if (!isset($users[$id])) {
+                $users[$id] = $userWorkspace->user->toArray();
+                $users[$id]['roles'] = [$userWorkspace->role];
+            } else {
+                $users[$id]['roles'][] = $userWorkspace->role;
             }
-            $roles[$relation->user_id][] = $relation->role;
-        }
-
-        $users = UserResource::find()->where(['IN', 'id', $userIds])->all();
-        foreach ($users as &$user) {
-            $user = $user->toArray();
-            $user['roles'] = $roles[$user['id']];
         }
 
         return $users;
