@@ -1,6 +1,6 @@
 <template>
   <b-button @click="onDelete" class="delete-comment" variant="link">
-    <i class="far fa-trash-alt"/>
+    <i class="far fa-trash-alt text-danger"/>
   </b-button>
 </template>
 
@@ -33,7 +33,7 @@ export default {
 .delete-comment {
   position: absolute;
   right: 10px;
-  top: 10px;
+  top: 5px;
   color: #495057;
 }
 </style>

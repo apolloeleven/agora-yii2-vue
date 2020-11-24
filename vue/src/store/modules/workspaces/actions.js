@@ -10,7 +10,7 @@ import {
   CREATE_ARTICLE,
   DELETE_TIMELINE_CHILD_COMMENT,
   DELETE_TIMELINE_COMMENT,
-  DELETED_TIMELINE_POST,
+  DELETED_TIMELINE_POST, EDIT_TIMELINE_CHILD_COMMENT, EDIT_TIMELINE_COMMENT,
   FOLDER_DELETED,
   GET_ACTIVE_USERS,
   GET_ALL_FOLDERS,
@@ -632,6 +632,25 @@ export async function deleteComment({commit}, data) {
     }
     commit(DELETE_TIMELINE_COMMENT, data)
 
+  }
+  return res;
+}
+
+/**
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function editComment({commit}, data) {
+  data.created_at = data.created_at / 1000;
+  data.updated_at = data.updated_at / 1000;
+
+  const res = await httpService.put(`${userCommentUrl}/${data.id}`, data);
+  if (res.success) {
+    if (data.parent_id) {
+      commit(EDIT_TIMELINE_CHILD_COMMENT, data)
+    }
+    commit(EDIT_TIMELINE_COMMENT, data)
   }
   return res;
 }

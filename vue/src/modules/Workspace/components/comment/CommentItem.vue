@@ -5,7 +5,8 @@
     </template>
     <h6 class="mt-0 mb-0">
       <span style="color: #008BCA">{{ comment.createdBy.displayName }}</span>
-      &nbsp;<span class="comment-wrapper" v-html="comment.comment"/>&nbsp;
+      &nbsp;<i class="far fa-clock"/>
+      {{ comment.updated_at | relativeDate }}&nbsp;
       <b-button size="sm" pill variant="light" :pressed.sync="showComments">
         <i class="fas fa-reply fa-lg"/>
         <b-badge class="ml-2" pill variant="secondary">
@@ -14,9 +15,12 @@
       </b-button>
     </h6>
     <p class="mb-0">
-      <i class="far fa-clock"/>
-      {{ comment.updated_at | relativeDate }}
+      <span class="comment-wrapper" v-html="comment.comment" v-if="!showEditComments"/>
+      <EditComment v-else :comment="comment" :show-edit="showEditComments"/>
     </p>
+    <b-button class="edit-comment" variant="link" :pressed.sync="showEditComments">
+      <i class="fas fa-pencil-alt text-primary"/>
+    </b-button>
     <DeleteComment :comment="comment"/>
     <b-card-body v-if="showComments" class="pt-1 pb-1">
       <ChildCommentItem v-for="(com, index) in comment.childrenComments" :comment="com" :index="index"
@@ -30,17 +34,19 @@
 import AddComment from "./AddComment";
 import ChildCommentItem from "./ChildCommentItem";
 import DeleteComment from "./DeleteComment";
+import EditComment from "./EditComment";
 
 export default {
   name: "CommentItem",
-  components: {DeleteComment, ChildCommentItem, AddComment},
+  components: {EditComment, DeleteComment, ChildCommentItem, AddComment},
   props: {
     comment: Object,
     index: Number
   },
   data() {
     return {
-      showComments: false
+      showComments: false,
+      showEditComments: false,
     }
   },
 }
@@ -63,5 +69,12 @@ export default {
     width: 24px;
     margin: 0 1px;
   }
+}
+
+.edit-comment {
+  position: absolute;
+  right: 35px;
+  top: 5px;
+  color: #495057;
 }
 </style>

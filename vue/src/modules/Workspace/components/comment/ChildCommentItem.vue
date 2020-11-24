@@ -11,16 +11,18 @@
       <i class="far fa-clock"/>
       {{ comment.updated_at | relativeDate }}
     </p>
+    <EditComment :comment="comment"/>
     <DeleteComment :comment="comment"/>
   </b-media>
 </template>
 
 <script>
 import DeleteComment from "./DeleteComment";
+import EditComment from "./EditComment";
 
 export default {
   name: "ChildCommentItem",
-  components: {DeleteComment},
+  components: {EditComment, DeleteComment},
   props: {
     comment: Object,
     index: Number
