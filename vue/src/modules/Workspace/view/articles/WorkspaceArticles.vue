@@ -78,7 +78,7 @@ export default {
     },
     onCopyUrlClick(article) {
       article.showTooltip = true;
-      this.$copyText(`${window.location.origin}/workspace/${this.workspace.id}/articles/${article.id}`);
+      this.$copyText(`${window.location.origin}/workspace/${this.workspace.id}/articles/view/${article.id}`);
       setTimeout(() => {
         article.showTooltip = false
       }, 1500)
