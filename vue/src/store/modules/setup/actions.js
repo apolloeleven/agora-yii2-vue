@@ -113,7 +113,7 @@ export async function deleteDepartment({dispatch}, id) {
 
 export async function getInvitations({commit}) {
   commit(SET_INVITATIONS_LOADING);
-  const res = await httpService.get(`/v1/users/invitation?expand=createdBy,user.userDepartments.department.country&sort=status`);
+  const res = await httpService.get(`/v1/users/invitation?expand=createdBy,user.userDepartments.department.country&sort=-created_at`);
   commit(SET_INVITATIONS_LOADING);
   commit(SET_INVITATIONS, res.body);
 }
