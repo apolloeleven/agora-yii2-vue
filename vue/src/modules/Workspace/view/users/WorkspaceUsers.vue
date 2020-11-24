@@ -8,9 +8,9 @@
       <table class="table table-striped" v-else>
         <thead class="title text-center">
         <tr>
-          <th>Image</th>
-          <th>Name</th>
-          <th>Roles</th>
+          <th>{{ $t('Image') }}</th>
+          <th>{{ $t('Name') }}</th>
+          <th>{{ $t('Roles') }}</th>
         </tr>
         </thead>
         <tbody class="text-center">
