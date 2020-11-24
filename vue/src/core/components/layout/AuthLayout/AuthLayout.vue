@@ -62,12 +62,7 @@ export default {
     }
   }
 
-  & /deep/ .btn-secondary {
-    border-radius: 1.5rem;
-  }
-
   & /deep/ .btn-action {
-    border-radius: 0;
     float: right;
     width: 160px;
   }

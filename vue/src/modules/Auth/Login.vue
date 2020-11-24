@@ -17,7 +17,7 @@
               <input-widget ref="emailInputWidget" :model="model" attribute="email"/>
               <input-widget :model="model" attribute="password" type="password"/>
               <div class="d-flex align-items-center justify-content-between">
-                <button class="btn btn-primary rounded-0 mr-2">{{ $t('Login') }}</button>
+                <button class="btn btn-primary mr-2">{{ $t('Login') }}</button>
                 <router-link :to="{name: 'request-password-reset'}">{{ $t('Request new password') }}</router-link>
               </div>
             </div>
