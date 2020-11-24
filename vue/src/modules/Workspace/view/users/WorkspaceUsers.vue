@@ -24,7 +24,7 @@
           </td>
           <td class="align-middle py-2" style="width: 30%">
             <span v-for="(role,index) in user.roles" :style="{'color': roleColor[role] || roleColor['default']}"
-                  class='px-1' :key="index">#{{ role }}</span></td>
+                  class='px-1' :key="`${role}-${index}`">#{{ role }}</span></td>
         </tr>
         </tbody>
       </table>
