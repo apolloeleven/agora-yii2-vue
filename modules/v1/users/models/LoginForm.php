@@ -64,7 +64,7 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getActiveUser();
 
-            if (User::find()->byEmailOrUsername($this->email)->notActive()->one()) {
+            if (User::find()->byEmail($this->email)->notActive()->one()) {
                 $this->addError('password', Yii::t('app', 'Your account must be activated by admin'));
             }
 
@@ -102,7 +102,7 @@ class LoginForm extends Model
     {
         if ($this->_user === false) {
             $this->_user = User::find()
-                ->byEmailOrUsername($this->email)
+                ->byEmail($this->email)
                 ->active()
                 ->one();
         }
