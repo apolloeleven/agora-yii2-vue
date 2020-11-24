@@ -80,7 +80,7 @@
       </b-card-body>
     </b-card>
     <FolderForm/>
-    <FilePreviewModal/>
+    <FilePreviewModal @onDownloadClick="onDownloadClick"/>
   </div>
 </template>
 

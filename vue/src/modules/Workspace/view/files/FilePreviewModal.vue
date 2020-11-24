@@ -1,6 +1,13 @@
 <template>
-  <b-modal v-if="fileIndex" modal-class="file-preview" :visible="previewModal.show" size="lg" :title="fileIndex.name"
+  <b-modal v-if="fileIndex" modal-class="file-preview" :visible="previewModal.show" size="lg"
            ref="attachmentModal" id="file-dialog" scrollable hide-footer @hidden="hidePreviewModal">
+    <template #modal-header>
+      <h5 class="modal-title align-self-center">{{ fileIndex.name }}</h5>
+      <b-button @click="onDownload(fileIndex)" variant="outline-primary">
+        <i class="fas fa-download"/>
+        {{ $t('Download') }}
+      </b-button>
+    </template>
     <div class="bg-light text-right bg-secondary shadow-sm py-2 px-3">
       <div class="attachment-preview-control">
         <b-button variant="outline-info" @click="prev">
@@ -87,6 +94,9 @@ export default {
       while (i--) {
         media[i].pause();
       }
+    },
+    onDownload(item) {
+      this.$emit('onDownloadClick', item)
     },
   },
 }
