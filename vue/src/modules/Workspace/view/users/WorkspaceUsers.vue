@@ -20,7 +20,7 @@
                    :src="user.image_url ? user.image_url : '/assets/img/avatar.svg'"></b-img>
           </td>
           <td class="align-middle py-1 text-dark font-weight-bold">
-            {{ user['display_name'] }}
+            {{ user.display_name }}
           </td>
           <td class="align-middle py-2" style="width: 30%">
             <span v-for="(role,index) in user.roles" :style="{'color': roleColor[role] || roleColor['default']}"
