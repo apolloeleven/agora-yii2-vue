@@ -1,6 +1,6 @@
 <template>
   <b-button @click="onDelete" class="delete-comment" variant="link">
-    <i class="far fa-trash-alt"/>
+    <i class="far fa-trash-alt text-danger"/>
   </b-button>
 </template>
 
