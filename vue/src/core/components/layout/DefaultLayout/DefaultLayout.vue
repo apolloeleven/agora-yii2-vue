@@ -10,7 +10,6 @@
     </div>
     <employee-form-modal/>
     <WorkspaceForm/>
-    <ArticleForm/>
     <TimelineForm/>
     <TimelineShare/>
   </div>
@@ -26,7 +25,6 @@ import MenuItem from "../../sidebar/MenuItem";
 import EmployeeFormModal from "@/modules/setup/employees/EmployeeFormModal";
 import TimelineForm from "@/modules/Workspace/view/timeline/TimelineForm";
 import TimelineShare from "@/modules/Workspace/view/timeline/TimelineShare";
-import ArticleForm from "@/modules/Workspace/view/articles/ArticleForm";
 import i18n from "@/shared/i18n";
 
 const {mapActions: userMapActions} = createNamespacedHelpers('user');
@@ -35,7 +33,6 @@ const {mapState: mapStateWorkspace, mapActions: mapActionsWorkspace} = createNam
 export default {
   name: "DefaultLayout",
   components: {
-    ArticleForm,
     TimelineShare,
     TimelineForm,
     EmployeeFormModal,

@@ -6,7 +6,7 @@
     <div class="card">
       <div class="card-header d-flex align-items-center">
         <h5 class="mb-0">{{ articles.length }} {{ $t('article(s)') }}</h5>
-        <b-button :to="{name: 'workspace.articles.view_create'}" size="sm" variant="primary" class="ml-auto">
+        <b-button :to="{name: 'workspace.articles.create'}" size="sm" variant="primary" class="ml-auto">
           <i class="fas fa-plus-circle"/>
           {{ $t('Create Article') }}
         </b-button>
@@ -17,7 +17,7 @@
              :key="`article-item-${article.id}`" class="p-3 d-flex align-items-center">
           <div>
             <router-link class="d-inline-block"
-                         :to="{name: 'workspace.articles.view_update', params: {articleId: article.id}}">
+                         :to="{name: 'workspace.articles.view', params: {articleId: article.id}}">
               <h5 class="mb-0">{{ article.title }}</h5>
             </router-link>
             <small class="mt-2 text-muted d-block">
@@ -35,12 +35,15 @@
                        :target="`copy-tooltip-${article.id}`" :title="$t('Copied!')" placement="auto"></b-tooltip>
             <i :id="`copy-tooltip-${article.id}`" class="mr-3 far fa-copy text-primary hover-pointer"
                @click="onCopyUrlClick(article)"></i>
+            <router-link class="d-inline-block"
+                         :to="{name: 'workspace.articles.update', params: {articleId: article.id}}">
+              <i class="mr-3 fas fa-pencil-alt text-primary hover-pointer"/>
+            </router-link>
             <i class="far fa-trash-alt text-danger hover-pointer" @click="onRemoveClicked(article)"></i>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -88,8 +91,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .workspace-articles {
-    width: 680px;
-    margin: 0 auto;
-  }
+.workspace-articles {
+  width: 680px;
+  margin: 0 auto;
+}
 </style>
