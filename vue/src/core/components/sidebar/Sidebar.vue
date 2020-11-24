@@ -1,16 +1,23 @@
 <template>
   <div class="menu">
+    <div class="sidebar-header">
+      <img class="product-logo" src="/assets/img/product_logo.png"/>
+      <span class="product-name">Agora Intranet</span>
+    </div>
     <nav>
       <ul>
         <sidebar-item v-for="menuItem in menuItems"
                       :to="menuItem.path || false"
-                      :name="menuItem.text"
+                      :name="menuItem.name"
+                      :text="menuItem.text"
                       :is-group="menuItem.isGroup"
                       :icon="menuItem.icon"
                       :image="menuItem.image"
                       :link-options="menuItem.linkOptions"
                       :badge="menuItem.badge"
                       :badge-classes="menuItem.badgeClasses"
+                      :button-text="menuItem.buttonText"
+                      :on-click="menuItem.onClick"
                       :children="menuItem.children"
                       :key="menuItem.path"
         ></sidebar-item>
@@ -30,7 +37,6 @@ import {createNamespacedHelpers, mapGetters, mapActions} from 'vuex';
 import SidebarItem from './SidebarItem'
 import MenuService from "./MenuService";
 import MenuItem from "./MenuItem";
-import FavouritesService from "../../../modules/Workspace/components/AddToFavourites/FavouritesService";
 
 const {mapState: mapStateUser, mapActions: mapUserActions} = createNamespacedHelpers('user');
 
@@ -50,8 +56,6 @@ export default {
       weight: 1000,
       icon: 'far fa-star'
     }));
-
-    FavouritesService.readFromStorage();
   },
   methods: {
     ...mapActions(['toggleMenuCollapse']),

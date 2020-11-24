@@ -47,6 +47,9 @@ class UserResource extends User
             'displayName' => function () {
                 return $this->getDisplayName();
             },
+            'image_url' => function () {
+                return $this->getImageUrl();
+            },
             'access_token',
             'email',
             'status' => function () {

@@ -12,11 +12,15 @@ import Setup from "@/modules/setup/Setup";
 import CountryList from "@/modules/setup/countries/CountryList";
 import UserInvitations from "@/modules/setup/invitations/UserInvitations";
 import Profile from "@/modules/User/Profile";
-import Workspace from "@/modules/Workspace/workspace/Workspace";
-import WorkspaceView from "@/modules/Workspace/workspace/WorkspaceView";
-import ArticleView from "@/modules/Workspace/article/ArticleView";
+import Workspace from "@/modules/Workspace/Workspace";
+import WorkspaceView from "@/modules/Workspace/WorkspaceView";
 import EmployeeList from "@/modules/setup/employees/EmployeeList";
 import Orgchart from "../modules/Orgchart/Orgchart";
+import WorkspaceTimeline from "@/modules/Workspace/view/timeline/WorkspaceTimeline";
+import WorkspaceFiles from "@/modules/Workspace/view/files/WorkspaceFiles";
+import WorkspaceArticles from "@/modules/Workspace/view/articles/WorkspaceArticles";
+import WorkspaceAbout from "@/modules/Workspace/view/about/WorkspaceAbout";
+import ArticleView from "@/modules/Workspace/view/articles/ArticleView";
 
 Vue.use(Router);
 
@@ -71,8 +75,21 @@ const router = new Router({
         {path: '/profile', name: 'profile', component: Profile,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
         {path: '/workspace', name: 'workspace', component: Workspace},
-        {path: '/workspace/:id', name: 'workspace.view', component: WorkspaceView},
-        {path: '/article/:id', name: 'article.view', component: ArticleView},
+        {
+          path: '/workspace/:id',
+          name: 'workspace.view',
+          component: WorkspaceView,
+          redirect: 'workspace/:id/timeline',
+          meta: {requiresAuth: true},
+          children: [
+            {path: 'timeline', name: 'workspace.timeline', component: WorkspaceTimeline},
+            {path: 'files/:folderId', name: 'workspace.files', component: WorkspaceFiles},
+            {path: 'articles', name: 'workspace.articles', component: WorkspaceArticles},
+            {path: 'articles/new', name: 'workspace.articles.view_create', component: ArticleView},
+            {path: 'articles/:articleId', name: 'workspace.articles.view_update', component: ArticleView},
+            {path: 'about', name: 'workspace.about', component: WorkspaceAbout},
+          ]
+        },
       ]
     },
     {

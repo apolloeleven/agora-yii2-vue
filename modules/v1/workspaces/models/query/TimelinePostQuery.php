@@ -3,7 +3,6 @@
 namespace app\modules\v1\workspaces\models\query;
 
 use app\modules\v1\workspaces\models\TimelinePost;
-use app\modules\v1\workspaces\models\WorkspaceTimelinePost;
 use yii\db\ActiveQuery;
 
 
@@ -32,10 +31,13 @@ class TimelinePostQuery extends ActiveQuery
         return parent::one($db);
     }
 
-    public function byWorkspaceId($workspaceId)
+    /**
+     * @param $id
+     * @return TimelinePostQuery
+     * @author Saiat Kalbiev <kalbievich11@gmail.com>
+     */
+    public function byWorkspaceId($id)
     {
-        return $this
-            ->innerJoin(WorkspaceTimelinePost::tableName() . ' wt', 'wt.timeline_post_id=' . TimelinePost::tableName() . '.id')
-            ->andWhere(['wt.workspace_id' => $workspaceId]);
+        return $this->andWhere([TimelinePost::tableName() . '.workspace_id' => $id]);
     }
 }
