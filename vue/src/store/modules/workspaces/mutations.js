@@ -431,7 +431,7 @@ export default {
   [ADD_TIMELINE_CHILD_COMMENT](state, data) {
     state.view.timeline.data.filter(t => t.id === data.parent.timeline_post_id)
       .forEach(t => t.timelineComments.filter(tc => tc.id === data.parent_id)
-        .forEach(tc => tc.childrenComments.unshift(data)));
+        .forEach(tc => tc.childrenComments.push(data)));
   },
   /**
    *

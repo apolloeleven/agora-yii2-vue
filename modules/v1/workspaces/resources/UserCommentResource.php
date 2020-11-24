@@ -59,6 +59,6 @@ class UserCommentResource extends UserComment
      */
     public function getChildrenComments()
     {
-        return $this->hasMany(UserCommentResource::class, ['parent_id' => 'id'])->orderBy('created_at DESC');
+        return $this->hasMany(UserCommentResource::class, ['parent_id' => 'id']);
     }
 }
