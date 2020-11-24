@@ -12,7 +12,7 @@
 <script>
 import {createNamespacedHelpers} from "vuex";
 
-const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace')
+const {mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace')
 
 export default {
   name: "EditComment",
@@ -23,7 +23,7 @@ export default {
   methods: {
     ...mapWorkspaceActions(['editComment']),
     async onEdit() {
-      if (this.comment.comment === '') {
+      if (this.comment.comment.replace(/\s/g, '') === '') {
         return this.$toast(this.$t(`Comment can not be blank`), 'danger');
       }
       const {success} = await this.editComment(this.comment);

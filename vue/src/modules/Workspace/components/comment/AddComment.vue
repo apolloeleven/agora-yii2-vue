@@ -6,7 +6,8 @@
       </template>
       <b-form @submit.prevent="onAdd">
         <b-input-group>
-          <b-form-textarea v-model="model.comment" :placeholder="parent_id ? $t('Write a replay') : $t('Leave comment')"/>
+          <b-form-textarea v-model="model.comment"
+                           :placeholder="parent_id ? $t('Write a replay') : $t('Leave comment')"/>
           <b-input-group-append>
             <b-button @click="onAdd" variant="info">{{ $t('Comment') }}</b-button>
           </b-input-group-append>
@@ -37,17 +38,18 @@ export default {
   methods: {
     ...mapWorkspaceActions(['addComment']),
     async onAdd() {
-      if (this.model.comment) {
-        this.model.article_id = this.article_id;
-        this.model.parent_id = this.parent_id;
-        this.model.timeline_post_id = this.timeline_id;
-
-        const {success} = await this.addComment(this.model);
-        if (!success) {
-          this.$toast(this.$t(`This comment not saved`), 'danger');
-        }
-        this.model = new AddCommentModel();
+      if (this.model.comment.replace(/\s/g, '') === '') {
+        return this.$toast(this.$t(`Comment can not be blank`), 'danger');
       }
+      this.model.article_id = this.article_id;
+      this.model.parent_id = this.parent_id;
+      this.model.timeline_post_id = this.timeline_id;
+
+      const {success} = await this.addComment(this.model);
+      if (!success) {
+        this.$toast(this.$t(`This comment not saved`), 'danger');
+      }
+      this.model = new AddCommentModel();
     },
   },
 }
