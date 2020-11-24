@@ -11,6 +11,7 @@ import {
   DELETE_TIMELINE_CHILD_COMMENT,
   DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
+  EDIT_TIMELINE_COMMENT,
   FOLDER_DELETED,
   GET_ACTIVE_USERS,
   GET_ALL_FOLDERS,
@@ -414,6 +415,19 @@ export default {
    */
   [ADD_TIMELINE_COMMENT](state, data) {
     state.view.timeline.data.filter(t => t.id === data.timeline_post_id).forEach(t => t.timelineComments.unshift(data));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [EDIT_TIMELINE_COMMENT](state, data) {
+    state.view.timeline.data.filter(t => t.id === data.timeline_post_id)
+      .forEach(t => {
+        let index = t.timelineComments.findIndex(tc => tc.id === data.id)
+        t.timelineComments[index] = {...t.timelineComments[index], ...data};
+        t.timelineComments = [...t.timelineComments];
+      });
   },
   /**
    *

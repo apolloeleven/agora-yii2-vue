@@ -10,7 +10,9 @@ import {
   CREATE_ARTICLE,
   DELETE_TIMELINE_CHILD_COMMENT,
   DELETE_TIMELINE_COMMENT,
-  DELETED_TIMELINE_POST, EDIT_TIMELINE_CHILD_COMMENT, EDIT_TIMELINE_COMMENT,
+  DELETED_TIMELINE_POST,
+  EDIT_TIMELINE_CHILD_COMMENT,
+  EDIT_TIMELINE_COMMENT,
   FOLDER_DELETED,
   GET_ACTIVE_USERS,
   GET_ALL_FOLDERS,
@@ -637,25 +639,6 @@ export async function deleteComment({commit}, data) {
 }
 
 /**
- * @param commit
- * @param data
- * @returns {Promise<unknown>}
- */
-export async function editComment({commit}, data) {
-  data.created_at = data.created_at / 1000;
-  data.updated_at = data.updated_at / 1000;
-
-  const res = await httpService.put(`${userCommentUrl}/${data.id}`, data);
-  if (res.success) {
-    if (data.parent_id) {
-      commit(EDIT_TIMELINE_CHILD_COMMENT, data)
-    }
-    commit(EDIT_TIMELINE_COMMENT, data)
-  }
-  return res;
-}
-
-/**
  * Open invite modal
  *
  * @param commit
@@ -695,4 +678,23 @@ export async function getActiveUsers({commit}) {
  */
 export async function inviteUsers({commit}, data) {
   return await httpService.post(`${url}/invite-users`, data)
+}
+
+/**
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function editComment({commit}, data) {
+  data.created_at = data.created_at / 1000;
+  data.updated_at = data.updated_at / 1000;
+
+  const res = await httpService.put(`${userCommentUrl}/${data.id}`, data);
+  if (res.success) {
+    if (data.parent_id) {
+      commit(EDIT_TIMELINE_CHILD_COMMENT, res.body)
+    }
+    commit(EDIT_TIMELINE_COMMENT, res.body)
+  }
+  return res;
 }

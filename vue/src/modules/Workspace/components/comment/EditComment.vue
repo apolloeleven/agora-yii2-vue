@@ -24,7 +24,9 @@ export default {
     ...mapWorkspaceActions(['editComment']),
     async onEdit() {
       const {success} = await this.editComment(this.comment);
-      if (!success) {
+      if (success) {
+        this.$emit('updateComment');
+      }else {
         this.$toast(this.$t(`Unable to edit comment`), 'danger');
       }
     },

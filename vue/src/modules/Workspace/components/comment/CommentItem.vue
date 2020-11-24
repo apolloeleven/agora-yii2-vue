@@ -16,7 +16,7 @@
     </h6>
     <p class="mb-0">
       <span class="comment-wrapper" v-html="comment.comment" v-if="!showEditComments"/>
-      <EditComment v-else :comment="comment" :show-edit="showEditComments"/>
+      <EditComment v-else :comment="comment" :show-edit="showEditComments" @updateComment="updateComment"/>
     </p>
     <b-button class="edit-comment" variant="link" :pressed.sync="showEditComments">
       <i class="fas fa-pencil-alt text-primary"/>
@@ -48,6 +48,11 @@ export default {
       showComments: false,
       showEditComments: false,
     }
+  },
+  methods: {
+    updateComment() {
+      this.showEditComments = false;
+    },
   },
 }
 </script>

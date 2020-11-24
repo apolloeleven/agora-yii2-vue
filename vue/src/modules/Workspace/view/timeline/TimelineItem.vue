@@ -47,7 +47,7 @@
         <source :src="timeline.file_url">
       </video>
     </div>
-    <b-card-footer >
+    <b-card-footer>
       <LikeUnlikeButton class="mr-2" :item="timeline.userLikes" :liked="liked" @onLikeClicked="onLikeClicked"/>
       <b-button size="sm" pill variant="light" :pressed.sync="showComments">
         <i class="far fa-comments fa-lg"/>

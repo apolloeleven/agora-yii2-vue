@@ -27,7 +27,7 @@ const STATE = {
         loading: false,
         show: false,
         object: null,
-      }
+      },
     },
     folders: {
       loading: false,
