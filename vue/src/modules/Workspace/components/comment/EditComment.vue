@@ -1,6 +1,6 @@
 <template>
   <b-form @submit.prevent="onEdit" v-show="showEdit">
-    <b-input-group>
+    <b-input-group class="mt-2">
       <b-form-textarea v-model="comment.comment"/>
       <b-input-group-append>
         <b-button @click="onEdit" variant="info">{{ $t('Comment') }}</b-button>
@@ -23,10 +23,13 @@ export default {
   methods: {
     ...mapWorkspaceActions(['editComment']),
     async onEdit() {
+      if (this.comment.comment === '') {
+        return this.$toast(this.$t(`Comment can not be blank`), 'danger');
+      }
       const {success} = await this.editComment(this.comment);
       if (success) {
         this.$emit('updateComment');
-      }else {
+      } else {
         this.$toast(this.$t(`Unable to edit comment`), 'danger');
       }
     },

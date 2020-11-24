@@ -79,7 +79,7 @@ export default {
 .edit-comment {
   position: absolute;
   right: 35px;
-  top: 5px;
+  top: 0;
   color: #495057;
 }
 </style>

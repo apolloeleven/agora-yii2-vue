@@ -33,7 +33,7 @@ export default {
 .delete-comment {
   position: absolute;
   right: 10px;
-  top: 5px;
+  top: 0;
   color: #495057;
 }
 </style>

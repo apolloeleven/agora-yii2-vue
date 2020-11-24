@@ -11,6 +11,7 @@ import {
   DELETE_TIMELINE_CHILD_COMMENT,
   DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
+  EDIT_TIMELINE_CHILD_COMMENT,
   EDIT_TIMELINE_COMMENT,
   FOLDER_DELETED,
   GET_ACTIVE_USERS,
@@ -446,6 +447,19 @@ export default {
     state.view.timeline.data.filter(t => t.id === data.parent.timeline_post_id)
       .forEach(t => t.timelineComments.filter(tc => tc.id === data.parent_id)
         .forEach(tc => tc.childrenComments.push(data)));
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [EDIT_TIMELINE_CHILD_COMMENT](state, data) {
+    state.view.timeline.data.forEach(t => t.timelineComments.filter(tc => tc.id === data.parent_id)
+        .forEach(tc => {
+          let index = tc.childrenComments.findIndex(tc => tc.id === data.id)
+          tc.childrenComments[index] = {...tc.childrenComments[index], ...data};
+          tc.childrenComments = [...tc.childrenComments];
+        }));
   },
   /**
    *
