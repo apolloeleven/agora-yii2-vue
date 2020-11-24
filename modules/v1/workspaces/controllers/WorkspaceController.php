@@ -108,9 +108,9 @@ class WorkspaceController extends ActiveController
      */
     public function actionGetUsers()
     {
-        $workspaceId = Yii::$app->request->get('id') ?? false;
+        $workspaceId = Yii::$app->request->get('id');
         if (!$workspaceId) {
-            return new ValidationException('Please, provide the workspace id');
+            return new ValidationException(Yii::t('app', 'Please, provide the workspace id'));
         }
 
         $users = [];
