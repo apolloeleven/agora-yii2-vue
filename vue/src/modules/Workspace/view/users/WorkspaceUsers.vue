@@ -3,18 +3,11 @@
     <content-spinner show/>
   </div>
   <div v-else class="workspace-users">
-    <b-card class="rounded-0 border-0" style="box-shadow: 2px 2px 4px lightgrey;">
+    <b-card class="rounded-0 border-0">
       <no-data-available v-if="!users" height="100"/>
       <table class="table table-striped" v-else>
-        <thead class="title text-center">
-        <tr>
-          <th>{{ $t('Image') }}</th>
-          <th>{{ $t('Name') }}</th>
-          <th>{{ $t('Roles') }}</th>
-        </tr>
-        </thead>
         <tbody class="text-center">
-        <tr class="py-0" v-for="user in users" :key="user.id">
+        <tr v-for="user in users" :key="user.id">
           <td class="align-middle py-1" style="width: 20%">
             <b-img width="34" class="user-image rounded-circle mx-5"
                    :src="user.image_url ? user.image_url : '/assets/img/avatar.svg'"></b-img>
@@ -24,7 +17,7 @@
           </td>
           <td class="align-middle py-2" style="width: 30%">
             <span v-for="(role,index) in user.roles" :style="{'color': roleColor[role] || roleColor['default']}"
-                  class='px-1' :key="`${role}-${index}`">#{{ role }}</span></td>
+                  class='px-1' :key="`${role}-${index}`">{{ role }}</span></td>
         </tr>
         </tbody>
       </table>
@@ -75,10 +68,5 @@ export default {
   margin: 0 auto;
 }
 
-.title {
-  font-size: 1rem;
-  font-weight: bold;
-  color: #bab5b5;
-}
 
 </style>
