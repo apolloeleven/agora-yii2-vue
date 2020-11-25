@@ -29,7 +29,7 @@ class UserResource extends User
     const ROLE_ADMIN = 'admin';
     const ROLE_WORKSPACE_ADMIN = 'workspaceAdmin';
 
-    public $userDepartmentsData, $userWorkspacesData, $inlineUpdate;
+    public $userDepartmentsData, $userWorkspacesData;
 
     public function fields()
     {
@@ -65,9 +65,7 @@ class UserResource extends User
 
     public function rules()
     {
-        return ArrayHelper::merge(parent::rules(), [[
-            ['userDepartmentsData', 'userWorkspacesData'], 'safe']
-        ]);
+        return ArrayHelper::merge(parent::rules(), [[['userDepartmentsData', 'userWorkspacesData'], 'safe']]);
     }
 
     public function save($runValidation = true, $attributeNames = null)
