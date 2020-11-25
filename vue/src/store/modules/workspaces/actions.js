@@ -102,7 +102,7 @@ export async function createWorkspace({dispatch}, data) {
  * @param { Object } data
  * @returns {Promise<unknown>}
  */
-export async function updateWorkspace({dispatch}, data) {
+export async function updateWorkspace({dispatch, commit}, data) {
   const id = data.id;
   data = prepareData(data);
   let res;
@@ -115,6 +115,7 @@ export async function updateWorkspace({dispatch}, data) {
   }
   if (res.success) {
     dispatch('getWorkspaces');
+    commit(GET_CURRENT_WORKSPACE, {...data, ...res.body});
   }
   return res;
 }
