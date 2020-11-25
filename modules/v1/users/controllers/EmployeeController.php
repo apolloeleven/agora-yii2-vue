@@ -11,7 +11,6 @@ namespace app\modules\v1\users\controllers;
 use app\modules\v1\users\resources\UserDepartmentResource;
 use app\modules\v1\users\resources\UserResource;
 use app\rest\ActiveController;
-use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 
@@ -70,28 +69,5 @@ class EmployeeController extends ActiveController
         $data['userPositions'] = ArrayHelper::getColumn($positionOptions, 'position');
 
         return $data;
-    }
-
-    /**
-     * Update user status from inline
-     *
-     * @return array|mixed
-     */
-    public function actionUpdateStatus()
-    {
-        $request = Yii::$app->request;
-        $userId = $request->post('id');
-
-        $user = UserResource::find()->byId($userId)->one();
-
-        if (!$user) {
-            return $this->validationError(Yii::t('app', 'Unable to find user'), 422);
-        }
-
-        if (!$user->load($request->post(), '') || !$user->save()) {
-            return $this->validationError(Yii::t('app', 'Unable to update user'), 422);
-        }
-
-        return $this->response(null, 201);
     }
 }

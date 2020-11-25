@@ -66,7 +66,7 @@ class UserResource extends User
     public function rules()
     {
         return ArrayHelper::merge(parent::rules(), [[
-            ['userDepartmentsData', 'userWorkspacesData', 'inlineUpdate'], 'safe']
+            ['userDepartmentsData', 'userWorkspacesData'], 'safe']
         ]);
     }
 
@@ -78,11 +78,14 @@ class UserResource extends User
             if (!$parentSave) {
                 $transaction->rollBack();
             }
-            if (!$this->inlineUpdate) {
+            if (isset($this->userWorkspacesData)) {
                 $this->updateRoles($this->userWorkspacesData);
                 $this->updateUserWorkspaces($this->userWorkspacesData);
+            }
+            if (isset($this->userDepartmentsData)) {
                 $this->updateUserDepartments($this->userDepartmentsData);
             }
+
             $transaction->commit();
         } catch (\Exception $e) {
             $transaction->rollBack();

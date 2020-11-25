@@ -46,9 +46,5 @@ export async function deleteEmployee({commit}, data) {
 }
 
 export async function updateUserStatus({commit}, data) {
-  return httpService.put(`/v1/users/employee/update-status`, {
-    status: data.status ? INACTIVE_USER : ACTIVE_USER,
-    id: data.id,
-    inlineUpdate: true,
-  });
+  return httpService.put(`/v1/users/employee/${data.id}`, {status: data.status ? INACTIVE_USER : ACTIVE_USER});
 }
