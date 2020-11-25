@@ -7,7 +7,7 @@
         <div class="pb-2">
           <label>{{ $t('Invites') }}</label>
           <b-form-input
-            :disabled="isSelectedCheckbox" v-model="usersFilterKeyword" :placeholder="$t('Type to search user')">
+            :disabled="isSelectedCheckbox" v-model="keyword" :placeholder="$t('Type to search user')">
           </b-form-input>
         </div>
         <b-card-body class="pb-0" v-if="isSelectedUsers">
@@ -20,7 +20,7 @@
             </b-col>
           </b-row>
         </b-card-body>
-        <b-card-body class="pl-0" v-if="usersFilterKeyword && !isSelectedCheckbox && isFilteredUsers">
+        <b-card-body class="pl-0" v-if="keyword && !isSelectedCheckbox && isFilteredUsers">
           <b-media @click="onUserClick(user)" class="user hover-pointer" v-for="(user, index) in filteredUsers"
                    :key="`workspace-users-${index}`">
             <template v-slot:aside>
@@ -29,7 +29,7 @@
             <h5 class="mt-0">{{ user.displayName }}</h5>
           </b-media>
         </b-card-body>
-        <NoDataAvailable v-if="usersFilterKeyword && !isFilteredUsers"/>
+        <NoDataAvailable v-if="keyword && !isFilteredUsers"/>
         <input-widget class=" mt-2" :model="model" attribute="allUser" type="checkbox" @change="onCheckboxClick"/>
       </b-form>
     </b-modal>
@@ -50,7 +50,7 @@ export default {
     return {
       model: new WorkspaceInviteModel(),
       isDisabled: false,
-      usersFilterKeyword: '',
+      keyword: '',
       selectedUsers: {},
     }
   },
@@ -69,12 +69,11 @@ export default {
       return this.filteredUsers.length > 0
     },
     filteredUsers() {
-      if (!this.usersFilterKeyword || this.isSelectedCheckbox) {
+      if (!this.keyword || this.isSelectedCheckbox) {
         return [];
       }
-      const keyword = this.usersFilterKeyword.toLowerCase();
       return this.users.filter(u =>
-        u.displayName.toLowerCase().includes(keyword) &&
+        u.displayName.toLowerCase().includes(this.keyword.toLowerCase()) &&
         !Object.keys(this.selectedUsers).includes(u.id.toString())
       );
     }
@@ -85,7 +84,7 @@ export default {
       this.hideInviteModal();
       this.isDisabled = false;
       this.selectedUsers = {};
-      this.usersFilterKeyword = '';
+      this.keyword = '';
       this.model = new WorkspaceInviteModel();
     },
     async onSubmit() {
@@ -107,7 +106,7 @@ export default {
     onCheckboxClick() {
       this.isDisabled = !this.isDisabled;
       this.selectedUsers = {};
-      this.usersFilterKeyword = '';
+      this.keyword = '';
       this.model.allUser = this.isDisabled ? this.users : [];
     },
     onUserClick(user) {
