@@ -10,6 +10,7 @@
     </div>
     <div class="col-md-8 col-right">
       <div class="auth-right clearfix">
+        <content-spinner :show="loading" :text="$t('Please wait...')" class="h-100"/>
         <h3 class="auth-heading">{{ $t('Login to your account') }}</h3>
         <br>
         <form v-on:submit.prevent="onLoginClick">
@@ -33,20 +34,23 @@
 import auth from '../../core/services/authService';
 import LoginModel from "./LoginModel";
 import InputWidget from "../../core/components/input-widget/InputWidget";
+import ContentSpinner from "@/core/components/ContentSpinner";
 
 export default {
   name: "Login",
-  components: {InputWidget},
+  components: {InputWidget, ContentSpinner},
   data() {
     return {
+      loading: false,
       model: new LoginModel(),
     }
   },
   methods: {
     async onLoginClick() {
+      this.loading = true;
       this.model.resetErrors();
       let response = await auth.login(this.model);
-
+      this.loading = false;
       if (response.success) {
         if (auth.getRedirectTo()) {
           this.$router.push(auth.getRedirectTo());
