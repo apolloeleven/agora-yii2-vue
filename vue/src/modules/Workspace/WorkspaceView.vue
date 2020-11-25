@@ -30,6 +30,14 @@
                 <i class="fas fa-paper-plane mr-2"/>
                 {{ $t('Invite') }}
               </b-dropdown-item>
+              <b-dropdown-item @click="onEditClick">
+                <i class="fas fa-pen-alt mr-2"/>
+                {{ $t('Edit workspace') }}
+              </b-dropdown-item>
+              <b-dropdown-item @click="onDeleteClick">
+                <i class="fas fa-trash mr-2"/>
+                {{ $t('Delete workspace') }}
+              </b-dropdown-item>
             </b-nav-item-dropdown>
           </b-nav>
         </div>
@@ -217,6 +225,12 @@ export default {
     onInviteClick() {
       this.showInviteModal();
     },
+    onEditClick(){
+
+    },
+    onDeleteClick(){
+
+    }
   },
   async beforeMount() {
     await this.getCurrentWorkspace(this.$route.params.id);
