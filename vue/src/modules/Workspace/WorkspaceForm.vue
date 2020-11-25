@@ -1,7 +1,7 @@
 <template>
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal
-      :visible="showModal" id="workspace-form" ref="modal" size="lg"
+      :visible="showModal" id="workspace-form" ref="modal" size="lg" no-enforce-focus
       :title='modalWorkspace ? $t(`Update workspace "{workspace}"`,{workspace:model.name}) : $t(`Add New Workspace`)'
       @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-title="$t('Submit')"
       scrollable>
