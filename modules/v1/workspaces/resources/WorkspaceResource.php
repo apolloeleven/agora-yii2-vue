@@ -174,16 +174,21 @@ class WorkspaceResource extends Workspace
      */
     public function delete()
     {
-        if ($this->getFolders()->count() > 2){
-            throw new ValidationException(Yii::t('app', 'Can\'t delete workspace, because it has folders'));
-        }
-
         $timelinePosts = $this->getTimelinePosts()->all();
-        foreach ($timelinePosts as $timelinePost){
+        foreach ($timelinePosts as $timelinePost) {
             $timelinePost->delete();
         }
 
-        Folder::deleteAll(['workspace_id' => $this->id]);
+        $folder = $this->getFolders()
+            ->andWhere(['name' => 'Files'])
+            ->one();
+        $folder->deleteWithChildren();
+
+        $path = "/file-manager/{$this->id}";
+        $fullPath = Yii::getAlias('@storage' . $path);
+        if (is_dir($fullPath)) {
+            FileHelper::removeDirectory($fullPath);
+        }
 
         UserWorkspace::deleteAll(['workspace_id' => $this->id]);
         Article::deleteAll(['workspace_id' => $this->id]);
