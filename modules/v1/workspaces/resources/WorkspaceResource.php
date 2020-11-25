@@ -6,6 +6,8 @@ namespace app\modules\v1\workspaces\resources;
 
 use app\helpers\ModelHelper;
 use app\modules\v1\users\resources\UserResource;
+use app\modules\v1\workspaces\models\Article;
+use app\modules\v1\workspaces\models\Folder;
 use app\modules\v1\workspaces\models\UserWorkspace;
 use app\modules\v1\workspaces\models\Workspace;
 use app\rest\ValidationException;
@@ -172,10 +174,19 @@ class WorkspaceResource extends Workspace
      */
     public function delete()
     {
-        if ($this->getFolders()->count()) {
-            throw new ValidationException(Yii::t('app', 'You can\'t delete this workspace because it has folders'));
+        if ($this->getFolders()->count() > 2){
+            throw new ValidationException(Yii::t('app', 'Can\'t delete workspace, because it has folders'));
         }
+
+        $timelinePosts = $this->getTimelinePosts()->all();
+        foreach ($timelinePosts as $timelinePost){
+            $timelinePost->delete();
+        }
+
+        Folder::deleteAll(['workspace_id' => $this->id]);
+
         UserWorkspace::deleteAll(['workspace_id' => $this->id]);
+        Article::deleteAll(['workspace_id' => $this->id]);
         Workspace::deleteAll(['id' => $this->id]);
 
         return true;

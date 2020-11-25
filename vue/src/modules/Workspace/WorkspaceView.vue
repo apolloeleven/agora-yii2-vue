@@ -192,7 +192,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace', 'showInviteModal', 'getActiveUsers', 'showWorkspaceModal']),
+    ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace', 'showInviteModal', 'getActiveUsers', 'showWorkspaceModal', 'deleteWorkspace']),
     initBreadcrumbs() {
       this.breadcrumbs = [
         {text: this.$i18n.t('My Workspaces'), to: {name: 'workspace'}},
@@ -228,8 +228,17 @@ export default {
     onEditClick(){
       this.showWorkspaceModal(this.workspace);
     },
-    onDeleteClick(){
-
+    async onDeleteClick(){
+      let success = await this.$confirm(this.$i18n.t("If you delete this workspace all the timeline records and users will be removed from this workspace. Are you sure you want to continue?"));
+      if (success) {
+        let response = await this.deleteWorkspace(this.workspace);
+        if (response.success) {
+          this.$toast(this.$i18n.t("Workspace was successfully deleted"));
+          this.$router.push('/')
+        } else {
+          this.$toast(response.body.message, 'danger');
+        }
+      }
     }
   },
   async beforeMount() {
