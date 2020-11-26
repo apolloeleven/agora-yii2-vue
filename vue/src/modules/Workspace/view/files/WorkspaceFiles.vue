@@ -4,6 +4,7 @@
       <b-card-body>
         <div class="d-flex justify-content-between align-items-center mb-2">
           <b-breadcrumb :items="breadcrumb" class="d-none d-sm-flex mb-0"/>
+          <b-form-input class="search" v-model="keyword" :placeholder="$t('Type to search files')"/>
           <div v-if="!isTimelineFolder()">
             <div class="file-manager-btn-wrapper">
               <b-button variant="success" size="sm">
@@ -26,7 +27,7 @@
             </div>
           </div>
         </div>
-        <b-table :busy="loading" small striped hover :items="foldersAndFiles" no-local-sorting :fields="fields"
+        <b-table :busy="loading" small striped hover :items="filteredFoldersAndFiles" no-local-sorting :fields="fields"
                  @sort-changed="onSort" class="mb-0">
           <template v-slot:table-busy>
             <content-spinner show/>
@@ -102,6 +103,7 @@ export default {
     return {
       sortBy: null,
       sortDesc: null,
+      keyword: '',
     }
   },
   computed: {
@@ -124,6 +126,12 @@ export default {
     },
     selected() {
       return this.foldersAndFiles.filter(a => a.selected === '1')
+    },
+    filteredFoldersAndFiles() {
+      if (!this.keyword) {
+        return this.foldersAndFiles;
+      }
+      return this.foldersAndFiles.filter(c => c.name.toLowerCase().includes(this.keyword.toLowerCase()));
     },
   },
   watch: {
@@ -297,7 +305,7 @@ export default {
     position: relative;
     overflow: hidden;
     display: inline-block;
-    margin: 2px;
+    margin-left: 2px;
   }
 
   .file-name {
@@ -337,6 +345,10 @@ export default {
     button {
       margin-left: 10px;
     }
+  }
+
+  .search {
+    width: 25%;
   }
 }
 </style>
