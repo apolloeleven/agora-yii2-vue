@@ -174,15 +174,42 @@ class WorkspaceResource extends Workspace
      */
     public function delete()
     {
+        $dbTransaction = Yii::$app->db->beginTransaction();
+
         $timelinePosts = $this->getTimelinePosts()->all();
         foreach ($timelinePosts as $timelinePost) {
             $timelinePost->delete();
         }
+        if ($this->getTimelinePosts()->count()) {
+            $dbTransaction->rollBack();
+            throw new ValidationException(Yii::t('app', "Can't delete timeline posts"));
+        }
 
-        $folder = $this->getFolders()
-            ->andWhere(['name' => 'Files'])
-            ->one();
+        $folder = $this->getRootFolder()->one();
         $folder->deleteWithChildren();
+        if ($folder->getChildren()->count()) {
+            $dbTransaction->rollBack();
+            throw new ValidationException(Yii::t('app', "Can't delete workspace folders"));
+        }
+
+        UserWorkspace::deleteAll(['workspace_id' => $this->id]);
+        if (UserWorkspace::find()->where(['workspace_id' => $this->id])->count()) {
+            $dbTransaction->rollBack();
+            throw new ValidationException(Yii::t('app', "Can't delete workspace users"));
+        }
+
+        Article::deleteAll(['workspace_id' => $this->id]);
+        if (Article::find()->where(['workspace_id' => $this->id])->count()) {
+            $dbTransaction->rollBack();
+            throw new ValidationException(Yii::t('app', "Can't delete workspace articles"));
+        }
+
+        Workspace::deleteAll(['id' => $this->id]);
+        if (Workspace::find()->where(['id' => $this->id])->count()) {
+            $dbTransaction->rollBack();
+            throw new ValidationException(Yii::t('app', "Can't delete workspace"));
+        }
+
 
         $path = "/file-manager/{$this->id}";
         $fullPath = Yii::getAlias('@storage' . $path);
@@ -190,9 +217,7 @@ class WorkspaceResource extends Workspace
             FileHelper::removeDirectory($fullPath);
         }
 
-        UserWorkspace::deleteAll(['workspace_id' => $this->id]);
-        Article::deleteAll(['workspace_id' => $this->id]);
-        Workspace::deleteAll(['id' => $this->id]);
+        $dbTransaction->commit();
 
         return true;
     }
