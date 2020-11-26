@@ -713,3 +713,7 @@ export async function getPolls({commit}, workspace_id) {
   commit(TOGGLE_POLLS_LOADING)
   return res;
 }
+
+export async function createPoll({commit}, data) {
+  return await httpService.post(pollUrl, data);
+}

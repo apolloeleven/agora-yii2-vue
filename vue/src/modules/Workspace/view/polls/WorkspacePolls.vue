@@ -39,6 +39,7 @@ import PollsFormModel from "./PollsFormModel";
 import InputWidget from "@/core/components/input-widget/InputWidget";
 import AnswerModel from "./AnswerModel";
 import Vue from "vue";
+import {clone} from "lodash";
 
 const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 export default {
@@ -57,7 +58,7 @@ export default {
     }),
   },
   methods: {
-    ...mapWorkspaceActions(['getPolls']),
+    ...mapWorkspaceActions(['getPolls', 'createPoll']),
     onInputClick() {
       this.showInputs = true;
     },
@@ -68,7 +69,18 @@ export default {
       Vue.delete(this.model.answers, index);
     },
     async onSubmit() {
+      let data = clone(this.model);
+      data['workspace_id'] = this.$route.params.id;
+      data['answers'] = this.model.answers.filter(a => a.answer.replace(/\s/g, '') !== '').map(a => a.answer);
 
+      const {success, body} = await this.createPoll(data);
+      if (success) {
+        this.$toast(this.$t(`Poll Created successfully`));
+        this.showInputs = false;
+        this.model = new PollsFormModel();
+      } else {
+        console.log(body)
+      }
     },
   },
   mounted() {

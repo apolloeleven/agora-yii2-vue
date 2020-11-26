@@ -6,7 +6,11 @@ namespace app\modules\v1\workspaces\resources;
 
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\Poll;
+use app\rest\ValidationException;
+use Yii;
 use yii\db\ActiveQuery;
+use yii\db\Exception;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class PollResource
@@ -15,6 +19,13 @@ use yii\db\ActiveQuery;
  */
 class PollResource extends Poll
 {
+    public $answers;
+
+    public function rules()
+    {
+        return ArrayHelper::merge(parent::rules(), [[['answers'], 'safe']]);
+    }
+
     public function fields()
     {
         return [
@@ -41,5 +52,27 @@ class PollResource extends Poll
     public function getCreatedBy()
     {
         return $this->hasOne(UserResource::class, ['id' => 'created_by']);
+    }
+
+    /**
+     *
+     *
+     * @param bool $runValidation
+     * @param null $attributeNames
+     * @return bool
+     * @throws Exception
+     * @throws ValidationException
+     */
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        $dbTransaction = Yii::$app->db->beginTransaction();
+
+        if (count($this->answers) < 2) {
+            $dbTransaction->rollBack();
+            throw new ValidationException(Yii::t('app', 'Answer can not be blank'));
+        }
+
+        $dbTransaction->commit();
+        return parent::save($runValidation, $attributeNames);
     }
 }
