@@ -210,6 +210,12 @@ class WorkspaceResource extends Workspace
             throw new ValidationException(Yii::t('app', "Can't delete workspace"));
         }
 
+        if ($this->image_path){
+            $fullPath = dirname(Yii::getAlias('@storage' . $this->image_path));
+            if (is_dir($fullPath)) {
+                FileHelper::removeDirectory($fullPath);
+            }
+        }
 
         $path = "/file-manager/{$this->id}";
         $fullPath = Yii::getAlias('@storage' . $path);
