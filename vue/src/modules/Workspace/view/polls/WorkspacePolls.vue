@@ -7,23 +7,25 @@
       <input-widget
         :model="model" attribute="question" :label="false" :placeholder="$t('Question')" @click="onInputClick">
       </input-widget>
-      <input-widget v-if="showInputs" :model="model" attribute="description" type="richtext"/>
-      <label v-text="$t('Answers')" v-if="showInputs"/>
-      <div v-if="showInputs" v-for="(answer, index) in model.answers" :key="`poll-answers-${index}`">
+      <div v-if="showInputs">
+        <input-widget :model="model" attribute="description" type="richtext"/>
+        <label v-text="$t('Answers')"/>
+        <div v-for="(answer, index) in model.answers" :key="`poll-answers-${index}`">
+          <input-widget
+            :label="false" :model="answer" attribute="answer" :append="`<i class='fas fa-trash-alt'/>`"
+            :placeholder="$t('Add answer...')" @onButtonClick="removeAnswer(index)">
+          </input-widget>
+        </div>
         <input-widget
-          :label="false" :model="answer" attribute="answer" :append="`<i class='fas fa-trash-alt'/>`"
-          :placeholder="$t('Add answer...')" @onButtonClick="removeAnswer(index)">
+          :label="false" :model="model" attribute="addAnswer" :append="`<i class='fas fa-plus'/>`"
+          :placeholder="$t('Add answer...')" @onButtonClick="addNewAnswer">
         </input-widget>
+        <input-widget :model="model" attribute="postTimeline" type="checkbox"/>
+        <input-widget :model="model" attribute="multipleChoice" type="checkbox"/>
       </div>
-      <input-widget
-        v-if="showInputs" :label="false" :model="model" attribute="addAnswer" :append="`<i class='fas fa-plus'/>`"
-        :placeholder="$t('Add answer...')" @onButtonClick="addNewAnswer">
-      </input-widget>
-      <input-widget v-if="showInputs" :model="model" attribute="postTimeline" type="checkbox"/>
-      <input-widget v-if="showInputs" :model="model" attribute="multipleChoice" type="checkbox"/>
     </b-card-body>
     <b-card-footer v-if="showInputs">
-      <b-button variant="primary" class="float-right">
+      <b-button variant="primary" class="float-right" @click="onSubmit">
         {{ $t('Save') }}
       </b-button>
     </b-card-footer>
@@ -55,6 +57,7 @@ export default {
     }),
   },
   methods: {
+    ...mapWorkspaceActions(['getPolls']),
     onInputClick() {
       this.showInputs = true;
     },
@@ -64,9 +67,13 @@ export default {
     removeAnswer: function (index) {
       Vue.delete(this.model.answers, index);
     },
+    async onSubmit() {
+
+    },
   },
   mounted() {
     this.addNewAnswer();
+    this.getPolls(this.$route.params.id);
   }
 }
 </script>

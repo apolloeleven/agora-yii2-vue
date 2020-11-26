@@ -84,6 +84,7 @@ $config = [
                         'v1/workspaces/user-comment',
                         'v1/workspaces/user-like',
                         'v1/workspaces/folder',
+                        'v1/workspaces/poll',
                     ]
                 ]
             ],

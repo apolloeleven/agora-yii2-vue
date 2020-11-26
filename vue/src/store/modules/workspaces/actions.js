@@ -20,6 +20,7 @@ import {
   GET_BREAD_CRUMB,
   GET_CURRENT_FOLDER,
   GET_CURRENT_WORKSPACE,
+  GET_POLLS_DATA,
   GET_TIMELINE_DATA,
   GET_WORKSPACES,
   HIDE_ARTICLE_MODAL,
@@ -30,6 +31,7 @@ import {
   HIDE_WORKSPACE_MODAL,
   LIKE_TIMELINE_POST,
   REMOVE_ARTICLE,
+  SET_WORKSPACE_USERS,
   SHOW_ARTICLE_MODAL,
   SHOW_FOLDER_MODAL,
   SHOW_INVITE_MODAL,
@@ -40,13 +42,13 @@ import {
   TOGGLE_ARTICLE_VIEW_LOADING,
   TOGGLE_ARTICLES_LOADING,
   TOGGLE_FOLDERS_LOADING,
+  TOGGLE_POLLS_LOADING,
   TOGGLE_VIEW_LOADING,
+  TOGGLE_WORKSPACE_USERS_LOADING,
   UNLIKE_TIMELINE_POST,
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
-  TOGGLE_WORKSPACE_USERS_LOADING,
-  SET_WORKSPACE_USERS,
 } from './mutation-types';
 import httpService from "../../../core/services/httpService";
 
@@ -57,6 +59,7 @@ const folderUrl = '/v1/workspaces/folder';
 const userUrl = '/v1/users/user';
 const userLikeUrl = '/v1/workspaces/user-like';
 const userCommentUrl = '/v1/workspaces/user-comment';
+const pollUrl = '/v1/workspaces/poll';
 
 const timelineExpand = `expand=article,createdBy,timelineComments.createdBy,timelineComments.childrenComments.createdBy,
 timelineComments.childrenComments.parent,userLikes,myLikes&sort=-created_at`
@@ -684,11 +687,29 @@ export async function inviteUsers({commit}, data) {
  * @param commit
  * @param id
  */
-export async function getWorkspaceUsers({commit}, id){
+export async function getWorkspaceUsers({commit}, id) {
   commit(TOGGLE_WORKSPACE_USERS_LOADING);
   let {success, body} = await httpService.get(`${url}/get-users?id=${id}`)
   if (success) {
     commit(SET_WORKSPACE_USERS, body);
   }
   commit(TOGGLE_WORKSPACE_USERS_LOADING);
+}
+
+/**
+ *
+ * @param commit
+ * @param workspace_id
+ * @returns {Promise<unknown>}
+ */
+export async function getPolls({commit}, workspace_id) {
+  commit(TOGGLE_POLLS_LOADING)
+  const res = await httpService.get(pollUrl, {
+    params: {workspace_id, sort: '-created_at', expand: 'createdBy,pollAnswers'}
+  })
+  if (res.success) {
+    commit(GET_POLLS_DATA, res.body)
+  }
+  commit(TOGGLE_POLLS_LOADING)
+  return res;
 }

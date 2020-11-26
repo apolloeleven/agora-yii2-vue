@@ -15,9 +15,24 @@ use yii\db\ActiveQuery;
  */
 class PollResource extends Poll
 {
+    public function fields()
+    {
+        return [
+            'id',
+            'question',
+            'description',
+            'created_at' => function () {
+                return $this->created_at * 1000;
+            },
+            'updated_at' => function () {
+                return $this->updated_at * 1000;
+            },
+        ];
+    }
+
     public function extraFields()
     {
-        return ['createdBy'];
+        return ['createdBy', 'pollAnswers'];
     }
 
     /**

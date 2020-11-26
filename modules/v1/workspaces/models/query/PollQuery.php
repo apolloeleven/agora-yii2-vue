@@ -40,4 +40,13 @@ class PollQuery extends ActiveQuery
     {
         return $this->andWhere([Poll::tableName() . '.id' => $id]);
     }
+
+    /**
+     * @param $id
+     * @return PollQuery
+     */
+    public function byWorkspaceId($id)
+    {
+        return $this->andWhere([Poll::tableName() . '.workspace_id' => $id]);
+    }
 }

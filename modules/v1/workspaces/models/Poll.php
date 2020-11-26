@@ -14,6 +14,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "{{%polls}}".
  *
  * @property int $id
+ * @property int $workspace_id
  * @property string|null $question
  * @property string|null $description
  * @property int|null $created_at
@@ -24,6 +25,7 @@ use yii\db\ActiveRecord;
  * @property PollAnswer[] $pollAnswers
  * @property User $createdBy
  * @property User $updatedBy
+ * @property Workspace $workspace
  */
 class Poll extends ActiveRecord
 {
@@ -53,10 +55,12 @@ class Poll extends ActiveRecord
     {
         return [
             [['description'], 'string'],
-            [['created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['workspace_id'], 'required'],
+            [['workspace_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['question'], 'string', 'max' => 1024],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
+            [['workspace_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workspace::class, 'targetAttribute' => ['workspace_id' => 'id']],
         ];
     }
 
@@ -67,6 +71,7 @@ class Poll extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'workspace_id' => Yii::t('app', 'Workspace ID'),
             'question' => Yii::t('app', 'Question'),
             'description' => Yii::t('app', 'Description'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -112,5 +117,15 @@ class Poll extends ActiveRecord
     public function getUpdatedBy()
     {
         return $this->hasOne(User::class, ['id' => 'updated_by']);
+    }
+
+    /**
+     * Gets query for [[Workspace]].
+     *
+     * @return ActiveQuery
+     */
+    public function getWorkspace()
+    {
+        return $this->hasOne(Workspace::class, ['id' => 'workspace_id']);
     }
 }

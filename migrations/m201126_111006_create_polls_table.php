@@ -14,6 +14,7 @@ class m201126_111006_create_polls_table extends Migration
     {
         $this->createTable('{{%polls}}', [
             'id' => $this->primaryKey(),
+            'workspace_id' => $this->integer()->notNull(),
             'question' => $this->string(1024),
             'description' => $this->text(),
             'created_at' => $this->integer(),
@@ -21,6 +22,23 @@ class m201126_111006_create_polls_table extends Migration
             'created_by' => $this->integer(),
             'updated_by' => $this->integer(),
         ]);
+
+        // creates index for column `workspace_id`
+        $this->createIndex(
+            '{{%idx-poll-workspace_id}}',
+            '{{%polls}}',
+            'workspace_id'
+        );
+
+        // add foreign key for table `{{%workspaces}}`
+        $this->addForeignKey(
+            '{{%fk-poll-workspace_id}}',
+            '{{%polls}}',
+            'workspace_id',
+            '{{%workspaces}}',
+            'id',
+            'CASCADE'
+        );
 
         // creates index for column `created_by`
         $this->createIndex(
@@ -62,6 +80,19 @@ class m201126_111006_create_polls_table extends Migration
      */
     public function safeDown()
     {
+
+        // drops foreign key for table `{{%workspaces}}`
+        $this->dropForeignKey(
+            '{{%fk-poll-workspace_id}}',
+            '{{%polls}}'
+        );
+
+        // drops index for column `workspace_id`
+        $this->dropIndex(
+            '{{%idx-poll-workspace_id}}',
+            '{{%polls}}'
+        );
+
         // drops foreign key for table `{{%users}}`
         $this->dropForeignKey(
             '{{%fk-poll-created_by}}',

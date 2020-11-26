@@ -20,6 +20,7 @@ import {
   GET_BREAD_CRUMB,
   GET_CURRENT_FOLDER,
   GET_CURRENT_WORKSPACE,
+  GET_POLLS_DATA,
   GET_TIMELINE_DATA,
   GET_WORKSPACES,
   HIDE_ARTICLE_MODAL,
@@ -30,6 +31,7 @@ import {
   HIDE_WORKSPACE_MODAL,
   LIKE_TIMELINE_POST,
   REMOVE_ARTICLE,
+  SET_WORKSPACE_USERS,
   SHOW_ARTICLE_MODAL,
   SHOW_FOLDER_MODAL,
   SHOW_INVITE_MODAL,
@@ -40,13 +42,13 @@ import {
   TOGGLE_ARTICLE_VIEW_LOADING,
   TOGGLE_ARTICLES_LOADING,
   TOGGLE_FOLDERS_LOADING,
+  TOGGLE_POLLS_LOADING,
   TOGGLE_VIEW_LOADING,
+  TOGGLE_WORKSPACE_USERS_LOADING,
   UNLIKE_TIMELINE_POST,
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
-  TOGGLE_WORKSPACE_USERS_LOADING,
-  SET_WORKSPACE_USERS,
 } from './mutation-types';
 import _ from 'lodash';
 
@@ -471,7 +473,7 @@ export default {
    *
    * @param state
    */
-  [TOGGLE_WORKSPACE_USERS_LOADING](state){
+  [TOGGLE_WORKSPACE_USERS_LOADING](state) {
     state.view.users.loading = !state.view.users.loading;
   },
   /**
@@ -479,7 +481,22 @@ export default {
    * @param state
    * @param data
    */
-  [SET_WORKSPACE_USERS](state, data){
+  [SET_WORKSPACE_USERS](state, data) {
     state.view.users.data = data;
+  },
+  /**
+   *
+   * @param state
+   */
+  [TOGGLE_POLLS_LOADING](state) {
+    state.view.polls.loading = !state.view.polls.loading;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_POLLS_DATA](state, data) {
+    state.view.polls.data = data;
   },
 };
