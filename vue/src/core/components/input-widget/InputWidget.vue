@@ -7,12 +7,15 @@
         {{ computedLabel }}
         <span v-if="v.required" class="text-danger">*</span>
       </label>
-      <b-input-group v-if="isInput()" :prepend="prepend" :append="append" :size="size">
+      <b-input-group v-if="isInput()" :prepend="prepend" :size="size">
         <template v-slot:append v-if="appendQuestion">
           <b-tooltip :target="`question-mark-tooltip-${attribute}-${uuid}`" :title="appendQuestion"/>
           <b-input-group-text :id="`question-mark-tooltip-${attribute}-${uuid}`" class="hover-cursor">
             <i class="fas fa-question-circle"></i>
           </b-input-group-text>
+        </template>
+        <template v-slot:append v-if="append">
+          <b-button v-html="append" variant="secondary" class="hover-cursor" @click="onButtonClick"/>
         </template>
         <b-form-input v-if="type === 'number'" ref="currentInput" :size="size" :type="type" :disabled="disabled"
                       :readonly="readonly" :autofocus="autofocus" :name="`${attribute}-${uuid}`" @keyup="onKeyup"
@@ -22,7 +25,8 @@
         <b-form-input v-else ref="currentInput" :size="size" :type="type" :disabled="disabled" :readonly="readonly"
                       :autofocus="autofocus" :name="`${attribute}-${uuid}`" :key="`${attribute}-${uuid}`"
                       :id="inputId" v-model="model[attribute]" @change="onChange" @input="onInput" @keydown="onKeydown"
-                      @keyup="onKeyup" @blur="onBlur" :state="getState(v)" :placeholder="computedPlaceholder"/>
+                      @keyup="onKeyup" @blur="onBlur" :state="getState(v)" :placeholder="computedPlaceholder"
+                      @click="onClick"/>
       </b-input-group>
       <b-form-textarea v-if="isTextarea()" ref="currentInput" :type="type" :name="`${attribute}-${uuid}`"
                        :key="`${attribute}-${uuid}`" v-model="model[attribute]" :state="getState(v)"
@@ -327,6 +331,12 @@ export default {
     },
     onInput($event) {
       this.$emit('input', $event);
+    },
+    onClick($event) {
+      this.$emit('click', $event);
+    },
+    onButtonClick($event) {
+      this.$emit('onButtonClick', $event);
     },
     onBlur($event) {
       if (this.type === 'number' && $event.target.value === '') {

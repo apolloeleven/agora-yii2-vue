@@ -4,30 +4,29 @@
   </div>
   <b-card v-else no-body class="workspace-polls">
     <b-card-body>
-      <input-widget :model="model" attribute="question" :label="false" :placeholder="$t('Question')"/>
-      <input-widget :model="model" attribute="description" type="richtext"/>
-      <b-form-group>
-        <label>
-          {{ $t('Answers') }}
-        </label>
-        <b-input-group class="mb-2">
-          <b-form-input :placeholder="$t('Add answer...')"/>
-          <b-input-group-append>
-            <b-button variant="secondary">
-              <i class="fas fa-trash"/>
-            </b-button>
-          </b-input-group-append>
-        </b-input-group>
-        <b-input-group class="mb-2">
-          <b-form-input :placeholder="$t('Add answer...')"/>
-          <b-input-group-append>
-            <b-button variant="secondary">
-              <i class="fas fa-plus"/>
-            </b-button>
-          </b-input-group-append>
-        </b-input-group>
-      </b-form-group>
+      <input-widget
+        :model="model" attribute="question" :label="false" :placeholder="$t('Question')" @click="onInputClick">
+      </input-widget>
+      <input-widget v-if="showInputs" :model="model" attribute="description" type="richtext"/>
+      <label v-text="$t('Answers')" v-if="showInputs"/>
+      <div v-if="showInputs" v-for="(answer, index) in model.answers" :key="`poll-answers-${index}`">
+        <input-widget
+          :label="false" :model="answer" attribute="answer" :append="`<i class='fas fa-trash-alt'/>`"
+          :placeholder="$t('Add answer...')" @onButtonClick="removeAnswer(index)">
+        </input-widget>
+      </div>
+      <input-widget
+        v-if="showInputs" :label="false" :model="model" attribute="addAnswer" :append="`<i class='fas fa-plus'/>`"
+        :placeholder="$t('Add answer...')" @onButtonClick="addNewAnswer">
+      </input-widget>
+      <input-widget v-if="showInputs" :model="model" attribute="postTimeline" type="checkbox"/>
+      <input-widget v-if="showInputs" :model="model" attribute="multipleChoice" type="checkbox"/>
     </b-card-body>
+    <b-card-footer v-if="showInputs">
+      <b-button variant="primary" class="float-right">
+        {{ $t('Save') }}
+      </b-button>
+    </b-card-footer>
   </b-card>
 </template>
 
@@ -36,6 +35,8 @@ import ContentSpinner from "@/core/components/ContentSpinner";
 import {createNamespacedHelpers} from "vuex";
 import PollsFormModel from "./PollsFormModel";
 import InputWidget from "@/core/components/input-widget/InputWidget";
+import AnswerModel from "./AnswerModel";
+import Vue from "vue";
 
 const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 export default {
@@ -44,16 +45,29 @@ export default {
   data() {
     return {
       model: new PollsFormModel(),
+      answerModel: new AnswerModel(),
+      showInputs: false,
     }
   },
   computed: {
     ...mapWorkspaceState({
       loading: state => state.view.polls.loading,
     }),
-    appendIcons() {
-      return "<i class=\"fas fa-plus\"/>"
-    }
   },
+  methods: {
+    onInputClick() {
+      this.showInputs = true;
+    },
+    addNewAnswer: function () {
+      this.model.answers.push(new AnswerModel());
+    },
+    removeAnswer: function (index) {
+      Vue.delete(this.model.answers, index);
+    },
+  },
+  mounted() {
+    this.addNewAnswer();
+  }
 }
 </script>
 
