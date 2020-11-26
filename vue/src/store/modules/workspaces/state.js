@@ -55,6 +55,10 @@ const STATE = {
       show: false,
       users: [],
     },
+    polls: {
+      loading: false,
+      data: [],
+    }
   }
 };
 

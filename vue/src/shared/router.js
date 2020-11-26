@@ -23,6 +23,7 @@ import WorkspaceAbout from "@/modules/Workspace/view/about/WorkspaceAbout";
 import ArticleForm from "@/modules/Workspace/view/articles/ArticleForm";
 import ArticleView from "@/modules/Workspace/view/articles/ArticleView";
 import WorkspaceUsers from "@/modules/Workspace/view/users/WorkspaceUsers";
+import WorkspacePolls from "@/modules/Workspace/view/polls/WorkspacePolls";
 
 Vue.use(Router);
 
@@ -91,7 +92,8 @@ const router = new Router({
             {path: 'articles/update/:articleId', name: 'workspace.articles.update', component: ArticleForm},
             {path: 'articles/view/:articleId', name: 'workspace.articles.view', component: ArticleView},
             {path: 'about', name: 'workspace.about', component: WorkspaceAbout},
-            {path: 'users', name: 'workspace.users', component: WorkspaceUsers}
+            {path: 'users', name: 'workspace.users', component: WorkspaceUsers},
+            {path: 'polls', name: 'workspace.polls', component: WorkspacePolls}
           ]
         },
       ]
