@@ -186,10 +186,12 @@ class WorkspaceResource extends Workspace
         }
 
         $folder = $this->getRootFolder()->one();
-        $folder->deleteWithChildren();
-        if ($folder->getChildren()->count()) {
-            $dbTransaction->rollBack();
-            throw new ValidationException(Yii::t('app', "Can't delete workspace folders"));
+        if ($folder){
+            $folder->deleteWithChildren();
+            if ($folder->getChildren()->count()) {
+                $dbTransaction->rollBack();
+                throw new ValidationException(Yii::t('app', "Can't delete workspace folders"));
+            }
         }
 
         UserWorkspace::deleteAll(['workspace_id' => $this->id]);
