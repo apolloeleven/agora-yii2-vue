@@ -22,35 +22,6 @@ class WorkspaceController extends ActiveController
 {
     public $modelClass = WorkspaceResource::class;
 
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-
-        $behaviors['access'] = [
-            'class' => AccessControl::class,
-            'only' => ['create', 'delete', 'update'],
-            'rules' => [
-                [
-                    'allow' => true,
-                    'actions' => ['create'],
-                    'roles' => ['createWorkspace']
-                ],
-                [
-                    'allow' => true,
-                    'actions' => ['update'],
-                    'roles' => ['updateWorkspace']
-                ],
-                [
-                    'allow' => true,
-                    'actions' => ['delete'],
-                    'roles' => ['deleteWorkspace']
-                ],
-
-            ]
-        ];
-
-        return $behaviors;
-    }
     /**
      * Get workspaces by users
      *
