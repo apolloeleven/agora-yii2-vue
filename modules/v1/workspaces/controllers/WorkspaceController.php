@@ -12,7 +12,6 @@ use app\rest\ValidationException;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Exception;
-use yii\filters\AccessControl;
 
 /**
  * Class WorkspaceController
