@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       allTimelinePostsLoaded: false,
-      postsLimit: 2,
+      postsLimit: 20,
       lastPostId: 0,
     }
   },
@@ -60,8 +60,9 @@ export default {
         last_post_id: this.lastPostId,
       });
       if (res.success) {
-        this.allTimelinePostsLoaded = (res.body.length < this.postsLimit) || (res.body.length === 0);
-        this.lastPostId = this.timelineData[this.timelineData.length - 1].id;
+        this.allTimelinePostsLoaded = res.body.length < this.postsLimit;
+        if (this.timelineData.length)
+          this.lastPostId = this.timelineData[this.timelineData.length - 1].id;
       }
     },
   },
