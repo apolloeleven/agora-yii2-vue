@@ -38,14 +38,34 @@ export default {
       loading: state => state.view.timeline.loading,
     }),
   },
+  data() {
+    return {
+      allTimelinePostsLoaded: false,
+      postsLimit: 2,
+      lastPostId: 0,
+    }
+  },
   methods: {
     ...mapTimelineActions(['showTimelineModal', 'getTimelinePosts']),
     showTimelineForm() {
       this.showTimelineModal(null);
     },
+    async timelinePosts(workspaceId) {
+      if (this.allTimelinePostsLoaded || this.loading) return;
+      let res = await this.getTimelinePosts({
+        workspace_id: workspaceId,
+        posts_limit: this.postsLimit,
+        last_post_id: this.lastPostId,
+      });
+      if (res.success) {
+        this.allTimelinePostsLoaded = (res.body.length < this.postsLimit) || (res.body.length === 0);
+        this.lastPostId = this.timelineData[this.timelineData.length-1].id;
+      }
+    },
   },
   mounted() {
-    this.getTimelinePosts(this.$route.params.id);
+    let workspaceId = this.$route.params.id;
+    this.timelinePosts(workspaceId);
   },
 }
 </script>
