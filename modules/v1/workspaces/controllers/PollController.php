@@ -58,6 +58,7 @@ class PollController extends ActiveController
             $model = new UserPollResource();
 
             $model->poll_answer_id = $answer->id;
+            $model->poll_id = $answer->poll_id;
             if (!$model->save()) {
                 $dbTransaction->rollBack();
                 return $this->validationError($model->getFirstErrors());

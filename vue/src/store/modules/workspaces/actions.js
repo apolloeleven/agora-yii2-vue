@@ -708,7 +708,7 @@ export async function getWorkspaceUsers({commit}, id) {
 export async function getPolls({commit}, workspace_id) {
   commit(TOGGLE_POLLS_LOADING)
   const res = await httpService.get(pollUrl, {
-    params: {workspace_id, sort: '-created_at', expand: 'createdBy,pollAnswers.userPolls.createdBy'}
+    params: {workspace_id, sort: '-created_at', expand: 'createdBy,pollAnswers.userPolls.createdBy,myVotes,userPolls'}
   })
   if (res.success) {
     commit(GET_POLLS_DATA, res.body)
@@ -725,7 +725,7 @@ export async function getPolls({commit}, workspace_id) {
  */
 export async function createPoll({commit}, data) {
   commit(TOGGLE_POLLS_LOADING)
-  const res = await httpService.post(`${pollUrl}?expand=createdBy,pollAnswers`, data);
+  const res = await httpService.post(`${pollUrl}?expand=createdBy,pollAnswers.userPolls.createdBy,myVotes,userPolls`, data);
   if (res.success) {
     commit(ADD_POLL_ITEM, res.body)
   }

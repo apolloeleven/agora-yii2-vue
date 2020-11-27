@@ -46,7 +46,7 @@ class PollResource extends Poll
 
     public function extraFields()
     {
-        return ['createdBy', 'pollAnswers'];
+        return ['createdBy', 'pollAnswers', 'myVotes', 'userPolls'];
     }
 
     /**
@@ -65,6 +65,29 @@ class PollResource extends Poll
     public function getPollAnswers()
     {
         return $this->hasMany(PollAnswerResource::class, ['poll_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getMyVotes()
+    {
+        $up = UserPollResource::tableName();
+        $pa = PollAnswerResource::tableName();
+
+        return $this->hasMany(PollAnswerResource::class, ['poll_id' => 'id'])
+            ->innerJoin($up, "$up.poll_answer_id = $pa.id")
+            ->andWhere(["$up.created_by" => Yii::$app->user->id]);
+    }
+
+    /**
+     * Gets query for [[PollAnswers]].
+     *
+     * @return ActiveQuery
+     */
+    public function getUserPolls()
+    {
+        return $this->hasMany(UserPollResource::class, ['poll_id' => 'id']);
     }
 
     /**

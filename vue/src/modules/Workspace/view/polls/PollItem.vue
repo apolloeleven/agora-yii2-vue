@@ -20,16 +20,22 @@
     <b-card-body>
       <span class="mb-0" v-html="item.description"/>
       <div v-for="(answer, index) in item.pollAnswers" :key="`poll-item-answers-${index}`">
-        <div class="d-flex justify-content-between align-items-center">
-          <b-form-checkbox
-            v-if="item.is_multiple" :id="`checkbox-${answer.id}`" v-model="selected" :name="`checkbox-${answer.id}`"
-            :value="answer.id">
-            {{ answer.answer }}
-          </b-form-checkbox>
-          <b-form-radio v-else v-model="selected" :name="`radio-${answer.id}`" :value="answer.id">
-            {{ answer.answer }}
-          </b-form-radio>
-          <span>{{ answer.userPolls.length }} {{ $t('votes') }}</span>
+        <div class="row">
+          <div class="col-md-1">
+            <b-form-checkbox
+              v-if="item.is_multiple && item.myVotes.length === 0" :id="`checkbox-${answer.id}`" v-model="selected"
+              :name="`checkbox-${answer.id}`" :value="answer.id" class="mb-4">
+            </b-form-checkbox>
+            <b-form-radio
+              v-else-if="!item.is_multiple && item.myVotes.length === 0" class="mb-4" v-model="selected"
+              :name="`radio-${answer.id}`" :value="answer.id">
+            </b-form-radio>
+          </div>
+          <div class="col-md-6">
+            <h6 class="mb-0">{{ answer.answer }}</h6>
+            <b-progress height="7px" :value="answer.userPolls.length * 100 / item.userPolls.length" variant="primary"/>
+          </div>
+          <div class="col-md-4 mt-2">{{ answer.userPolls.length }} {{ $t('votes') }}</div>
         </div>
       </div>
       <b-button variant="primary" class="float-right" @click="onVoteClick" :disabled="selected.length === 0">
@@ -51,6 +57,7 @@ export default {
       selected: [],
     }
   },
+  computed: {},
   methods: {
     onDeleteClick() {
       this.$emit('onDeleteClick')

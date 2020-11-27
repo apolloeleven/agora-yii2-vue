@@ -14,6 +14,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "{{%user_polls}}".
  *
  * @property int $id
+ * @property int $poll_id
  * @property int $poll_answer_id
  * @property int|null $created_at
  * @property int|null $updated_at
@@ -52,8 +53,8 @@ class UserPoll extends ActiveRecord
     public function rules()
     {
         return [
-            [['poll_answer_id'], 'required'],
-            [['poll_answer_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['poll_answer_id', 'poll_id'], 'required'],
+            [['poll_answer_id', 'poll_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['poll_answer_id'], 'exist', 'skipOnError' => true, 'targetClass' => PollAnswer::class, 'targetAttribute' => ['poll_answer_id' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
@@ -67,6 +68,7 @@ class UserPoll extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'poll_id' => Yii::t('app', 'Poll ID'),
             'poll_answer_id' => Yii::t('app', 'Poll Answer ID'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
