@@ -6,6 +6,7 @@ namespace app\modules\v1\workspaces\resources;
 
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\Poll;
+use app\modules\v1\workspaces\models\PollAnswer;
 use app\rest\ValidationException;
 use Yii;
 use yii\db\ActiveQuery;
@@ -71,8 +72,35 @@ class PollResource extends Poll
             $dbTransaction->rollBack();
             throw new ValidationException(Yii::t('app', 'Answer can not be blank'));
         }
+        $parentSave = parent::save($runValidation, $attributeNames);
+
+        $answerData = [];
+
+        foreach ($this->answers as $answer) {
+            $answerData [] = [
+                'pool_id' => $this->id,
+                'answer' => $answer,
+                'created_at' => time(),
+                'updated_at' => time(),
+                'created_by' => Yii::$app->user->id,
+                'updated_by' => Yii::$app->user->id,
+            ];
+        }
+        $createdData = Yii::$app->db->createCommand()
+            ->batchInsert
+            (
+                PollAnswer::tableName(),
+                ['poll_id', 'answer', 'created_at', 'updated_at', 'created_by', 'updated_by'],
+                $answerData
+            )
+            ->execute();
+
+        if ($createdData !== count($answerData)) {
+            $dbTransaction->rollBack();
+            throw new ValidationException(Yii::t('app', 'Unable to save answer'));
+        }
 
         $dbTransaction->commit();
-        return parent::save($runValidation, $attributeNames);
+        return $parentSave;
     }
 }
