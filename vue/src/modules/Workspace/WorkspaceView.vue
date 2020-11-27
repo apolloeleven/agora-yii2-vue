@@ -79,6 +79,7 @@
 import {createNamespacedHelpers} from "vuex";
 import ContentSpinner from "@/core/components/ContentSpinner";
 import WorkspaceInviteModal from "./invite/WorkspaceInviteModal";
+import {eventBus} from "@/core/services/event-bus";
 
 const {mapState, mapActions} = createNamespacedHelpers('workspace')
 
@@ -212,6 +213,11 @@ export default {
         this.headerFixed = false;
         this.$refs.headerNav.style.position = '';
         this.$refs.headerNav.style.width = '';
+      }
+      if (this.$route.name === 'workspace.timeline'){
+        if (this.$refs.workspaceContent.scrollTop + this.$refs.workspaceContent.offsetHeight === this.$refs.workspaceContent.scrollHeight) {
+          eventBus.$emit('onScrollToBottom');
+        }
       }
     },
     onInviteClick() {
