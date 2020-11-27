@@ -20,16 +20,19 @@
     <b-card-body>
       <span class="mb-0" v-html="item.description"/>
       <div v-for="(answer, index) in item.pollAnswers" :key="`poll-item-answers-${index}`">
-        <b-form-checkbox
-          v-if="item.is_multiple" :id="`checkbox-${answer.id}`" v-model="selected" :name="`checkbox-${answer.id}`"
-          :value="answer.id">
-          {{ answer.answer }}
-        </b-form-checkbox>
-        <b-form-radio v-else v-model="selected" :name="`radio-${answer.id}`" :value="answer.id">
-          {{ answer.answer }}
-        </b-form-radio>
+        <div class="d-flex justify-content-between align-items-center">
+          <b-form-checkbox
+            v-if="item.is_multiple" :id="`checkbox-${answer.id}`" v-model="selected" :name="`checkbox-${answer.id}`"
+            :value="answer.id">
+            {{ answer.answer }}
+          </b-form-checkbox>
+          <b-form-radio v-else v-model="selected" :name="`radio-${answer.id}`" :value="answer.id">
+            {{ answer.answer }}
+          </b-form-radio>
+          <span>{{ answer.userPolls.length }} {{ $t('votes') }}</span>
+        </div>
       </div>
-      <b-button variant="primary" class="float-right" @click="onVoteClick">
+      <b-button variant="primary" class="float-right" @click="onVoteClick" :disabled="selected.length === 0">
         {{ $t('Vote') }}
       </b-button>
     </b-card-body>
@@ -54,6 +57,7 @@ export default {
     },
     onVoteClick() {
       this.$emit('onVoteClick', this.selected)
+      this.selected = [];
     }
   },
 }

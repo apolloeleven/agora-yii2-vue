@@ -525,7 +525,7 @@ export default {
    * @param data
    */
   [EDIT_POLL_ITEM](state, data) {
-    state.view.polls.form.object = null;
+    console.log(data)
   },
   /**
    *

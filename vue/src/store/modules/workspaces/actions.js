@@ -758,7 +758,7 @@ export async function deletePoll({commit}, data) {
 export async function addVote({commit}, data) {
   const res = await httpService.post(`${pollUrl}/add-vote`, {answerIds: data});
   if (res.success) {
-    commit(ADD_VOTE, res.body)
+    commit(ADD_VOTE, data)
   }
   return res;
 }
