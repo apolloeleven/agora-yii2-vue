@@ -1,9 +1,17 @@
 <template>
   <b-card no-body class="mb-2">
     <b-card-header>
-      <h5 class="mt-0 mb-0">
-        {{ item.question }}
-      </h5>
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-none d-sm-flex mb-0">
+          <h5 class="mt-0 mb-0">
+            {{ item.question }}
+          </h5>
+        </div>
+        <div class="float-right">
+          <i class="mr-3 fas fa-pencil-alt text-primary hover-pointer"/>
+          <i class="far fa-trash-alt text-danger hover-pointer" @click="onDeleteClick"/>
+        </div>
+      </div>
       <p class="mb-0">
         <span style="color: #008BCA">{{ item.createdBy.displayName }}</span>
         &#x2027; {{ item.updated_at | relativeDate }}
@@ -38,6 +46,11 @@ export default {
   data() {
     return {
       selected: [],
+    }
+  },
+  methods: {
+    onDeleteClick() {
+      this.$emit('onDeleteClick')
     }
   },
 }

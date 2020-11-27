@@ -31,7 +31,8 @@
     <div class="poll-record">
       <no-data :model="pollData" :loading="loading" :text="$t('There are no polls')"/>
       <template v-if="!loading">
-        <PollItem v-for="(item, index) in pollData" :key="`poll-item-${index}`" :item="item" :index="index"/>
+        <PollItem v-for="(item, index) in pollData" :key="`poll-item-${index}`" :item="item" :index="index"
+                  @onDeleteClick="onDeleteClick(item)"/>
       </template>
     </div>
   </div>
@@ -69,7 +70,7 @@ export default {
     },
   },
   methods: {
-    ...mapWorkspaceActions(['getPolls', 'createPoll']),
+    ...mapWorkspaceActions(['getPolls', 'createPoll', 'deletePoll']),
     onInputClick() {
       this.showInputs = true;
     },
@@ -93,7 +94,7 @@ export default {
 
       const {success, body} = await this.createPoll(data);
       if (success) {
-        this.$toast(this.$t(`Poll Created successfully`));
+        this.$toast(this.$t(`Poll created successfully`));
         this.showInputs = false;
         this.model = new PollsFormModel();
         this.addNewAnswer(2);
@@ -101,6 +102,20 @@ export default {
         this.$toast(body.message, 'danger');
       }
     },
+    async onDeleteClick(item) {
+      const result = await this.$confirm(
+        this.$t(`Are you sure you want to delete this poll?`),
+        this.$t('This operation can not be undone')
+      );
+      if (result) {
+        const {success, body} = await this.deletePoll(item);
+        if (success) {
+          this.$toast(this.$t(`Poll deleted successfully`));
+        } else {
+          this.$toast(body);
+        }
+      }
+    }
   },
   mounted() {
     this.addNewAnswer(2);

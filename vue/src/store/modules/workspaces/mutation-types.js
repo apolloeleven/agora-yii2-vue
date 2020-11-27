@@ -55,4 +55,5 @@ export const SET_WORKSPACE_USERS = 'workspace/SET_WORKSPACE_USERS';
 
 export const TOGGLE_POLLS_LOADING = 'workspace/TOGGLE_POLLS_LOADING';
 export const GET_POLLS_DATA = 'workspace/GET_POLLS_DATA';
-export const ADD_POLL_DATA = 'workspace/ADD_POLL_DATA';
+export const ADD_POLL_ITEM = 'workspace/ADD_POLL_ITEM';
+export const DELETE_POLL_ITEM = 'workspace/DELETE_POLL_ITEM';

@@ -1,6 +1,6 @@
 import {
   ADD_ATTACH_FILES,
-  ADD_POLL_DATA,
+  ADD_POLL_ITEM,
   ADD_TIMELINE_CHILD_COMMENT,
   ADD_TIMELINE_COMMENT,
   ADD_TIMELINE_POST,
@@ -9,6 +9,7 @@ import {
   CHANGE_TIMELINE_MODAL_LOADING,
   CHANGE_WORKSPACE_LOADING,
   CREATE_ARTICLE,
+  DELETE_POLL_ITEM,
   DELETE_TIMELINE_CHILD_COMMENT,
   DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
@@ -725,7 +726,17 @@ export async function createPoll({commit}, data) {
   commit(TOGGLE_POLLS_LOADING)
   const res = await httpService.post(`${pollUrl}?expand=createdBy,pollAnswers`, data);
   if (res.success) {
-    commit(ADD_POLL_DATA, res.body)
+    commit(ADD_POLL_ITEM, res.body)
+  }
+  commit(TOGGLE_POLLS_LOADING)
+  return res;
+}
+
+export async function deletePoll({commit}, data) {
+  commit(TOGGLE_POLLS_LOADING)
+  const res = await httpService.delete(`${pollUrl}/${data.id}`);
+  if (res.success) {
+    commit(DELETE_POLL_ITEM, data)
   }
   commit(TOGGLE_POLLS_LOADING)
   return res;

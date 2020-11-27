@@ -1,6 +1,6 @@
 import {
   ADD_ATTACH_FILES,
-  ADD_POLL_DATA,
+  ADD_POLL_ITEM,
   ADD_TIMELINE_CHILD_COMMENT,
   ADD_TIMELINE_COMMENT,
   ADD_TIMELINE_POST,
@@ -9,6 +9,7 @@ import {
   CHANGE_TIMELINE_MODAL_LOADING,
   CHANGE_WORKSPACE_LOADING,
   CREATE_ARTICLE,
+  DELETE_POLL_ITEM,
   DELETE_TIMELINE_CHILD_COMMENT,
   DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
@@ -505,8 +506,15 @@ export default {
    * @param state
    * @param data
    */
-  [ADD_POLL_DATA](state, data) {
+  [ADD_POLL_ITEM](state, data) {
     state.view.polls.data.unshift(data);
-    console.log(state.view.polls.data)
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [DELETE_POLL_ITEM](state, data) {
+    state.view.polls.data = state.view.polls.data.filter(p => p.id !== data.id);
   },
 };
