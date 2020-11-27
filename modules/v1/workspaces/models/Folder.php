@@ -65,21 +65,25 @@ class Folder extends ActiveRecord
      */
     public function behaviors()
     {
-        return array_merge(parent::behaviors(), [
-            TimestampBehavior::class,
-            BlameableBehavior::class,
-            'NestedSetsModel' => [
-                'class' => NestedSetsBehavior::class,
-                'treeAttribute' => 'tree',
-            ],
-//            [
-//                'class' => ActivityBehavior::class,
-//                'workspaceIdAttribute' => 'workspace_id',
-//                'tableNameAttribute' => TimelinePost::tableName(),
-//                'contentIdAttribute' => 'id',
-//                'descriptionAttribute' => 'name',
-//            ]
-        ]);
+        $behaviors = parent::behaviors();
+        $behaviors[] = TimestampBehavior::class;
+        $behaviors[] = BlameableBehavior::class;
+        $behaviors['NestedSetsModel'] = [
+            'class' => NestedSetsBehavior::class,
+            'treeAttribute' => 'tree',
+        ];
+        $behaviors['activity'] = [
+            'class' => ActivityBehavior::class,
+            'workspace_id' => function () {
+                return $this->workspace_id;
+            },
+            'data' => function () {
+                return $this;
+            },
+            'events' => ['create', 'update', 'delete'],
+        ];
+
+        return $behaviors;
     }
 
     /**
