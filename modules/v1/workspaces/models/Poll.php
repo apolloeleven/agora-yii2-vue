@@ -17,6 +17,8 @@ use yii\db\ActiveRecord;
  * @property int $workspace_id
  * @property string|null $question
  * @property string|null $description
+ * @property int|null $is_multiple
+ * @property int|null $is_for_timeline
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $created_by
@@ -56,7 +58,7 @@ class Poll extends ActiveRecord
         return [
             [['description'], 'string'],
             [['workspace_id'], 'required'],
-            [['workspace_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['workspace_id', 'is_multiple', 'is_for_timeline', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['question'], 'string', 'max' => 1024],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
@@ -74,6 +76,8 @@ class Poll extends ActiveRecord
             'workspace_id' => Yii::t('app', 'Workspace ID'),
             'question' => Yii::t('app', 'Question'),
             'description' => Yii::t('app', 'Description'),
+            'is_multiple' => Yii::t('app', 'Is Multiple'),
+            'is_for_timeline' => Yii::t('app', 'Is For Timeline'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'created_by' => Yii::t('app', 'Created By'),

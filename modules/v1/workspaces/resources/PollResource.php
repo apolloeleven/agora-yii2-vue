@@ -33,6 +33,8 @@ class PollResource extends Poll
             'id',
             'question',
             'description',
+            'is_multiple',
+            'is_for_timeline',
             'created_at' => function () {
                 return $this->created_at * 1000;
             },

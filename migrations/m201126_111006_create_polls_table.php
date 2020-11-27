@@ -17,6 +17,8 @@ class m201126_111006_create_polls_table extends Migration
             'workspace_id' => $this->integer()->notNull(),
             'question' => $this->string(1024),
             'description' => $this->text(),
+            'is_multiple' => $this->tinyInteger()->defaultValue(0),
+            'is_for_timeline' => $this->tinyInteger()->defaultValue(0),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
             'created_by' => $this->integer(),

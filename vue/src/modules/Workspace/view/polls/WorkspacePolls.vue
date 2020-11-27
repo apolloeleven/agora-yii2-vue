@@ -2,31 +2,39 @@
   <div v-if="loading">
     <content-spinner show/>
   </div>
-  <b-card v-else no-body class="workspace-polls">
-    <b-card-body>
-      <input-widget
-        :model="model" attribute="question" :label="false" :placeholder="$t('Question')" @click="onInputClick">
-      </input-widget>
-      <div v-if="showInputs">
-        <input-widget :model="model" attribute="description" type="richtext"/>
-        <label v-text="$t('Answers')"/>
-        <div v-for="(answer, index) in model.answers" :key="`poll-answers-${index}`">
-          <input-widget
-            :label="false" :model="answer" attribute="answer" :placeholder="$t('Add answer...')"
-            :append="!model.answers[index + 1] ? `<i class='fas fa-plus'/>` : `<i class='fas fa-trash-alt'/>`"
-            @onButtonClick="onButtonClick(index)">
-          </input-widget>
+  <div v-else class="workspace-polls">
+    <div class="card mb-3">
+      <div class="card-body">
+        <input-widget
+          :model="model" attribute="question" :label="false" :placeholder="$t('Question')" @click="onInputClick">
+        </input-widget>
+        <div v-if="showInputs">
+          <input-widget :model="model" attribute="description" type="richtext"/>
+          <label v-text="$t('Answers')"/>
+          <div v-for="(answer, index) in model.answers" :key="`poll-answers-${index}`">
+            <input-widget
+              :label="false" :model="answer" attribute="answer" :placeholder="$t('Add answer...')"
+              :append="!model.answers[index + 1] ? `<i class='fas fa-plus'/>` : `<i class='fas fa-trash-alt'/>`"
+              @onButtonClick="onButtonClick(index)">
+            </input-widget>
+          </div>
+          <input-widget :model="model" attribute="postTimeline" type="checkbox"/>
+          <input-widget :model="model" attribute="multipleChoice" type="checkbox"/>
         </div>
-        <input-widget :model="model" attribute="postTimeline" type="checkbox"/>
-        <input-widget :model="model" attribute="multipleChoice" type="checkbox"/>
       </div>
-    </b-card-body>
-    <b-card-footer v-if="showInputs">
-      <b-button variant="primary" class="float-right" @click="onSubmit" :disabled="disabledButton">
-        {{ $t('Save') }}
-      </b-button>
-    </b-card-footer>
-  </b-card>
+      <div class="card-footer" v-if="showInputs">
+        <b-button variant="primary" class="float-right" @click="onSubmit" :disabled="disabledButton">
+          {{ $t('Save') }}
+        </b-button>
+      </div>
+    </div>
+    <div class="poll-record">
+      <no-data :model="pollData" :loading="loading" :text="$t('There are no polls')"/>
+      <template v-if="!loading">
+        <PollItem v-for="(item, index) in pollData" :key="`poll-item-${index}`" :item="item" :index="index"/>
+      </template>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -37,11 +45,13 @@ import InputWidget from "@/core/components/input-widget/InputWidget";
 import AnswerModel from "./AnswerModel";
 import Vue from "vue";
 import {clone} from "lodash";
+import NoData from "@/core/components/NoData";
+import PollItem from "./PollItem";
 
 const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 export default {
   name: "WorkspacePolls",
-  components: {InputWidget, ContentSpinner},
+  components: {PollItem, NoData, InputWidget, ContentSpinner},
   data() {
     return {
       model: new PollsFormModel(),
@@ -51,6 +61,7 @@ export default {
   computed: {
     ...mapWorkspaceState({
       loading: state => state.view.polls.loading,
+      pollData: state => state.view.polls.data,
     }),
     disabledButton() {
       return !this.model.question || !this.model.description ||
@@ -78,6 +89,7 @@ export default {
       let data = clone(this.model);
       data['workspace_id'] = this.$route.params.id;
       data['answers'] = this.model.answers.filter(a => a.answer.replace(/\s/g, '') !== '').map(a => a.answer);
+      data['is_multiple'] = this.model.multipleChoice ? 1 : 0;
 
       const {success, body} = await this.createPoll(data);
       if (success) {
