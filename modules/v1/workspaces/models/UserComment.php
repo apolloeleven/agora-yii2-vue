@@ -46,22 +46,24 @@ class UserComment extends ActiveRecord
      */
     public function behaviors()
     {
-        return array_merge(parent::behaviors(), [
-            TimestampBehavior::class,
-            BlameableBehavior::class,
-            [
-                'class' => ActivityBehavior::class,
-                'workspace_id' => function() {
-                    return $this->timelinePost->workspace_id;
-                },
-                'description' => '{user} {action} on post "{content}"',
-                'data' => function(){
-                    return [
-                        'content' => $this->toArray()
-                    ];
-                }
+        $behaviors = parent::behaviors();
+        $behaviors[] = TimestampBehavior::class;
+        $behaviors[] = BlameableBehavior::class;
+        $behaviors['activity'] = [
+            'class' => ActivityBehavior::class,
+            'workspace_id' => function () {
+                return $this->timelinePost->workspace_id;
+            },
+            'data' => function () {
+                return $this;
+            },
+            'events' => ['create'],
+            'template' => [
+                'create' => '{user} commented on {model} {title}',
             ]
-        ]);
+        ];
+
+        return $behaviors;
     }
 
     /**
