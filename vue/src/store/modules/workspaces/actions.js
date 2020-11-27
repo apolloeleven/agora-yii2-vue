@@ -4,6 +4,7 @@ import {
   ADD_TIMELINE_CHILD_COMMENT,
   ADD_TIMELINE_COMMENT,
   ADD_TIMELINE_POST,
+  ADD_VOTE,
   CHANGE_CAROUSEL,
   CHANGE_TIMELINE_LOADING,
   CHANGE_TIMELINE_MODAL_LOADING,
@@ -707,7 +708,7 @@ export async function getWorkspaceUsers({commit}, id) {
 export async function getPolls({commit}, workspace_id) {
   commit(TOGGLE_POLLS_LOADING)
   const res = await httpService.get(pollUrl, {
-    params: {workspace_id, sort: '-created_at', expand: 'createdBy,pollAnswers'}
+    params: {workspace_id, sort: '-created_at', expand: 'createdBy,pollAnswers.userPolls.createdBy'}
   })
   if (res.success) {
     commit(GET_POLLS_DATA, res.body)
@@ -745,5 +746,19 @@ export async function deletePoll({commit}, data) {
     commit(DELETE_POLL_ITEM, data)
   }
   commit(TOGGLE_POLLS_LOADING)
+  return res;
+}
+
+/**
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export async function addVote({commit}, data) {
+  const res = await httpService.post(`${pollUrl}/add-vote`, {answerIds: data});
+  if (res.success) {
+    commit(ADD_VOTE, res.body)
+  }
   return res;
 }

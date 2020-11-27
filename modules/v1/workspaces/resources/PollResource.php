@@ -58,6 +58,16 @@ class PollResource extends Poll
     }
 
     /**
+     * Gets query for [[PollAnswers]].
+     *
+     * @return ActiveQuery
+     */
+    public function getPollAnswers()
+    {
+        return $this->hasMany(PollAnswerResource::class, ['poll_id' => 'id']);
+    }
+
+    /**
      *
      *
      * @param bool $runValidation

@@ -29,7 +29,7 @@
           {{ answer.answer }}
         </b-form-radio>
       </div>
-      <b-button variant="primary" class="float-right">
+      <b-button variant="primary" class="float-right" @click="onVoteClick">
         {{ $t('Vote') }}
       </b-button>
     </b-card-body>
@@ -51,6 +51,9 @@ export default {
   methods: {
     onDeleteClick() {
       this.$emit('onDeleteClick')
+    },
+    onVoteClick() {
+      this.$emit('onVoteClick', this.selected)
     }
   },
 }

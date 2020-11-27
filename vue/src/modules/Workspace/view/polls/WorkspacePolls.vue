@@ -31,7 +31,7 @@
     <div class="poll-record">
       <no-data :model="pollData" :text="$t('There are no polls')"/>
       <PollItem v-for="(item, index) in pollData" :key="`poll-item-${index}`" :item="item" :index="index"
-                @onDeleteClick="onDeleteClick(item)"/>
+                @onDeleteClick="onDeleteClick(item)" @onVoteClick="onVoteClick"/>
     </div>
   </div>
 </template>
@@ -68,7 +68,7 @@ export default {
     },
   },
   methods: {
-    ...mapWorkspaceActions(['getPolls', 'createPoll', 'deletePoll']),
+    ...mapWorkspaceActions(['getPolls', 'createPoll', 'deletePoll', 'addVote']),
     onInputClick() {
       this.showInputs = true;
     },
@@ -110,10 +110,18 @@ export default {
         if (success) {
           this.$toast(this.$t(`Poll deleted successfully`));
         } else {
-          this.$toast(body);
+          this.$toast(body, 'danger');
         }
       }
     },
+    async onVoteClick(index) {
+      const {success, body} = await this.addVote(index);
+      if (success) {
+        this.$toast(this.$t(`Vote added successfully`));
+      } else {
+        this.$toast(body, 'danger');
+      }
+    }
   },
   mounted() {
     this.addNewAnswer(2);

@@ -15,7 +15,6 @@ class m201126_111045_create_user_polls_table extends Migration
         $this->createTable('{{%user_polls}}', [
             'id' => $this->primaryKey(),
             'poll_answer_id' => $this->integer()->notNull(),
-            'user_id' => $this->integer()->notNull(),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
             'created_by' => $this->integer(),
@@ -35,23 +34,6 @@ class m201126_111045_create_user_polls_table extends Migration
             '{{%user_polls}}',
             'poll_answer_id',
             '{{%poll_answers}}',
-            'id',
-            'CASCADE'
-        );
-
-        // creates index for column `user_id`
-        $this->createIndex(
-            '{{%idx-user_poll-user_id}}',
-            '{{%user_polls}}',
-            'user_id'
-        );
-
-        // add foreign key for table `{{%users}}`
-        $this->addForeignKey(
-            '{{%fk-user_poll-user_id}}',
-            '{{%user_polls}}',
-            'user_id',
-            '{{%users}}',
             'id',
             'CASCADE'
         );
@@ -105,18 +87,6 @@ class m201126_111045_create_user_polls_table extends Migration
         // drops index for column `poll_answer_id`
         $this->dropIndex(
             '{{%idx-user_poll-poll_answer_id}}',
-            '{{%user_polls}}'
-        );
-
-        // drops foreign key for table `{{%users}}`
-        $this->dropForeignKey(
-            '{{%fk-user_poll-user_id}}',
-            '{{%user_polls}}'
-        );
-
-        // drops index for column `user_id`
-        $this->dropIndex(
-            '{{%idx-user_poll-user_id}}',
             '{{%user_polls}}'
         );
 

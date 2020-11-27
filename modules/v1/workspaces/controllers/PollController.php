@@ -4,10 +4,13 @@
 namespace app\modules\v1\workspaces\controllers;
 
 
+use app\modules\v1\workspaces\resources\PollAnswerResource;
 use app\modules\v1\workspaces\resources\PollResource;
+use app\modules\v1\workspaces\resources\UserPollResource;
 use app\rest\ActiveController;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\db\Exception;
 
 /**
  * Class PollController
@@ -31,5 +34,37 @@ class PollController extends ActiveController
         return new ActiveDataProvider([
             'query' => $query
         ]);
+    }
+
+    /**
+     *
+     *
+     * @return array|mixed
+     * @throws Exception
+     */
+    public function actionAddVote()
+    {
+        $request = Yii::$app->request;
+        $answerIds = $request->post('answerIds');
+
+        $answers = PollAnswerResource::find()->byId($answerIds)->all();
+
+        if (!$answers) {
+            return $this->validationError(Yii::t('app', 'Unable to find answers'));
+        }
+
+        $dbTransaction = Yii::$app->db->beginTransaction();
+        foreach ($answers as $answer) {
+            $model = new UserPollResource();
+
+            $model->poll_answer_id = $answer->id;
+            if (!$model->save()) {
+                $dbTransaction->rollBack();
+                return $this->validationError($model->getFirstErrors());
+            }
+        }
+
+        $dbTransaction->commit();
+        return $this->response(null, 201);
     }
 }

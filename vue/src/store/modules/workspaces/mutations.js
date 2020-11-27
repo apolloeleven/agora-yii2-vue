@@ -4,6 +4,7 @@ import {
   ADD_TIMELINE_CHILD_COMMENT,
   ADD_TIMELINE_COMMENT,
   ADD_TIMELINE_POST,
+  ADD_VOTE,
   CHANGE_CAROUSEL,
   CHANGE_TIMELINE_LOADING,
   CHANGE_TIMELINE_MODAL_LOADING,
@@ -525,5 +526,13 @@ export default {
    */
   [EDIT_POLL_ITEM](state, data) {
     state.view.polls.form.object = null;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [ADD_VOTE](state, data) {
+    console.log(data)
   },
 };

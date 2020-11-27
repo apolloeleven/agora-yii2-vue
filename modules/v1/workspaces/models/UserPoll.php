@@ -15,7 +15,6 @@ use yii\db\ActiveRecord;
  *
  * @property int $id
  * @property int $poll_answer_id
- * @property int $user_id
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $created_by
@@ -33,7 +32,7 @@ class UserPoll extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{$user_polls}}';
+        return '{{%user_polls}}';
     }
 
     /**
@@ -53,12 +52,11 @@ class UserPoll extends ActiveRecord
     public function rules()
     {
         return [
-            [['poll_answer_id', 'user_id'], 'required'],
-            [['poll_answer_id', 'user_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['poll_answer_id'], 'required'],
+            [['poll_answer_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['poll_answer_id'], 'exist', 'skipOnError' => true, 'targetClass' => PollAnswer::class, 'targetAttribute' => ['poll_answer_id' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -70,7 +68,6 @@ class UserPoll extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'poll_answer_id' => Yii::t('app', 'Poll Answer ID'),
-            'user_id' => Yii::t('app', 'User ID'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'created_by' => Yii::t('app', 'Created By'),
@@ -114,15 +111,5 @@ class UserPoll extends ActiveRecord
     public function getUpdatedBy()
     {
         return $this->hasOne(User::class, ['id' => 'updated_by']);
-    }
-
-    /**
-     * Gets query for [[User]].
-     *
-     * @return ActiveQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 }
