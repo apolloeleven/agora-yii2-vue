@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading">
+  <div v-if="loading && !this.timelineData">
     <content-spinner show/>
   </div>
   <div v-else class="workspace-timeline">
@@ -13,10 +13,11 @@
     </div>
     <div class="timeline-records">
       <no-data :model="timelineData" :loading="loading" :text="$t('Nothing is shared on timeline')"></no-data>
-      <template v-if="!loading">
-        <TimelineItem v-for="(timeline, index) in timelineData" :timeline="timeline"
-                      :index="index" :key="`timeline-post-${timeline.id}`"/>
-      </template>
+      <TimelineItem v-for="(timeline, index) in timelineData" :timeline="timeline"
+                    :index="index" :key="`timeline-post-${timeline.id}`"/>
+      <div v-if="loading && this.timelineData">
+        <content-spinner show/>
+      </div>
     </div>
   </div>
 </template>
@@ -59,7 +60,7 @@ export default {
       });
       if (res.success) {
         this.allTimelinePostsLoaded = (res.body.length < this.postsLimit) || (res.body.length === 0);
-        this.lastPostId = this.timelineData[this.timelineData.length-1].id;
+        this.lastPostId = this.timelineData[this.timelineData.length - 1].id;
       }
     },
   },
@@ -71,10 +72,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .workspace-timeline {
-    max-width: 680px;
-    margin: 0 auto;
-    overflow: auto;
-    height: 100%;
-  }
+.workspace-timeline {
+  max-width: 680px;
+  margin: 0 auto;
+  overflow: auto;
+  height: 100%;
+}
 </style>
