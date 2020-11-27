@@ -18,10 +18,16 @@ class ActivityBehavior extends Behavior
      * @var string
      */
     public $contentIdAttribute = 'id';
+
+    public $events = ['create', 'update', 'delete'];
     /**
      * @var string
      */
-    public $description;
+    public $description = [
+        'create' => '{user} created {model} {title}',
+        'update' => '{user} updated {model} {title}',
+        'delete' => '{user} created {model} {title}',
+    ];
     /**
      * @var \Closure
      */
@@ -32,7 +38,8 @@ class ActivityBehavior extends Behavior
         return [
             ActiveRecord::EVENT_AFTER_INSERT => 'afterInsert',
             ActiveRecord::EVENT_AFTER_UPDATE => 'afterUpdate',
-            ActiveRecord::EVENT_BEFORE_DELETE => 'beforeDelete'
+            ActiveRecord::EVENT_AFTER_DELETE => 'afterDelete',
+            UserActivity::EVENT_SHARE => 'onShare'
         ];
     }
 
@@ -58,7 +65,7 @@ class ActivityBehavior extends Behavior
         $this->appendAction(UserActivity::ACTION_UPDATE);
     }
 
-    public function beforeDelete()
+    public function afterDelete()
     {
         $this->appendAction(UserActivity::ACTION_DELETE);
     }
