@@ -59,17 +59,24 @@ class TimelinePost extends ActiveRecord
      */
     public function behaviors()
     {
-        return array_merge(parent::behaviors(), [
-            TimestampBehavior::class,
-            BlameableBehavior::class,
-//            [
-//                'class' => ActivityBehavior::class,
-//                'workspaceIdAttribute' => 'workspace_id',
-//                'tableNameAttribute' => TimelinePost::tableName(),
-//                'contentIdAttribute' => 'id',
-//                'descriptionAttribute' => 'description',
-//            ]
-        ]);
+        $behaviors = parent::behaviors();
+        $behaviors[] = TimestampBehavior::class;
+        $behaviors[] = BlameableBehavior::class;
+        $behaviors['activity'] = [
+            'class' => ActivityBehavior::class,
+            'workspace_id' => function () {
+                return $this->workspace_id;
+            },
+            'data' => function () {
+                return $this;
+            },
+            'events' => ['create', 'update'],
+            'template' => [
+                'update' => '{user} edited {model} {title}',
+            ]
+        ];
+
+        return $behaviors;
     }
 
     /**
