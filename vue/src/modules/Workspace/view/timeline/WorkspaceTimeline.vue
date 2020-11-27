@@ -27,6 +27,7 @@ import ContentSpinner from "@/core/components/ContentSpinner";
 import NoData from "@/core/components/NoData";
 import TimelineItem from "@/modules/Workspace/view/timeline/TimelineItem";
 import {createNamespacedHelpers} from "vuex";
+import {eventBus} from "@/core/services/event-bus";
 
 const {mapActions: mapTimelineActions, mapState: mapTimelineState} = createNamespacedHelpers('workspace');
 
@@ -67,6 +68,10 @@ export default {
   mounted() {
     let workspaceId = this.$route.params.id;
     this.timelinePosts(workspaceId);
+
+    eventBus.$on('onScrollToBottom', () => {
+      this.timelinePosts(workspaceId);
+    })
   },
 }
 </script>
