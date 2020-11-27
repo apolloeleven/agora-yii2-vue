@@ -1,5 +1,5 @@
 import {
-  ADD_ATTACH_FILES,
+  ADD_ATTACH_FILES, ADD_POLL_DATA,
   ADD_TIMELINE_CHILD_COMMENT,
   ADD_TIMELINE_COMMENT,
   ADD_TIMELINE_POST,
@@ -714,6 +714,18 @@ export async function getPolls({commit}, workspace_id) {
   return res;
 }
 
+/**
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
 export async function createPoll({commit}, data) {
-  return await httpService.post(pollUrl, data);
+  commit(TOGGLE_POLLS_LOADING)
+  const res = await httpService.post(`${pollUrl}?expand=createdBy,pollAnswers`, data);
+  if (res.success) {
+    commit(ADD_POLL_DATA, res.body)
+  }
+  commit(TOGGLE_POLLS_LOADING)
+  return res;
 }

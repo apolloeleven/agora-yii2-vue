@@ -1,5 +1,6 @@
 import {
   ADD_ATTACH_FILES,
+  ADD_POLL_DATA,
   ADD_TIMELINE_CHILD_COMMENT,
   ADD_TIMELINE_COMMENT,
   ADD_TIMELINE_POST,
@@ -498,5 +499,14 @@ export default {
    */
   [GET_POLLS_DATA](state, data) {
     state.view.polls.data = data;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [ADD_POLL_DATA](state, data) {
+    state.view.polls.data.unshift(data);
+    console.log(state.view.polls.data)
   },
 };
