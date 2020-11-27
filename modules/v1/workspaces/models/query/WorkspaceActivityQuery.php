@@ -3,11 +3,11 @@
 namespace app\modules\v1\workspaces\models\query;
 
 /**
- * This is the ActiveQuery class for [[\app\modules\v1\workspaces\models\UserActivity]].
+ * This is the ActiveQuery class for [[\app\modules\v1\workspaces\models\WorkspaceActivity]].
  *
- * @see \app\modules\v1\workspaces\models\UserActivity
+ * @see \app\modules\v1\workspaces\models\WorkspaceActivity
  */
-class UserActivtyQuery extends \yii\db\ActiveQuery
+class WorkspaceActivityQuery extends \yii\db\ActiveQuery
 {
     /*public function active()
     {
@@ -16,7 +16,7 @@ class UserActivtyQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\modules\v1\workspaces\models\UserActivity[]|array
+     * @return \app\modules\v1\workspaces\models\WorkspaceActivity[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class UserActivtyQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\modules\v1\workspaces\models\UserActivity|array|null
+     * @return \app\modules\v1\workspaces\models\WorkspaceActivity|array|null
      */
     public function one($db = null)
     {

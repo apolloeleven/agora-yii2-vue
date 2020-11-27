@@ -3,16 +3,12 @@
 
 namespace app\modules\v1\workspaces\controllers;
 
-use app\modules\v1\workspaces\models\UserActivity;
-use app\modules\v1\workspaces\resources\WorkspaceResource;
-use app\rest\ActiveController;
+use app\modules\v1\workspaces\models\WorkspaceActivity;
 use yii\data\ActiveDataProvider;
-use yii\filters\auth\HttpBearerAuth;
-use yii\web\NotFoundHttpException;
 
-class UserActivityController extends ActiveController
+class WorkspaceActivityController extends \yii\rest\ActiveController
 {
-    public $modelClass = UserActivity::class;
+    public $modelClass = WorkspaceActivity::class;
 
     public function actions()
     {

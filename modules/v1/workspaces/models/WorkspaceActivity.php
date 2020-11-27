@@ -4,15 +4,16 @@ namespace app\modules\v1\workspaces\models;
 
 use app\modules\v1\users\models\query\UserQuery;
 use app\modules\v1\users\models\User;
-use app\modules\v1\workspaces\models\query\UserActivtyQuery;
+use app\modules\v1\workspaces\models\query\WorkspaceActivityQuery;
 use app\modules\v1\workspaces\models\query\WorkspaceQuery;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "{{%user_activity}}".
+ * This is the model class for table "{{%workspace_activity}}".
  *
  * @property int $id
  * @property int|null $workspace_id
@@ -27,9 +28,9 @@ use yii\db\ActiveQuery;
  * @property User $createdBy
  * @property Workspace $workspace
  */
-class UserActivity extends \yii\db\ActiveRecord
+class WorkspaceActivity extends ActiveRecord
 {
-    public const ACTION_INSERT = 'insert';
+    public const ACTION_INSERT = 'create';
     public const ACTION_UPDATE = 'update';
     public const ACTION_DELETE = 'delete';
 
@@ -38,7 +39,7 @@ class UserActivity extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%user_activity}}';
+        return '{{%workspace_activity}}';
     }
 
     public function behaviors()
@@ -63,9 +64,8 @@ class UserActivity extends \yii\db\ActiveRecord
     {
         return [
             [['workspace_id', 'content_id', 'created_at', 'created_by'], 'integer'],
-            [['description'], 'string'],
+            [['description', 'data'], 'string'],
             [['table_name', 'action'], 'string', 'max' => 128],
-            [['data', ], 'string',],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['workspace_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workspace::className(), 'targetAttribute' => ['workspace_id' => 'id']],
         ];
@@ -77,15 +77,15 @@ class UserActivity extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'workspace_id' => 'Workspace ID',
-            'table_name' => 'Table Name',
-            'content_id' => 'Content ID',
-            'action' => 'Action',
-            'description' => 'Description',
-            'data' => 'Data',
-            'created_at' => 'Created At',
-            'created_by' => 'Created By',
+            'id' => Yii::t('app', 'ID'),
+            'workspace_id' => Yii::t('app', 'Workspace ID'),
+            'table_name' => Yii::t('app', 'Table Name'),
+            'content_id' => Yii::t('app', 'Content ID'),
+            'action' => Yii::t('app', 'Action'),
+            'description' => Yii::t('app', 'Description'),
+            'data' => Yii::t('app', 'Data'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'created_by' => Yii::t('app', 'Created By'),
         ];
     }
 
@@ -111,10 +111,10 @@ class UserActivity extends \yii\db\ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return UserActivtyQuery the active query used by this AR class.
+     * @return WorkspaceActivityQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new UserActivtyQuery(get_called_class());
+        return new WorkspaceActivityQuery(get_called_class());
     }
 }
