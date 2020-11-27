@@ -3,6 +3,7 @@
 namespace app\modules\v1\workspaces\models;
 
 use app\modules\v1\users\models\User;
+use app\modules\v1\workspaces\behaviors\ActivityBehavior;
 use app\modules\v1\workspaces\models\query\UserLikeQuery;
 use Yii;
 use yii\behaviors\BlameableBehavior;
@@ -38,16 +39,30 @@ class UserLike extends ActiveRecord
      */
     public function behaviors()
     {
-        return [
-            [
-                'class' => TimestampBehavior::class,
-                'updatedAtAttribute' => false,
-            ],
-            [
-                'class' => BlameableBehavior::class,
-                'updatedByAttribute' => false,
+        $behaviors = parent::behaviors();
+        $behaviors[] = [
+            'class' => TimestampBehavior::class,
+            'updatedAtAttribute' => false,
+        ];
+        $behaviors[] = [
+            'class' => BlameableBehavior::class,
+            'updatedByAttribute' => false,
+        ];
+        $behaviors['activity'] = [
+            'class' => ActivityBehavior::class,
+            'workspace_id' => function () {
+                return $this->timelinePost->workspace_id;
+            },
+            'data' => function () {
+                return $this;
+            },
+            'events' => ['create'],
+            'template' => [
+                'create' => '{user} liked {model} {title}',
             ]
         ];
+
+        return $behaviors;
     }
 
     /**
