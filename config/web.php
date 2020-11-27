@@ -68,8 +68,8 @@ $config = [
                     'route' => 'v1/workspaces/folder/download-file'
                 ],
                 [
-                    'pattern' => 'v1/workspaces/user-activity/<workspaceId:\d+>',
-                    'route' => 'v1/workspaces/user-activity'
+                    'pattern' => 'v1/workspaces/workspace-activity/<workspaceId:\d+>',
+                    'route' => 'v1/workspaces/workspace-activity'
                 ],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/department'],
