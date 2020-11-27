@@ -318,15 +318,17 @@ export function hideTimelineModal({commit}) {
 /**
  *
  * @param commit
- * @param workspaceId
+ * @param workspace_id
+ * @param posts_limit
+ * @param last_post_id
  * @returns {Promise<unknown>}
  */
-export async function getTimelinePosts({commit}, workspaceId) {
+export async function getTimelinePosts({state, commit}, {workspace_id, posts_limit=1e4, last_post_id=0}) {
   commit(CHANGE_TIMELINE_LOADING)
-  const res = await httpService.get(`${timelineUrl}?workspace_id=${workspaceId}&${timelineExpand}`);
+  const res = await httpService.get(`${timelineUrl}?workspace_id=${workspace_id}&limit=${posts_limit}&last_post_id=${last_post_id}&${timelineExpand}`);
   if (res.success) {
     commit(CHANGE_TIMELINE_LOADING)
-    commit(GET_TIMELINE_DATA, res.body);
+    commit(GET_TIMELINE_DATA, last_post_id === 0 ? res.body : state.view.timeline.data.concat(res.body));
   }
   return res;
 }
