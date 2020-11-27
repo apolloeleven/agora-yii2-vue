@@ -10,8 +10,8 @@ export default class PollsFormModel extends BaseModel {
   multipleChoice = false;
 
   rules = {
-    question: 'required',
-    description: 'required',
+    // question: 'required',
+    // description: 'required',
   };
 
   attributeLabels = {

@@ -68,9 +68,14 @@ class PollResource extends Poll
     {
         $dbTransaction = Yii::$app->db->beginTransaction();
 
+        if (!$this->question || !$this->description) {
+            $dbTransaction->rollBack();
+            throw new ValidationException(Yii::t('app', 'Question and description can not be blank'));
+        }
+
         if (count($this->answers) < 2) {
             $dbTransaction->rollBack();
-            throw new ValidationException(Yii::t('app', 'Answer can not be blank'));
+            throw new ValidationException(Yii::t('app', 'Answers must be 2 or more'));
         }
         $parentSave = parent::save($runValidation, $attributeNames);
 

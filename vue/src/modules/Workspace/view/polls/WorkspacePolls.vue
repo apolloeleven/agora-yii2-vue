@@ -12,20 +12,17 @@
         <label v-text="$t('Answers')"/>
         <div v-for="(answer, index) in model.answers" :key="`poll-answers-${index}`">
           <input-widget
-            :label="false" :model="answer" attribute="answer" :append="`<i class='fas fa-trash-alt'/>`"
-            :placeholder="$t('Add answer...')" @onButtonClick="removeAnswer(index)">
+            :label="false" :model="answer" attribute="answer" :placeholder="$t('Add answer...')"
+            :append="!model.answers[index + 1] ? `<i class='fas fa-plus'/>` : `<i class='fas fa-trash-alt'/>`"
+            @onButtonClick="onButtonClick(index)">
           </input-widget>
         </div>
-        <input-widget
-          :label="false" :model="model" attribute="addAnswer" :append="`<i class='fas fa-plus'/>`"
-          :placeholder="$t('Add answer...')" @onButtonClick="addNewAnswer">
-        </input-widget>
         <input-widget :model="model" attribute="postTimeline" type="checkbox"/>
         <input-widget :model="model" attribute="multipleChoice" type="checkbox"/>
       </div>
     </b-card-body>
     <b-card-footer v-if="showInputs">
-      <b-button variant="primary" class="float-right" @click="onSubmit">
+      <b-button variant="primary" class="float-right" @click="onSubmit" :disabled="disabledButton">
         {{ $t('Save') }}
       </b-button>
     </b-card-footer>
@@ -48,7 +45,6 @@ export default {
   data() {
     return {
       model: new PollsFormModel(),
-      answerModel: new AnswerModel(),
       showInputs: false,
     }
   },
@@ -56,17 +52,25 @@ export default {
     ...mapWorkspaceState({
       loading: state => state.view.polls.loading,
     }),
+    disabledButton() {
+      return !this.model.question || !this.model.description ||
+        this.model.answers.filter(a => a.answer.replace(/\s/g, '') !== '').length < 2
+    }
   },
   methods: {
     ...mapWorkspaceActions(['getPolls', 'createPoll']),
     onInputClick() {
       this.showInputs = true;
     },
-    addNewAnswer: function () {
+    addNewAnswer() {
       this.model.answers.push(new AnswerModel());
     },
-    removeAnswer: function (index) {
-      Vue.delete(this.model.answers, index);
+    onButtonClick(index) {
+      if (!this.model.answers[index + 1]) {
+        this.addNewAnswer();
+      } else {
+        Vue.delete(this.model.answers, index);
+      }
     },
     async onSubmit() {
       let data = clone(this.model);
@@ -78,8 +82,9 @@ export default {
         this.$toast(this.$t(`Poll Created successfully`));
         this.showInputs = false;
         this.model = new PollsFormModel();
+        this.addNewAnswer();
       } else {
-        console.log(body)
+        this.$toast(body.message, 'danger');
       }
     },
   },
