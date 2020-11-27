@@ -13,6 +13,7 @@ import {
   DELETE_TIMELINE_CHILD_COMMENT,
   DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
+  EDIT_POLL_ITEM,
   FOLDER_DELETED,
   GET_ACTIVE_USERS,
   GET_ALL_FOLDERS,
@@ -516,5 +517,13 @@ export default {
    */
   [DELETE_POLL_ITEM](state, data) {
     state.view.polls.data = state.view.polls.data.filter(p => p.id !== data.id);
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [EDIT_POLL_ITEM](state, data) {
+    state.view.polls.form.object = null;
   },
 };

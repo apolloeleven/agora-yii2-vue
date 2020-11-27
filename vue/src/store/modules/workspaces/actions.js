@@ -732,6 +732,12 @@ export async function createPoll({commit}, data) {
   return res;
 }
 
+/**
+ *
+ * @param commit
+ * @param data
+ * @returns {Promise<unknown>}
+ */
 export async function deletePoll({commit}, data) {
   commit(TOGGLE_POLLS_LOADING)
   const res = await httpService.delete(`${pollUrl}/${data.id}`);

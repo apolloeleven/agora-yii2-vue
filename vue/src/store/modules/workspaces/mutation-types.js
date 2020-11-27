@@ -57,3 +57,4 @@ export const TOGGLE_POLLS_LOADING = 'workspace/TOGGLE_POLLS_LOADING';
 export const GET_POLLS_DATA = 'workspace/GET_POLLS_DATA';
 export const ADD_POLL_ITEM = 'workspace/ADD_POLL_ITEM';
 export const DELETE_POLL_ITEM = 'workspace/DELETE_POLL_ITEM';
+export const EDIT_POLL_ITEM = 'workspace/EDIT_POLL_ITEM';

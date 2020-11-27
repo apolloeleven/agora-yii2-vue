@@ -3,8 +3,8 @@
     <content-spinner show/>
   </div>
   <div v-else class="workspace-polls">
-    <div class="card mb-3">
-      <div class="card-body">
+    <b-card no-body class="mb-2">
+      <b-card-body>
         <input-widget
           :model="model" attribute="question" :label="false" :placeholder="$t('Question')" @click="onInputClick">
         </input-widget>
@@ -21,19 +21,17 @@
           <input-widget :model="model" attribute="postTimeline" type="checkbox"/>
           <input-widget :model="model" attribute="multipleChoice" type="checkbox"/>
         </div>
-      </div>
-      <div class="card-footer" v-if="showInputs">
+      </b-card-body>
+      <b-card-footer v-if="showInputs">
         <b-button variant="primary" class="float-right" @click="onSubmit" :disabled="disabledButton">
           {{ $t('Save') }}
         </b-button>
-      </div>
-    </div>
+      </b-card-footer>
+    </b-card>
     <div class="poll-record">
-      <no-data :model="pollData" :loading="loading" :text="$t('There are no polls')"/>
-      <template v-if="!loading">
-        <PollItem v-for="(item, index) in pollData" :key="`poll-item-${index}`" :item="item" :index="index"
-                  @onDeleteClick="onDeleteClick(item)"/>
-      </template>
+      <no-data :model="pollData" :text="$t('There are no polls')"/>
+      <PollItem v-for="(item, index) in pollData" :key="`poll-item-${index}`" :item="item" :index="index"
+                @onDeleteClick="onDeleteClick(item)"/>
     </div>
   </div>
 </template>
@@ -41,18 +39,18 @@
 <script>
 import ContentSpinner from "@/core/components/ContentSpinner";
 import {createNamespacedHelpers} from "vuex";
+import NoData from "@/core/components/NoData";
+import PollItem from "./PollItem";
+import InputWidget from "../../../../core/components/input-widget/InputWidget";
 import PollsFormModel from "./PollsFormModel";
-import InputWidget from "@/core/components/input-widget/InputWidget";
 import AnswerModel from "./AnswerModel";
 import Vue from "vue";
 import {clone} from "lodash";
-import NoData from "@/core/components/NoData";
-import PollItem from "./PollItem";
 
 const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 export default {
   name: "WorkspacePolls",
-  components: {PollItem, NoData, InputWidget, ContentSpinner},
+  components: {InputWidget, PollItem, NoData, ContentSpinner},
   data() {
     return {
       model: new PollsFormModel(),
@@ -115,7 +113,7 @@ export default {
           this.$toast(body);
         }
       }
-    }
+    },
   },
   mounted() {
     this.addNewAnswer(2);
