@@ -15,9 +15,11 @@ use yii\db\ActiveQuery;
  */
 class UserLikeResource extends UserLike
 {
-    public function extraFields()
+    public function fields()
     {
-        return ['createdBy'];
+        return array_merge(Parent::fields(), [
+            'createdBy'
+        ]);
     }
 
     /**
