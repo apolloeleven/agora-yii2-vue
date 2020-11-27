@@ -55,19 +55,21 @@ export default {
     disabledButton() {
       return !this.model.question || !this.model.description ||
         this.model.answers.filter(a => a.answer.replace(/\s/g, '') !== '').length < 2
-    }
+    },
   },
   methods: {
     ...mapWorkspaceActions(['getPolls', 'createPoll']),
     onInputClick() {
       this.showInputs = true;
     },
-    addNewAnswer() {
-      this.model.answers.push(new AnswerModel());
+    addNewAnswer(inputNum) {
+      for (let i = 0; i < inputNum; i++) {
+        this.model.answers.push(new AnswerModel());
+      }
     },
     onButtonClick(index) {
       if (!this.model.answers[index + 1]) {
-        this.addNewAnswer();
+        this.addNewAnswer(1);
       } else {
         Vue.delete(this.model.answers, index);
       }
@@ -82,14 +84,14 @@ export default {
         this.$toast(this.$t(`Poll Created successfully`));
         this.showInputs = false;
         this.model = new PollsFormModel();
-        this.addNewAnswer();
+        this.addNewAnswer(2);
       } else {
         this.$toast(body.message, 'danger');
       }
     },
   },
   mounted() {
-    this.addNewAnswer();
+    this.addNewAnswer(2);
     this.getPolls(this.$route.params.id);
   }
 }
