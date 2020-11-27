@@ -55,6 +55,9 @@ class Article extends ActiveRecord
             'workspace_id' => function () {
                 return $this->workspace_id;
             },
+            'data' => function () {
+                return $this;
+            },
             'events' => ['create', 'update'],
             'template' => [
                 'update' => '{user} edited {model} {title}',
