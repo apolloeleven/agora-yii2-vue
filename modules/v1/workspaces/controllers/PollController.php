@@ -54,18 +54,34 @@ class PollController extends ActiveController
         }
 
         $dbTransaction = Yii::$app->db->beginTransaction();
-        foreach ($answers as $answer) {
-            $model = new UserPollAnswerResource();
 
-            $model->poll_answer_id = $answer->id;
-            $model->poll_id = $answer->poll_id;
-            if (!$model->save()) {
-                $dbTransaction->rollBack();
-                return $this->validationError($model->getFirstErrors());
-            }
+        $userAnswerData = [];
+
+        foreach ($answers as $answer) {
+            $userAnswerData [] = [
+                'poll_answer_id' => $answer->id,
+                'pool_id' => $answer->poll_id,
+                'created_at' => time(),
+                'updated_at' => time(),
+                'created_by' => Yii::$app->user->id,
+                'updated_by' => Yii::$app->user->id,
+            ];
+        }
+        $createdData = Yii::$app->db->createCommand()
+            ->batchInsert
+            (
+                UserPollAnswerResource::tableName(),
+                ['poll_answer_id', 'poll_id', 'created_at', 'updated_at', 'created_by', 'updated_by'],
+                $userAnswerData
+            )
+            ->execute();
+
+        if ($createdData !== count($userAnswerData)) {
+            $dbTransaction->rollBack();
+            return $this->validationError(Yii::t('app', 'Unable to save vote'));
         }
 
         $dbTransaction->commit();
-        return $this->response(null, 201);
+        return $this->response($userAnswerData, 201);
     }
 }

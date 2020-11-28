@@ -23,11 +23,11 @@
         <div class="row">
           <div class="col-md-1">
             <b-form-checkbox
-              v-if="item.is_multiple && item.myVotes.length === 0" :id="`checkbox-${answer.id}`" v-model="selected"
+              v-if="item.is_multiple && haveVotePermission" :id="`checkbox-${answer.id}`" v-model="selected"
               :name="`checkbox-${answer.id}`" :value="answer.id" class="mb-4">
             </b-form-checkbox>
             <b-form-radio
-              v-else-if="!item.is_multiple && item.myVotes.length === 0" class="mb-4" v-model="selected"
+              v-else-if="!item.is_multiple && haveVotePermission" class="mb-4" v-model="selected"
               :name="`radio-${answer.id}`" :value="answer.id">
             </b-form-radio>
           </div>
@@ -38,7 +38,9 @@
           <div class="col-md-4 mt-2">{{ answer.userPollAnswers.length }} {{ $t('votes') }}</div>
         </div>
       </div>
-      <b-button variant="primary" class="float-right" @click="onVoteClick" :disabled="selected.length === 0">
+      <b-button
+        v-if="haveVotePermission" variant="primary" class="float-right" @click="onVoteClick(item)"
+        :disabled="selected.length === 0">
         {{ $t('Vote') }}
       </b-button>
     </b-card-body>
@@ -57,13 +59,17 @@ export default {
       selected: [],
     }
   },
-  computed: {},
+  computed: {
+    haveVotePermission() {
+      return this.item.myVotes.length === 0
+    },
+  },
   methods: {
     onDeleteClick() {
       this.$emit('onDeleteClick')
     },
-    onVoteClick() {
-      this.$emit('onVoteClick', this.selected)
+    onVoteClick(item) {
+      this.$emit('onVoteClick', {selected: this.selected, item: item})
       this.selected = [];
     },
     progressValue(item, answer) {

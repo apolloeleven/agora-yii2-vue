@@ -530,9 +530,26 @@ export default {
   /**
    *
    * @param state
+   * @param selected
+   * @param pollData
    * @param data
    */
-  [ADD_VOTE](state, data) {
-    console.log(data)
+  [ADD_VOTE](state, {selected, item: pollData, data}) {
+    let pollItem = state.view.polls.data.filter(p => p.id === pollData.id)
+    if (pollData.is_multiple) {
+      selected.forEach(id => {
+          pollItem.forEach(p => p.pollAnswers.filter(pa => pa.id === id)
+            .forEach(pa => pa.userPollAnswers.push(data)));
+          pollItem.forEach(p => p.myVotes.push(data));
+          pollItem.forEach(p => p.userPollAllAnswers.push(data));
+        }
+      );
+    } else {
+      pollItem.forEach(p => p.pollAnswers.filter(pa => pa.id === selected)
+        .forEach(pa => pa.userPollAnswers.push(data)));
+      pollItem.forEach(p => p.myVotes.push(data));
+      pollItem.forEach(p => p.userPollAllAnswers.push(data));
+    }
+
   },
 };

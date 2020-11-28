@@ -754,13 +754,14 @@ export async function deletePoll({commit}, data) {
 /**
  *
  * @param commit
- * @param data
+ * @param selected
+ * @param item
  * @returns {Promise<unknown>}
  */
-export async function addVote({commit}, data) {
-  const res = await httpService.post(`${pollUrl}/add-vote`, {answerIds: data});
+export async function addVote({commit}, {selected, item}) {
+  const res = await httpService.post(`${pollUrl}/add-vote`, {answerIds: selected});
   if (res.success) {
-    commit(ADD_VOTE, data)
+    commit(ADD_VOTE, {selected, item, data: res.body})
   }
   return res;
 }

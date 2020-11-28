@@ -114,8 +114,8 @@ export default {
         }
       }
     },
-    async onVoteClick(index) {
-      const {success, body} = await this.addVote(index);
+    async onVoteClick({selected, item}) {
+      const {success, body} = await this.addVote({selected, item});
       if (success) {
         this.$toast(this.$t(`Vote added successfully`));
       } else {
