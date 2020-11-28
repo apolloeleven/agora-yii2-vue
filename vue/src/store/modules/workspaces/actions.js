@@ -759,7 +759,7 @@ export async function deletePoll({commit}, data) {
  * @returns {Promise<unknown>}
  */
 export async function addVote({commit}, {selected, item}) {
-  const res = await httpService.post(`${pollUrl}/add-vote`, {answerIds: selected});
+  const res = await httpService.post(`${pollUrl}/add-vote?expand=createdBy`, {answerIds: selected});
   if (res.success) {
     commit(ADD_VOTE, {selected, item, data: res.body})
   }

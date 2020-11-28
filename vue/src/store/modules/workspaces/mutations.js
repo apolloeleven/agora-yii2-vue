@@ -536,12 +536,11 @@ export default {
    */
   [ADD_VOTE](state, {selected, item: pollData, data}) {
     let pollItem = state.view.polls.data.filter(p => p.id === pollData.id)
-    selected.forEach(id => {
-        pollItem.forEach(p => p.pollAnswers.filter(pa => pa.id === id)
-          .forEach(pa => pa.userPollAnswers.push(data)));
-        pollItem.forEach(p => p.myVotes.push(data));
-        pollItem.forEach(p => p.userPollAllAnswers.push(data));
-      }
-    );
+    pollItem.forEach(p => p.pollAnswers.filter(pa => selected.includes(pa.id))
+      .forEach(pa => pa.userPollAnswers.push(...data.filter(d => d.poll_answer_id === pa.id))));
+    pollItem.forEach(p => p.myVotes.push(...data));
+    pollItem.forEach(p => p.userPollAllAnswers.push(...data));
+
+    state.view.polls.data = [...state.view.polls.data];
   },
 };
