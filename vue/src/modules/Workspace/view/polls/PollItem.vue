@@ -33,7 +33,7 @@
           </div>
           <div class="col-md-6">
             <h6 class="mb-0">{{ answer.answer }}</h6>
-            <b-progress height="7px" :value="answer.userPolls.length * 100 / item.userPolls.length" variant="primary"/>
+            <b-progress height="7px" :value="progressValue(item, answer)" variant="primary"/>
           </div>
           <div class="col-md-4 mt-2">{{ answer.userPolls.length }} {{ $t('votes') }}</div>
         </div>
@@ -65,7 +65,10 @@ export default {
     onVoteClick() {
       this.$emit('onVoteClick', this.selected)
       this.selected = [];
-    }
+    },
+    progressValue(item, answer) {
+      return answer.userPolls.length * 100 / item.userPolls.length
+    },
   },
 }
 </script>

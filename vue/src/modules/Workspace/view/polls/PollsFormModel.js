@@ -1,6 +1,5 @@
 import BaseModel from "@/core/components/input-widget/BaseModel";
 import i18n from "../../../../shared/i18n";
-import AnswerModel from "./AnswerModel";
 
 export default class PollsFormModel extends BaseModel {
   question = '';
