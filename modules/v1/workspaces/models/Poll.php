@@ -25,10 +25,10 @@ use yii\db\ActiveRecord;
  * @property int|null $updated_by
  *
  * @property PollAnswer[] $pollAnswers
- * @property UserPoll[] $userPolls
  * @property User $createdBy
  * @property User $updatedBy
  * @property Workspace $workspace
+ * @property UserPollAnswer[] $userPollAnswers
  */
 class Poll extends ActiveRecord
 {
@@ -57,10 +57,10 @@ class Poll extends ActiveRecord
     public function rules()
     {
         return [
-            [['description'], 'string'],
             [['workspace_id'], 'required'],
             [['workspace_id', 'is_multiple', 'is_for_timeline', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['question'], 'string', 'max' => 1024],
+            [['description'], 'string'],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
             [['workspace_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workspace::class, 'targetAttribute' => ['workspace_id' => 'id']],
@@ -111,7 +111,7 @@ class Poll extends ActiveRecord
      */
     public function getUserPolls()
     {
-        return $this->hasMany(UserPoll::class, ['poll_id' => 'id']);
+        return $this->hasMany(UserPollAnswer::class, ['poll_id' => 'id']);
     }
 
     /**
@@ -142,5 +142,15 @@ class Poll extends ActiveRecord
     public function getWorkspace()
     {
         return $this->hasOne(Workspace::class, ['id' => 'workspace_id']);
+    }
+
+    /**
+     * Gets query for [[UserPollAnswers]].
+     *
+     * @return ActiveQuery
+     */
+    public function getUserPollAnswers()
+    {
+        return $this->hasMany(UserPollAnswer::class, ['poll_id' => 'id']);
     }
 }

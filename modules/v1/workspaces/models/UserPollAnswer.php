@@ -3,7 +3,7 @@
 namespace app\modules\v1\workspaces\models;
 
 use app\modules\v1\users\models\User;
-use app\modules\v1\workspaces\models\query\UserPollQuery;
+use app\modules\v1\workspaces\models\query\UserPollAnswerQuery;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -11,7 +11,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "{{%user_polls}}".
+ * This is the model class for table "{{%user_poll_answers}}".
  *
  * @property int $id
  * @property int $poll_id
@@ -23,17 +23,17 @@ use yii\db\ActiveRecord;
  *
  * @property User $createdBy
  * @property PollAnswer $pollAnswer
+ * @property Poll $poll
  * @property User $updatedBy
- * @property User $user
  */
-class UserPoll extends ActiveRecord
+class UserPollAnswer extends ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return '{{%user_polls}}';
+        return '{{%user_poll_answers}}';
     }
 
     /**
@@ -57,6 +57,7 @@ class UserPoll extends ActiveRecord
             [['poll_answer_id', 'poll_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['poll_answer_id'], 'exist', 'skipOnError' => true, 'targetClass' => PollAnswer::class, 'targetAttribute' => ['poll_answer_id' => 'id']],
+            [['poll_id'], 'exist', 'skipOnError' => true, 'targetClass' => Poll::class, 'targetAttribute' => ['poll_id' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
         ];
     }
@@ -78,11 +79,11 @@ class UserPoll extends ActiveRecord
     }
 
     /**
-     * @return UserPollQuery|ActiveQuery
+     * @return UserPollAnswerQuery|ActiveQuery
      */
     public static function find()
     {
-        return new UserPollQuery(get_called_class());
+        return new UserPollAnswerQuery(get_called_class());
     }
 
     /**
@@ -103,6 +104,16 @@ class UserPoll extends ActiveRecord
     public function getPollAnswer()
     {
         return $this->hasOne(PollAnswer::class, ['id' => 'poll_answer_id']);
+    }
+
+    /**
+     * Gets query for [[Poll]].
+     *
+     * @return ActiveQuery
+     */
+    public function getPoll()
+    {
+        return $this->hasOne(Poll::class, ['id' => 'poll_id']);
     }
 
     /**

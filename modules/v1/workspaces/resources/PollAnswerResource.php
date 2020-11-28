@@ -16,7 +16,7 @@ class PollAnswerResource extends PollAnswer
 {
     public function extraFields()
     {
-        return ['userPolls'];
+        return ['userPollAnswers'];
     }
 
     /**
@@ -26,6 +26,6 @@ class PollAnswerResource extends PollAnswer
      */
     public function getUserPolls()
     {
-        return $this->hasMany(UserPollResource::class, ['poll_answer_id' => 'id']);
+        return $this->hasMany(UserPollAnswerResource::class, ['poll_answer_id' => 'id']);
     }
 }

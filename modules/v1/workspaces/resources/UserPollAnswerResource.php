@@ -5,15 +5,15 @@ namespace app\modules\v1\workspaces\resources;
 
 
 use app\modules\v1\users\resources\UserResource;
-use app\modules\v1\workspaces\models\UserPoll;
+use app\modules\v1\workspaces\models\UserPollAnswer;
 use yii\db\ActiveQuery;
 
 /**
- * Class UserPollResource
+ * Class UserPollAnswerResource
  *
  * @package app\modules\v1\workspaces\resources
  */
-class UserPollResource extends UserPoll
+class UserPollAnswerResource extends UserPollAnswer
 {
     public function extraFields()
     {

@@ -24,7 +24,7 @@ use yii\db\ActiveRecord;
  * @property User $createdBy
  * @property Poll $poll
  * @property User $updatedBy
- * @property UserPoll[] $userPolls
+ * @property UserPollAnswer[] $userPollAnswers
  */
 class PollAnswer extends ActiveRecord
 {
@@ -121,8 +121,8 @@ class PollAnswer extends ActiveRecord
      *
      * @return ActiveQuery
      */
-    public function getUserPolls()
+    public function getUserPollAnswers()
     {
-        return $this->hasMany(UserPoll::class, ['poll_answer_id' => 'id']);
+        return $this->hasMany(UserPollAnswer::class, ['poll_answer_id' => 'id']);
     }
 }

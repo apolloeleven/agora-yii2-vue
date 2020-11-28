@@ -6,7 +6,7 @@ namespace app\modules\v1\workspaces\controllers;
 
 use app\modules\v1\workspaces\resources\PollAnswerResource;
 use app\modules\v1\workspaces\resources\PollResource;
-use app\modules\v1\workspaces\resources\UserPollResource;
+use app\modules\v1\workspaces\resources\UserPollAnswerResource;
 use app\rest\ActiveController;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -55,7 +55,7 @@ class PollController extends ActiveController
 
         $dbTransaction = Yii::$app->db->beginTransaction();
         foreach ($answers as $answer) {
-            $model = new UserPollResource();
+            $model = new UserPollAnswerResource();
 
             $model->poll_answer_id = $answer->id;
             $model->poll_id = $answer->poll_id;

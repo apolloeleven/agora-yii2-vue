@@ -3,20 +3,20 @@
 
 namespace app\modules\v1\workspaces\models\query;
 
-use app\modules\v1\workspaces\models\UserPoll;
+use app\modules\v1\workspaces\models\UserPollAnswer;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * Class UserPollQuery
+ * Class UserPollAnswerQuery
  *
  * @package app\modules\v1\workspaces\models\query
  */
-class UserPollQuery extends ActiveQuery
+class UserPollAnswerQuery extends ActiveQuery
 {
     /**
      * @param null $db
-     * @return UserPoll[]
+     * @return UserPollAnswer[]
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class UserPollQuery extends ActiveQuery
 
     /**
      * @param null $db
-     * @return UserPoll|array|ActiveRecord
+     * @return UserPollAnswer|array|ActiveRecord
      */
     public function one($db = null)
     {
@@ -34,10 +34,10 @@ class UserPollQuery extends ActiveQuery
 
     /**
      * @param $id
-     * @return UserPollQuery
+     * @return UserPollAnswerQuery
      */
     public function byId($id)
     {
-        return $this->andWhere([UserPoll::tableName() . '.id' => $id]);
+        return $this->andWhere([UserPollAnswer::tableName() . '.id' => $id]);
     }
 }
