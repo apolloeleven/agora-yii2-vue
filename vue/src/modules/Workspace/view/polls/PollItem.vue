@@ -74,23 +74,23 @@ export default {
   },
   computed: {
     haveVotePermission() {
-      return this.item.myVotes.length === 0
+      return this.item.myVotes.length === 0;
     },
   },
   methods: {
     onDeleteClick() {
-      this.$emit('onDeleteClick')
+      this.$emit('onDeleteClick');
     },
     onVoteClick(item) {
       let selected = this.selected.length > 0 ? this.selected : [this.selected];
-      this.$emit('onVoteClick', {selected: selected, item: item})
+      this.$emit('onVoteClick', {selected: selected, item: item});
       this.selected = [];
     },
     progressValue(item, answer) {
-      return answer.userPollAnswers.length * 100 / item.userPollAllAnswers.length
+      return answer.userPollAnswers.length * 100 / item.userPollAllAnswers.length;
     },
     computedVote(item) {
-      return item.userPollAnswers.length !== 0
+      return item.userPollAnswers.length !== 0;
     },
   },
 }
