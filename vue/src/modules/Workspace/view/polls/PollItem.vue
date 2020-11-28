@@ -35,7 +35,7 @@
             <h6 class="mb-0">{{ answer.answer }}</h6>
             <b-progress height="7px" :value="progressValue(item, answer)" variant="primary"/>
           </div>
-          <div class="col-md-4 mt-2">{{ answer.userPolls.length }} {{ $t('votes') }}</div>
+          <div class="col-md-4 mt-2">{{ answer.userPollAnswers.length }} {{ $t('votes') }}</div>
         </div>
       </div>
       <b-button variant="primary" class="float-right" @click="onVoteClick" :disabled="selected.length === 0">
@@ -67,7 +67,7 @@ export default {
       this.selected = [];
     },
     progressValue(item, answer) {
-      return answer.userPolls.length * 100 / item.userPolls.length
+      return answer.userPollAnswers.length * 100 / item.userPollAllAnswers.length
     },
   },
 }

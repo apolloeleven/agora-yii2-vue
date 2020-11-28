@@ -24,7 +24,7 @@ class PollAnswerResource extends PollAnswer
      *
      * @return ActiveQuery
      */
-    public function getUserPolls()
+    public function getUserPollAnswers()
     {
         return $this->hasMany(UserPollAnswerResource::class, ['poll_answer_id' => 'id']);
     }

@@ -46,7 +46,7 @@ class PollResource extends Poll
 
     public function extraFields()
     {
-        return ['createdBy', 'pollAnswers', 'myVotes', 'userPollAnswers'];
+        return ['createdBy', 'pollAnswers', 'myVotes', 'userPollAllAnswers'];
     }
 
     /**
@@ -81,7 +81,7 @@ class PollResource extends Poll
      *
      * @return ActiveQuery
      */
-    public function getUserPollAnswers()
+    public function getUserPollAllAnswers()
     {
         return $this->hasMany(UserPollAnswerResource::class, ['poll_id' => 'id']);
     }

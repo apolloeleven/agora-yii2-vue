@@ -65,7 +65,9 @@ const userCommentUrl = '/v1/workspaces/user-comment';
 const pollUrl = '/v1/workspaces/poll';
 
 const timelineExpand = `expand=article,createdBy,timelineComments.createdBy,timelineComments.childrenComments.createdBy,
-timelineComments.childrenComments.parent,userLikes,myLikes&sort=-created_at`
+timelineComments.childrenComments.parent,userLikes,myLikes&sort=-created_at`;
+
+const pollExpand = `createdBy,pollAnswers.userPollAnswers.createdBy,userPollAllAnswers.createdBy,myVotes`;
 
 /**
  * Show workspace form's modal
@@ -708,7 +710,7 @@ export async function getWorkspaceUsers({commit}, id) {
 export async function getPolls({commit}, workspace_id) {
   commit(TOGGLE_POLLS_LOADING)
   const res = await httpService.get(pollUrl, {
-    params: {workspace_id, sort: '-created_at', expand: 'createdBy,pollAnswers.userPolls.createdBy,myVotes,userPolls'}
+    params: {workspace_id, sort: '-created_at', expand: pollExpand}
   })
   if (res.success) {
     commit(GET_POLLS_DATA, res.body)
@@ -725,7 +727,7 @@ export async function getPolls({commit}, workspace_id) {
  */
 export async function createPoll({commit}, data) {
   commit(TOGGLE_POLLS_LOADING)
-  const res = await httpService.post(`${pollUrl}?expand=createdBy,pollAnswers.userPolls.createdBy,myVotes,userPolls`, data);
+  const res = await httpService.post(`${pollUrl}?expand=${pollExpand}`, data);
   if (res.success) {
     commit(ADD_POLL_ITEM, res.body)
   }
