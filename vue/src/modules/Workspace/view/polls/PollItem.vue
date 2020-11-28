@@ -69,11 +69,8 @@ export default {
       this.$emit('onDeleteClick')
     },
     onVoteClick(item) {
-      if (this.selected.length > 0) {
-        this.$emit('onVoteClick', {selected: this.selected, item: item})
-      } else {
-        this.$emit('onVoteClick', {selected: [this.selected], item: item})
-      }
+      let selected = this.selected.length > 0 ? this.selected : [this.selected];
+      this.$emit('onVoteClick', {selected: selected, item: item})
       this.selected = [];
     },
     progressValue(item, answer) {
