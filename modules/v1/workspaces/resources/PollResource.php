@@ -108,6 +108,12 @@ class PollResource extends Poll
             $dbTransaction->rollBack();
             throw new ValidationException(Yii::t('app', 'Answers must be 2 or more'));
         }
+
+        if (count(array_unique($this->answers)) !== count($this->answers)) {
+            $dbTransaction->rollBack();
+            throw new ValidationException(Yii::t('app', 'Answer must be unique'));
+        }
+
         $parentSave = parent::save($runValidation, $attributeNames);
 
         $answerData = [];
