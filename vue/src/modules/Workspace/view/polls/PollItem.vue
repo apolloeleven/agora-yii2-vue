@@ -35,7 +35,17 @@
             <h6 class="mb-0">{{ answer.answer }}</h6>
             <b-progress height="7px" :value="progressValue(item, answer)" variant="primary"/>
           </div>
-          <div class="col-md-4 mt-2">{{ answer.userPollAnswers.length }} {{ $t('votes') }}</div>
+          <h6 class="col-md-2 mt-2" :class="{'vote-text': computedVote(answer)}"
+              :id="`all-vote-${answer.id}`">
+            {{ answer.userPollAnswers.length }} {{ $t('votes') }}
+          </h6>
+          <b-popover v-if="computedVote(answer)" :target="`all-vote-${answer.id}`" triggers="hover" placement="top">
+            <ul class="poll-popover">
+              <li v-for="(value, key) in answer.userPollAnswers" :key="`poll-vote-${key}`">
+                {{ value.createdBy.displayName }}
+              </li>
+            </ul>
+          </b-popover>
         </div>
       </div>
       <b-button
@@ -48,8 +58,11 @@
 </template>
 
 <script>
+import NoDataAvailable from "../../../../core/components/NoDataAvailable";
+
 export default {
   name: "PollItem",
+  components: {NoDataAvailable},
   props: {
     item: Object,
     index: Number,
@@ -76,10 +89,22 @@ export default {
     progressValue(item, answer) {
       return answer.userPollAnswers.length * 100 / item.userPollAllAnswers.length
     },
+    computedVote(item) {
+      return item.userPollAnswers.length !== 0
+    },
   },
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.poll-popover {
+  list-style: none;
+  padding: unset;
+  margin-bottom: unset;
+  font-size: 12px;
+}
 
+.vote-text {
+  color: #3989c6;
+}
 </style>
