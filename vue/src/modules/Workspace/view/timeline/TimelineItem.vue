@@ -1,6 +1,6 @@
 <template>
   <b-card no-body class="mb-3" :style="'animation-delay: '+(index / 5)+'s'">
-    <b-card-body class="pr-5 pb-0">
+    <b-card-body v-if="!timeline.poll_id" class="pr-5 pb-0">
       <b-media>
         <template v-slot:aside>
           <b-img
@@ -29,8 +29,9 @@
         </p>
       </b-media>
     </b-card-body>
+    <PollItem v-else :item="timeline.poll" @onDeleteClick="onDeleteClicked(timeline.poll)" @onVoteClick="onVoteClicked"/>
 
-    <div class="p-3 description" v-html="timeline.description"></div>
+    <div v-if="!timeline.poll_id" class="p-3 description" v-html="timeline.description"/>
     <b-card-body v-if="timeline.action === this.SHARE_ARTICLE && timeline.article">
       <div class="row">
         <div class="col">
@@ -65,7 +66,8 @@
         :key="`timeline-item-comment-${index}`" :currentUser="user">
       </CommentItem>
     </b-card-body>
-    <dropdown-buttons :item="timeline" @editClicked="onEditClicked" @removeClicked="onRemoveClicked"/>
+    <dropdown-buttons v-if="!timeline.poll_id" :item="timeline" @editClicked="onEditClicked"
+                      @removeClicked="onRemoveClicked"/>
   </b-card>
 </template>
 
@@ -77,13 +79,14 @@ import CommentItem from "@/modules/Workspace/components/comment/CommentItem";
 import AddComment from "@/modules/Workspace/components/comment/AddComment";
 import LikeUnlikeButton from "@/core/components/LikeUnlikeButton";
 import DropdownButtons from "@/core/components/DropdownButtons";
+import PollItem from "../polls/PollItem";
 
 const {mapState} = createNamespacedHelpers('user');
 const {mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "TimelineItem",
-  components: {DropdownButtons, LikeUnlikeButton, AddComment, CommentItem},
+  components: {PollItem, DropdownButtons, LikeUnlikeButton, AddComment, CommentItem},
   props: {
     index: Number,
     timeline: Object
@@ -107,7 +110,7 @@ export default {
     }
   },
   methods: {
-    ...mapWorkspaceActions(['showTimelineModal', 'deleteTimelinePost', 'like', 'unlike']),
+    ...mapWorkspaceActions(['showTimelineModal', 'deleteTimelinePost', 'like', 'unlike', 'deletePoll', 'addVote']),
     isImage(url) {
       return fileService.isImage(url)
     },
@@ -140,6 +143,28 @@ export default {
         await this.like(params);
       }
     },
+    async onDeleteClicked(item) {
+      const result = await this.$confirm(
+        this.$t(`Are you sure you want to delete this poll?`),
+        this.$t('This operation can not be undone')
+      );
+      if (result) {
+        const {success, body} = await this.deletePoll(item);
+        if (success) {
+          this.$toast(this.$t(`Poll deleted successfully`));
+        } else {
+          this.$toast(body, 'danger');
+        }
+      }
+    },
+    async onVoteClicked({selected, item}) {
+      const {success, body} = await this.addVote({selected, item});
+      if (success) {
+        this.$toast(this.$t(`Vote added successfully`));
+      } else {
+        this.$toast(body, 'danger');
+      }
+    }
   },
 }
 </script>

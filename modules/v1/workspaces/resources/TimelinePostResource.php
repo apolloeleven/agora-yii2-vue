@@ -32,6 +32,7 @@ class TimelinePostResource extends TimelinePost
             'id',
             'action',
             'workspace_id',
+            'poll_id',
             'description',
             'file_url' => function () {
                 return $this->getFileUrl();
@@ -59,6 +60,7 @@ class TimelinePostResource extends TimelinePost
             'userLikes',
             'myLikes',
             'workspace',
+            'poll',
         ];
     }
 
@@ -112,6 +114,14 @@ class TimelinePostResource extends TimelinePost
     public function getArticle()
     {
         return $this->hasOne(ArticleResource::class, ['id' => 'article_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getPoll()
+    {
+        return $this->hasOne(PollResource::class, ['id' => 'poll_id']);
     }
 
     /**

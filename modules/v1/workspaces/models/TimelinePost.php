@@ -20,6 +20,7 @@ use yii\web\UploadedFile;
  * @property int $id
  * @property int $workspace_id
  * @property int $article_id
+ * @property int $poll_id
  * @property string|null $attachment_ids
  * @property string|null $action
  * @property string|null $description
@@ -29,6 +30,7 @@ use yii\web\UploadedFile;
  * @property int|null $updated_by
  *
  * @property Article $article
+ * @property Poll $poll
  * @property UserLike[] $myLikes
  * @property UserComment[] $userComments
  * @property UserLike[] $userLikes
@@ -72,11 +74,12 @@ class TimelinePost extends ActiveRecord
         return [
             [['workspace_id'], 'required'],
             [['description', 'attachment_ids'], 'string'],
-            [['article_id', 'created_at', 'updated_at', 'created_by', 'updated_by', 'workspace_id'], 'integer'],
+            [['article_id', 'poll_id', 'created_at', 'updated_at', 'created_by', 'updated_by', 'workspace_id'], 'integer'],
             [['action'], 'string', 'max' => 255],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['workspace_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workspace::class, 'targetAttribute' => ['workspace_id' => 'id']],
+            [['poll_id'], 'exist', 'skipOnError' => true, 'targetClass' => Poll::class, 'targetAttribute' => ['poll_id' => 'id']],
             [['file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpeg, svg, gif, jpg, avi, flv, wmv, mov, mp4, ogg']
         ];
     }
@@ -90,6 +93,7 @@ class TimelinePost extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'workspace_id' => Yii::t('app', 'Workspace ID'),
             'article_id' => Yii::t('app', 'Article ID'),
+            'poll_id' => Yii::t('app', 'Poll ID'),
             'attachment_ids' => Yii::t('app', 'Attachment IDs'),
             'action' => Yii::t('app', 'Action'),
             'description' => Yii::t('app', 'Description'),
@@ -126,6 +130,14 @@ class TimelinePost extends ActiveRecord
     public function getArticle()
     {
         return $this->hasOne(Article::class, ['id' => 'article_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getPoll()
+    {
+        return $this->hasOne(Poll::class, ['id' => 'poll_id']);
     }
 
     /**

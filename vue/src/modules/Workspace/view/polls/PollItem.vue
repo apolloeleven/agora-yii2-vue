@@ -1,5 +1,5 @@
 <template>
-  <b-card no-body class="mb-2">
+  <b-card no-body :class="{'mb-2': isPollPage}">
     <b-card-header>
       <div class="d-flex justify-content-between align-items-center">
         <div class="d-none d-sm-flex mb-0">
@@ -75,6 +75,9 @@ export default {
   computed: {
     haveVotePermission() {
       return this.item.myVotes.length === 0;
+    },
+    isPollPage() {
+      return this.$route.name === 'workspace.polls'
     },
   },
   methods: {

@@ -18,7 +18,7 @@
               @onButtonClick="onButtonClick(index)">
             </input-widget>
           </div>
-          <input-widget :model="model" attribute="postTimeline" type="checkbox"/>
+          <input-widget :model="model" attribute="postOnTimeline" type="checkbox"/>
           <input-widget :model="model" attribute="multipleChoice" type="checkbox"/>
         </div>
       </b-card-body>
@@ -89,6 +89,7 @@ export default {
       data['workspace_id'] = this.$route.params.id;
       data['answers'] = this.model.answers.filter(a => a.answer.replace(/\s/g, '') !== '').map(a => a.answer);
       data['is_multiple'] = this.model.multipleChoice ? 1 : 0;
+      data['is_for_timeline'] = this.model.postOnTimeline ? 1 : 0;
 
       const {success, body} = await this.createPoll(data);
       if (success) {
@@ -121,7 +122,7 @@ export default {
       } else {
         this.$toast(body, 'danger');
       }
-    }
+    },
   },
   mounted() {
     this.addNewAnswer(2);

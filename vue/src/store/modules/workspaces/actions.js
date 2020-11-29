@@ -65,7 +65,8 @@ const userCommentUrl = '/v1/workspaces/user-comment';
 const pollUrl = '/v1/workspaces/poll';
 
 const timelineExpand = `expand=article,createdBy,timelineComments.createdBy,timelineComments.childrenComments.createdBy,
-timelineComments.childrenComments.parent,userLikes,myLikes&sort=-created_at`;
+timelineComments.childrenComments.parent,userLikes,myLikes,poll.pollAnswers.userPollAnswers.createdBy,poll.createdBy,
+poll.userPollAllAnswers.createdBy,poll.myVotes&sort=-created_at`;
 
 const pollExpand = `createdBy,pollAnswers.userPollAnswers.createdBy,userPollAllAnswers.createdBy,myVotes`;
 

@@ -5,7 +5,7 @@ export default class PollsFormModel extends BaseModel {
   question = '';
   description = '';
   answers = [];
-  postTimeline = false;
+  postOnTimeline = false;
   multipleChoice = false;
 
   rules = {
@@ -16,7 +16,7 @@ export default class PollsFormModel extends BaseModel {
   attributeLabels = {
     question: i18n.t('Question'),
     description: i18n.t('Description'),
-    postTimeline: i18n.t('Post on the timeline'),
+    postOnTimeline: i18n.t('Post on the timeline'),
     multipleChoice: i18n.t('Multiple answers per user'),
   };
 

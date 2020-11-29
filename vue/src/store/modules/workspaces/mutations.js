@@ -518,6 +518,7 @@ export default {
    */
   [DELETE_POLL_ITEM](state, data) {
     state.view.polls.data = state.view.polls.data.filter(p => p.id !== data.id);
+    state.view.timeline.data = state.view.timeline.data.filter(p => p.poll_id !== data.id);
   },
   /**
    *
@@ -542,5 +543,12 @@ export default {
     pollItem.forEach(p => p.userPollAllAnswers.push(...data));
 
     state.view.polls.data = [...state.view.polls.data];
+
+    if (pollData.is_for_timeline) {
+      state.view.timeline.data.filter(t => t.poll_id === pollData.id)
+        .forEach(tp => tp.poll = {...state.view.polls.data.filter(p => p.id === pollData.id)[0]})
+
+      state.view.timeline.data = [...state.view.timeline.data]
+    }
   },
 };

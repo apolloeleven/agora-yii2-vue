@@ -116,6 +116,18 @@ class PollResource extends Poll
 
         $parentSave = parent::save($runValidation, $attributeNames);
 
+        if ($this->is_for_timeline) {
+            $timelineModel = new TimelinePostResource();
+
+            $timelineModel->poll_id = $this->id;
+            $timelineModel->workspace_id = $this->workspace_id;
+
+            if (!$timelineModel->save()) {
+                $dbTransaction->rollBack();
+                throw new ValidationException(Yii::t('app', 'Unable to create poll for timeline'));
+            }
+        }
+
         $answerData = [];
 
         foreach ($this->answers as $answer) {
