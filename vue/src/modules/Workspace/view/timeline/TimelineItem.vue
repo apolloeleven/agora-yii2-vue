@@ -1,35 +1,42 @@
 <template>
   <b-card no-body class="mb-3" :style="'animation-delay: '+(index / 5)+'s'">
-    <b-card-body v-if="!timeline.poll_id" class="pr-5 pb-0">
-      <b-media>
-        <template v-slot:aside>
-          <b-img
-            rounded="circle" :src="timeline.createdBy.image_url  || '/assets/img/avatar.svg'" width="48" height="48">
-          </b-img>
-        </template>
-        <h5 class="mt-0">
-          {{ timeline.createdBy.displayName }}
+    <b-card-body v-if="!timeline.poll_id">
+      <div class="d-flex justify-content-between">
+        <b-media>
+          <template v-slot:aside>
+            <b-img
+              rounded="circle" :src="timeline.createdBy.image_url  || '/assets/img/avatar.svg'" width="48" height="48">
+            </b-img>
+          </template>
+          <h5 class="mt-0">
+            {{ timeline.createdBy.displayName }}
 
-          <span v-if="timeline.action === SHARE_ARTICLE && timeline.article">
+            <span v-if="timeline.action === SHARE_ARTICLE && timeline.article">
             {{ $t('created article') }}
             <router-link :to="{name: 'article.view', params: {id: timeline.article.id}}">
               {{ timeline.article.title }}
             </router-link>
           </span>
-          <span v-else-if="timeline.action === SHARE_FILE && timeline.article">
+            <span v-else-if="timeline.action === SHARE_FILE && timeline.article">
                 {{ $t('uploaded attachment(s) to article') }}
             <router-link :to="{name: 'article.view', params: {id: timeline.article.id}}">
               {{ timeline.article.title }}
             </router-link>
           </span>
-        </h5>
-        <p class="mb-0">
-          <i class="far fa-clock"/>
-          {{ timeline.updated_at | relativeDate }}
-        </p>
-      </b-media>
+          </h5>
+          <p class="mb-0">
+            <i class="far fa-clock"/>
+            {{ timeline.updated_at | relativeDate }}
+          </p>
+        </b-media>
+        <div v-if="!timeline.poll_id" class="ml-auto">
+          <i class="mr-3 fas fa-pencil-alt text-primary hover-pointer" @click="onEditClicked"/>
+          <i class="far fa-trash-alt text-danger hover-pointer" @click="onRemoveClicked"/>
+        </div>
+      </div>
     </b-card-body>
-    <PollItem v-else :item="timeline.poll" @onDeleteClick="onDeleteClicked(timeline.poll)" @onVoteClick="onVoteClicked"/>
+    <PollItem v-else :item="timeline.poll" @onDeleteClick="onDeleteClicked(timeline.poll)"
+              @onVoteClick="onVoteClicked"/>
 
     <div v-if="!timeline.poll_id" class="p-3 description" v-html="timeline.description"/>
     <b-card-body v-if="timeline.action === this.SHARE_ARTICLE && timeline.article">
@@ -66,8 +73,6 @@
         :key="`timeline-item-comment-${index}`" :currentUser="user">
       </CommentItem>
     </b-card-body>
-    <dropdown-buttons v-if="!timeline.poll_id" :item="timeline" @editClicked="onEditClicked"
-                      @removeClicked="onRemoveClicked"/>
   </b-card>
 </template>
 
