@@ -1,23 +1,25 @@
 <template>
-  <b-card no-body :class="{'mb-2': isPollPage}">
-    <b-card-header>
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="d-none d-sm-flex mb-0">
-          <h5 class="mt-0 mb-0">
-            {{ item.question }}
-          </h5>
-        </div>
-        <div class="float-right">
-          <i class="mr-3 fas fa-pencil-alt text-primary hover-pointer"/>
-          <i class="far fa-trash-alt text-danger hover-pointer" @click="onDeleteClick"/>
-        </div>
+  <b-card no-body :class="{'mb-3': isPollPage}">
+    <b-card-header class="d-flex justify-content-between">
+      <b-media class="d-none d-sm-flex mb-0">
+        <template v-slot:aside>
+          <b-img
+            rounded="circle" :src="item.createdBy.image_url  || '/assets/img/avatar.svg'" width="46" height="46">
+          </b-img>
+        </template>
+        <h5>{{ item.createdBy.displayName }}</h5>
+        <p class="mb-0">
+          <i class="far fa-clock"/>
+          {{ item.updated_at | relativeDate }}
+        </p>
+      </b-media>
+      <div class="float-right">
+        <i class="mr-3 fas fa-pencil-alt text-primary hover-pointer"/>
+        <i class="far fa-trash-alt text-danger hover-pointer" @click="onDeleteClick"/>
       </div>
-      <p class="mb-0">
-        <span style="color: #008BCA">{{ item.createdBy.displayName }}</span>
-        &#x2027; {{ item.updated_at | relativeDate }}
-      </p>
     </b-card-header>
     <b-card-body>
+      <h5 class="mt-0 mb-0">{{ item.question }}</h5>
       <span class="mb-0" v-html="item.description"/>
       <div v-for="(answer, index) in item.pollAnswers" :key="`poll-item-answers-${index}`">
         <div class="row">
