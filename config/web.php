@@ -67,10 +67,6 @@ $config = [
                     'pattern' => 'v1/workspaces/folder/download-file/<id:\d+>',
                     'route' => 'v1/workspaces/folder/download-file'
                 ],
-                [
-                    'pattern' => 'v1/workspaces/workspace-activity/<workspaceId:\d+>',
-                    'route' => 'v1/workspaces/workspace-activity'
-                ],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/country'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/setup/department'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/users/user'],
@@ -88,7 +84,7 @@ $config = [
                         'v1/workspaces/user-comment',
                         'v1/workspaces/user-like',
                         'v1/workspaces/folder',
-                        'v1/workspaces/user-activity'
+                        'v1/workspaces/workspace-activity'
                     ]
                 ],
             ],
