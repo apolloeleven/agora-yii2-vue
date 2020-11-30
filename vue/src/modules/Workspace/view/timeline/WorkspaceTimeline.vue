@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       allTimelinePostsLoaded: false,
-      postsLimit: 20,
+      postsLimit: 2,
       lastPostId: 0,
     }
   },
@@ -68,6 +68,7 @@ export default {
   },
   mounted() {
     let workspaceId = this.$route.params.id;
+    this.lastPostId = 0;
     this.timelinePosts(workspaceId);
 
     eventBus.$on('onScrollToBottom', () => {
