@@ -100,7 +100,6 @@ export default {
 .workspace-timeline {
   max-width: 680px;
   margin: 0 auto;
-  overflow: auto;
   height: 100%;
 }
 </style>
