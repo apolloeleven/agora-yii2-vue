@@ -19,6 +19,10 @@ class ActivityBehavior extends Behavior
      * @var string
      */
     public $contentIdAttribute = 'id';
+    /**
+     * @var string
+     */
+    public $tableName = null;
 
     public $events = ['create', 'update', 'delete'];
     /**
@@ -51,34 +55,34 @@ class ActivityBehavior extends Behavior
         $this->template = array_merge($this->defaultTemplate, $this->template);
         $userActivity = new WorkspaceActivity();
         $userActivity->workspace_id = $this->workspace_id instanceof \Closure ? call_user_func($this->workspace_id) : null;
-        $userActivity->table_name = $this->owner->tableName();
+        $userActivity->table_name = $this->tableName ?? $this->owner->tableName();
         $userActivity->content_id = $this->owner->{$this->contentIdAttribute};
         $userActivity->action = $action;
         $userActivity->description = $this->template[$action];
         $userActivity->data = $this->data ? Json::encode(call_user_func($this->data)) : null;
         $saved = $userActivity->save();
 
-        if(!$saved) { //If arguments are invalid, save() fails, but no error is produced. Will reduce time of debugging. You are welcome :)
+        if (!$saved) { //If arguments are invalid, save() fails, but no error is produced. Will reduce time of debugging. You are welcome :)
             throw new Exception("Invalid Arguments");
         }
     }
 
     public function afterInsert()
     {
-        if(in_array(WorkspaceActivity::ACTION_INSERT, $this->events))
+        if (in_array(WorkspaceActivity::ACTION_INSERT, $this->events))
             $this->appendAction(WorkspaceActivity::ACTION_INSERT);
 
     }
 
     public function afterUpdate()
     {
-        if(in_array(WorkspaceActivity::ACTION_UPDATE, $this->events))
+        if (in_array(WorkspaceActivity::ACTION_UPDATE, $this->events))
             $this->appendAction(WorkspaceActivity::ACTION_UPDATE);
     }
 
     public function beforeDelete()
     {
-        if(in_array(WorkspaceActivity::ACTION_DELETE, $this->events))
+        if (in_array(WorkspaceActivity::ACTION_DELETE, $this->events))
             $this->appendAction(WorkspaceActivity::ACTION_DELETE);
     }
 }
