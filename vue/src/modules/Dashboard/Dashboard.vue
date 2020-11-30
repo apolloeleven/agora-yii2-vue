@@ -3,14 +3,23 @@
     <div class="twitter-feed-container">
       <a class="twitter-timeline" :href="twitterFeedUrl">Tweets</a>
     </div>
+
+    <div class="m-3" ref="postsContent" @scroll="onScroll" style="grid-column: 2/4;overflow-y: scroll">
+      <workspace-timeline />
+    </div>
+
   </div>
 </template>
 
 <script>
 import {AppSettings} from "@/shared/AppSettings";
+import WorkspaceTimeline from "@/modules/Workspace/view/timeline/WorkspaceTimeline";
 
 export default {
   name: "Dashboard",
+  components: {
+    WorkspaceTimeline,
+  },
   data() {
     return {
       twitterFeedUrl: AppSettings.getTwitterFeedUrl()
