@@ -34,6 +34,16 @@ const {mapActions: mapTimelineActions, mapState: mapTimelineState} = createNames
 export default {
   name: "WorkspaceTimeline",
   components: {TimelineItem, NoData, ContentSpinner},
+  props: {
+    workspaceId: {
+      type: Number,
+      default: null,
+    },
+    createNew: {
+      type: Boolean,
+      default: true,
+    }
+  },
   computed: {
     ...mapTimelineState({
       timelineData: state => state.view.timeline.data,

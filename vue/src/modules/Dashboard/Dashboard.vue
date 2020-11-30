@@ -5,7 +5,7 @@
     </div>
 
     <div class="m-3" ref="postsContent" @scroll="onScroll" style="grid-column: 2/4;overflow-y: scroll">
-      <workspace-timeline />
+      <workspace-timeline :workspace-id="0" :create-new="false" />
     </div>
 
   </div>
