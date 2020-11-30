@@ -1,25 +1,27 @@
 <template>
-  <div class="p-3 h-100 dashboard-container">
-    <div class="twitter-feed-container">
+  <div class="h-100 dashboard-container">
+    <div class="m-3 twitter-feed-container">
       <a class="twitter-timeline" :href="twitterFeedUrl">Tweets</a>
     </div>
 
     <div class="m-3" ref="postsContent" @scroll="onScroll" style="grid-column: 2/4;overflow-y: scroll">
-      <workspace-timeline :workspace-id="0" :create-new="false" />
+      <workspace-timeline :workspace-id="0" :create-new="false"/>
     </div>
 
+    <contacts/>
   </div>
 </template>
 
 <script>
 import {AppSettings} from "@/shared/AppSettings";
 import WorkspaceTimeline from "@/modules/Workspace/view/timeline/WorkspaceTimeline";
+import Contacts from "@/modules/Contacts/Contacts";
 import {eventBus} from "@/core/services/event-bus";
 
 export default {
   name: "Dashboard",
   components: {
-    WorkspaceTimeline,
+    WorkspaceTimeline, Contacts
   },
   data() {
     return {
@@ -44,7 +46,7 @@ export default {
         this.$toast(this.$i18n.t("Could not initialize twitter feed. Try refreshing the page."), 'danger');
       }
     },
-    onScroll(){
+    onScroll() {
       if (this.$refs.postsContent.scrollTop + this.$refs.postsContent.offsetHeight === this.$refs.postsContent.scrollHeight) {
         eventBus.$emit('onScrollToBottom')
       }

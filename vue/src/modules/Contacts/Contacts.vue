@@ -1,21 +1,34 @@
 <template>
-  <b-list-group style="max-width: 300px;">
+  <b-card class="workspace-sidebar ml-auto" :title="$t('Contacts')" no-body>
+    <b-card-header style="background-color: rgb(32 42 61)" class="text-white">
+      <h5 class="card-title mb-0">{{ $t('Contacts') }}</h5>
+    </b-card-header>
 
-    <b-list-group-item v-for="contact in contacts" class="d-flex align-items-start pb-0 pt-3">
-      <b-img class="contact-image" :src="contact.avatar"></b-img>
-      <div class="contact-content pb-3 border-bottom d-flex flex-column w-100">
-        <div class="d-flex justify-content-between">
-          <span class="mr-auto">{{ contact.from }}</span>
-          <span class="message-time">{{ contact.time | relativeDate }}</span>
-        </div>
-        <div class="d-flex justify-content-between align-items-start">
-          <span class="latest-message">{{ contact.message }}</span>
-          <b-badge v-if="contact.unread" pill variant="danger">{{ contact.unread }}</b-badge>
-        </div>
-      </div>
+    <div class="p-3">
+      <b-input-group>
+        <b-input-group-prepend is-text>
+          <i class="fas fa-search"></i>
+        </b-input-group-prepend>
+        <b-form-input placeholder="Search for contacts"></b-form-input>
+      </b-input-group>
+    </div>
 
-    </b-list-group-item>
-  </b-list-group>
+    <b-list-group style="max-width: 300px;">
+      <b-list-group-item v-for="contact in contacts" class="d-flex align-items-start pb-0 pt-3">
+        <b-img class="contact-image" :src="contact.avatar"></b-img>
+        <div class="contact-content pb-3 border-bottom d-flex flex-column w-100">
+          <div class="d-flex justify-content-between">
+            <span class="mr-auto">{{ contact.from }}</span>
+            <span class="message-time">{{ contact.time | relativeDate }}</span>
+          </div>
+          <div class="d-flex justify-content-between align-items-start">
+            <span class="latest-message">{{ contact.message }}</span>
+            <b-badge v-if="contact.unread" pill variant="danger">{{ contact.unread }}</b-badge>
+          </div>
+        </div>
+      </b-list-group-item>
+    </b-list-group>
+  </b-card>
 </template>
 
 <script>
@@ -36,7 +49,7 @@ export default {
           id: 2,
           message: 'Please wait outside of the house.',
           from: 'Diane Herrera',
-          avatar: 'https://randomuser.me/api/portraits/women/6.jpg',
+          avatar: 'https://randomuser.me/api/portraits/men/6.jpg',
           unread: 3,
           time: Date.now() - 1000 * 55
         },
