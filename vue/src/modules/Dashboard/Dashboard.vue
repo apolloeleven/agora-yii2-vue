@@ -4,7 +4,7 @@
       <a class="twitter-timeline" :href="twitterFeedUrl">Tweets</a>
     </div>
 
-    <div class="m-3" ref="postsContent" @scroll="onScroll" style="grid-column: 2/4;overflow-y: scroll">
+    <div class="px-3 m-3" ref="postsContent" @scroll="onScroll" style="grid-column: 2/4;overflow-y: scroll">
       <workspace-timeline :workspace-id="0" :create-new="false"/>
     </div>
 
