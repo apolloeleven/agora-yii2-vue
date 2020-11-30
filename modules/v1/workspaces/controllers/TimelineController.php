@@ -55,8 +55,11 @@ class TimelineController extends ActiveController
 
         $query = TimelinePostResource::find()
             ->where($condition)
-            ->byWorkspaceId(Yii::$app->request->get('workspace_id'))
             ->limit($limit);
+
+        if (Yii::$app->request->get('workspace_id')) {
+            $query = $query->byWorkspaceId(Yii::$app->request->get('workspace_id'));
+        }
 
         return new ActiveDataProvider([
             'query' => $query,
