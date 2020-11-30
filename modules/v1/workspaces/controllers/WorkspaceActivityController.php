@@ -17,7 +17,7 @@ class WorkspaceActivityController extends ActiveController
         if (\Yii::$app->request->get('workspaceId')) {
             $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
         }
-        return $actions;?
+        return $actions;
     }
 
     public function prepareDataProvider()
