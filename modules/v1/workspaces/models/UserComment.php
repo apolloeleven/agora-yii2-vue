@@ -54,8 +54,9 @@ class UserComment extends ActiveRecord
             'workspace_id' => function () {
                 return $this->timelinePost->workspace_id;
             },
+            'tableName' => TimelinePost::tableName(),
             'data' => function () {
-                return $this;
+                return $this->timelinePost;
             },
             'events' => ['create'],
             'template' => [
