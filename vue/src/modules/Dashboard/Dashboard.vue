@@ -14,6 +14,7 @@
 <script>
 import {AppSettings} from "@/shared/AppSettings";
 import WorkspaceTimeline from "@/modules/Workspace/view/timeline/WorkspaceTimeline";
+import {eventBus} from "@/core/services/event-bus";
 
 export default {
   name: "Dashboard",
@@ -41,6 +42,11 @@ export default {
 
       if (count === 10) {
         this.$toast(this.$i18n.t("Could not initialize twitter feed. Try refreshing the page."), 'danger');
+      }
+    },
+    onScroll(){
+      if (this.$refs.postsContent.scrollTop + this.$refs.postsContent.offsetHeight === this.$refs.postsContent.scrollHeight) {
+        eventBus.$emit('onScrollToBottom')
       }
     }
   },
