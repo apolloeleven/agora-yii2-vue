@@ -42,8 +42,8 @@ export default {
   },
   data() {
     return {
-      allTimelinePostsLoaded: false,
-      postsLimit: 2,
+      allLoaded: false,
+      postsLimit: 20,
       lastPostId: 0,
     }
   },
@@ -53,23 +53,31 @@ export default {
       this.showTimelineModal(null);
     },
     async timelinePosts(workspaceId) {
-      if (this.allTimelinePostsLoaded || this.loading) return;
+      if (this.allLoaded || this.loading) return;
       let res = await this.getTimelinePosts({
         workspace_id: workspaceId,
         posts_limit: this.postsLimit,
         last_post_id: this.lastPostId,
       });
       if (res.success) {
-        this.allTimelinePostsLoaded = res.body.length < this.postsLimit;
-        if (this.timelineData.length)
-          this.lastPostId = this.timelineData[this.timelineData.length - 1].id;
+        if (res.body.length) {
+          this.lastPostId = res.body[res.body.length - 1].id;
+        }
+        this.allLoaded = res.body.length < this.postsLimit;
       }
     },
+    resetAndLoadArticles(workspaceId) {
+      this.lastPostId = 0;
+      this.allLoaded = false;
+      this.timelinePosts(workspaceId);
+    }
+  },
+  destroyed() {
+    eventBus.$off('onScrollToBottom')
   },
   mounted() {
     let workspaceId = this.$route.params.id;
-    this.lastPostId = 0;
-    this.timelinePosts(workspaceId);
+    this.resetAndLoadArticles(workspaceId);
 
     eventBus.$on('onScrollToBottom', () => {
       this.timelinePosts(workspaceId);
