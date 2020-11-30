@@ -57,6 +57,11 @@ class WorkspaceActivity extends ActiveRecord
         ]);
     }
 
+    public function fields()
+    {
+        return array_merge(parent::fields(), ['createdBy']);
+    }
+
     /**
      * {@inheritdoc}
      */
