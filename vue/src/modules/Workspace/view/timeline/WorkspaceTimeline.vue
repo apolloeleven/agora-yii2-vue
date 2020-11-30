@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading && !this.timelineData">
+  <div v-if="loading && lastPostId === 0">
     <content-spinner show/>
   </div>
   <div v-else class="workspace-timeline">
@@ -15,7 +15,7 @@
       <no-data :model="timelineData" :loading="loading" :text="$t('Nothing is shared on timeline')"></no-data>
       <TimelineItem v-for="(timeline, index) in timelineData" :timeline="timeline"
                     :index="index" :key="`timeline-post-${timeline.id}`"/>
-      <div v-if="loading && this.timelineData">
+      <div v-if="loading && lastPostId !== 0">
         <content-spinner show/>
       </div>
     </div>
