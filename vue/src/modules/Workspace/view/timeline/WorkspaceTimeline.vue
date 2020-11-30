@@ -3,7 +3,7 @@
     <content-spinner show/>
   </div>
   <div v-else class="workspace-timeline">
-    <div class="card mb-3">
+    <div class="card mb-3" v-if="createNew">
       <div class="card-header border-bottom-0 text-right">
         <b-button @click="showTimelineForm" size="sm" variant="primary">
           <i class="fas fa-plus-circle"/>
@@ -86,7 +86,7 @@ export default {
     eventBus.$off('onScrollToBottom')
   },
   mounted() {
-    let workspaceId = this.$route.params.id;
+    let workspaceId = this.$route.params.id ? this.$route.params.id : this.workspaceId;
     this.resetAndLoadArticles(workspaceId);
 
     eventBus.$on('onScrollToBottom', () => {
