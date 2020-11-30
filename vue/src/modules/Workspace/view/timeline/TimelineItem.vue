@@ -54,11 +54,9 @@
 <script>
 import fileService from '@/core/services/fileService';
 import {createNamespacedHelpers} from "vuex";
-import {SHARE_ARTICLE, SHARE_FILE} from "@/core/services/event-bus";
 import CommentItem from "@/modules/Workspace/components/comment/CommentItem";
 import AddComment from "@/modules/Workspace/components/comment/AddComment";
 import LikeUnlikeButton from "@/core/components/LikeUnlikeButton";
-import DropdownButtons from "@/core/components/DropdownButtons";
 import PollItem from "../polls/PollItem";
 
 const {mapState} = createNamespacedHelpers('user');
@@ -66,15 +64,13 @@ const {mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "TimelineItem",
-  components: {PollItem, DropdownButtons, LikeUnlikeButton, AddComment, CommentItem},
+  components: {PollItem, LikeUnlikeButton, AddComment, CommentItem},
   props: {
     index: Number,
     timeline: Object
   },
   data() {
     return {
-      SHARE_ARTICLE: SHARE_ARTICLE,
-      SHARE_FILE: SHARE_FILE,
       showComments: true,
     }
   },
