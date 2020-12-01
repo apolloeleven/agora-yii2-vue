@@ -3,7 +3,7 @@
     <content-spinner show/>
   </div>
   <div v-else class="workspace-timeline">
-    <div class="card mb-3" v-if="createNew">
+    <div class="card mb-3">
       <div class="card-header border-bottom-0 text-right">
         <b-button @click="showTimelineForm" size="sm" variant="primary">
           <i class="fas fa-plus-circle"/>
@@ -39,9 +39,9 @@ export default {
       type: Number,
       default: null,
     },
-    createNew: {
+    wantsWorkspace: {
       type: Boolean,
-      default: true,
+      default: false,
     }
   },
   computed: {
@@ -60,7 +60,7 @@ export default {
   methods: {
     ...mapTimelineActions(['showTimelineModal', 'getTimelinePosts']),
     showTimelineForm() {
-      this.showTimelineModal(null);
+      this.showTimelineModal({wantsWorkspace: this.wantsWorkspace});
     },
     async timelinePosts(workspaceId) {
       if (this.allLoaded || this.loading) return;

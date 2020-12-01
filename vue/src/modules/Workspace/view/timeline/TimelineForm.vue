@@ -6,7 +6,7 @@
       <content-spinner :show="loading" :text="`${progress}% ${$t('Uploaded...')}`" class="h-100" :fullscreen="true"/>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
 
-        <b-form-group :disabled="!!model.id" v-if="model.id">
+        <b-form-group :disabled="!!model.id" v-if="model.wantsWorkspace || model.id">
           <b-form-select v-model="model.workspace_id" :options="userWorkspaceOptions">
             <template #first>
               <b-form-select-option :value="null" disabled> {{$t('Select a workspace')}} </b-form-select-option>
