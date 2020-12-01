@@ -3,9 +3,7 @@
     <b-card no-body class="mb-0">
       <b-card-body class="pr-5 pb-3">
         <b-media>
-          <h5 class="mb-0">
-            {{ activity.description }}
-          </h5>
+          <h5 class="mb-0" v-html="activity.description"></h5>
         </b-media>
       </b-card-body>
     </b-card>
@@ -22,8 +20,23 @@ export default {
   },
 
   methods: {
+    prepareLink(href, id, description, action) {
+      if (action === 'delete')
+        return description.replace(/(<([^>]+)>)/gi, "");
+
+      return `<a href="${href}/${id}" target='_blank'>${description.replace(/(<([^>]+)>)/gi, "")}</a>`
+    },
+
     prepareUser() {
-      return this.activity.createdBy.username;
+      return `<a href="#" target='_blank'>${this.activity.createdBy.username}</a>`;
+    },
+
+    prepareParent() {
+      if (this.activity.description.search('{parent}') === -1) {
+        return null;
+      }
+      let parentIdentity = JSON.parse(this.activity.parent_identity);
+      return `<a href="#" target='_blank'>${parentIdentity.username}</a>`;
     },
 
     prepareModel() {
@@ -51,21 +64,23 @@ export default {
 
       switch (tableName) {
         case 'timeline_posts':
-          return data.description;
+          return this.prepareLink("timeline", data.id, data.description, this.activity.action);
         case 'articles':
-          return data.title;
+          return this.prepareLink("articles", data.id, data.title, this.activity.action);
         case 'folders':
-          return data.name;
+          return this.prepareLink("files", data.id, data.name, this.activity.action);
       }
     },
 
     prepareActivity() {
-
       this.activity.description = this.activity.description.replace('{user}', this.prepareUser());
+
+      if (this.prepareParent())
+        this.activity.description = this.activity.description.replace('{parent}', this.prepareParent());
       if (this.prepareModel())
         this.activity.description = this.activity.description.replace('{model}', this.prepareModel());
       if (this.prepareTitle())
-        this.activity.description = this.activity.description.replace('{title}', this.prepareTitle().replace(/(<([^>]+)>)/gi, ""));
+        this.activity.description = this.activity.description.replace('{title}', this.prepareTitle());
     }
   },
   beforeMount() {
