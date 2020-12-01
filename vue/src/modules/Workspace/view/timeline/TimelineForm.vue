@@ -58,14 +58,15 @@ export default {
     modalTimeline() {
       if (this.modalTimeline) {
         this.model = new TimelineFormModel(this.modalTimeline);
+        if (this.$route.params.id){
+          this.model.workspace_id = this.$route.params.id;
+        }
       }
     },
   },
   methods: {
     ...mapWorkspaceActions(['hideTimelineModal', 'postOnTimeline', 'updateTimelinePost']),
     async onSubmit() {
-      this.model.workspace_id = this.$route.params.id;
-
       let res;
       if (this.model.id) {
         res = await this.updateTimelinePost(this.model)
