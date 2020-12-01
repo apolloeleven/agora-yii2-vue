@@ -327,9 +327,9 @@ export async function getTimelinePosts({state, commit}, {workspace_id, posts_lim
   commit(CHANGE_TIMELINE_LOADING)
   const res = await httpService.get(`${timelineUrl}?workspace_id=${workspace_id}&limit=${posts_limit}&last_post_id=${last_post_id}&${timelineExpand}`);
   if (res.success) {
-    commit(CHANGE_TIMELINE_LOADING)
     commit(GET_TIMELINE_DATA, last_post_id === 0 ? res.body : state.view.timeline.data.concat(res.body));
   }
+  commit(CHANGE_TIMELINE_LOADING)
   return res;
 }
 
