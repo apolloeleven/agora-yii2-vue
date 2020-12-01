@@ -7,7 +7,11 @@
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
 
         <b-form-group :disabled="!!model.id" v-if="model.id">
-          <b-form-select v-model="model.workspace_id" :options="userWorkspaceOptions"/>
+          <b-form-select v-model="model.workspace_id" :options="userWorkspaceOptions">
+            <template #first>
+              <b-form-select-option :value="null" disabled> {{$t('Select a workspace')}} </b-form-select-option>
+            </template>
+          </b-form-select>
         </b-form-group>
 
         <input-widget v-if="!model.id"
