@@ -41,6 +41,11 @@ class ActivityBehavior extends Behavior
      */
     public $data = null;
 
+    /**
+     * @var \Closure
+     */
+    public $parentIdentity = null;
+
     public function events()
     {
         return [
@@ -50,9 +55,18 @@ class ActivityBehavior extends Behavior
         ];
     }
 
+    public function prepareTemplate()
+    {
+        foreach ($this->template as $event => $template) {
+            if ($this->template[$event] instanceof \Closure)
+                $this->template[$event] = call_user_func($template);
+        }
+        $this->template = array_merge($this->defaultTemplate, $this->template);
+    }
+
     public function appendAction($action)
     {
-        $this->template = array_merge($this->defaultTemplate, $this->template);
+        $this->prepareTemplate();
         $userActivity = new WorkspaceActivity();
         $userActivity->workspace_id = $this->workspace_id instanceof \Closure ? call_user_func($this->workspace_id) : null;
         $userActivity->table_name = $this->tableName ?? $this->owner->tableName();
@@ -60,6 +74,7 @@ class ActivityBehavior extends Behavior
         $userActivity->action = $action;
         $userActivity->description = $this->template[$action];
         $userActivity->data = $this->data ? Json::encode(call_user_func($this->data)) : null;
+        $userActivity->parent_identity = $this->parentIdentity ? Json::encode(call_user_func($this->parentIdentity)) : null;
         $saved = $userActivity->save();
 
         if (!$saved) { //If arguments are invalid, save() fails, but no error is produced. Will reduce time of debugging. You are welcome :)
