@@ -49,18 +49,36 @@ class UserComment extends ActiveRecord
         $behaviors = parent::behaviors();
         $behaviors[] = TimestampBehavior::class;
         $behaviors[] = BlameableBehavior::class;
+
         $behaviors['activity'] = [
             'class' => ActivityBehavior::class,
             'workspace_id' => function () {
-                return $this->timelinePost->workspace_id;
+                if ($this->timelinePost)
+                    return $this->timelinePost->workspace_id;
+
+                return $this->parent->timelinePost->workspace_id;
             },
             'tableName' => TimelinePost::tableName(),
             'data' => function () {
-                return $this->timelinePost;
+                if ($this->timelinePost)
+                    return $this->timelinePost;
+
+                return $this->parent->timelinePost;
+            },
+            'parentIdentity' => function () {
+                if ($this->parent)
+                    return $this->parent->createdBy;
+
+                return null;
             },
             'events' => ['create'],
             'template' => [
-                'create' => '{user} commented on {model} {title}',
+                'create' => function () {
+                    if ($this->parent)
+                        return '{user} replied to {parent}\'s comment under {model} {title}';
+
+                    return '{user} commented on {model} {title}';
+                },
             ]
         ];
 
