@@ -60,7 +60,7 @@ class Article extends ActiveRecord
             },
             'events' => ['create', 'update'],
             'template' => [
-                'update' => '{user} edited {model} {title}',
+                'update' => 'Edited {model} {title}',
             ]
         ];
 
