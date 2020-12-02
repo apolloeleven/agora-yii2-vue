@@ -29,9 +29,9 @@ class ActivityBehavior extends Behavior
      * @var string
      */
     public $defaultTemplate = [
-        'create' => '{user} created {model} {title}',
-        'update' => '{user} updated {model} {title}',
-        'delete' => '{user} deleted {model} {title}',
+        'create' => 'Created {model} {title}',
+        'update' => 'Updated {model} {title}',
+        'delete' => 'Deleted {model} {title}',
     ];
 
     public $template = [];
