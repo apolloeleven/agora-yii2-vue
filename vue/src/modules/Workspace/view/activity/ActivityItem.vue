@@ -1,16 +1,24 @@
 <template>
-  <div class="ActivityItem">
+  <li>
     <b-card no-body class="mb-0">
-      <b-card-body class="pr-5 pb-3">
+      <b-card-body class="pr-5 pb-2">
         <b-media>
-          <h5 class="mb-0" v-html="activity.description"></h5>
+          <b-img class="mr-2" rounded="0" :src="this.getAvatar()" width="24" height="24"/>
+          <strong class="mr-1">{{ this.activity.createdBy.first_name + ' ' + this.activity.createdBy.last_name + ' - ' }}</strong>
+          <i class="fas fa-user-clock mr-2"></i>
+          <p class="text-muted d-inline">{{this.getDate()}}</p>
+          <span class="text-muted d-block mt-2">{{this.activity.description}}<router-link :to="this.path + '/' + this.id">
+          {{this.name}}
+          </router-link></span>
         </b-media>
       </b-card-body>
     </b-card>
-  </div>
+  </li>
 </template>
 
 <script>
+
+import moment from 'moment';
 
 export default {
   name: "ActivityItem",
@@ -19,16 +27,25 @@ export default {
     activity: Object,
   },
 
-  methods: {
-    prepareLink(href, id, description, action) {
-      if (action === 'delete')
-        return description.replace(/(<([^>]+)>)/gi, "");
+  data: function () {
+    return {
+      path: '',
+      id: '',
+      name: '',
+      storage: process.env.VUE_APP_API_HOST
+    }
+  },
 
-      return `<a href="${href}/${id}" target='_blank'>${description.replace(/(<([^>]+)>)/gi, "")}</a>`
+  methods: {
+    getDate() {
+      return moment(this.activity.created_at * 1000).format('YYYY-MM-DD | HH:MM:ss');
     },
 
-    prepareUser() {
-      return `<a href="#" target='_blank'>${this.activity.createdBy.username}</a>`;
+    getAvatar() {
+      if(this.activity.createdBy.image_path)
+        return this.storage + this.activity.createdBy.image_path;
+
+      return '/assets/img/avatar.svg';
     },
 
     prepareParent() {
@@ -36,7 +53,7 @@ export default {
         return null;
       }
       let parentIdentity = JSON.parse(this.activity.parent_identity);
-      return `<a href="#" target='_blank'>${parentIdentity.username}</a>`;
+      return parentIdentity.first_name + ' ' + parentIdentity.last_name;
     },
 
     prepareModel() {
@@ -49,38 +66,52 @@ export default {
         case 'timeline_posts':
           return 'post';
         case 'articles':
+          this.path = "articles";
+          this.id = this.activity.content_id;
           return 'article';
         case 'folders':
+          this.path = "files";
+          this.id = this.activity.content_id;
           return 'folder';
       }
     },
 
     prepareTitle() {
       if (this.activity.description.search('{title}') === -1) {
-        return null;
+        return;
       }
+      this.activity.description = this.activity.description.replace("{title}", "");
       let data = JSON.parse(this.activity.data);
       let tableName = this.activity.table_name.replaceAll(/\W/ig, "");
+      let title = '';
 
       switch (tableName) {
         case 'timeline_posts':
-          return this.prepareLink("timeline", data.id, data.description, this.activity.action);
+          title = data.description;
+          break;
         case 'articles':
-          return this.prepareLink("articles", data.id, data.title, this.activity.action);
+          title = data.title;
+          break;
         case 'folders':
-          return this.prepareLink("files", data.id, data.name, this.activity.action);
+          title = data.name;
+          break;
       }
+      if(this.activity.action === 'delete') {
+        this.path = '';
+        this.id = '';
+      }
+      this.name = title.replace(/(<([^>]+)>)/gi, "");
     },
 
     prepareActivity() {
-      this.activity.description = this.activity.description.replace('{user}', this.prepareUser());
+      this.activity.description = this.activity.description.replace('{user}', this.activity.createdBy.username);
 
       if (this.prepareParent())
         this.activity.description = this.activity.description.replace('{parent}', this.prepareParent());
       if (this.prepareModel())
         this.activity.description = this.activity.description.replace('{model}', this.prepareModel());
-      if (this.prepareTitle())
-        this.activity.description = this.activity.description.replace('{title}', this.prepareTitle());
+
+      this.prepareTitle();
     }
   },
   beforeMount() {
