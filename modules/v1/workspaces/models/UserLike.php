@@ -59,7 +59,7 @@ class UserLike extends ActiveRecord
             },
             'events' => ['create'],
             'template' => [
-                'create' => '{user} liked {model} {title}',
+                'create' => 'liked {model} {title}',
             ]
         ];
 
