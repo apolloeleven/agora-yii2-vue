@@ -75,9 +75,9 @@ class UserComment extends ActiveRecord
             'template' => [
                 'create' => function () {
                     if ($this->parent)
-                        return '{user} replied to {parent}\'s comment under {model} {title}';
+                        return 'Replied to {parent}\'s comment under {model} {title}';
 
-                    return '{user} commented on {model} {title}';
+                    return 'Commented on {model} {title}';
                 },
             ]
         ];
