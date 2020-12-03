@@ -16,6 +16,7 @@ use app\rest\ValidationException;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
+use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
 class TimelinePostResource extends TimelinePost
@@ -147,6 +148,7 @@ class TimelinePostResource extends TimelinePost
      * @param $changedAttributes
      * @throws ValidationException
      * @throws Exception
+     * @throws \ImagickException
      */
     public function afterSave($insert, $changedAttributes)
     {
@@ -166,6 +168,12 @@ class TimelinePostResource extends TimelinePost
 
             if (!$folder->uploadFile($this->file, $folder->workspace_id)) {
                 throw new ValidationException(Yii::t('app', 'Unable to upload attachment'));
+            }
+
+            if ($this->isImage($folder->file_path)) {
+                if (!$folder->convertUploadedFile(Yii::getAlias('@storage/' . $folder->file_path))) {
+                    throw new ValidationException(Yii::t('app', 'Unable to convert uploaded file'));
+                }
             }
 
             if (!$folder->appendTo($parentFolder)) {
@@ -188,10 +196,29 @@ class TimelinePostResource extends TimelinePost
             return parent::beforeDelete();
         }
 
+        if ($this->isImage($folder->file_path)) {
+            $filepath = Yii::getAlias("@storage/$folder->file_path.webp");
+            if (file_exists($filepath)) {
+                if (!FileHelper::unlink($filepath)) {
+                    throw new ValidationException(Yii::t('app', 'Unable to delete timeline image'));
+                }
+            }
+        }
+
         if (!ModelHelper::deleteFile($folder->file_path)) {
             throw new ValidationException(Yii::t('app', 'Unable to delete timeline file'));
         }
 
         return parent::beforeDelete();
+    }
+
+    /**
+     * @param String $path
+     * @return bool
+     */
+    public function isImage(string $path)
+    {
+        $extension = strtolower(substr($path, strrpos($path, '.') + 1));
+        return in_array($extension, ['png', 'jpeg', 'svg', 'gif', 'jpg']);
     }
 }

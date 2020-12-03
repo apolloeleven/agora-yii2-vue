@@ -6,6 +6,8 @@ use app\modules\v1\users\models\User;
 use app\modules\v1\workspaces\models\query\FolderQuery;
 use app\rest\ValidationException;
 use creocoder\nestedsets\NestedSetsBehavior;
+use Imagick;
+use ImagickException;
 use Yii;
 use yii\base\Exception;
 use yii\behaviors\BlameableBehavior;
@@ -226,6 +228,33 @@ class Folder extends ActiveRecord
         if (!$file->saveAs(Yii::getAlias('@storage/' . $this->file_path))) {
             throw new ValidationException(Yii::t('app', 'Unable to save file'));
         }
+        return true;
+    }
+
+    /**
+     * Convert uploaded file, then resize and save
+     *
+     * @param $filePath
+     * @return bool
+     * @throws ImagickException
+     */
+    public function convertUploadedFile($filePath)
+    {
+        $imageWidth = 680;
+        list($width1, $height1) = getimagesize($filePath);
+
+        $src = $filePath;
+        $width = $imageWidth;
+        $height = $height1 * ($imageWidth / $width1);
+        $dest = $filePath . '.webp';
+
+        $im = new Imagick();
+        $im->pingImage($src);
+        $im->readImage($src);
+        $im->resizeImage($width,$height, Imagick::FILTER_CATROM , 1,TRUE );
+        $im->setImageFormat( "webp" );
+        $im->writeImage($dest);
+
         return true;
     }
 }
