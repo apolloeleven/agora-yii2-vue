@@ -7,7 +7,8 @@
           <strong class="mr-1">{{ this.activity.createdBy.first_name + ' ' + this.activity.createdBy.last_name + ' - ' }}</strong>
           <i class="fas fa-user-clock mr-2"></i>
           <p class="text-muted d-inline">{{this.getDate()}}</p>
-          <span class="text-muted d-block mt-2">{{this.activity.description}}<router-link :to="this.path + '/' + this.id">
+          <span class="text-muted d-block mt-2">{{this.activity.description}}
+            <router-link :event="clickable ? 'click' : ''" :to="this.path + '/' + this.id">
           {{this.name}}
           </router-link></span>
         </b-media>
@@ -32,13 +33,14 @@ export default {
       path: '',
       id: '',
       name: '',
+      clickable: true,
       storage: process.env.VUE_APP_API_HOST
     }
   },
 
   methods: {
     getDate() {
-      return moment(this.activity.created_at * 1000).format('YYYY-MM-DD | HH:MM:ss');
+      return moment((this.activity.created_at * 1000)).format('YYYY-MM-DD | HH:mm:ss');
     },
 
     getAvatar() {
@@ -64,6 +66,7 @@ export default {
       let model = this.activity.table_name.replaceAll(/\W/ig, "");
       switch (model) {
         case 'timeline_posts':
+          this.clickable = false; //temporary disable link until timeline post link is created
           return 'post';
         case 'articles':
           this.path = "articles";
@@ -99,6 +102,7 @@ export default {
       if(this.activity.action === 'delete') {
         this.path = '';
         this.id = '';
+        this.clickable = false;
       }
       this.name = title.replace(/(<([^>]+)>)/gi, "");
     },
