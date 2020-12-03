@@ -67,15 +67,15 @@ class ActivityBehavior extends Behavior
     public function appendAction($action)
     {
         $this->prepareTemplate();
-        $userActivity = new WorkspaceActivity();
-        $userActivity->workspace_id = $this->workspace_id instanceof \Closure ? call_user_func($this->workspace_id) : null;
-        $userActivity->table_name = $this->tableName ?? $this->owner->tableName();
-        $userActivity->content_id = $this->owner->{$this->contentIdAttribute};
-        $userActivity->action = $action;
-        $userActivity->description = $this->template[$action];
-        $userActivity->data = $this->data ? Json::encode(call_user_func($this->data)) : null;
-        $userActivity->parent_identity = $this->parentIdentity ? Json::encode(call_user_func($this->parentIdentity)) : null;
-        $saved = $userActivity->save();
+        $workspaceActivity = new WorkspaceActivity();
+        $workspaceActivity->workspace_id = $this->workspace_id instanceof \Closure ? call_user_func($this->workspace_id) : null;
+        $workspaceActivity->table_name = $this->tableName ?? $this->owner->tableName();
+        $workspaceActivity->content_id = $this->owner->{$this->contentIdAttribute};
+        $workspaceActivity->action = $action;
+        $workspaceActivity->description = $this->template[$action];
+        $workspaceActivity->data = $this->data ? Json::encode(call_user_func($this->data)) : null;
+        $workspaceActivity->parent_identity = $this->parentIdentity ? Json::encode(call_user_func($this->parentIdentity)) : null;
+        $saved = $workspaceActivity->save();
 
         if (!$saved) { //If arguments are invalid, save() fails, but no error is produced. Will reduce time of debugging. You are welcome :)
             throw new Exception("Invalid Arguments");
