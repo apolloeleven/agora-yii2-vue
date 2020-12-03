@@ -3,13 +3,13 @@
 
 namespace app\modules\v1\workspaces\controllers;
 
-use app\modules\v1\workspaces\models\WorkspaceActivity;
+use app\modules\v1\workspaces\resources\WorkspaceActivityResource;
 use app\rest\ActiveController;
 use yii\data\ActiveDataProvider;
 
 class WorkspaceActivityController extends ActiveController
 {
-    public $modelClass = WorkspaceActivity::class;
+    public $modelClass = WorkspaceActivityResource::class;
 
     public function actions()
     {
