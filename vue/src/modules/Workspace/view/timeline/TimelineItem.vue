@@ -43,7 +43,7 @@
     </b-card-body>
     <div v-if="timeline.file_url" class="timeline-preview">
       <div v-if="isImage(timeline.file_url)" class="image-preview">
-        <b-img :src="timeline.attachments.converted" @click="previewModal" class="img-fluid" style="cursor: pointer"/>
+        <b-img :src="timeline.attachments.converted" @error="loadOriginalImage" @click="previewModal" class="img-fluid" style="cursor: pointer"/>
       </div>
       <video v-else-if="isVideo(timeline.file_url)" controls class="video-preview">
         <source :src="timeline.file_url">
@@ -142,6 +142,9 @@ export default {
     },
     previewModal() {
       this.showPreviewModal({activeFile: 0, files: [{file_path: this.timeline.attachments.original, mime: 'image/png', name: this.$t('Uploaded file')}]});
+    },
+    loadOriginalImage() {
+      this.timeline.attachments.converted = this.timeline.attachments.original
     }
   },
 }
