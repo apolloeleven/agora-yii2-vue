@@ -45,7 +45,7 @@
       <div v-if="isImage(timeline.file_url)" class="image-preview">
         <b-img :src="timeline.attachments.converted" @click="previewModal" class="img-fluid" style="cursor: pointer"/>
       </div>
-      <video v-else-if="isVideo(timeline.file_url)" controls @click="previewModal" class="video-preview">
+      <video v-else-if="isVideo(timeline.file_url)" controls class="video-preview">
         <source :src="timeline.file_url">
       </video>
     </div>
@@ -141,8 +141,7 @@ export default {
       }
     },
     previewModal() {
-      let mime = fileService.isImage(this.timeline.attachments.original) ? 'image/png' : 'video'
-      this.showPreviewModal({activeFile: 0, files: [{file_path: this.timeline.attachments.original, mime, name: this.$t('Uploaded file')}]});
+      this.showPreviewModal({activeFile: 0, files: [{file_path: this.timeline.attachments.original, mime: 'image/png', name: this.$t('Uploaded file')}]});
     }
   },
 }
