@@ -343,7 +343,7 @@ export async function getTimelinePosts({commit}, workspaceId) {
  */
 export function setAttachments(post){
   if (post.file_url) {
-    post.attachments = {original: post.file_url}
+    post.attachments = {original: post.file_url, converted: null}
     if (fileService.isImage(post.file_url)) {
       post.attachments.converted = post.file_url + '.webp'
     }
