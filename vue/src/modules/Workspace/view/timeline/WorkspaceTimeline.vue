@@ -18,6 +18,7 @@
                       :index="index" :key="`timeline-post-${timeline.id}`"/>
       </template>
     </div>
+    <FilePreviewModal @onDownloadClick="onDownloadClick"/>
   </div>
 </template>
 
@@ -25,13 +26,14 @@
 import ContentSpinner from "@/core/components/ContentSpinner";
 import NoData from "@/core/components/NoData";
 import TimelineItem from "@/modules/Workspace/view/timeline/TimelineItem";
+import FilePreviewModal from "@/modules/Workspace/view/files/FilePreviewModal";
 import {createNamespacedHelpers} from "vuex";
 
 const {mapActions: mapTimelineActions, mapState: mapTimelineState} = createNamespacedHelpers('workspace');
 
 export default {
   name: "WorkspaceTimeline",
-  components: {TimelineItem, NoData, ContentSpinner},
+  components: {TimelineItem, NoData, ContentSpinner, FilePreviewModal},
   computed: {
     ...mapTimelineState({
       timelineData: state => state.view.timeline.data,
@@ -43,6 +45,9 @@ export default {
     showTimelineForm() {
       this.showTimelineModal(null);
     },
+    onDownloadClick() {
+
+    }
   },
   mounted() {
     this.getTimelinePosts(this.$route.params.id);
