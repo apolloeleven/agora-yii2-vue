@@ -13,6 +13,7 @@ const fileService = {
       'png': this.TYPE_IMAGE,
       'jpeg': this.TYPE_IMAGE,
       'svg': this.TYPE_IMAGE,
+      'webp' : this.TYPE_IMAGE,
 
       'odt': this.TYPE_WORD,
       'doc': this.TYPE_WORD,
@@ -43,6 +44,7 @@ const fileService = {
       'video',
       'image/jpeg',
       'image/jpg',
+      'image/webp',
       'no-attachment'
     ]
   },
