@@ -42,11 +42,11 @@
       </div>
     </b-card-body>
     <div v-if="timeline.file_url" class="timeline-preview">
-      <div v-if="isImage(timeline.file_url)" class="image-preview">
-        <b-img :src="timeline.attachments.converted" @error="loadOriginalImage" @click="previewModal" class="img-fluid" style="cursor: pointer"/>
+      <div v-if="timeline.file_url.original && isImage(timeline.file_url.original)" class="image-preview">
+        <b-img :src="timeline.file_url.converted" @error="loadOriginalImage" @click="previewModal" class="img-fluid" style="cursor: pointer"/>
       </div>
-      <video v-else-if="isVideo(timeline.file_url)" controls class="video-preview">
-        <source :src="timeline.file_url">
+      <video v-else-if="timeline.file_url.original && isVideo(timeline.file_url.original)" controls class="video-preview">
+        <source :src="timeline.file_url.original">
       </video>
     </div>
     <b-card-footer>
@@ -141,10 +141,13 @@ export default {
       }
     },
     previewModal() {
-      this.showPreviewModal({activeFile: 0, files: [{file_path: this.timeline.attachments.original, mime: 'image/png', name: this.$t('Uploaded file')}]});
+      this.showPreviewModal({
+        activeFile: 0,
+        files: [{file_path: this.timeline.file_url.original, mime: 'image/png', name: 'Uploaded image'}]
+      });
     },
     loadOriginalImage() {
-      this.timeline.attachments.converted = this.timeline.attachments.original
+      this.timeline.file_url.converted = this.timeline.file_url.original
     }
   },
 }

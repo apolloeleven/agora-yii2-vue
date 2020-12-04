@@ -326,28 +326,10 @@ export async function getTimelinePosts({commit}, workspaceId) {
   commit(CHANGE_TIMELINE_LOADING)
   const res = await httpService.get(`${timelineUrl}?workspace_id=${workspaceId}&${timelineExpand}`);
   if (res.success) {
-    res.body.forEach(post => {
-      setAttachments(post)
-    })
     commit(CHANGE_TIMELINE_LOADING)
     commit(GET_TIMELINE_DATA, res.body);
   }
   return res;
-}
-
-/**
- * Sets attachments for post
- *
- * @returns VoidFunction
- * @param post
- */
-export function setAttachments(post){
-  if (post.file_url) {
-    post.attachments = {original: post.file_url, converted: null}
-    if (fileService.isImage(post.file_url)) {
-      post.attachments.converted = post.file_url + '.webp'
-    }
-  }
 }
 
 /**
@@ -389,7 +371,6 @@ export async function postOnTimeline({commit}, {data, config}) {
   commit(CHANGE_TIMELINE_MODAL_LOADING, true)
   const res = await httpService.post(`${timelineUrl}?${timelineExpand}`, prepareTimelineData(data), config);
   if (res.success) {
-    setAttachments(res.body)
     commit(ADD_TIMELINE_POST, res.body);
   }
   commit(CHANGE_TIMELINE_MODAL_LOADING, false)
