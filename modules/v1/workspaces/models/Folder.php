@@ -235,18 +235,24 @@ class Folder extends ActiveRecord
      * Convert uploaded file, then resize and save
      *
      * @param $filePath
+     * @param $fileName
      * @return bool
      * @throws ImagickException
      */
-    public function convertUploadedFile($filePath)
+    public function convertUploadedFile($filePath, $fileName)
     {
         $imageWidth = 680;
-        list($width1, $height1) = getimagesize($filePath);
+        $src = Yii::getAlias("@storage/$filePath");
+        list($width1, $height1) = getimagesize($src);
 
-        $src = $filePath;
         $width = $imageWidth;
         $height = $height1 * ($imageWidth / $width1);
-        $dest = $filePath . '.webp';
+        $newFilePath = substr($filePath, 0, strrpos($filePath, '.') + 1) . 'webp';
+        $dest =  Yii::getAlias("@storage/$newFilePath");
+
+        $this->name = substr($fileName, 0, strrpos($fileName, '.') + 1) . 'webp';
+        $this->mime = 'image/webp';
+        $this->file_path = $newFilePath;
 
         $im = new Imagick();
         $im->pingImage($src);
@@ -254,6 +260,8 @@ class Folder extends ActiveRecord
         $im->resizeImage($width,$height, Imagick::FILTER_CATROM , 1,TRUE );
         $im->setImageFormat( "webp" );
         $im->writeImage($dest);
+
+        $this->size = strlen( $im->getImageBlob() );
 
         return true;
     }
