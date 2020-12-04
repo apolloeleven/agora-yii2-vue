@@ -131,8 +131,12 @@ class TimelinePostResource extends TimelinePost
      */
     public function getFileUrl()
     {
-        $folder = FolderResource::findOne(['timeline_post_id' => $this->id]);
-        return $folder ? Yii::getAlias('@storageUrl' . $folder->file_path) : '';
+        $folders = FolderResource::findAll(['timeline_post_id' => $this->id]);
+        $files = ['original' => null, 'converted' => null];
+        foreach ($folders as $folder) {
+            $files[$folder->mime === 'image/webp' ? 'converted' : 'original'] = Yii::getAlias('@storageUrl' . $folder->file_path);
+        }
+        return $folders ? $files : '';
     }
 
     public function load($data, $formName = null)
