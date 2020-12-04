@@ -143,7 +143,7 @@ export default {
     previewModal() {
       this.showPreviewModal({
         activeFile: 0,
-        files: [{file_path: this.timeline.file_url.original, mime: 'image/png', name: 'Uploaded image'}]
+        files: [{file_path: this.timeline.file_url.original, mime: 'image/png', name: this.$t('Uploaded image')}]
       });
     },
     loadOriginalImage() {
