@@ -2,7 +2,7 @@
   <b-card-body class="pt-1" :class="!parent_id ? 'bg-light' : ''">
     <b-media>
       <template v-slot:aside>
-        <b-img rounded="0" :src="'/assets/img/avatar.svg'" height="32" width="32"/>
+        <b-img rounded="circle" :src="currentUser.image_url  || '/assets/img/avatar.svg'" width="32" height="32"/>
       </template>
       <b-form @submit.prevent="onAdd">
         <b-input-group>
@@ -25,6 +25,7 @@ const {mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace')
 export default {
   name: "AddComment",
   props: {
+    currentUser: Object,
     article_id: Number,
     timeline_id: Number,
     parent_id: Number,

@@ -8,6 +8,7 @@ use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\resources\UserWorkspaceResource;
 use app\modules\v1\workspaces\resources\WorkspaceResource;
 use app\rest\ActiveController;
+use app\rest\ValidationException;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Exception;
@@ -97,5 +98,38 @@ class WorkspaceController extends ActiveController
 
         $dbTransaction->commit();
         return $this->response(null, 201);
+    }
+
+    /**
+     * Get users by workspace
+     *
+     * @return array|mixed
+     * @throws \Exception
+     */
+    public function actionGetUsers()
+    {
+        $workspaceId = Yii::$app->request->get('id');
+        if (!$workspaceId) {
+            return new ValidationException(Yii::t('app', 'Please, provide the workspace id'));
+        }
+
+        $users = [];
+        $userWorkspaces = UserWorkspaceResource::find()
+            ->byWorkspaceId($workspaceId)
+            ->with(['user'])
+            ->all();
+
+        foreach ($userWorkspaces as $userWorkspace) {
+            $id = $userWorkspace->user->id;
+
+            if (!isset($users[$id])) {
+                $users[$id] = $userWorkspace->user->toArray();
+                $users[$id]['roles'] = [$userWorkspace->role];
+            } else {
+                $users[$id]['roles'][] = $userWorkspace->role;
+            }
+        }
+
+        return $users;
     }
 }

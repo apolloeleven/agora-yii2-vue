@@ -1,17 +1,7 @@
 <template>
-  <b-modal v-if="fileIndex" modal-class="file-preview" :visible="previewModal.show" size="lg" :title="fileIndex.name"
-           ref="attachmentModal" id="file-dialog" scrollable hide-footer @hidden="hidePreviewModal">
-    <div class="bg-light text-right bg-secondary shadow-sm py-2 px-3">
-      <div class="attachment-preview-control">
-        <b-button variant="outline-info" @click="prev">
-          {{ $t('Previous') }}
-        </b-button>
-        <b-button variant="outline-info" @click="next">
-          {{ $t('Next') }}
-        </b-button>
-      </div>
-    </div>
-
+  <b-modal v-if="fileIndex" modal-class="file-preview" :visible="previewModal.show" size="lg" class="pb-0 mb-0"
+           :title="fileIndex.name" ref="attachmentModal" id="file-dialog" scrollable @hidden="hidePreviewModal"
+           body-class="pb-0">
     <div class="h-100">
       <b-carousel
         id="carousel-1" no-animation :value="previewModal.activeFile" :interval="0" ref="filePreview" img-width="10"
@@ -46,6 +36,24 @@
         </b-carousel-slide>
       </b-carousel>
     </div>
+    <template #modal-footer>
+      <div class="d-flex w-100 align-items-center">
+        <div class="mr-auto">
+          <b-button @click="onDownload(fileIndex)" variant="primary">
+            <i class="fas fa-download"/>
+            {{ $t('Download') }}
+          </b-button>
+        </div>
+        <div>
+          <b-button variant="info" @click="prev" class="mr-2">
+            {{ $t('Previous') }}
+          </b-button>
+          <b-button variant="info" @click="next">
+            {{ $t('Next') }}
+          </b-button>
+        </div>
+      </div>
+    </template>
   </b-modal>
 </template>
 
@@ -88,6 +96,9 @@ export default {
         media[i].pause();
       }
     },
+    onDownload(item) {
+      this.$emit('onDownloadClick', item)
+    },
   },
 }
 </script>
@@ -110,7 +121,6 @@ export default {
     .modal-content {
       height: 100%;
       max-height: unset;
-      padding-bottom: 16px;
     }
 
     .modal-body {
