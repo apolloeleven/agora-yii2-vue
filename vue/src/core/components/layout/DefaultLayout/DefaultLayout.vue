@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="header-fixed menu-fixed page-header-fixed"
+  <div v-if="currentUser.loaded" id="app" class="header-fixed menu-fixed page-header-fixed"
        :class="{'menu-collapsed': this.menuCollapsed, 'menu-hidden': this.menuHidden}">
     <Sidebar/>
     <div id="menu-content-wrapper">
@@ -27,7 +27,7 @@ import TimelineForm from "@/modules/Workspace/view/timeline/TimelineForm";
 import TimelineShare from "@/modules/Workspace/view/timeline/TimelineShare";
 import i18n from "@/shared/i18n";
 
-const {mapActions: userMapActions} = createNamespacedHelpers('user');
+const {mapState: mapUserState, mapActions: userMapActions} = createNamespacedHelpers('user');
 const {mapState: mapStateWorkspace, mapActions: mapActionsWorkspace} = createNamespacedHelpers('workspace');
 
 export default {
@@ -45,6 +45,7 @@ export default {
       'menuCollapsed',
       'menuHidden'
     ]),
+    ...mapUserState(['currentUser']),
     ...mapStateWorkspace(['workspaces'])
   },
   watch: {
