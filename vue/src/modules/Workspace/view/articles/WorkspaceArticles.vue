@@ -32,14 +32,27 @@
           </div>
           <div class="ml-auto">
             <b-tooltip :show.sync="article.showTooltip" triggers=""
-                       :target="`copy-tooltip-${article.id}`" :title="$t('Copied!')" placement="auto"></b-tooltip>
-            <i :id="`copy-tooltip-${article.id}`" class="mr-3 far fa-copy text-primary hover-pointer"
+                       :target="`copy-tooltip-${article.id}`" placement="auto">
+              <span class="text-sm p-2">{{ $t('Copied!') }}</span>
+            </b-tooltip>
+            <i :id="`copy-tooltip-${article.id}`" class="mr-3 far fa-copy text-primary hover-pointer p-2"
                @click="onCopyUrlClick(article)"></i>
+            <b-tooltip :show.sync="article.hasCopyClicked"
+                       :target="`copy-tooltip-${article.id}`">
+              <span class="text-sm px-2">{{ $t('Copy article link') }}</span>
+            </b-tooltip>
+
             <router-link class="d-inline-block"
                          :to="{name: 'workspace.articles.update', params: {articleId: article.id}}">
               <i class="mr-3 fas fa-pencil-alt text-primary hover-pointer"/>
             </router-link>
-            <i class="far fa-trash-alt text-danger hover-pointer" @click="onRemoveClicked(article)"></i>
+
+            <i class="far fa-trash-alt text-danger hover-pointer mr-3 py-2" :id="`article-delete-button-${article.id}`"
+               @click="onRemoveClicked(article)"></i>
+            <b-tooltip
+              :target="`article-delete-button-${article.id}`">
+              <span class="text-sm px-2">{{ $t('Delete article') }}</span>
+            </b-tooltip>
           </div>
         </div>
       </div>
@@ -77,6 +90,7 @@ export default {
       }
     },
     onCopyUrlClick(article) {
+      article.hasCopyClicked = false;
       article.showTooltip = true;
       this.$copyText(`${window.location.origin}/workspace/${this.workspace.id}/articles/view/${article.id}`);
       setTimeout(() => {
@@ -94,5 +108,13 @@ export default {
 .workspace-articles {
   width: 680px;
   margin: 0 auto;
+}
+
+.tooltip {
+  top: 0;
+}
+
+.text-sm {
+  font-size: .7rem;
 }
 </style>

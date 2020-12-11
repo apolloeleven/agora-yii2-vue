@@ -8,7 +8,7 @@
     </template>
 
     <b-card-body>
-      <NoDataAvailable v-if="!article.body" :text="$t('This article has not description')"/>
+      <NoDataAvailable v-if="!article.body" :text="$t('This article does not have body')"/>
       <div v-html="article.body"/>
     </b-card-body>
   </b-card>
