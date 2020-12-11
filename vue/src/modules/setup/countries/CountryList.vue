@@ -149,7 +149,7 @@ export default {
     }
   },
   async mounted() {
-    let response = await this.getCountries();
+    await this.getCountries();
 
     // if (response.success) {
     //   this.selectFirstCountry();

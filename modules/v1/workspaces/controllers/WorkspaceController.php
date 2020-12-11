@@ -5,12 +5,13 @@ namespace app\modules\v1\workspaces\controllers;
 
 
 use app\modules\v1\users\resources\UserResource;
-use app\modules\v1\workspaces\models\UserWorkspace;
+use app\modules\v1\workspaces\resources\UserWorkspaceResource;
 use app\modules\v1\workspaces\resources\WorkspaceResource;
 use app\rest\ActiveController;
 use app\rest\ValidationException;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\db\Exception;
 
 /**
  * Class WorkspaceController
@@ -35,54 +36,100 @@ class WorkspaceController extends ActiveController
     }
 
     /**
-     * Get breadcrumb for workspace view page
+     * Invite users into workspace
      *
-     * @return array
-     * @throws ValidationException
+     * @return array|mixed
+     * @throws Exception
      */
-    public function actionGetBreadCrumb()
+    public function actionInviteUsers()
     {
         $request = Yii::$app->request;
-        $workspaceId = $request->get('workspaceId');
+        $selectedUsers = $request->post('selectedUsers');
+        $allUser = $request->post('allUser');
+        $workspaceId = $request->post('workspace_id');
 
-        $workspace = WorkspaceResource::find()->byId($workspaceId)->one();
+        $userIds = $selectedUsers ? $selectedUsers : $allUser;
 
-        if (!$workspace) {
-            throw new ValidationException(Yii::t('app', 'This workspace not exist'));
+        if (!$userIds) {
+            return $this->validationError(Yii::t('app', 'Please select users'));
         }
 
-        $breadCrumb[] = [
-            'text' => Yii::t('app', 'My Workspaces'),
-            'to' => [
-                'name' => 'workspace',
-            ]
-        ];
+        // Get all users which already exist this workspace
+        $userWorkspaceIds = UserWorkspaceResource::find()
+            ->select(UserWorkspaceResource::tableName() . '.user_id')
+            ->byWorkspaceId($workspaceId)
+            ->byUserIds($userIds)
+            ->column();
 
-        $breadCrumb[] = [
-            'text' => $workspace->abbreviation ?: $workspace->name,
-            'to' => [
-                'name' => 'workspace.view',
-                'params' => [
-                    'id' => $workspace->id
-                ]
-            ]
-        ];
+        $userData = [];
 
-        return $breadCrumb;
+        foreach ($userIds as $userId) {
+            // Check if user is already member of workspace
+            if (!in_array($userId, $userWorkspaceIds)) {
+                $userData [] = [
+                    'user_id' => $userId,
+                    'workspace_id' => $workspaceId,
+                    'role' => UserResource::ROLE_USER,
+                    'created_at' => time(),
+                    'updated_at' => time(),
+                    'created_by' => Yii::$app->user->id,
+                    'updated_by' => Yii::$app->user->id,
+                ];
+            }
+        }
+        if (!$userData) {
+            return $this->response(null, 200);
+        }
+
+        $dbTransaction = Yii::$app->db->beginTransaction();
+        $createdData = Yii::$app->db->createCommand()
+            ->batchInsert
+            (
+                UserWorkspaceResource::tableName(),
+                ['user_id', 'workspace_id', 'role', 'created_at', 'updated_at', 'created_by', 'updated_by'],
+                $userData
+            )
+            ->execute();
+
+        if ($createdData !== count($userData)) {
+            $dbTransaction->rollBack();
+            return $this->validationError(Yii::t('app', 'Unable to invite user(s)'));
+        }
+
+        $dbTransaction->commit();
+        return $this->response(null, 201);
     }
 
     /**
-     * Get employees data by workspace id
+     * Get users by workspace
      *
-     * @param $workspaceId
-     * @return mixed
+     * @return array|mixed
+     * @throws \Exception
      */
-    public function actionGetEmployees($workspaceId)
+    public function actionGetUsers()
     {
-        return UserResource::find()
+        $workspaceId = Yii::$app->request->get('id');
+        if (!$workspaceId) {
+            return new ValidationException(Yii::t('app', 'Please, provide the workspace id'));
+        }
+
+        $users = [];
+        $userWorkspaces = UserWorkspaceResource::find()
             ->byWorkspaceId($workspaceId)
-            ->active()
-            ->orderByName()
+            ->with(['user'])
             ->all();
+
+        foreach ($userWorkspaces as $userWorkspace) {
+            $id = $userWorkspace->user->id;
+
+            if (!isset($users[$id])) {
+                $users[$id] = $userWorkspace->user->toArray();
+                $users[$id]['roles'] = [$userWorkspace->role];
+            } else {
+                $users[$id]['roles'][] = $userWorkspace->role;
+            }
+        }
+
+        return $users;
     }
 }

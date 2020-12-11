@@ -12,53 +12,21 @@
                 <strong>{{ $t('Loading...') }}</strong>
               </div>
             </template>
+            <template v-slot:cell(avatar)="data">
+              <b-img :src="data.item.image_url || '/assets/img/avatar.svg'" rounded="circle" width="32" height="32"/>
+            </template>
             <template v-slot:cell(fullName)="data">
               <div style="width: 100%">
                 {{ data.item.displayName }}
               </div>
-            </template>
-            <template v-slot:cell(departments)="data">
-              <ul v-if="data.item.userDepartments.length > 0"
-                  style="width: 100%; list-style-type: none;padding-inline-start: 0">
-                <li v-for="dep in data.item.userDepartments">
-                  {{ dep.department.name }}
-                </li>
-              </ul>
-            </template>
-            <template v-slot:cell(country)="data">
-              <ul v-if="data.item.userDepartments.length > 0"
-                  style="width: 100%; list-style-type: none; padding-inline-start: 0">
-                <li v-for="dep in data.item.userDepartments">
-                  {{ dep.department.country.name }}
-                </li>
-              </ul>
-            </template>
-            <template v-slot:cell(position)="data">
-              <ul v-if="data.item.userDepartments.length > 0"
-                  style="width: 100%; list-style-type: none; padding-inline-start: 0">
-                <li v-for="dep in data.item.userDepartments" :key="dep.id">
-                  {{ dep.position }}
-                </li>
-              </ul>
             </template>
             <template v-slot:cell(verified)="data">
               <b-form-checkbox v-model="data.item.status" name="check-button" switch size="lg"
                                @change="verifiedUser(data.item)"/>
             </template>
             <template v-slot:cell(actions)="data">
-              <b-dropdown variant="transparent text-dark p-0" right no-caret>
-                <template slot="button-content">
-                  <i class="fas fa-ellipsis-v"></i>
-                </template>
-                <b-dropdown-item @click="editUser(data.item)">
-                  <i class="fas fa-pencil-alt"></i>
-                  {{ $t('Edit') }}
-                </b-dropdown-item>
-                <b-dropdown-item @click="deleteUser(data.item)">
-                  <i class="far fa-trash-alt"></i>
-                  {{ $t('Delete') }}
-                </b-dropdown-item>
-              </b-dropdown>
+              <i class="fas fa-pencil-alt mr-3 text-primary hover-pointer" @click="editUser(data.item)"/>
+              <i class="far fa-trash-alt mr-3 text-danger hover-pointer" @click="deleteUser(data.item)"/>
             </template>
           </b-table>
         </b-card>
@@ -86,11 +54,9 @@ export default {
     fields() {
       return [
         {key: 'id', label: this.$t('ID')},
+        {key: 'avatar', label: this.$t('Image')},
         {key: 'fullName', label: this.$t('Full Name')},
         {key: 'email', label: this.$t('Email')},
-        {key: 'departments', label: this.$t('Departments')},
-        {key: 'country', label: this.$t('Country')},
-        {key: 'position', label: this.$t('Position')},
         {key: 'verified', label: this.$t('Verified')},
         {key: 'actions', label: this.$t('Actions')},
       ]

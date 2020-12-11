@@ -1,10 +1,5 @@
 <template>
-  <b-navbar class="header" type="dark" variant="info">
-    <b-navbar-brand href="#">
-      <div class="navbar-brand-img"
-           style="background-image: url('')"></div>
-    </b-navbar-brand>
-
+  <b-navbar class="header shadow border-bottom" type="light" variant="light">
     <SidebarToggle/>
 
     <b-nav-form class="navbar-search">

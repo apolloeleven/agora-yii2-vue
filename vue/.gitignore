@@ -23,3 +23,4 @@ yarn-error.log*
 
 # Others
 deploy.sh
+deploy-demo.sh

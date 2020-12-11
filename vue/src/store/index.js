@@ -2,10 +2,8 @@ import Vuex from "vuex";
 import Vue from 'vue';
 import setup from './modules/setup';
 import user from './modules/user';
-import timeline from './modules/timeline';
 import employee from './modules/employee'
-import workspace from './modules/workspaces/workspace';
-import article from './modules/workspaces/article';
+import workspace from './modules/workspaces';
 import httpService from "../core/services/httpService";
 import {SHARE_ARTICLE, SHARE_FILE} from "@/core/services/event-bus";
 
@@ -39,7 +37,7 @@ export default new Vuex.Store({
     toggleMenuHide({commit, state}) {
       commit('toggleMenuHide', !state.menuHidden);
     },
-    async shareToTimeline({commit, state}, data) {
+    async shareToTimeline({state}, data) {
       const res = await httpService.post(`/v1/workspaces/timeline`, data);
       if (res.success) {
         const currentArticle = state.article.currentArticle;
@@ -70,7 +68,5 @@ export default new Vuex.Store({
     user,
     employee,
     workspace,
-    article,
-    timeline
   }
 });

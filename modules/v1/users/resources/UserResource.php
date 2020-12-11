@@ -47,6 +47,9 @@ class UserResource extends User
             'displayName' => function () {
                 return $this->getDisplayName();
             },
+            'image_url' => function () {
+                return $this->getImageUrl();
+            },
             'access_token',
             'email',
             'status' => function () {
@@ -73,11 +76,11 @@ class UserResource extends User
             if (!$parentSave) {
                 $transaction->rollBack();
             }
-            if ($this->userWorkspacesData) {
+            if (isset($this->userWorkspacesData)) {
                 $this->updateRoles($this->userWorkspacesData);
                 $this->updateUserWorkspaces($this->userWorkspacesData);
             }
-            if ($this->userDepartmentsData) {
+            if (isset($this->userDepartmentsData)) {
                 $this->updateUserDepartments($this->userDepartmentsData);
             }
             $transaction->commit();

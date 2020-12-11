@@ -28,9 +28,6 @@ class WorkspaceResource extends Workspace
             'name',
             'abbreviation',
             'description',
-            'folder_in_folder' => function () {
-                return !!$this->folder_in_folder;
-            },
             'created_at' => function () {
                 return $this->created_at * 1000;
             },
@@ -48,7 +45,7 @@ class WorkspaceResource extends Workspace
      */
     public function extraFields()
     {
-        return ['createdBy', 'updatedBy', 'articles'];
+        return ['createdBy', 'updatedBy', 'articles', 'rootFolder'];
     }
 
     /**
@@ -68,7 +65,24 @@ class WorkspaceResource extends Workspace
     }
 
     /**
-     * After save workspace create new user workspace
+     * @return ActiveQuery
+     */
+    public function getTimelinePosts()
+    {
+        return $this->hasMany(TimelinePostResource::class, ['workspace_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getRootFolder()
+    {
+        return $this->hasOne(FolderResource::class, ['workspace_id' => 'id'])
+            ->andWhere(['depth' => 0]);
+    }
+
+    /**
+     * After save workspace create new user workspace and default folder for timeline posts
      *
      * @param $insert
      * @param $changedAttributes
@@ -85,6 +99,24 @@ class WorkspaceResource extends Workspace
 
             if (!$userWorkspace->save()) {
                 throw new ValidationException(Yii::t('app', 'Unable to create user workspace'));
+            }
+
+            $workspaceRootFolder = new FolderResource();
+            $workspaceRootFolder->name = 'Files';
+            $workspaceRootFolder->workspace_id = $this->id;
+
+            if (!$workspaceRootFolder->makeRoot()) {
+                throw new ValidationException(Yii::t('app', 'Unable to create root folder'));
+            }
+
+            $childFolder = new FolderResource();
+            $childFolder->workspace_id = $this->id;
+            $childFolder->is_timeline_folder = 1;
+            $childFolder->parent_id = $workspaceRootFolder->id;
+            $childFolder->name = "$this->name - Timeline posts";
+
+            if (!$childFolder->appendTo($workspaceRootFolder)) {
+                throw new ValidationException(Yii::t('app', 'Unable to create child folder'));
             }
         }
     }
@@ -140,10 +172,11 @@ class WorkspaceResource extends Workspace
      */
     public function delete()
     {
-        if ($this->getArticles()->count()) {
+        if ($this->getFolders()->count()) {
             throw new ValidationException(Yii::t('app', 'You can\'t delete this workspace because it has folders'));
         }
         UserWorkspace::deleteAll(['workspace_id' => $this->id]);
+        Workspace::deleteAll(['id' => $this->id]);
 
         return true;
     }
