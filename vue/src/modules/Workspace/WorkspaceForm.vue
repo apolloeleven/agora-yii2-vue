@@ -12,6 +12,8 @@
         <input-widget :model="model" attribute="name"/>
         <input-widget :model="model" attribute="abbreviation"/>
         <input-widget :model="model" attribute="description" type="richtext"/>
+<!--        This button is necessary in order submitting form to work on enter-->
+        <button style="display: none"></button>
       </b-form>
     </b-modal>
   </ValidationObserver>
@@ -64,6 +66,9 @@ export default {
     hideModal() {
       this.hideWorkspaceModal();
       this.model = new WorkspaceFormModel()
+    },
+    onShown() {
+      this.$refs.nameInputWidget.focus()
     }
   }
 }
