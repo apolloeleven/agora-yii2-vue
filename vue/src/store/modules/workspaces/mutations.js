@@ -12,6 +12,7 @@ import {
   DELETE_TIMELINE_COMMENT,
   DELETED_TIMELINE_POST,
   FOLDER_DELETED,
+  GET_ACTIVE_USERS,
   GET_ALL_FOLDERS,
   GET_ARTICLE,
   GET_ARTICLES,
@@ -23,6 +24,7 @@ import {
   GET_WORKSPACES,
   HIDE_ARTICLE_MODAL,
   HIDE_FOLDER_MODAL,
+  HIDE_INVITE_MODAL,
   HIDE_PREVIEW_MODAL,
   HIDE_TIMELINE_MODAL,
   HIDE_WORKSPACE_MODAL,
@@ -30,6 +32,7 @@ import {
   REMOVE_ARTICLE,
   SHOW_ARTICLE_MODAL,
   SHOW_FOLDER_MODAL,
+  SHOW_INVITE_MODAL,
   SHOW_PREVIEW_MODAL,
   SHOW_TIMELINE_MODAL,
   SHOW_WORKSPACE_MODAL,
@@ -42,6 +45,8 @@ import {
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
+  TOGGLE_WORKSPACE_USERS_LOADING,
+  SET_WORKSPACE_USERS,
 } from './mutation-types';
 import _ from 'lodash';
 
@@ -440,5 +445,41 @@ export default {
       .forEach(t => t.timelineComments
         .forEach(t => t.childrenComments = t.childrenComments.filter(c => c.id !== data.id)));
   },
-
+  /**
+   *
+   * @param state
+   */
+  [SHOW_INVITE_MODAL](state) {
+    state.view.inviteModal.show = true;
+  },
+  /**
+   *
+   * @param state
+   */
+  [HIDE_INVITE_MODAL](state) {
+    state.view.inviteModal.show = false;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [GET_ACTIVE_USERS](state, data) {
+    state.view.inviteModal.users = data
+  },
+  /**
+   *
+   * @param state
+   */
+  [TOGGLE_WORKSPACE_USERS_LOADING](state){
+    state.view.users.loading = !state.view.users.loading;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [SET_WORKSPACE_USERS](state, data){
+    state.view.users.data = data;
+  },
 };

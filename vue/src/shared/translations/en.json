@@ -22,5 +22,6 @@
   "This operation can not be undone": "This operation can not be undone",
   " Are you sure you want to continue?": " Are you sure you want to continue?",
   "File(s) were successfully deleted": "File(s) were successfully deleted",
-  "{count} file(s) were successfully uploaded": "{count} file(s) were successfully uploaded"
+  "{count} file(s) were successfully uploaded": "{count} file(s) were successfully uploaded",
+  "User(s) invited successfully": "User(s) invited successfully"
 }

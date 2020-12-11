@@ -5,7 +5,6 @@
         <img src="/assets/img/apollo11-white.png" alt="" style="width: 80px"/>
         <h3>{{ $t('Welcome') }}</h3>
         <p>You are 30 seconds away from entering in <b>Agora!</b></p>
-        <router-link class="btn btn-light btn-secondary btn-block" :to="{name: 'auth.register'}">Register</router-link>
       </div>
     </div>
     <div class="col-md-8 col-right">
@@ -15,7 +14,7 @@
         <form v-on:submit.prevent="onLoginClick">
           <ValidationObserver ref="loginForm">
             <div class="auth-form">
-              <input-widget ref="usernameInputWidget" :model="model" attribute="username"/>
+              <input-widget ref="emailInputWidget" :model="model" attribute="email"/>
               <input-widget :model="model" attribute="password" type="password"/>
               <div class="d-flex align-items-center justify-content-between">
                 <button class="btn btn-primary mr-2">{{ $t('Login') }}</button>
@@ -61,7 +60,7 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.$refs.usernameInputWidget.focus()
+      this.$refs.emailInputWidget.focus()
     }, 500)
   }
 }
