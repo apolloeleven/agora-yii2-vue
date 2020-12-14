@@ -10,7 +10,6 @@
     </div>
     <div class="col-md-8 col-right">
       <div class="auth-right clearfix">
-        <content-spinner :show="loading" :text="$t('Please wait...')" class="h-100"/>
         <h3 class="auth-heading">{{ $t('Login to your account') }}</h3>
         <br>
         <form v-on:submit.prevent="onLoginClick">
@@ -19,7 +18,10 @@
               <input-widget ref="usernameInputWidget" :model="model" attribute="username"/>
               <input-widget :model="model" attribute="password" type="password"/>
               <div class="d-flex align-items-center justify-content-between">
-                <button class="btn btn-primary mr-2">{{ $t('Login') }}</button>
+                <button :disabled="loading" class="btn btn-primary mr-2">
+                  <b-spinner v-if="loading" small/>
+                  {{ $t('Login') }}
+                </button>
                 <router-link :to="{name: 'request-password-reset'}">{{ $t('Request new password') }}</router-link>
               </div>
             </div>
@@ -72,4 +74,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.col-right {
+  position: relative;
+}
 </style>
