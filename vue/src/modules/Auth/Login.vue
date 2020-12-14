@@ -40,7 +40,7 @@ import ContentSpinner from "@/core/components/ContentSpinner";
 
 export default {
   name: "Login",
-  components: {InputWidget, ContentSpinner},
+  components: {InputWidget},
   data() {
     return {
       loading: false,
