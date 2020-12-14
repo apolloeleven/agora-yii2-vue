@@ -57,9 +57,9 @@ class UserLike extends ActiveRecord
             'data' => function () {
                 return $this->timelinePost;
             },
-            'events' => ['create'],
-            'template' => [
-                'create' => 'liked {model} {title}',
+            'eventMap' => [
+                'create' => 'like',
+                'delete' => 'dislike',
             ]
         ];
 

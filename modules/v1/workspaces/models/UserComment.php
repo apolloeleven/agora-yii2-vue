@@ -60,24 +60,22 @@ class UserComment extends ActiveRecord
             },
             'tableName' => TimelinePost::tableName(),
             'data' => function () {
+                $data = [];
                 if ($this->timelinePost)
-                    return $this->timelinePost;
+                    $data['item'] = $this->timelinePost;
 
-                return $this->parent->timelinePost;
-            },
-            'parentIdentity' => function () {
+                $data['item'] = $this->parent->timelinePost;
                 if ($this->parent)
-                    return $this->parent->createdBy;
+                    return $data['parentItem'] = $this->parent;
 
-                return null;
+                return $data;
             },
             'events' => ['create'],
-            'template' => [
+            'eventMap' => [
                 'create' => function () {
-                    if ($this->parent)
-                        return 'Replied to {parent}\'s comment under {model} {title}';
+                    if ($this->parent) return 'reply';
 
-                    return 'Commented on {model} {title}';
+                    return 'comment';
                 },
             ]
         ];

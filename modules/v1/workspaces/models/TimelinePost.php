@@ -67,13 +67,6 @@ class TimelinePost extends ActiveRecord
             'workspace_id' => function () {
                 return $this->workspace_id;
             },
-            'data' => function () {
-                return $this;
-            },
-            'events' => ['create', 'update'],
-            'template' => [
-                'update' => 'Edited {model} {title}',
-            ]
         ];
 
         return $behaviors;

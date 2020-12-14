@@ -8,6 +8,7 @@ use yii\base\Behavior;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
 use yii\helpers\Json;
+use yii\helpers\VarDumper;
 
 class ActivityBehavior extends Behavior
 {
@@ -25,16 +26,8 @@ class ActivityBehavior extends Behavior
     public $tableName = null;
 
     public $events = ['create', 'update', 'delete'];
-    /**
-     * @var string
-     */
-    public $defaultTemplate = [
-        'create' => 'Created {model} {title}',
-        'update' => 'Updated {model} {title}',
-        'delete' => 'Deleted {model} {title}',
-    ];
 
-    public $template = [];
+    public $eventMap = [];
 
     /**
      * @var \Closure
@@ -49,37 +42,33 @@ class ActivityBehavior extends Behavior
     public function events()
     {
         return [
-            ActiveRecord::EVENT_AFTER_INSERT => 'afterInsert',
-            ActiveRecord::EVENT_AFTER_UPDATE => 'afterUpdate',
-            ActiveRecord::EVENT_BEFORE_DELETE => 'beforeDelete',
+            WorkspaceActivity::EVENT_AFTER_INSERT => 'afterInsert',
+            WorkspaceActivity::EVENT_AFTER_UPDATE => 'afterUpdate',
+            WorkspaceActivity::EVENT_BEFORE_DELETE => 'beforeDelete',
         ];
-    }
-
-    public function prepareTemplate()
-    {
-        foreach ($this->template as $event => $template) {
-            if ($this->template[$event] instanceof \Closure)
-                $this->template[$event] = call_user_func($template);
-        }
-        $this->template = array_merge($this->defaultTemplate, $this->template);
     }
 
     public function appendAction($action)
     {
-        $this->prepareTemplate();
+        $mapAction = $this->eventMap[$action] ?? $action;
         $workspaceActivity = new WorkspaceActivity();
         $workspaceActivity->workspace_id = $this->workspace_id instanceof \Closure ? call_user_func($this->workspace_id) : null;
-        $workspaceActivity->table_name = $this->tableName ?? $this->owner->tableName();
+        $workspaceActivity->table_name = $this->processTableName($this->tableName ?? $this->owner->tableName());
         $workspaceActivity->content_id = $this->owner->{$this->contentIdAttribute};
-        $workspaceActivity->action = $action;
-        $workspaceActivity->description = $this->template[$action];
-        $workspaceActivity->data = $this->data ? Json::encode(call_user_func($this->data)) : null;
+        $workspaceActivity->action = is_callable($mapAction) ? call_user_func($mapAction) : $mapAction;
+        $workspaceActivity->data = $this->data ? Json::encode(call_user_func($this->data)) : Json::encode($this->owner->toArray());
         $workspaceActivity->parent_identity = $this->parentIdentity ? Json::encode(call_user_func($this->parentIdentity)) : null;
         $saved = $workspaceActivity->save();
 
-        if (!$saved) { //If arguments are invalid, save() fails, but no error is produced. Will reduce time of debugging. You are welcome :)
-            throw new Exception("Invalid Arguments");
+        if (!$saved) {
+            \Yii::error("WorkspaceActivity was not saved. Errors: ". VarDumper::dumpAsString($workspaceActivity->errors));
+            throw new Exception("Invalid Arguments ". implode('<br>', $workspaceActivity->getFirstErrors()));
         }
+    }
+
+    private function processTableName($tableName)
+    {
+        return preg_replace('(^{{%?|}}$)', '', $tableName);
     }
 
     public function afterInsert()
