@@ -17,7 +17,10 @@
               <input-widget ref="emailInputWidget" :model="model" attribute="email"/>
               <input-widget :model="model" attribute="password" type="password"/>
               <div class="d-flex align-items-center justify-content-between">
-                <button class="btn btn-primary mr-2">{{ $t('Login') }}</button>
+                <button :disabled="loading" class="btn btn-primary mr-2">
+                  <b-spinner v-if="loading" small/>
+                  {{ $t('Login') }}
+                </button>
                 <router-link :to="{name: 'request-password-reset'}">{{ $t('Request new password') }}</router-link>
               </div>
             </div>
@@ -32,20 +35,23 @@
 import auth from '../../core/services/authService';
 import LoginModel from "./LoginModel";
 import InputWidget from "../../core/components/input-widget/InputWidget";
+import ContentSpinner from "@/core/components/ContentSpinner";
 
 export default {
   name: "Login",
   components: {InputWidget},
   data() {
     return {
+      loading: false,
       model: new LoginModel(),
     }
   },
   methods: {
     async onLoginClick() {
+      this.loading = true;
       this.model.resetErrors();
       let response = await auth.login(this.model);
-
+      this.loading = false;
       if (response.success) {
         if (auth.getRedirectTo()) {
           this.$router.push(auth.getRedirectTo());
@@ -67,4 +73,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.col-right {
+  position: relative;
+}
 </style>
