@@ -32,8 +32,15 @@
             }">{{ data.value }}</span>
             </template>
             <template v-slot:cell(actions)="data">
-              <i class="fas fa-pencil-alt mr-3 text-primary hover-pointer" @click="editUser(data.item)" v-if="data.item.status !== PENDING_STATUS"/>
-              <i class="far fa-trash-alt text-danger hover-pointer" @click="deleteUser(data.item)"/>
+              <i v-if="data.item.status !== PENDING_STATUS"
+                 class="fas fa-pencil-alt mr-3 text-primary hover-pointer"
+                 v-b-tooltip.hover.left="$t('Edit user')"
+                 @click="editUser(data.item)">
+              </i>
+              <i v-else class="disabled fas fa-pencil-alt mr-3"/>
+              <i class="far fa-trash-alt mr-3 text-danger hover-pointer"
+                 v-b-tooltip.hover.left="$t('Delete invitation')"
+                 @click="deleteUser(data.item)"/>
             </template>
           </b-table>
           <no-data-available v-if="!invitations.data.length" height="100"/>
