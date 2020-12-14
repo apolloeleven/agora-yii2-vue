@@ -51,6 +51,10 @@ const STATE = {
       loading: false,
       data: []
     },
+    users: {
+      loading: false,
+      data: [],
+    },
     inviteModal: {
       show: false,
       users: [],

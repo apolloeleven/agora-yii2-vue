@@ -47,6 +47,8 @@ import {
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
   TOGGLE_WORKSPACE_ACTIVITY_LOADING,
+  TOGGLE_WORKSPACE_USERS_LOADING,
+  SET_WORKSPACE_USERS,
 } from './mutation-types';
 import httpService from "../../../core/services/httpService";
 
@@ -689,4 +691,17 @@ export async function getActiveUsers({commit}) {
  */
 export async function inviteUsers({commit}, data) {
   return await httpService.post(`${url}/invite-users`, data)
+}
+
+/**
+ * @param commit
+ * @param id
+ */
+export async function getWorkspaceUsers({commit}, id){
+  commit(TOGGLE_WORKSPACE_USERS_LOADING);
+  let {success, body} = await httpService.get(`${url}/get-users?id=${id}`)
+  if (success) {
+    commit(SET_WORKSPACE_USERS, body);
+  }
+  commit(TOGGLE_WORKSPACE_USERS_LOADING);
 }

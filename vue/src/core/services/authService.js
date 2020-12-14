@@ -18,6 +18,7 @@ export default {
 
   logout() {
     localStorage.removeItem(AUTH_TOKEN);
+    localStorage.removeItem(CURRENT_USER);
     router.push({name: 'auth.login'});
   },
 

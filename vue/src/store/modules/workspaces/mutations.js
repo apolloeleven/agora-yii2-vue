@@ -47,6 +47,8 @@ import {
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
+  TOGGLE_WORKSPACE_USERS_LOADING,
+  SET_WORKSPACE_USERS,
 } from './mutation-types';
 import _ from 'lodash';
 
@@ -474,5 +476,20 @@ export default {
 
   [TOGGLE_WORKSPACE_ACTIVITY_LOADING](state, data) {
     state.view.activity.loading = data;
-  }
+  },
+  /**
+   *
+   * @param state
+   */
+  [TOGGLE_WORKSPACE_USERS_LOADING](state){
+    state.view.users.loading = !state.view.users.loading;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [SET_WORKSPACE_USERS](state, data){
+    state.view.users.data = data;
+  },
 };

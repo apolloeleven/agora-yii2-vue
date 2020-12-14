@@ -6,7 +6,7 @@
     <div class="card">
       <div class="card-header d-flex align-items-center">
         <h5 class="mb-0">{{ articles.length }} {{ $t('article(s)') }}</h5>
-        <b-button :to="{name: 'workspace.articles.view_create'}" size="sm" variant="primary" class="ml-auto">
+        <b-button :to="{name: 'workspace.articles.create'}" size="sm" variant="primary" class="ml-auto">
           <i class="fas fa-plus-circle"/>
           {{ $t('Create Article') }}
         </b-button>
@@ -17,7 +17,7 @@
              :key="`article-item-${article.id}`" class="p-3 d-flex align-items-center">
           <div>
             <router-link class="d-inline-block"
-                         :to="{name: 'workspace.articles.view_update', params: {articleId: article.id}}">
+                         :to="{name: 'workspace.articles.view', params: {articleId: article.id}}">
               <h5 class="mb-0">{{ article.title }}</h5>
             </router-link>
             <small class="mt-2 text-muted d-block">
@@ -32,15 +32,31 @@
           </div>
           <div class="ml-auto">
             <b-tooltip :show.sync="article.showTooltip" triggers=""
-                       :target="`copy-tooltip-${article.id}`" :title="$t('Copied!')" placement="auto"></b-tooltip>
-            <i :id="`copy-tooltip-${article.id}`" class="mr-3 far fa-copy text-primary hover-pointer"
+                       :target="`copy-tooltip-${article.id}`" placement="auto">
+              <span class="text-sm p-2">{{ $t('Copied!') }}</span>
+            </b-tooltip>
+            <i :id="`copy-tooltip-${article.id}`" class="mr-3 far fa-copy text-primary hover-pointer p-2"
                @click="onCopyUrlClick(article)"></i>
-            <i class="far fa-trash-alt text-danger hover-pointer" @click="onRemoveClicked(article)"></i>
+            <b-tooltip :show.sync="article.hasCopyClicked"
+                       :target="`copy-tooltip-${article.id}`">
+              <span class="text-sm px-2">{{ $t('Copy article link') }}</span>
+            </b-tooltip>
+
+            <router-link class="d-inline-block"
+                         :to="{name: 'workspace.articles.update', params: {articleId: article.id}}">
+              <i class="mr-3 fas fa-pencil-alt text-primary hover-pointer"/>
+            </router-link>
+
+            <i class="far fa-trash-alt text-danger hover-pointer mr-3 py-2" :id="`article-delete-button-${article.id}`"
+               @click="onRemoveClicked(article)"></i>
+            <b-tooltip
+              :target="`article-delete-button-${article.id}`">
+              <span class="text-sm px-2">{{ $t('Delete article') }}</span>
+            </b-tooltip>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -74,8 +90,9 @@ export default {
       }
     },
     onCopyUrlClick(article) {
+      article.hasCopyClicked = false;
       article.showTooltip = true;
-      this.$copyText(`${window.location.origin}/workspace/${this.workspace.id}/articles/${article.id}`);
+      this.$copyText(`${window.location.origin}/workspace/${this.workspace.id}/articles/view/${article.id}`);
       setTimeout(() => {
         article.showTooltip = false
       }, 1500)
@@ -88,8 +105,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .workspace-articles {
-    width: 680px;
-    margin: 0 auto;
-  }
+.workspace-articles {
+  width: 680px;
+  margin: 0 auto;
+}
+
+.tooltip {
+  top: 0;
+}
+
+.text-sm {
+  font-size: .7rem;
+}
 </style>
