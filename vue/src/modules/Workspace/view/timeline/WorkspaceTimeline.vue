@@ -48,9 +48,12 @@ export default {
     }
   },
   watch: {
-     '$route.params.id': function (id) {
-        this.timelinePosts(id);
-      },
+    '$route.params.id': function (id) {
+      this.allLoaded = false;
+      this.loading = false;
+      this.lastPostId = 0;
+      this.timelinePosts(id);
+    },
   },
   methods: {
     ...mapTimelineActions(['showTimelineModal', 'getTimelinePosts']),
@@ -92,8 +95,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .workspace-timeline {
-    overflow: auto;
-    height: 100%;
-  }
+.workspace-timeline {
+  overflow: auto;
+  height: 100%;
+}
 </style>

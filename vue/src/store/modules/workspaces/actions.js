@@ -326,7 +326,7 @@ export function hideTimelineModal({commit}) {
  * @param last_post_id
  * @returns {Promise<unknown>}
  */
-export async function getTimelinePosts({state, commit}, {workspace_id, posts_limit=1e4, last_post_id=0}) {
+export async function getTimelinePosts({state, commit}, {workspace_id, posts_limit = 1e4, last_post_id = 0}) {
   commit(CHANGE_TIMELINE_LOADING)
   const res = await httpService.get(`${timelineUrl}?workspace_id=${workspace_id}&limit=${posts_limit}&last_post_id=${last_post_id}&${timelineExpand}`);
   if (res.success) {
@@ -699,7 +699,7 @@ export async function inviteUsers({commit}, data) {
  * @param commit
  * @param id
  */
-export async function getWorkspaceUsers({commit}, id){
+export async function getWorkspaceUsers({commit}, id) {
   commit(TOGGLE_WORKSPACE_USERS_LOADING);
   let {success, body} = await httpService.get(`${url}/get-users?id=${id}`)
   if (success) {
