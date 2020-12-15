@@ -30,14 +30,6 @@
                 <i class="fas fa-paper-plane mr-2"/>
                 {{ $t('Invite') }}
               </b-dropdown-item>
-              <b-dropdown-item @click="onEditClick">
-                <i class="fas fa-pen-alt mr-2"/>
-                {{ $t('Edit workspace') }}
-              </b-dropdown-item>
-              <b-dropdown-item @click="onDeleteClick">
-                <i class="fas fa-trash mr-2"/>
-                {{ $t('Delete workspace') }}
-              </b-dropdown-item>
             </b-nav-item-dropdown>
           </b-nav>
         </div>
@@ -151,21 +143,6 @@ export default {
     onInviteClick() {
       this.showInviteModal();
     },
-    onEditClick(){
-      this.showWorkspaceModal(this.workspace);
-    },
-    async onDeleteClick(){
-      let success = await this.$confirm(this.$i18n.t("If you delete this workspace all the timeline records and users will be removed from this workspace. Are you sure you want to continue?"));
-      if (success) {
-        let response = await this.deleteWorkspace(this.workspace);
-        if (response.success) {
-          this.$toast(this.$i18n.t("Workspace was successfully deleted"));
-          this.$router.push('/')
-        } else {
-          this.$toast(response.body.message, 'danger');
-        }
-      }
-    }
   },
   async beforeMount() {
     await this.getCurrentWorkspace(this.$route.params.id);
