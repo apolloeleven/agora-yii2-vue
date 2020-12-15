@@ -55,7 +55,7 @@ import ActivityItemDescription from "@/modules/Workspace/view/activity/ActivityI
 
 export default {
   name: "ActivityItem",
-  components: {ActivityItemDescription},
+  components: {},
   props: {
     activity: Object,
   },
