@@ -167,7 +167,7 @@ export default {
         {title: this.$i18n.t('Timeline'), to: {name: 'workspace.timeline'}, icon: 'fas fa-stream'},
         {
           title: this.$i18n.t('Files'),
-          to: {name: 'workspace.files', params: {folderId: this.workspace.rootFolder.id}},
+          to: {name: 'workspace.files', params: {folderId: this.workspace.rootFolder ? this.workspace.rootFolder.id : ''}},
           icon: 'fa fa-folder'
         },
         {title: this.$i18n.t('Articles'), to: {name: 'workspace.articles'}, icon: 'fa fa-book'},
