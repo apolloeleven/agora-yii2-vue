@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading">
+  <div v-if="loading && !this.timelineData">
     <content-spinner show/>
   </div>
   <div v-else class="workspace-timeline shrinked-width">
@@ -13,10 +13,11 @@
     </div>
     <div class="timeline-records">
       <no-data :model="timelineData" :loading="loading" :text="$t('Nothing is shared on timeline')"></no-data>
-      <template v-if="!loading">
-        <TimelineItem v-for="(timeline, index) in timelineData" :timeline="timeline"
-                      :index="index" :key="`timeline-post-${timeline.id}`"/>
-      </template>
+      <TimelineItem v-for="(timeline, index) in timelineData" :timeline="timeline"
+                    :index="index" :key="`timeline-post-${timeline.id}`"/>
+      <div v-if="loading && this.timelineData">
+        <content-spinner show/>
+      </div>
     </div>
   </div>
 </template>
@@ -26,6 +27,7 @@ import ContentSpinner from "@/core/components/ContentSpinner";
 import NoData from "@/core/components/NoData";
 import TimelineItem from "@/modules/Workspace/view/timeline/TimelineItem";
 import {createNamespacedHelpers} from "vuex";
+import {eventBus} from "@/core/services/event-bus";
 
 const {mapActions: mapTimelineActions, mapState: mapTimelineState} = createNamespacedHelpers('workspace');
 
@@ -38,26 +40,63 @@ export default {
       loading: state => state.view.timeline.loading,
     }),
   },
+  data() {
+    return {
+      allLoaded: false,
+      postsLimit: 20,
+      lastPostId: 0,
+    }
+  },
   watch: {
-     '$route.params.id': function (id) {
-        this.getTimelinePosts(id);
-      },
+    '$route.params.id': function (id) {
+      this.allLoaded = false;
+      this.loading = false;
+      this.lastPostId = 0;
+      this.timelinePosts(id);
+    },
   },
   methods: {
     ...mapTimelineActions(['showTimelineModal', 'getTimelinePosts']),
     showTimelineForm() {
       this.showTimelineModal(null);
     },
+    async timelinePosts(workspaceId) {
+      if (this.allLoaded || this.loading) return;
+      let res = await this.getTimelinePosts({
+        workspace_id: workspaceId,
+        posts_limit: this.postsLimit,
+        last_post_id: this.lastPostId,
+      });
+      if (res.success) {
+        if (res.body.length) {
+          this.lastPostId = res.body[res.body.length - 1].id;
+        }
+        this.allLoaded = res.body.length < this.postsLimit;
+      }
+    },
+    resetAndLoadArticles(workspaceId) {
+      this.lastPostId = 0;
+      this.allLoaded = false;
+      this.timelinePosts(workspaceId);
+    }
+  },
+  destroyed() {
+    eventBus.$off('onScrollToBottom')
   },
   mounted() {
-    this.getTimelinePosts(this.$route.params.id);
+    let workspaceId = this.$route.params.id;
+    this.resetAndLoadArticles(workspaceId);
+
+    eventBus.$on('onScrollToBottom', () => {
+      this.timelinePosts(workspaceId);
+    })
   },
 }
 </script>
 
 <style lang="scss" scoped>
-  .workspace-timeline {
-    overflow: auto;
-    height: 100%;
-  }
+.workspace-timeline {
+  overflow: auto;
+  height: 100%;
+}
 </style>

@@ -204,7 +204,6 @@ export default {
    * @param data
    */
   [GET_TIMELINE_DATA](state, data) {
-    state.view.timeline.loading = false;
     state.view.timeline.data = data;
   },
   /**
