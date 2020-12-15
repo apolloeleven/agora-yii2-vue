@@ -20,8 +20,10 @@ export default class WorkspaceFormModel extends BaseModel {
 
   constructor(data = {}) {
     super();
-    data.created_at = data.created_at / 1000;
-    data.updated_at = data.updated_at / 1000;
+    if (data.created_at > 1e10){
+      data.created_at = data.created_at / 1000;
+      data.updated_at = data.updated_at / 1000;
+    }
     Object.assign(this, {...data});
   }
 }
