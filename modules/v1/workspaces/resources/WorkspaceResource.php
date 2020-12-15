@@ -8,8 +8,10 @@ use app\helpers\ModelHelper;
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\Article;
 use app\modules\v1\workspaces\models\Folder;
+use app\modules\v1\workspaces\models\TimelinePost;
 use app\modules\v1\workspaces\models\UserWorkspace;
 use app\modules\v1\workspaces\models\Workspace;
+use app\modules\v1\workspaces\models\WorkspaceActivity;
 use app\rest\ValidationException;
 use Yii;
 use yii\db\ActiveQuery;
@@ -127,7 +129,7 @@ class WorkspaceResource extends Workspace
      * Load for image upload
      *
      * @param array $data
-     * @param null $formName
+     * @param null  $formName
      * @return bool
      */
     public function load($data, $formName = null)
@@ -176,55 +178,29 @@ class WorkspaceResource extends Workspace
     {
         $dbTransaction = Yii::$app->db->beginTransaction();
 
-        $timelinePosts = $this->getTimelinePosts()->all();
-        foreach ($timelinePosts as $timelinePost) {
-            $timelinePost->delete();
-        }
-        if ($this->getTimelinePosts()->count()) {
-            $dbTransaction->rollBack();
-            throw new ValidationException(Yii::t('app', "Can't delete timeline posts"));
+        // Delete all timeline posts
+        TimelinePost::deleteAll(['workspace_id' => $this->id]);
+
+        // Delete the whole file manager records
+        Folder::deleteAll(['workspace_id' => $this->id]);
+        // Delete all files from file system
+        $fullPath = Yii::getAlias("@storage/file-manager/{$this->id}");
+        if (is_dir($fullPath)) {
+            FileHelper::removeDirectory($fullPath);
         }
 
-        $folder = $this->getRootFolder()->one();
-        if ($folder){
-            $folder->deleteWithChildren();
-            if ($folder->getChildren()->count()) {
-                $dbTransaction->rollBack();
-                throw new ValidationException(Yii::t('app', "Can't delete workspace folders"));
-            }
-        }
-
+        WorkspaceActivity::deleteAll(['workspace_id' => $this->id]);
         UserWorkspace::deleteAll(['workspace_id' => $this->id]);
-        if (UserWorkspace::find()->where(['workspace_id' => $this->id])->count()) {
-            $dbTransaction->rollBack();
-            throw new ValidationException(Yii::t('app', "Can't delete workspace users"));
-        }
-
         Article::deleteAll(['workspace_id' => $this->id]);
-        if (Article::find()->where(['workspace_id' => $this->id])->count()) {
-            $dbTransaction->rollBack();
-            throw new ValidationException(Yii::t('app', "Can't delete workspace articles"));
-        }
 
-        Workspace::deleteAll(['id' => $this->id]);
-        if (Workspace::find()->where(['id' => $this->id])->count()) {
-            $dbTransaction->rollBack();
-            throw new ValidationException(Yii::t('app', "Can't delete workspace"));
-        }
+        parent::delete();
 
-        if ($this->image_path){
+        if ($this->image_path) {
             $fullPath = dirname(Yii::getAlias('@storage' . $this->image_path));
             if (is_dir($fullPath)) {
                 FileHelper::removeDirectory($fullPath);
             }
         }
-
-        $path = "/file-manager/{$this->id}";
-        $fullPath = Yii::getAlias('@storage' . $path);
-        if (is_dir($fullPath)) {
-            FileHelper::removeDirectory($fullPath);
-        }
-
         $dbTransaction->commit();
 
         return true;
