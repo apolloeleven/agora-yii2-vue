@@ -59,7 +59,7 @@ class UserLike extends ActiveRecord
             },
             'eventMap' => [
                 'create' => 'like',
-                'delete' => 'dislike',
+                'delete' => 'unlike',
             ]
         ];
 

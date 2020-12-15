@@ -13,10 +13,8 @@
                 {{ this.activity.createdBy.first_name + ' ' + this.activity.createdBy.last_name }}
               </strong>
               <span v-if="tableName === 'timeline_posts'">
-                <template v-if="action === 'create' || action === 'update' || action === 'delete'">
                   {{ description }}
                   <router-link :to="{name: 'todo'}">{{ $t('timeline post') }}</router-link>
-                </template>
               </span>
               <span v-else-if="tableName === 'articles'">
                 <template v-if="action === 'create' || action === 'update' || action === 'delete'">
@@ -72,6 +70,10 @@ export default {
           create: this.$t('created'),
           update: this.$t('updated'),
           delete: this.$t('deleted'),
+          like: this.$t('liked'),
+          unlike: this.$t('unliked'),
+          comment: this.$t('commented on'),
+          reply: this.$t('replied on comment on'),
         },
         folders: {
           create: this.$t('created folder'),

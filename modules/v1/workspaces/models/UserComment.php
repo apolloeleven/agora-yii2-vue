@@ -64,7 +64,6 @@ class UserComment extends ActiveRecord
                 if ($this->timelinePost)
                     $data['item'] = $this->timelinePost;
 
-                $data['item'] = $this->parent->timelinePost;
                 if ($this->parent)
                     return $data['parentItem'] = $this->parent;
 
