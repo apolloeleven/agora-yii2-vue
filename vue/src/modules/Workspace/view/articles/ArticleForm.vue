@@ -2,7 +2,7 @@
   <div v-if="loading">
     <content-spinner show/>
   </div>
-  <div v-else class="article-view">
+  <div v-else class="article-view shrinked-width">
     <div class="card">
       <div class="card-header">
         <h5 class="mb-0">{{ model.id ? $t('Update Article') : $t('Create Article') }}</h5>

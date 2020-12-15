@@ -3,6 +3,7 @@
 namespace app\modules\v1\workspaces\models;
 
 use app\modules\v1\users\models\User;
+use app\modules\v1\workspaces\behaviors\ActivityBehavior;
 use app\modules\v1\workspaces\models\query\UserCommentQuery;
 use Yii;
 use yii\behaviors\BlameableBehavior;
@@ -45,10 +46,40 @@ class UserComment extends ActiveRecord
      */
     public function behaviors()
     {
-        return array_merge(parent::behaviors(), [
-            TimestampBehavior::class,
-            BlameableBehavior::class,
-        ]);
+        $behaviors = parent::behaviors();
+        $behaviors[] = TimestampBehavior::class;
+        $behaviors[] = BlameableBehavior::class;
+
+        $behaviors['activity'] = [
+            'class' => ActivityBehavior::class,
+            'workspace_id' => function () {
+                if ($this->timelinePost)
+                    return $this->timelinePost->workspace_id;
+
+                return $this->parent->timelinePost->workspace_id;
+            },
+            'tableName' => TimelinePost::tableName(),
+            'data' => function () {
+                $data = [];
+                if ($this->timelinePost)
+                    $data['item'] = $this->timelinePost;
+
+                if ($this->parent)
+                    return $data['parentItem'] = $this->parent;
+
+                return $data;
+            },
+            'events' => ['create'],
+            'eventMap' => [
+                'create' => function () {
+                    if ($this->parent) return 'reply';
+
+                    return 'comment';
+                },
+            ]
+        ];
+
+        return $behaviors;
     }
 
     /**
