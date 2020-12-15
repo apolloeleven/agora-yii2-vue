@@ -12,20 +12,30 @@
               <strong class="mr-1">
                 {{ this.activity.createdBy.first_name + ' ' + this.activity.createdBy.last_name }}
               </strong>
-              <span v-if="this.tableName === 'timeline_posts'">
-                <template v-if="this.activity.action === 'create'">
-                  {{ $t('created') }} <router-link :to="{name: 'todo'}">{{ $t('timeline post') }}</router-link>
+              <span v-if="tableName === 'timeline_posts'">
+                <template v-if="action === 'create' || action === 'update' || action === 'delete'">
+                  {{ description }}
+                  <router-link :to="{name: 'todo'}">{{ $t('timeline post') }}</router-link>
                 </template>
               </span>
-              <span v-else-if="this.tableName === 'articles'">
-                <template v-if="this.action === 'create'">
-                  {{ 'created article' }}
+              <span v-else-if="tableName === 'articles'">
+                <template v-if="action === 'create' || action === 'update' || action === 'delete'">
+                  {{ description }}
                   <router-link :to="{name: 'workspace.articles.view',params: {articleId: this.activity.content_id}}">
                     {{ this.activity.data.title }}
                   </router-link>
                 </template>
               </span>
-<!--              <activity-item-description :model-labels="modelLabels" :table-name="tableName" :activity="activity" :route="route"/>-->
+              <span v-else-if="tableName === 'folders'">
+                <template
+                  v-if="action === 'create' || action === 'upload' || action === 'update' || action === 'delete'">
+                  {{ description }}
+                  <router-link :to="{name: 'workspace.files', params: {folderId: this.activity.content_id}}">
+                    {{ this.activity.data.name }}
+                  </router-link>
+                </template>
+              </span>
+              <!--              <activity-item-description :model-labels="modelLabels" :table-name="tableName" :activity="activity" :route="route"/>-->
 
             </div>
             <div>
@@ -57,6 +67,17 @@ export default {
           create: this.$t('created article'),
           update: this.$t('updated article'),
           delete: this.$t('deleted article'),
+        },
+        timeline_posts: {
+          create: this.$t('created'),
+          update: this.$t('updated'),
+          delete: this.$t('deleted'),
+        },
+        folders: {
+          create: this.$t('created folder'),
+          upload: this.$t('uploaded file'),
+          update: activity => this.$t('updated ' + (activity.data.is_file ? 'file' : 'folder')),
+          delete: activity => this.$t('deleted ' + (activity.data.is_file ? 'file' : 'folder')),
         }
       },
       path: '',
@@ -75,11 +96,11 @@ export default {
     tableName() {
       return this.activity.table_name.replaceAll(/\W/ig, "");
     },
-    action(){
+    action() {
       return this.activity.action
     },
     route() {
-       switch (this.tableName) {
+      switch (this.tableName) {
         case 'timeline_posts':
           //TODO
           return {};
@@ -98,16 +119,11 @@ export default {
       }
     },
     description() {
-      console.log(this);
-      console.log(this.modelLabels[this.tableName]);
-      let desc =  this.activity.description
-          .replace('{model}', this.modelLabels[this.tableName] || '')
-        ;
-      switch (this.tableName) {
-        case 'folders':
-          desc = desc.replace('{title}', `<router-link :to="this.route">${this.activity.data.name}</router-link`)
+      const desc = this.messageMap[this.tableName][this.action];
+      console.log(desc);
+      if (typeof desc === 'function') {
+        return desc(this.activity);
       }
-
       return desc;
     }
   },
