@@ -19,6 +19,7 @@ import Orgchart from "../modules/Orgchart/Orgchart";
 import WorkspaceTimeline from "@/modules/Workspace/view/timeline/WorkspaceTimeline";
 import WorkspaceFiles from "@/modules/Workspace/view/files/WorkspaceFiles";
 import WorkspaceArticles from "@/modules/Workspace/view/articles/WorkspaceArticles";
+import WorkspaceActivity from "@/modules/Workspace/view/activity/WorkspaceActivity";
 import WorkspaceAbout from "@/modules/Workspace/view/about/WorkspaceAbout";
 import ArticleForm from "@/modules/Workspace/view/articles/ArticleForm";
 import ArticleView from "@/modules/Workspace/view/articles/ArticleView";
@@ -92,6 +93,7 @@ const router = new Router({
             {path: 'articles/new', name: 'workspace.articles.create', component: ArticleForm},
             {path: 'articles/update/:articleId', name: 'workspace.articles.update', component: ArticleForm},
             {path: 'articles/view/:articleId', name: 'workspace.articles.view', component: ArticleView},
+            {path: 'activity', name: 'workspace.activity', component: WorkspaceActivity},
             {path: 'about', name: 'workspace.about', component: WorkspaceAbout},
             {path: 'users', name: 'workspace.users', component: WorkspaceUsers}
           ]

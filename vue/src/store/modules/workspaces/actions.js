@@ -22,6 +22,7 @@ import {
   GET_CURRENT_WORKSPACE,
   GET_TIMELINE_DATA,
   GET_WORKSPACES,
+  GET_WORKSPACE_ACTIVITY_DATA,
   HIDE_ARTICLE_MODAL,
   HIDE_FOLDER_MODAL,
   HIDE_INVITE_MODAL,
@@ -45,6 +46,7 @@ import {
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
+  TOGGLE_WORKSPACE_ACTIVITY_LOADING,
   TOGGLE_WORKSPACE_USERS_LOADING,
   SET_WORKSPACE_USERS,
 } from './mutation-types';
@@ -57,6 +59,7 @@ const folderUrl = '/v1/workspaces/folder';
 const userUrl = '/v1/users/user';
 const userLikeUrl = '/v1/workspaces/user-like';
 const userCommentUrl = '/v1/workspaces/user-comment';
+const workspaceActivity = '/v1/workspaces/workspace-activity';
 
 const timelineExpand = `expand=article,createdBy,timelineComments.createdBy,timelineComments.childrenComments.createdBy,
 timelineComments.childrenComments.parent,userLikes,myLikes&sort=-created_at`
@@ -392,6 +395,16 @@ export function prepareTimelineData(data) {
     data = tmp;
   }
   return data;
+}
+
+export async function getActivities({commit}, workspaceId) {
+  commit(TOGGLE_WORKSPACE_ACTIVITY_LOADING, true);
+  const res = await httpService.get(`${workspaceActivity}?workspaceId=${workspaceId}`);
+  if (res.success) {
+    commit(GET_WORKSPACE_ACTIVITY_DATA, res.body);
+  }
+  commit(TOGGLE_WORKSPACE_ACTIVITY_LOADING, false);
+  return res;
 }
 
 /**
