@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       allLoaded: false,
-      postsLimit: 5,
+      postsLimit: 20,
       lastPostId: 0,
     }
   },
