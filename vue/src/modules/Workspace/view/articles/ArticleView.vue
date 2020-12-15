@@ -2,87 +2,51 @@
   <div v-if="loading">
     <content-spinner show/>
   </div>
-  <div v-else class="article-view">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="mb-0">{{ model.id ? $t('Update Article') : $t('Create Article') }}</h5>
-      </div>
-      <div class="card-body">
-        <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
-          <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
-            <input-widget :model="model" attribute="title" :autofocus="true"></input-widget>
-            <input-widget :model="model" attribute="body" type="richtext"></input-widget>
-            <submit-button :disabled="submitLoading" :show-loader="submitLoading"/>
-          </b-form>
-        </ValidationObserver>
-      </div>
-    </div>
-  </div>
+  <b-card v-else-if="article" class="article-item mb-3" no-body>
+    <template v-slot:header>
+      <h5 class="mb-0">{{ article.title }}</h5>
+    </template>
+
+    <b-card-body>
+      <NoDataAvailable v-if="!article.body" :text="$t('This article does not have body')"/>
+      <div v-html="article.body"/>
+    </b-card-body>
+  </b-card>
 </template>
 
 <script>
 import {createNamespacedHelpers} from "vuex";
-import ContentSpinner from "@/core/components/ContentSpinner";
-import ArticleFormModel from "@/modules/Workspace/view/articles/ArticleFormModel";
-import InputWidget from "@/core/components/input-widget/InputWidget";
-import httpService from "@/core/services/httpService";
-import SubmitButton from "@/core/components/SubmitButton";
+import NoDataAvailable from "../../../../core/components/NoDataAvailable";
+import ContentSpinner from "../../../../core/components/ContentSpinner";
 
-const {mapState, mapActions} = createNamespacedHelpers('workspace')
+const {mapState: mapWorkspaceState, mapActions: mapWorkspaceActions} = createNamespacedHelpers('workspace');
 
 export default {
   name: "ArticleView",
-  components: {SubmitButton, InputWidget, ContentSpinner},
-  data() {
-    return {
-      model: new ArticleFormModel(),
-      submitLoading: false
-    }
-  },
+  components: {ContentSpinner, NoDataAvailable},
   computed: {
-    ...mapState({
-      workspace: state => state.view.workspace,
+    ...mapWorkspaceState({
       article: state => state.view.articles.view.article,
       loading: state => state.view.articles.view.loading,
-    })
+    }),
   },
   watch: {
-    article() {
-      this.model = new ArticleFormModel(this.article);
+    '$route.params.articleId': function (id) {
+      this.getArticle(id)
     }
   },
   methods: {
-    ...mapActions(['getArticle']),
-    async onSubmit() {
-      let response;
-
-      this.submitLoading = true;
-      if (this.model.id) {
-        response = await httpService.put(`/v1/workspaces/article/${this.model.id}`, this.model);
-      } else {
-        this.model.workspace_id = this.workspace.id;
-        response = await httpService.post('/v1/workspaces/article', this.model);
-      }
-      this.submitLoading = false;
-
-      if (response.success) {
-        this.$router.push({
-          name: 'workspace.articles',
-          params: {id: this.workspace.id}
-        });
-      } else {
-        this.model.setMultipleErrors(response.body);
-      }
-    }
+    ...mapWorkspaceActions(['getArticle'])
   },
-  beforeMount() {
-    if (this.$route.params.articleId) {
-      this.getArticle(this.$route.params.articleId)
-    }
+  mounted() {
+    this.getArticle(this.$route.params.articleId)
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.article-item {
+  width: 680px;
+  margin: 0 auto;
+}
 </style>

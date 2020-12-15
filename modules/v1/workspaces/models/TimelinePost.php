@@ -4,6 +4,7 @@ namespace app\modules\v1\workspaces\models;
 
 use app\modules\v1\users\models\query\UserQuery;
 use app\modules\v1\users\models\User;
+use app\modules\v1\workspaces\behaviors\ActivityBehavior;
 use app\modules\v1\workspaces\models\query\TimelinePostQuery;
 use app\modules\v1\workspaces\models\query\WorkspaceQuery;
 use Yii;
@@ -58,10 +59,17 @@ class TimelinePost extends ActiveRecord
      */
     public function behaviors()
     {
-        return array_merge(parent::behaviors(), [
-            TimestampBehavior::class,
-            BlameableBehavior::class,
-        ]);
+        $behaviors = parent::behaviors();
+        $behaviors[] = TimestampBehavior::class;
+        $behaviors[] = BlameableBehavior::class;
+        $behaviors['activity'] = [
+            'class' => ActivityBehavior::class,
+            'workspace_id' => function () {
+                return $this->workspace_id;
+            },
+        ];
+
+        return $behaviors;
     }
 
     /**

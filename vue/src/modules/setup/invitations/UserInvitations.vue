@@ -40,7 +40,7 @@
               <i v-else class="disabled fas fa-pencil-alt mr-3"/>
               <i class="far fa-trash-alt mr-3 text-danger hover-pointer"
                  v-b-tooltip.hover.left="$t('Delete invitation')"
-                 @click="deleteUser(data.item)"/>
+                 @click="deleteUser(data.item)" />
             </template>
           </b-table>
           <no-data-available v-if="!invitations.data.length" height="100"/>

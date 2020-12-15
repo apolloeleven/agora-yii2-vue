@@ -254,7 +254,9 @@ export default {
         format: 'DD-MM-YYYY'
       },
       editor: ClassicEditor,
-      editorConfig: {},
+      editorConfig: {
+        removePlugins: ['ImageUpload', 'MediaEmbed'],
+      }
     }
   },
   methods: {
@@ -372,6 +374,10 @@ export default {
 <style lang="scss">
 .ck.ck-reset.ck-editor.ck-rounded-corners {
   width: 100%;
+}
+
+.ck.ck-balloon-panel {
+  z-index: 10055 !important;
 }
 
 .option__image {

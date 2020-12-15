@@ -3,6 +3,7 @@
 namespace app\modules\v1\workspaces\models;
 
 use app\modules\v1\users\models\User;
+use app\modules\v1\workspaces\behaviors\ActivityBehavior;
 use app\modules\v1\workspaces\models\query\ArticleQuery;
 use Yii;
 use yii\behaviors\BlameableBehavior;
@@ -13,21 +14,21 @@ use yii\db\ActiveRecord;
 /**
  * This is the model class for table "{{%articles}}".
  *
- * @property int $id
- * @property int $workspace_id
- * @property string|null $title
- * @property string|null $body
- * @property int|null $created_at
- * @property int|null $updated_at
- * @property int|null $created_by
- * @property int|null $updated_by
+ * @property int           $id
+ * @property int           $workspace_id
+ * @property string|null   $title
+ * @property string|null   $body
+ * @property int|null      $created_at
+ * @property int|null      $updated_at
+ * @property int|null      $created_by
+ * @property int|null      $updated_by
  *
- * @property User $createdBy
+ * @property User          $createdBy
  * @property UserComment[] $userComments
- * @property UserLike[] $userLikes
- * @property UserLike[] $myLikes
- * @property User $updatedBy
- * @property Workspace $workspace
+ * @property UserLike[]    $userLikes
+ * @property UserLike[]    $myLikes
+ * @property User          $updatedBy
+ * @property Workspace     $workspace
  */
 class Article extends ActiveRecord
 {
@@ -46,10 +47,17 @@ class Article extends ActiveRecord
      */
     public function behaviors()
     {
-        return array_merge(parent::behaviors(), [
-            TimestampBehavior::class,
-            BlameableBehavior::class,
-        ]);
+        $behaviors = parent::behaviors();
+        $behaviors[] = TimestampBehavior::class;
+        $behaviors[] = BlameableBehavior::class;
+        $behaviors['activity'] = [
+            'class' => ActivityBehavior::class,
+            'workspace_id' => function () {
+                return $this->workspace_id;
+            },
+        ];
+
+        return $behaviors;
     }
 
     /**
@@ -61,7 +69,7 @@ class Article extends ActiveRecord
             [['workspace_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['workspace_id'], 'required'],
             [['body'], 'string'],
-            [['title', ], 'string', 'max' => 1024],
+            [['title',], 'string', 'max' => 1024],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
             [['workspace_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workspace::class, 'targetAttribute' => ['workspace_id' => 'id']],

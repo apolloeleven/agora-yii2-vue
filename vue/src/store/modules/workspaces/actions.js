@@ -22,6 +22,7 @@ import {
   GET_CURRENT_WORKSPACE,
   GET_TIMELINE_DATA,
   GET_WORKSPACES,
+  GET_WORKSPACE_ACTIVITY_DATA,
   HIDE_ARTICLE_MODAL,
   HIDE_FOLDER_MODAL,
   HIDE_INVITE_MODAL,
@@ -45,6 +46,9 @@ import {
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
+  TOGGLE_WORKSPACE_ACTIVITY_LOADING,
+  TOGGLE_WORKSPACE_USERS_LOADING,
+  SET_WORKSPACE_USERS,
 } from './mutation-types';
 import httpService from "../../../core/services/httpService";
 
@@ -55,6 +59,7 @@ const folderUrl = '/v1/workspaces/folder';
 const userUrl = '/v1/users/user';
 const userLikeUrl = '/v1/workspaces/user-like';
 const userCommentUrl = '/v1/workspaces/user-comment';
+const workspaceActivity = '/v1/workspaces/workspace-activity';
 
 const timelineExpand = `expand=article,createdBy,timelineComments.createdBy,timelineComments.childrenComments.createdBy,
 timelineComments.childrenComments.parent,userLikes,myLikes&sort=-created_at`
@@ -316,16 +321,18 @@ export function hideTimelineModal({commit}) {
 /**
  *
  * @param commit
- * @param workspaceId
+ * @param workspace_id
+ * @param posts_limit
+ * @param last_post_id
  * @returns {Promise<unknown>}
  */
-export async function getTimelinePosts({commit}, workspaceId) {
+export async function getTimelinePosts({state, commit}, {workspace_id, posts_limit = 1e4, last_post_id = 0}) {
   commit(CHANGE_TIMELINE_LOADING)
-  const res = await httpService.get(`${timelineUrl}?workspace_id=${workspaceId}&${timelineExpand}`);
+  const res = await httpService.get(`${timelineUrl}?workspace_id=${workspace_id}&limit=${posts_limit}&last_post_id=${last_post_id}&${timelineExpand}`);
   if (res.success) {
-    commit(CHANGE_TIMELINE_LOADING)
-    commit(GET_TIMELINE_DATA, res.body);
+    commit(GET_TIMELINE_DATA, last_post_id === 0 ? res.body : state.view.timeline.data.concat(res.body));
   }
+  commit(CHANGE_TIMELINE_LOADING)
   return res;
 }
 
@@ -390,6 +397,16 @@ export function prepareTimelineData(data) {
     data = tmp;
   }
   return data;
+}
+
+export async function getActivities({commit}, workspaceId) {
+  commit(TOGGLE_WORKSPACE_ACTIVITY_LOADING, true);
+  const res = await httpService.get(`${workspaceActivity}?workspaceId=${workspaceId}`);
+  if (res.success) {
+    commit(GET_WORKSPACE_ACTIVITY_DATA, res.body);
+  }
+  commit(TOGGLE_WORKSPACE_ACTIVITY_LOADING, false);
+  return res;
 }
 
 /**
@@ -676,4 +693,17 @@ export async function getActiveUsers({commit}) {
  */
 export async function inviteUsers({commit}, data) {
   return await httpService.post(`${url}/invite-users`, data)
+}
+
+/**
+ * @param commit
+ * @param id
+ */
+export async function getWorkspaceUsers({commit}, id) {
+  commit(TOGGLE_WORKSPACE_USERS_LOADING);
+  let {success, body} = await httpService.get(`${url}/get-users?id=${id}`)
+  if (success) {
+    commit(SET_WORKSPACE_USERS, body);
+  }
+  commit(TOGGLE_WORKSPACE_USERS_LOADING);
 }

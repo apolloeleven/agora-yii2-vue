@@ -22,6 +22,7 @@ import {
   GET_CURRENT_WORKSPACE,
   GET_TIMELINE_DATA,
   GET_WORKSPACES,
+  GET_WORKSPACE_ACTIVITY_DATA,
   HIDE_ARTICLE_MODAL,
   HIDE_FOLDER_MODAL,
   HIDE_INVITE_MODAL,
@@ -41,10 +42,13 @@ import {
   TOGGLE_ARTICLES_LOADING,
   TOGGLE_FOLDERS_LOADING,
   TOGGLE_VIEW_LOADING,
+  TOGGLE_WORKSPACE_ACTIVITY_LOADING,
   UNLIKE_TIMELINE_POST,
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
   WORKSPACE_DELETED,
+  TOGGLE_WORKSPACE_USERS_LOADING,
+  SET_WORKSPACE_USERS,
 } from './mutation-types';
 import _ from 'lodash';
 
@@ -97,7 +101,7 @@ export default {
    * @param data
    */
   [TOGGLE_VIEW_LOADING](state, data) {
-    state.view.loading = data
+    state.view.activity.loading = data
   },
 
   /**
@@ -200,7 +204,6 @@ export default {
    * @param data
    */
   [GET_TIMELINE_DATA](state, data) {
-    state.view.timeline.loading = false;
     state.view.timeline.data = data;
   },
   /**
@@ -466,4 +469,26 @@ export default {
     state.view.inviteModal.users = data
   },
 
+  [GET_WORKSPACE_ACTIVITY_DATA](state, data) {
+    state.view.activity.data = data;
+  },
+
+  [TOGGLE_WORKSPACE_ACTIVITY_LOADING](state, data) {
+    state.view.activity.loading = data;
+  },
+  /**
+   *
+   * @param state
+   */
+  [TOGGLE_WORKSPACE_USERS_LOADING](state){
+    state.view.users.loading = !state.view.users.loading;
+  },
+  /**
+   *
+   * @param state
+   * @param data
+   */
+  [SET_WORKSPACE_USERS](state, data){
+    state.view.users.data = data;
+  },
 };

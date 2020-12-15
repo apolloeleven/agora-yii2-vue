@@ -47,6 +47,14 @@ const STATE = {
       },
       attachConfig: {},
     },
+    activity: {
+      loading: false,
+      data: []
+    },
+    users: {
+      loading: false,
+      data: [],
+    },
     inviteModal: {
       show: false,
       users: [],
