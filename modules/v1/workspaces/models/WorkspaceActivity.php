@@ -21,7 +21,6 @@ use yii\db\ActiveRecord;
  * @property int|null $content_id
  * @property string|null $action
  * @property string|null $data
- * @property string|null $parent_identity
  * @property int|null $created_at
  * @property int|null $created_by
  *
@@ -64,7 +63,7 @@ class WorkspaceActivity extends ActiveRecord
     {
         return [
             [['workspace_id', 'content_id', 'created_at', 'created_by'], 'integer'],
-            [['data', 'parent_identity'], 'string'],
+            [['data'], 'string'],
             [['table_name', 'action'], 'string', 'max' => 128],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['workspace_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workspace::className(), 'targetAttribute' => ['workspace_id' => 'id']],

@@ -57,7 +57,6 @@ class ActivityBehavior extends Behavior
         $workspaceActivity->content_id = $this->owner->{$this->contentIdAttribute};
         $workspaceActivity->action = is_callable($mapAction) ? call_user_func($mapAction) : $mapAction;
         $workspaceActivity->data = $this->data ? Json::encode(call_user_func($this->data)) : Json::encode($this->owner->toArray());
-        $workspaceActivity->parent_identity = $this->parentIdentity ? Json::encode(call_user_func($this->parentIdentity)) : null;
         $saved = $workspaceActivity->save();
 
         if (!$saved) {
