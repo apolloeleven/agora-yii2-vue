@@ -19,7 +19,7 @@
                       :button-text="menuItem.buttonText"
                       :on-click="menuItem.onClick"
                       :children="menuItem.children"
-                      :key="menuItem.path"
+                      :key="menuItem.name"
         ></sidebar-item>
       </ul>
     </nav>

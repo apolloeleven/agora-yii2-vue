@@ -2,7 +2,7 @@
   <div v-if="loading && !this.timelineData">
     <content-spinner show/>
   </div>
-  <div v-else class="workspace-timeline">
+  <div v-else class="workspace-timeline shrinked-width">
     <div class="card mb-3">
       <div class="card-header border-bottom-0 text-right">
         <b-button @click="showTimelineForm" size="sm" variant="primary">
@@ -43,9 +43,14 @@ export default {
   data() {
     return {
       allLoaded: false,
-      postsLimit: 20,
+      postsLimit: 5,
       lastPostId: 0,
     }
+  },
+  watch: {
+     '$route.params.id': function (id) {
+        this.timelinePosts(id);
+      },
   },
   methods: {
     ...mapTimelineActions(['showTimelineModal', 'getTimelinePosts']),
@@ -87,10 +92,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.workspace-timeline {
-  max-width: 680px;
-  margin: 0 auto;
-  overflow: auto;
-  height: 100%;
-}
+  .workspace-timeline {
+    overflow: auto;
+    height: 100%;
+  }
 </style>

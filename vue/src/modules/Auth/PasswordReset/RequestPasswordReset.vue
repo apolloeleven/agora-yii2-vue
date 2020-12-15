@@ -16,7 +16,7 @@
             <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
               <input-widget ref="emailInputWidget" :model="model" attribute="email"/>
               <div class="d-flex align-items-center justify-content-between">
-                <button :disabled="loading" class="btn btn-primary btn-action">{{ $t('Submit') }}</button>
+                <button :disabled="loading" class="btn btn-primary">{{ $t('Submit') }}</button>
                 <router-link class="float-right" :to="{name: 'auth.login'}">
                   {{ $t('Go to Login') }}
                 </router-link>

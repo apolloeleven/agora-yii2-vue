@@ -85,12 +85,12 @@ export default {
         {title: this.$i18n.t('Timeline'), to: {name: 'workspace.timeline'}, icon: 'fas fa-stream'},
         {
           title: this.$i18n.t('Files'),
-          to: {name: 'workspace.files', params: {folderId: this.workspace.rootFolder.id}},
+          to: {name: 'workspace.files', params: {folderId: this.workspace.rootFolder ? this.workspace.rootFolder.id : ''}},
           icon: 'fa fa-folder'
         },
         {title: this.$i18n.t('Articles'), to: {name: 'workspace.articles'}, icon: 'fa fa-book'},
         {title: this.$i18n.t('Users'), to: {name: 'workspace.users'}, icon: 'fas fa-users'},
-        {title: this.$i18n.t('Polls'), to: {name: 'workspace.polls'}, icon: 'fas fa-poll-h'},
+        // {title: this.$i18n.t('Polls'), to: {name: 'workspace.polls'}, icon: 'fas fa-poll-h'},
         {title: this.$i18n.t('Activity'), to: {name: 'workspace.activity'}, icon: 'fas fa-list'},
         {title: this.$i18n.t('About'), to: {name: 'workspace.about'}, icon: 'fa fa-info-circle'},
       ]

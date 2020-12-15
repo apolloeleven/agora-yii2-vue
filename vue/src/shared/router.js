@@ -19,9 +19,11 @@ import Orgchart from "../modules/Orgchart/Orgchart";
 import WorkspaceTimeline from "@/modules/Workspace/view/timeline/WorkspaceTimeline";
 import WorkspaceFiles from "@/modules/Workspace/view/files/WorkspaceFiles";
 import WorkspaceArticles from "@/modules/Workspace/view/articles/WorkspaceArticles";
+import WorkspaceActivity from "@/modules/Workspace/view/activity/WorkspaceActivity";
 import WorkspaceAbout from "@/modules/Workspace/view/about/WorkspaceAbout";
 import ArticleForm from "@/modules/Workspace/view/articles/ArticleForm";
 import ArticleView from "@/modules/Workspace/view/articles/ArticleView";
+import authService from "@/core/services/authService";
 import WorkspaceUsers from "@/modules/Workspace/view/users/WorkspaceUsers";
 
 Vue.use(Router);
@@ -36,6 +38,7 @@ const router = new Router({
       name: 'auth',
       redirect: '/login',
       component: AuthLayout,
+      meta: {guest: true},
       children: [
         {
           path: 'login',
@@ -67,6 +70,7 @@ const router = new Router({
       path: '/',
       redirect: '/dashboard',
       component: DefaultLayout,
+      meta: {requiresAuth: true,},
       children: [
         {path: 'dashboard', name: 'dashboard', component: Dashboard,},
         {path: 'orgchart', name: 'orgchart', component: Orgchart,},
@@ -82,7 +86,6 @@ const router = new Router({
           name: 'workspace.view',
           component: WorkspaceView,
           redirect: 'workspace/:id/timeline',
-          meta: {requiresAuth: true},
           children: [
             {path: 'timeline', name: 'workspace.timeline', component: WorkspaceTimeline},
             {path: 'files/:folderId', name: 'workspace.files', component: WorkspaceFiles},
@@ -90,6 +93,7 @@ const router = new Router({
             {path: 'articles/new', name: 'workspace.articles.create', component: ArticleForm},
             {path: 'articles/update/:articleId', name: 'workspace.articles.update', component: ArticleForm},
             {path: 'articles/view/:articleId', name: 'workspace.articles.view', component: ArticleView},
+            {path: 'activity', name: 'workspace.activity', component: WorkspaceActivity},
             {path: 'about', name: 'workspace.about', component: WorkspaceAbout},
             {path: 'users', name: 'workspace.users', component: WorkspaceUsers}
           ]
@@ -104,20 +108,20 @@ const router = new Router({
   ]
 });
 
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.requiresAuth)) {
-//     // this route requires auth, check if logged in
-//     // if not, redirect to login page.
-//     if (!auth.loggedIn()) {
-//       next({path: '/login'})
-//     } else {
-//       next()
-//     }
-//   } else if (to.matched.some(record => record.meta.guest) && auth.loggedIn()) {
-//     next({path: '/'})
-//   } else {
-//     next() // make sure to always call next()!
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (!authService.loggedIn()) {
+      next({name: 'auth.login'})
+    } else {
+      next()
+    }
+  } else if (to.matched.some(record => record.meta.guest) && authService.loggedIn()) {
+    next({path: '/'})
+  } else {
+    next() // make sure to always call next()!
+  }
+});
 
 export default router;

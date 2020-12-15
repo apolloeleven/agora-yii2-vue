@@ -1,7 +1,7 @@
 <template>
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
     <b-modal
-      :visible="showModal" id="workspace-form" ref="modal" size="lg"
+      :visible="showModal" id="workspace-form" ref="modal" size="lg" no-enforce-focus
       :title='modalWorkspace ? $t(`Update workspace "{workspace}"`,{workspace:model.name}) : $t(`Add New Workspace`)'
       @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)" :ok-title="$t('Submit')"
       scrollable>
@@ -12,6 +12,8 @@
         <input-widget :model="model" attribute="name"/>
         <input-widget :model="model" attribute="abbreviation"/>
         <input-widget :model="model" attribute="description" type="richtext"/>
+<!--        This button is necessary in order submitting form to work on enter-->
+        <button style="display: none"></button>
       </b-form>
     </b-modal>
   </ValidationObserver>
@@ -64,6 +66,9 @@ export default {
     hideModal() {
       this.hideWorkspaceModal();
       this.model = new WorkspaceFormModel()
+    },
+    onShown() {
+      this.$refs.nameInputWidget.focus()
     }
   }
 }

@@ -14,7 +14,7 @@ use yii\db\ActiveRecord;
  */
 class LoginForm extends Model
 {
-    public $username;
+    public $email;
     public $password;
     public $rememberMe = true;
 
@@ -31,8 +31,8 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            // username and password are both required
-            [['username', 'password'], 'required'],
+            // email and password are both required
+            [['email', 'password'], 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
@@ -46,7 +46,7 @@ class LoginForm extends Model
     public function attributeLabels()
     {
         return [
-            'username' => Yii::t('app', 'Username or email'),
+            'email' => Yii::t('app', 'Username or email'),
             'password' => Yii::t('app', 'Password'),
             'rememberMe' => Yii::t('app', 'Remember Me'),
         ];
@@ -64,18 +64,18 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getActiveUser();
 
-            if (User::find()->byEmailOrUsername($this->username)->notActive()->one()) {
+            if (User::find()->byEmail($this->email)->notActive()->one()) {
                 $this->addError('password', Yii::t('app', 'Your account must be activated by admin'));
             }
 
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, Yii::t('app', 'Incorrect username or password.'));
+                $this->addError($attribute, Yii::t('app', 'Incorrect email or password.'));
             }
         }
     }
 
     /**
-     * Logs in a user using the provided username and password.
+     * Logs in a user using the provided email and password.
      * @return bool whether the user is logged in successfully
      */
     public function login()
@@ -102,7 +102,7 @@ class LoginForm extends Model
     {
         if ($this->_user === false) {
             $this->_user = User::find()
-                ->byEmailOrUsername($this->username)
+                ->byEmail($this->email)
                 ->active()
                 ->one();
         }
