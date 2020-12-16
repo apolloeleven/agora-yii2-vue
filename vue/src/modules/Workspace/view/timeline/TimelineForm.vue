@@ -94,7 +94,7 @@ export default {
     hideModal() {
       this.hideTimelineModal();
       this.model = new TimelineFormModel()
-    }
+    },
   }
 }
 </script>
