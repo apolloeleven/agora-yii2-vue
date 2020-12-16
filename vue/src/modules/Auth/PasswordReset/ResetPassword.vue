@@ -17,7 +17,7 @@
               <input-widget type="password" :model="model" attribute="password" vid="password"/>
               <input-widget type="password" :model="model" attribute="repeat_password" vid="repeat_password"/>
               <div class="d-flex align-items-center justify-content-between">
-                <button :disabled="loading" class="btn btn-primary btn-action">{{ $t('Submit') }}</button>
+                <button :disabled="loading" class="btn btn-primary">{{ $t('Submit') }}</button>
                 <router-link class="float-right" :to="{name: 'auth.login'}">
                   {{ $t('Go to Login') }}
                 </router-link>

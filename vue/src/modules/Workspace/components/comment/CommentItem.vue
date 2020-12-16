@@ -1,7 +1,7 @@
 <template>
   <b-media class="py-2">
     <template v-slot:aside>
-      <b-img rounded="0" :src="'/assets/img/avatar.svg'" width="32" height="32" :alt="comment.createdBy.displayName"/>
+      <b-img rounded="circle" :src="comment.createdBy.image_url  || '/assets/img/avatar.svg'" width="32" height="32"/>
     </template>
     <h6 class="mt-0 mb-0">
       <span style="color: #008BCA">{{ comment.createdBy.displayName }}</span>
@@ -18,7 +18,7 @@
       {{ comment.updated_at | relativeDate }}
     </p>
     <DeleteComment :comment="comment"/>
-    <AddComment :parent_id="comment.id" v-if="showComments"/>
+    <AddComment :parent_id="comment.id" v-if="showComments" :currentUser="currentUser"/>
     <b-card-body v-if="showComments" class="pt-1 pb-1">
       <ChildCommentItem v-for="(com, index) in comment.childrenComments" :comment="com" :index="index"
                         :key="`comment-item-child-comment-${index}`"/>
@@ -35,6 +35,7 @@ export default {
   name: "CommentItem",
   components: {DeleteComment, ChildCommentItem, AddComment},
   props: {
+    currentUser: Object,
     comment: Object,
     index: Number
   },

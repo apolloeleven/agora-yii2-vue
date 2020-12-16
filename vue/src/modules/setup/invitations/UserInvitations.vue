@@ -32,19 +32,17 @@
             }">{{ data.value }}</span>
             </template>
             <template v-slot:cell(actions)="data">
-              <b-dropdown variant="transparent text-dark p-0" right no-caret>
-                <template slot="button-content">
-                  <i class="fas fa-ellipsis-v"></i>
-                </template>
-                <b-dropdown-item @click="editUser(data.item)" v-if="data.item.status !== PENDING_STATUS">
-                  <i class="fas fa-pencil-alt"></i>
-                  {{ $t('Edit') }}
-                </b-dropdown-item>
-                <b-dropdown-item @click="deleteUser(data.item)">
-                  <i class="far fa-trash-alt"></i>
-                  {{ $t('Delete') }}
-                </b-dropdown-item>
-              </b-dropdown>
+              <span v-if="data.item.status !== PENDING_STATUS"
+                   v-b-tooltip.hover.top="$t('Edit user')">
+                <i class="fas fa-pencil-alt mr-3 text-primary hover-pointer"
+                   @click="editUser(data.item)">
+                </i>
+              </span>
+              <i v-else style="visibility: hidden" class="disabled fas fa-pencil-alt mr-3"/>
+              <span v-b-tooltip.hover.top="$t('Delete user')">
+                <i class="far fa-trash-alt mr-3 text-danger hover-pointer"
+                 @click="deleteUser(data.item)" />
+              </span>
             </template>
           </b-table>
           <no-data-available v-if="!invitations.data.length" height="100"/>

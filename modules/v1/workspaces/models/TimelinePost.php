@@ -4,6 +4,7 @@ namespace app\modules\v1\workspaces\models;
 
 use app\modules\v1\users\models\query\UserQuery;
 use app\modules\v1\users\models\User;
+use app\modules\v1\workspaces\behaviors\ActivityBehavior;
 use app\modules\v1\workspaces\workspaceBehaviours\UrlAnchorBehaviour;
 use app\modules\v1\workspaces\models\query\TimelinePostQuery;
 use app\modules\v1\workspaces\models\query\WorkspaceQuery;
@@ -66,6 +67,12 @@ class TimelinePost extends ActiveRecord
                 'class' => UrlAnchorBehaviour::class,
                 'attributes' => ['description']
             ],
+            [
+                'class' => ActivityBehavior::class,
+                'workspace_id' => function () {
+                    return $this->workspace_id;
+                },
+            ]
         ]);
     }
 

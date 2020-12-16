@@ -47,10 +47,20 @@ class TimelineController extends ActiveController
 
     public function prepareDataProvider()
     {
-        $query = TimelinePostResource::find()->byWorkspaceId(Yii::$app->request->get('workspace_id'));
+        $limit  = Yii::$app->request->get('limit') ?? 20;
+        $last_post_id = Yii::$app->request->get('last_post_id');
+
+        $condition = ['<', 'id', $last_post_id];
+        if (!$last_post_id) $condition = ['>', 'id', 0];
+
+        $query = TimelinePostResource::find()
+            ->where($condition)
+            ->byWorkspaceId(Yii::$app->request->get('workspace_id'))
+            ->limit($limit);
 
         return new ActiveDataProvider([
             'query' => $query,
+            'pagination' => false,
         ]);
     }
 }

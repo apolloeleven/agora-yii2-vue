@@ -3,7 +3,9 @@
     <b-card-body class="pr-5 pb-0">
       <b-media>
         <template v-slot:aside>
-          <b-img rounded="0" :src="timeline.createdBy.image_url  || '/assets/logo.png'" width="48" height="48"/>
+          <b-img
+            rounded="circle" :src="timeline.createdBy.image_url  || '/assets/img/avatar.svg'" width="48" height="48">
+          </b-img>
         </template>
         <h5 class="mt-0">
           {{ timeline.createdBy.displayName }}
@@ -47,7 +49,7 @@
         <source :src="timeline.file_url">
       </video>
     </div>
-    <b-card-footer >
+    <b-card-footer>
       <LikeUnlikeButton class="mr-2" :item="timeline.userLikes" :liked="liked" @onLikeClicked="onLikeClicked"/>
       <b-button size="sm" pill variant="light" :pressed.sync="showComments">
         <i class="far fa-comments fa-lg"/>
@@ -56,11 +58,11 @@
         </b-badge>
       </b-button>
     </b-card-footer>
-    <AddComment :timeline_id="timeline.id" v-if="showComments"/>
+    <AddComment :timeline_id="timeline.id" v-if="showComments" :currentUser="user"/>
     <b-card-body v-if="showComments && timeline.timelineComments && timeline.timelineComments.length" class="pt-1 pb-1">
       <CommentItem
         v-for="(comment, index) in timeline.timelineComments" :comment="comment" :index="index"
-        :key="`timeline-item-comment-${index}`">
+        :key="`timeline-item-comment-${index}`" :currentUser="user">
       </CommentItem>
     </b-card-body>
     <dropdown-buttons :item="timeline" @editClicked="onEditClicked" @removeClicked="onRemoveClicked"/>
