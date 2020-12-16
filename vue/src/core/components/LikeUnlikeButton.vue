@@ -2,8 +2,6 @@
   <b-button @click="$emit('onLikeClicked', item)" size="sm" pill :variant="liked ? 'info' : 'light'">
     <i class="far fa-thumbs-up fa-lg"/>
     {{ $t('Like') }}
-    <b-popover target="exPopover" container="special-popover" title="Prop Examples" triggers="hover focus" content="Embedding content using properties is easy">
-    </b-popover>
     <b-badge v-if="item" class="ml-2" v-b-popover.hover.top.html="updateLikes()" pill variant="secondary">
       {{ item.length }}
     </b-badge>
