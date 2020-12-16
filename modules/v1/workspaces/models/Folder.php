@@ -3,6 +3,7 @@
 namespace app\modules\v1\workspaces\models;
 
 use app\modules\v1\users\models\User;
+use app\modules\v1\workspaces\behaviors\ActivityBehavior;
 use app\modules\v1\workspaces\models\query\FolderQuery;
 use app\rest\ValidationException;
 use creocoder\nestedsets\NestedSetsBehavior;
@@ -18,36 +19,36 @@ use yii\web\UploadedFile;
 /**
  * This is the model class for table "{{%folders}}".
  *
- * @property int $id
- * @property int|null $parent_id
- * @property int $workspace_id
- * @property int $timeline_post_id
- * @property int|null $is_timeline_folder
- * @property int|null $is_file
- * @property string|null $name
- * @property string|null $label
- * @property string|null $body
- * @property string|null $file_path
- * @property string|null $mime
- * @property string|null $content
- * @property int|null $size
- * @property int|null $lft
- * @property int|null $rgt
- * @property int|null $depth
- * @property int|null $tree
- * @property int|null $created_at
- * @property int|null $updated_at
- * @property int|null $created_by
- * @property int|null $updated_by
+ * @property int           $id
+ * @property int|null      $parent_id
+ * @property int           $workspace_id
+ * @property int           $timeline_post_id
+ * @property int|null      $is_timeline_folder
+ * @property int|null      $is_file
+ * @property string|null   $name
+ * @property string|null   $label
+ * @property string|null   $body
+ * @property string|null   $file_path
+ * @property string|null   $mime
+ * @property string|null   $content
+ * @property int|null      $size
+ * @property int|null      $lft
+ * @property int|null      $rgt
+ * @property int|null      $depth
+ * @property int|null      $tree
+ * @property int|null      $created_at
+ * @property int|null      $updated_at
+ * @property int|null      $created_by
+ * @property int|null      $updated_by
  *
- * @property User $createdBy
- * @property Folder $parent
- * @property Folder[] $children
- * @property User $updatedBy
+ * @property User          $createdBy
+ * @property Folder        $parent
+ * @property Folder[]      $children
+ * @property User          $updatedBy
  * @property UserComment[] $userComments
- * @property UserLike[] $userLikes
- * @property TimelinePost $timelinePost
- * @property Workspace $workspace
+ * @property UserLike[]    $userLikes
+ * @property TimelinePost  $timelinePost
+ * @property Workspace     $workspace
  */
 class Folder extends ActiveRecord
 {
@@ -64,14 +65,36 @@ class Folder extends ActiveRecord
      */
     public function behaviors()
     {
-        return array_merge(parent::behaviors(), [
-            TimestampBehavior::class,
-            BlameableBehavior::class,
-            'NestedSetsModel' => [
-                'class' => NestedSetsBehavior::class,
-                'treeAttribute' => 'tree',
-            ],
-        ]);
+        $behaviors = parent::behaviors();
+        $behaviors[] = TimestampBehavior::class;
+        $behaviors[] = BlameableBehavior::class;
+        $behaviors['NestedSetsModel'] = [
+            'class' => NestedSetsBehavior::class,
+            'treeAttribute' => 'tree',
+        ];
+        $behaviors['activity'] = [
+            'class' => ActivityBehavior::class,
+            'workspace_id' => function () {
+                return $this->workspace_id;
+            },
+            'events' => ['create', 'update', 'delete'],
+            'eventMap' => [
+                'create' => function(){
+                    if ($this->is_file) {
+                        return 'upload';
+                    }
+                    return 'create';
+                },
+                'delete' => function(){
+                    if ($this->is_file) {
+                        return 'delete_file';
+                    }
+                    return 'delete';
+                }
+            ]
+        ];
+
+        return $behaviors;
     }
 
     /**
@@ -204,7 +227,7 @@ class Folder extends ActiveRecord
      * Upload file
      *
      * @param UploadedFile $file
-     * @param $workspaceId
+     * @param              $workspaceId
      * @return bool
      * @throws Exception
      * @throws ValidationException
@@ -226,6 +249,7 @@ class Folder extends ActiveRecord
         if (!$file->saveAs(Yii::getAlias('@storage/' . $this->file_path))) {
             throw new ValidationException(Yii::t('app', 'Unable to save file'));
         }
+
         return true;
     }
 }

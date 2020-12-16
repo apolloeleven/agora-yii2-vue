@@ -1,6 +1,6 @@
 <template>
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
-    <b-modal :visible="showModal" id="timeline-form" ref="modal" size="lg"
+    <b-modal :visible="showModal" id="timeline-form" ref="modal" size="lg" no-enforce-focus
              :title="$t('Write Something on Timeline')" @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)"
              :ok-disabled="loading || !model.description && !model.file || !model.workspace_id" :ok-title="$t('Submit')" scrollable>
       <content-spinner :show="loading" :text="`${progress}% ${$t('Uploaded...')}`" class="h-100" :fullscreen="true"/>
@@ -99,7 +99,7 @@ export default {
     hideModal() {
       this.hideTimelineModal();
       this.model = new TimelineFormModel()
-    }
+    },
   }
 }
 </script>

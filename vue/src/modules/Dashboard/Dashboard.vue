@@ -1,10 +1,7 @@
 <template>
   <div class="h-100 dashboard-container">
-    <div class="m-3 twitter-feed-container">
-      <a class="twitter-timeline" :href="twitterFeedUrl">Tweets</a>
-    </div>
 
-    <div class="px-3 m-3" ref="postsContent" @scroll="onScroll" style="grid-column: 2/4;overflow-y: scroll">
+    <div class="px-3 m-3 workspace-timeline-wrapper" ref="postsContent" @scroll="onScroll">
       <workspace-timeline :workspace-id="0" :wants-workspace="true"/>
     </div>
 
@@ -59,10 +56,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .dashboard-container {
-  display: grid;
-  grid-gap: 1em;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+
+  .workspace-timeline-wrapper {
+    flex: 1;
+  }
 
   .twitter-feed-container {
     overflow-y: scroll;

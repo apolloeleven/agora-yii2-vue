@@ -25,8 +25,16 @@
                                @change="verifiedUser(data.item)"/>
             </template>
             <template v-slot:cell(actions)="data">
-              <i class="fas fa-pencil-alt mr-3 text-primary hover-pointer" @click="editUser(data.item)"/>
-              <i class="far fa-trash-alt mr-3 text-danger hover-pointer" @click="deleteUser(data.item)"/>
+              <span v-b-tooltip.hover data-placement="top" :title="$t('Edit')">
+                <i id="edit-tooltip"
+                   class="fas fa-pencil-alt mr-3 text-primary hover-pointer"
+                   @click="editUser(data.item)"/>
+              </span>
+              <span v-b-tooltip.hover data-placement="top" :title="$t('Delete')">
+                <i id="delete-tooltip"
+                   class="far fa-trash-alt mr-3 text-danger hover-pointer"
+                   @click="deleteUser(data.item)"/>
+                </span>
             </template>
           </b-table>
         </b-card>

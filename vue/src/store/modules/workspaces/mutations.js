@@ -22,6 +22,7 @@ import {
   GET_CURRENT_WORKSPACE,
   GET_TIMELINE_DATA,
   GET_WORKSPACES,
+  GET_WORKSPACE_ACTIVITY_DATA,
   HIDE_ARTICLE_MODAL,
   HIDE_FOLDER_MODAL,
   HIDE_INVITE_MODAL,
@@ -41,6 +42,7 @@ import {
   TOGGLE_ARTICLES_LOADING,
   TOGGLE_FOLDERS_LOADING,
   TOGGLE_VIEW_LOADING,
+  TOGGLE_WORKSPACE_ACTIVITY_LOADING,
   UNLIKE_TIMELINE_POST,
   UPDATE_ARTICLE,
   UPDATE_TIMELINE_POST,
@@ -99,7 +101,7 @@ export default {
    * @param data
    */
   [TOGGLE_VIEW_LOADING](state, data) {
-    state.view.loading = data
+    state.view.activity.loading = data
   },
 
   /**
@@ -465,6 +467,14 @@ export default {
    */
   [GET_ACTIVE_USERS](state, data) {
     state.view.inviteModal.users = data
+  },
+
+  [GET_WORKSPACE_ACTIVITY_DATA](state, data) {
+    state.view.activity.data = data;
+  },
+
+  [TOGGLE_WORKSPACE_ACTIVITY_LOADING](state, data) {
+    state.view.activity.loading = data;
   },
   /**
    *

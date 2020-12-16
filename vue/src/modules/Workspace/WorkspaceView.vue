@@ -71,12 +71,15 @@ export default {
         {title: this.$i18n.t('Timeline'), to: {name: 'workspace.timeline'}, icon: 'fas fa-stream'},
         {
           title: this.$i18n.t('Files'),
-          to: {name: 'workspace.files', params: {folderId: this.workspace.rootFolder.id}},
+          to: {
+            name: 'workspace.files',
+            params: {folderId: this.workspace.rootFolder ? this.workspace.rootFolder.id : ''}
+          },
           icon: 'fa fa-folder'
         },
         {title: this.$i18n.t('Articles'), to: {name: 'workspace.articles'}, icon: 'fa fa-book'},
         {title: this.$i18n.t('Users'), to: {name: 'workspace.users'}, icon: 'fas fa-users'},
-        {title: this.$i18n.t('Polls'), to: {name: 'workspace.polls'}, icon: 'fas fa-poll-h'},
+        // {title: this.$i18n.t('Polls'), to: {name: 'workspace.polls'}, icon: 'fas fa-poll-h'},
         {title: this.$i18n.t('Activity'), to: {name: 'workspace.activity'}, icon: 'fas fa-list'},
         {title: this.$i18n.t('About'), to: {name: 'workspace.about'}, icon: 'fa fa-info-circle'},
       ]
@@ -88,7 +91,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace', 'showInviteModal', 'getActiveUsers']),
+    ...mapActions(['getCurrentWorkspace', 'destroyCurrentWorkspace', 'showInviteModal', 'getActiveUsers', 'showWorkspaceModal', 'deleteWorkspace']),
     initBreadcrumbs() {
       this.breadcrumbs = [
         {text: this.$i18n.t('My Workspaces'), to: {name: 'workspace'}},
@@ -117,8 +120,8 @@ export default {
         this.$refs.headerNav.style.position = '';
         this.$refs.headerNav.style.width = '';
       }
-      if (this.$route.name === 'workspace.timeline'){
-        if (this.$refs.workspaceContent.scrollTop + this.$refs.workspaceContent.offsetHeight === this.$refs.workspaceContent.scrollHeight) {
+      if (this.$route.name === 'workspace.timeline') {
+        if (this.$refs.workspaceContent.scrollTop + this.$refs.workspaceContent.offsetHeight >= this.$refs.workspaceContent.scrollHeight) {
           eventBus.$emit('onScrollToBottom');
         }
       }
