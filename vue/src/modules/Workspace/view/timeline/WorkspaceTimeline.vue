@@ -2,7 +2,7 @@
   <div v-if="loading && lastPostId === 0">
     <content-spinner show/>
   </div>
-  <div v-else class="workspace-timeline shrinked-width">
+  <div v-else ref="postsContent" class="workspace-timeline shrinked-width" @scroll="onScroll">
     <div class="card mb-3">
       <div class="card-header border-bottom-0 text-right">
         <b-button @click="showTimelineForm" size="sm" variant="primary">
@@ -53,20 +53,24 @@ export default {
   data() {
     return {
       allLoaded: false,
-      postsLimit: 20,
+      postsLimit: 5,
       lastPostId: 0,
     }
   },
   watch: {
     '$route.params.id': function (id) {
       this.allLoaded = false;
-      this.loading = false;
       this.lastPostId = 0;
       this.timelinePosts(id);
     },
   },
   methods: {
     ...mapTimelineActions(['showTimelineModal', 'getTimelinePosts']),
+    onScroll() {
+      if (this.$refs.postsContent.scrollTop + this.$refs.postsContent.offsetHeight >= this.$refs.postsContent.scrollHeight) {
+        eventBus.$emit('onScrollToBottom')
+      }
+    },
     showTimelineForm() {
       this.showTimelineModal({wantsWorkspace: this.wantsWorkspace});
     },

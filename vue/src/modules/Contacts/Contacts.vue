@@ -1,6 +1,6 @@
 <template>
   <b-card class="workspace-sidebar ml-auto" :title="$t('Contacts')" no-body>
-    <b-card-header style="background-color: rgb(32 42 61)" class="text-white">
+    <b-card-header header-bg-variant="dark" header-text-variant="white">
       <h5 class="card-title mb-0">{{ $t('Contacts') }}</h5>
     </b-card-header>
 

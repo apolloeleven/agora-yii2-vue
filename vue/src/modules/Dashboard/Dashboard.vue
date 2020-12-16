@@ -1,7 +1,7 @@
 <template>
   <div class="h-100 dashboard-container">
 
-    <div class="px-3 m-3 workspace-timeline-wrapper" ref="postsContent" @scroll="onScroll">
+    <div class="px-3 m-3 workspace-timeline-wrapper" ref="postsContent">
       <workspace-timeline :workspace-id="0" :wants-workspace="true"/>
     </div>
 
@@ -43,11 +43,6 @@ export default {
         this.$toast(this.$i18n.t("Could not initialize twitter feed. Try refreshing the page."), 'danger');
       }
     },
-    onScroll() {
-      if (this.$refs.postsContent.scrollTop + this.$refs.postsContent.offsetHeight === this.$refs.postsContent.scrollHeight) {
-        eventBus.$emit('onScrollToBottom')
-      }
-    }
   },
   mounted() {
     this.initTwitterTimeline();
