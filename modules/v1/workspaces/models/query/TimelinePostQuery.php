@@ -32,12 +32,13 @@ class TimelinePostQuery extends ActiveQuery
     }
 
     /**
-     * @param $id
+     * @param      $id
      * @return TimelinePostQuery
      * @author Saiat Kalbiev <kalbievich11@gmail.com>
      */
     public function byWorkspaceId($id)
     {
-        return $this->andWhere([TimelinePost::tableName() . '.workspace_id' => $id]);
+        list($t, $a) = $this->getTableNameAndAlias();
+        return $this->andWhere([$a . '.workspace_id' => $id]);
     }
 }
