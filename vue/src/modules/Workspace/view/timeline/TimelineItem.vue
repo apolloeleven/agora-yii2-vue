@@ -9,6 +9,10 @@
         </template>
         <h5 class="mt-0">
           {{ timeline.createdBy.displayName }}
+          <span v-if="!workspace">
+            &nbsp; <i class="fas fa-caret-right"></i>&nbsp;
+            <router-link :to="{name: 'workspace.view', params: {id: timeline.workspace.id}}">{{timeline.workspace.name}}</router-link>
+          </span>
 
           <span v-if="timeline.action === SHARE_ARTICLE && timeline.article">
             {{ $t('created article') }}
@@ -86,7 +90,8 @@ export default {
   components: {DropdownButtons, LikeUnlikeButton, AddComment, CommentItem},
   props: {
     index: Number,
-    timeline: Object
+    timeline: Object,
+    workspace: Object
   },
   data() {
     return {

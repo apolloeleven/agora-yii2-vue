@@ -73,7 +73,7 @@ const router = new Router({
       meta: {requiresAuth: true,},
       children: [
         {path: 'dashboard', name: 'dashboard', component: Dashboard,},
-        {path: 'orgchart', name: 'orgchart', component: Orgchart,},
+        // {path: 'orgchart', name: 'orgchart', component: Orgchart,},
         {path: '/setup', name: 'setup', component: Setup,},
         {path: '/setup/countries', name: 'countries', component: CountryList},
         {path: '/setup/invitations', name: 'invitations', component: UserInvitations},

@@ -61,8 +61,7 @@ const userLikeUrl = '/v1/workspaces/user-like';
 const userCommentUrl = '/v1/workspaces/user-comment';
 const workspaceActivity = '/v1/workspaces/workspace-activity';
 
-const timelineExpand = `expand=article,createdBy,timelineComments.createdBy,timelineComments.childrenComments.createdBy,
-timelineComments.childrenComments.parent,userLikes,myLikes&sort=-created_at`
+const timelineExpand = `workspace,article,createdBy,timelineComments.createdBy,timelineComments.childrenComments.createdBy,timelineComments.childrenComments.parent,userLikes,myLikes`
 
 /**
  * Show workspace form's modal
@@ -329,7 +328,16 @@ export function hideTimelineModal({commit}) {
  */
 export async function getTimelinePosts({state, commit}, {workspace_id, posts_limit = 1e4, last_post_id = 0}) {
   commit(CHANGE_TIMELINE_LOADING)
-  const res = await httpService.get(`${timelineUrl}?workspace_id=${workspace_id}&limit=${posts_limit}&last_post_id=${last_post_id}&${timelineExpand}`);
+  const params = {
+    limit: posts_limit,
+    last_post_id: last_post_id,
+    expand: timelineExpand,
+    sort: '-created_at'
+  };
+  if (workspace_id) {
+    params.workspace_id = workspace_id;
+  }
+  const res = await httpService.get(`${timelineUrl}`, {params});
   if (res.success) {
     commit(GET_TIMELINE_DATA, last_post_id === 0 ? res.body : state.view.timeline.data.concat(res.body));
   }
@@ -344,7 +352,10 @@ export async function getTimelinePosts({state, commit}, {workspace_id, posts_lim
  * @returns {Promise<unknown>}
  */
 export async function deleteTimelinePost({commit}, data) {
-  const res = await httpService.delete(`${timelineUrl}/${data.id}?${timelineExpand}`);
+  const params = {
+    expand: timelineExpand
+  }
+  const res = await httpService.delete(`${timelineUrl}/${data.id}`, {params});
   if (res.success) {
     commit(DELETED_TIMELINE_POST, data.id);
   }
@@ -374,7 +385,11 @@ export async function updateTimelinePost({commit}, data) {
  */
 export async function postOnTimeline({commit}, {data, config}) {
   commit(CHANGE_TIMELINE_MODAL_LOADING, true)
-  const res = await httpService.post(`${timelineUrl}?${timelineExpand}`, prepareTimelineData(data), config);
+  config.params = {
+    ...config.params,
+    expand: timelineExpand
+  }
+  const res = await httpService.post(`${timelineUrl}`, prepareTimelineData(data), config);
   if (res.success) {
     commit(ADD_TIMELINE_POST, res.body);
   }

@@ -35,24 +35,10 @@
         </div>
       </div>
       <div class="content p-3">
-        <router-view/>
+        <router-view v-bind="{workspace}"/>
       </div>
     </div>
-
-    <b-card class="workspace-sidebar" :title="$t('Contacts')" no-body>
-      <b-card-header style="background-color: rgb(32 42 61)" class="text-white">
-        <h5 class="card-title mb-0">{{ $t('Contacts') }}</h5>
-      </b-card-header>
-      <div class="p-3">
-        <b-input-group>
-          <b-input-group-prepend is-text>
-            <i class="fas fa-search"></i>
-          </b-input-group-prepend>
-          <b-form-input placeholder="Search for contacts"></b-form-input>
-        </b-input-group>
-      </div>
-      <contacts/>
-    </b-card>
+    <contacts />
     <WorkspaceInviteModal/>
   </div>
 </template>

@@ -8,6 +8,8 @@
 namespace app\modules\v1\workspaces\controllers;
 
 
+use app\modules\v1\workspaces\models\UserWorkspace;
+use app\modules\v1\workspaces\models\Workspace;
 use app\modules\v1\workspaces\resources\TimelinePostResource;
 use app\rest\ActiveController;
 use Yii;
@@ -48,15 +50,22 @@ class TimelineController extends ActiveController
     public function prepareDataProvider()
     {
         $limit  = Yii::$app->request->get('limit') ?? 20;
-        $last_post_id = Yii::$app->request->get('last_post_id');
-
-        $condition = ['<', 'id', $last_post_id];
-        if (!$last_post_id) $condition = ['>', 'id', 0];
+        $lastPostId = (int)Yii::$app->request->get('last_post_id');
+        $workspaceId = Yii::$app->request->get('workspace_id');
 
         $query = TimelinePostResource::find()
-            ->where($condition)
-            ->byWorkspaceId(Yii::$app->request->get('workspace_id'))
+            ->alias('t')
+            ->innerJoin(Workspace::tableName().' w', 'w.id = t.workspace_id')
+            ->innerJoin(UserWorkspace::tableName(). ' uw', 'uw.workspace_id = w.id')
+            ->andWhere(['uw.user_id' => Yii::$app->user->id])
             ->limit($limit);
+        if ($lastPostId) {
+            $query->andWhere(['<', 't.id', $lastPostId]);
+        }
+
+        if ($workspaceId) {
+            $query = $query->byWorkspaceId(Yii::$app->request->get('workspace_id'));
+        }
 
         return new ActiveDataProvider([
             'query' => $query,

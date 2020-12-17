@@ -1,8 +1,8 @@
 <template>
-  <div v-if="loading && !this.timelineData">
+  <div v-if="loading && lastPostId === 0">
     <content-spinner show/>
   </div>
-  <div v-else class="workspace-timeline shrinked-width">
+  <div v-else ref="postsContent" class="workspace-timeline shrinked-width" @scroll="onScroll">
     <div class="card mb-3">
       <div class="card-header border-bottom-0 text-right">
         <b-button @click="showTimelineForm" size="sm" variant="primary">
@@ -13,9 +13,11 @@
     </div>
     <div class="timeline-records">
       <no-data :model="timelineData" :loading="loading" :text="$t('Nothing is shared on timeline')"></no-data>
-      <TimelineItem v-for="(timeline, index) in timelineData" :timeline="timeline"
+      <TimelineItem v-for="(timeline, index) in timelineData"
+                    :timeline="timeline"
+                    :workspace="workspace"
                     :index="index" :key="`timeline-post-${timeline.id}`"/>
-      <div v-if="loading && this.timelineData">
+      <div v-if="loading && lastPostId !== 0">
         <content-spinner show/>
       </div>
     </div>
@@ -34,6 +36,13 @@ const {mapActions: mapTimelineActions, mapState: mapTimelineState} = createNames
 export default {
   name: "WorkspaceTimeline",
   components: {TimelineItem, NoData, ContentSpinner},
+  props: {
+    workspaceId: {
+      type: Number,
+      default: null,
+    },
+    workspace: Object
+  },
   computed: {
     ...mapTimelineState({
       timelineData: state => state.view.timeline.data,
@@ -50,15 +59,19 @@ export default {
   watch: {
     '$route.params.id': function (id) {
       this.allLoaded = false;
-      this.loading = false;
       this.lastPostId = 0;
       this.timelinePosts(id);
     },
   },
   methods: {
     ...mapTimelineActions(['showTimelineModal', 'getTimelinePosts']),
+    onScroll() {
+      if (this.$refs.postsContent.scrollTop + this.$refs.postsContent.offsetHeight >= this.$refs.postsContent.scrollHeight) {
+        eventBus.$emit('onScrollToBottom')
+      }
+    },
     showTimelineForm() {
-      this.showTimelineModal(null);
+      this.showTimelineModal({showWorkspaceField: !this.workspace});
     },
     async timelinePosts(workspaceId) {
       if (this.allLoaded || this.loading) return;
@@ -84,7 +97,7 @@ export default {
     eventBus.$off('onScrollToBottom')
   },
   mounted() {
-    let workspaceId = this.$route.params.id;
+    let workspaceId = this.$route.params.id ? this.$route.params.id : this.workspaceId;
     this.resetAndLoadArticles(workspaceId);
 
     eventBus.$on('onScrollToBottom', () => {
