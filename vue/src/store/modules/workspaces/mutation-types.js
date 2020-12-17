@@ -46,6 +46,9 @@ export const SHOW_PREVIEW_MODAL = 'workspace/SHOW_PREVIEW_MODAL';
 export const HIDE_PREVIEW_MODAL = 'workspace/HIDE_PREVIEW_MODAL';
 export const CHANGE_CAROUSEL = 'workspace/CHANGE_CAROUSEL';
 
+export const GET_WORKSPACE_ACTIVITY_DATA = 'workspace/GET_WORKSPACE_ACTIVITY_DATA';
+export const TOGGLE_WORKSPACE_ACTIVITY_LOADING = 'workspace/GET_WORKSPACE_ACTIVITY_LOADING';
+
 export const SHOW_INVITE_MODAL = 'workspace/SHOW_INVITE_MODAL';
 export const HIDE_INVITE_MODAL = 'workspace/HIDE_INVITE_MODAL';
 export const GET_ACTIVE_USERS = 'workspace/GET_ACTIVE_USERS';

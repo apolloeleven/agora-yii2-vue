@@ -6,8 +6,12 @@ namespace app\modules\v1\workspaces\resources;
 
 use app\helpers\ModelHelper;
 use app\modules\v1\users\resources\UserResource;
+use app\modules\v1\workspaces\models\Article;
+use app\modules\v1\workspaces\models\Folder;
+use app\modules\v1\workspaces\models\TimelinePost;
 use app\modules\v1\workspaces\models\UserWorkspace;
 use app\modules\v1\workspaces\models\Workspace;
+use app\modules\v1\workspaces\models\WorkspaceActivity;
 use app\rest\ValidationException;
 use Yii;
 use yii\db\ActiveQuery;
@@ -125,7 +129,7 @@ class WorkspaceResource extends Workspace
      * Load for image upload
      *
      * @param array $data
-     * @param null $formName
+     * @param null  $formName
      * @return bool
      */
     public function load($data, $formName = null)
@@ -172,11 +176,32 @@ class WorkspaceResource extends Workspace
      */
     public function delete()
     {
-        if ($this->getFolders()->count()) {
-            throw new ValidationException(Yii::t('app', 'You can\'t delete this workspace because it has folders'));
+        $dbTransaction = Yii::$app->db->beginTransaction();
+
+        // Delete all timeline posts
+        TimelinePost::deleteAll(['workspace_id' => $this->id]);
+
+        // Delete the whole file manager records
+        Folder::deleteAll(['workspace_id' => $this->id]);
+        // Delete all files from file system
+        $fullPath = Yii::getAlias("@storage/file-manager/{$this->id}");
+        if (is_dir($fullPath)) {
+            FileHelper::removeDirectory($fullPath);
         }
+
+        WorkspaceActivity::deleteAll(['workspace_id' => $this->id]);
         UserWorkspace::deleteAll(['workspace_id' => $this->id]);
-        Workspace::deleteAll(['id' => $this->id]);
+        Article::deleteAll(['workspace_id' => $this->id]);
+
+        parent::delete();
+
+        if ($this->image_path) {
+            $fullPath = dirname(Yii::getAlias('@storage' . $this->image_path));
+            if (is_dir($fullPath)) {
+                FileHelper::removeDirectory($fullPath);
+            }
+        }
+        $dbTransaction->commit();
 
         return true;
     }

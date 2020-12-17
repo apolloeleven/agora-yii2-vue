@@ -32,11 +32,17 @@
             }">{{ data.value }}</span>
             </template>
             <template v-slot:cell(actions)="data">
-              <i v-if="data.item.status !== PENDING_STATUS" class="fas fa-pencil-alt mr-3 text-primary hover-pointer"
-                 @click="editUser(data.item)">
-              </i>
-              <i v-else class="disabled fas fa-pencil-alt mr-3"/>
-              <i class="far fa-trash-alt mr-3 text-danger hover-pointer" @click="deleteUser(data.item)"/>
+              <span v-if="data.item.status !== PENDING_STATUS"
+                   v-b-tooltip.hover.top="$t('Edit user')">
+                <i class="fas fa-pencil-alt mr-3 text-primary hover-pointer"
+                   @click="editUser(data.item)">
+                </i>
+              </span>
+              <i v-else style="visibility: hidden" class="disabled fas fa-pencil-alt mr-3"/>
+              <span v-b-tooltip.hover.top="$t('Delete user')">
+                <i class="far fa-trash-alt mr-3 text-danger hover-pointer"
+                 @click="deleteUser(data.item)" />
+              </span>
             </template>
           </b-table>
           <no-data-available v-if="!invitations.data.length" height="100"/>
@@ -119,10 +125,6 @@ export default {
   td {
     vertical-align: middle;
   }
-}
-
-i.disabled:hover {
-  cursor: not-allowed
 }
 
 .pagination-table-info {

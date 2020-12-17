@@ -1,16 +1,25 @@
 <template>
-  <div class="p-3 h-100 dashboard-container">
-    <div class="twitter-feed-container">
-      <a class="twitter-timeline" :href="twitterFeedUrl">Tweets</a>
+  <div class="h-100 dashboard-container">
+
+    <div class="px-3 m-3 workspace-timeline-wrapper" ref="postsContent">
+      <workspace-timeline />
     </div>
+
+    <contacts/>
   </div>
 </template>
 
 <script>
 import {AppSettings} from "@/shared/AppSettings";
+import WorkspaceTimeline from "@/modules/Workspace/view/timeline/WorkspaceTimeline";
+import Contacts from "@/modules/Contacts/Contacts";
+import {eventBus} from "@/core/services/event-bus";
 
 export default {
   name: "Dashboard",
+  components: {
+    WorkspaceTimeline, Contacts
+  },
   data() {
     return {
       twitterFeedUrl: AppSettings.getTwitterFeedUrl()
@@ -33,19 +42,22 @@ export default {
       if (count === 10) {
         this.$toast(this.$i18n.t("Could not initialize twitter feed. Try refreshing the page."), 'danger');
       }
-    }
+    },
   },
   mounted() {
-    this.initTwitterTimeline();
+    // this.initTwitterTimeline();
   }
 }
 </script>
 
 <style lang="scss" scoped>
+
 .dashboard-container {
-  display: grid;
-  grid-gap: 1em;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+
+  .workspace-timeline-wrapper {
+    flex: 1;
+  }
 
   .twitter-feed-container {
     overflow-y: scroll;

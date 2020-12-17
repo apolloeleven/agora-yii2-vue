@@ -1,13 +1,18 @@
 <template>
   <ValidationObserver ref="form" v-slot="{ handleSubmit, invalid ,reset}">
-    <b-modal :visible="showModal" id="timeline-form" ref="modal" size="lg"
+    <b-modal :visible="showModal" id="timeline-form" ref="modal" size="lg" no-enforce-focus
              :title="$t('Write Something on Timeline')" @hidden="hideModal" @ok.prevent="handleSubmit(onSubmit)"
-             :ok-disabled="loading || !model.description && !model.file" :ok-title="$t('Submit')" scrollable>
+             :ok-disabled="loading || !model.description && !model.file || !model.workspace_id" :ok-title="$t('Submit')"
+             scrollable>
       <content-spinner :show="loading" :text="`${progress}% ${$t('Uploaded...')}`" class="h-100" :fullscreen="true"/>
       <b-form @submit.prevent="handleSubmit(onSubmit)" novalidate>
 
-        <b-form-group :disabled="!!model.id" v-if="model.id">
-          <b-form-select v-model="model.workspace_id" :options="userWorkspaceOptions"/>
+        <b-form-group :disabled="!!model.id" v-if="showWorkspaceField">
+          <b-form-select v-model="model.workspace_id" :options="userWorkspaceOptions">
+            <template #first>
+              <b-form-select-option :value="null" disabled> {{ $t('Select a workspace') }}</b-form-select-option>
+            </template>
+          </b-form-select>
         </b-form-group>
 
         <input-widget v-if="!model.id"
@@ -49,19 +54,23 @@ export default {
         return {value: w.id, text: w.name}
       });
     },
+    showWorkspaceField() {
+      return this.modalTimeline ? this.modalTimeline.showWorkspaceField : false;
+    }
   },
   watch: {
     modalTimeline() {
       if (this.modalTimeline) {
         this.model = new TimelineFormModel(this.modalTimeline);
+        if (this.$route.params.id) {
+          this.model.workspace_id = this.$route.params.id;
+        }
       }
     },
   },
   methods: {
     ...mapWorkspaceActions(['hideTimelineModal', 'postOnTimeline', 'updateTimelinePost']),
     async onSubmit() {
-      this.model.workspace_id = this.$route.params.id;
-
       let res;
       if (this.model.id) {
         res = await this.updateTimelinePost(this.model)
@@ -94,7 +103,7 @@ export default {
     hideModal() {
       this.hideTimelineModal();
       this.model = new TimelineFormModel()
-    }
+    },
   }
 }
 </script>
