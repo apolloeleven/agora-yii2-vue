@@ -13,7 +13,9 @@
     </div>
     <div class="timeline-records">
       <no-data :model="timelineData" :loading="loading" :text="$t('Nothing is shared on timeline')"></no-data>
-      <TimelineItem v-for="(timeline, index) in timelineData" :timeline="timeline"
+      <TimelineItem v-for="(timeline, index) in timelineData"
+                    :timeline="timeline"
+                    :workspace="workspace"
                     :index="index" :key="`timeline-post-${timeline.id}`"/>
       <div v-if="loading && lastPostId !== 0">
         <content-spinner show/>
@@ -39,10 +41,7 @@ export default {
       type: Number,
       default: null,
     },
-    wantsWorkspace: {
-      type: Boolean,
-      default: false,
-    }
+    workspace: Object
   },
   computed: {
     ...mapTimelineState({
@@ -53,7 +52,7 @@ export default {
   data() {
     return {
       allLoaded: false,
-      postsLimit: 5,
+      postsLimit: 20,
       lastPostId: 0,
     }
   },
@@ -72,7 +71,7 @@ export default {
       }
     },
     showTimelineForm() {
-      this.showTimelineModal({wantsWorkspace: this.wantsWorkspace});
+      this.showTimelineModal({showWorkspaceField: !this.workspace});
     },
     async timelinePosts(workspaceId) {
       if (this.allLoaded || this.loading) return;

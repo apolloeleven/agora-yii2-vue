@@ -2,7 +2,7 @@
   <div class="h-100 dashboard-container">
 
     <div class="px-3 m-3 workspace-timeline-wrapper" ref="postsContent">
-      <workspace-timeline :workspace-id="0" :wants-workspace="true"/>
+      <workspace-timeline />
     </div>
 
     <contacts/>
@@ -45,7 +45,7 @@ export default {
     },
   },
   mounted() {
-    this.initTwitterTimeline();
+    // this.initTwitterTimeline();
   }
 }
 </script>

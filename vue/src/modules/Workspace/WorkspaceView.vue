@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="content p-3">
-        <router-view/>
+        <router-view v-bind="{workspace}"/>
       </div>
     </div>
     <contacts />
