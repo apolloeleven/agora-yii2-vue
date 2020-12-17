@@ -9,7 +9,7 @@
         <b-input-group-prepend is-text>
           <i class="fas fa-search"></i>
         </b-input-group-prepend>
-        <b-form-input placeholder="Search for contacts"></b-form-input>
+        <b-form-input :placeholder="$t('Search for contacts')"></b-form-input>
       </b-input-group>
     </div>
 

@@ -67,7 +67,7 @@ class TimelinePostResource extends TimelinePost
      */
     public function getWorkspace()
     {
-        return $this->hasOne(WorkspaceResource::class, ['workspace_id' => 'id']);
+        return $this->hasOne(WorkspaceResource::class, ['id' => 'workspace_id']);
     }
 
     /**
