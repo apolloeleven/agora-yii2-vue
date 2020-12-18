@@ -1,36 +1,40 @@
-FROM php:7.2-fpm
+FROM php:7.4-fpm
 
-# Install modules
+ARG user
+ARG uid
+
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libicu-dev \
-        wget \
-        git \
-            --no-install-recommends
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip
 
-RUN docker-php-ext-install zip intl mbstring pdo_mysql exif \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install gd
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN pecl install -o -f xdebug \
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl
+
+RUN pecl install -o -f xdebug-2.9.8 \
     && rm -rf /tmp/pear
 
-COPY ./install-composer.sh /
-COPY ./php.ini /usr/local/etc/php/
-COPY ./www.conf /usr/local/etc/php/
+# Get latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN apt-get purge -y g++ \
-    && apt-get autoremove -y \
-    && rm -r /var/lib/apt/lists/* \
-    && rm -rf /tmp/* \
-    && sh /install-composer.sh \
-    && rm /install-composer.sh
+COPY ./docker/php/php.ini /usr/local/etc/php/
+#COPY ./www.conf /usr/local/etc/php/
 
-RUN usermod -u 1000 www-data
+# Create system user to run Composer and Artisan Commands
+RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN mkdir -p /home/$user/.composer && \
+    chown -R $user:$user /home/$user
 
-VOLUME /root/.composer
 WORKDIR /app
 
+USER $user
 EXPOSE 9000
 CMD ["php-fpm"]
