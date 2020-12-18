@@ -7,8 +7,7 @@ use app\modules\v1\workspaces\behaviors\ActivityBehavior;
 use app\modules\v1\workspaces\models\query\FolderQuery;
 use app\rest\ValidationException;
 use creocoder\nestedsets\NestedSetsBehavior;
-use Imagick;
-use ImagickException;
+use WebPConvert\WebPConvert;
 use Yii;
 use yii\base\Exception;
 use yii\behaviors\BlameableBehavior;
@@ -81,16 +80,18 @@ class Folder extends ActiveRecord
             },
             'events' => ['create', 'update', 'delete'],
             'eventMap' => [
-                'create' => function(){
+                'create' => function () {
                     if ($this->is_file) {
                         return 'upload';
                     }
+
                     return 'create';
                 },
-                'delete' => function(){
+                'delete' => function () {
                     if ($this->is_file) {
                         return 'delete_file';
                     }
+
                     return 'delete';
                 }
             ]
@@ -236,7 +237,7 @@ class Folder extends ActiveRecord
      */
     public function uploadFile(UploadedFile $file, $workspaceId)
     {
-        $path = "/file-manager/$workspaceId/" . date('dmY', time());
+        $path = "/file-manager/$workspaceId/" . date('Ymd', time());
         $fullPath = Yii::getAlias('@storage' . $path);
 
         if (!file_exists($fullPath) && !FileHelper::createDirectory($fullPath)) {
@@ -261,31 +262,19 @@ class Folder extends ActiveRecord
      * @param $filePath
      * @param $fileName
      * @return bool
-     * @throws ImagickException
+     * @throws \WebPConvert\Convert\Exceptions\ConversionFailedException
      */
-    public function convertUploadedFile($filePath, $fileName)
+    public function convertUploadedFile($filePath, $fileName): bool
     {
-        $imageWidth = 680;
-        $src = Yii::getAlias("@storage/$filePath");
-        list($width1, $height1) = getimagesize($src);
+        $src = Yii::getAlias("@storage{$filePath}");
+        $newFilePath = pathinfo($filePath, PATHINFO_DIRNAME) . '/' . pathinfo($filePath, PATHINFO_FILENAME) . '.webp';
+        $destination = Yii::getAlias("@storage{$newFilePath}");
+        WebPConvert::convert($src, $destination);
 
-        $width = $imageWidth;
-        $height = $height1 * ($imageWidth / $width1);
-        $newFilePath = substr($filePath, 0, strrpos($filePath, '.') + 1) . 'webp';
-        $dest =  Yii::getAlias("@storage/$newFilePath");
-
-        $this->name = substr($fileName, 0, strrpos($fileName, '.') + 1) . 'webp';
+        $this->name = pathinfo($fileName, PATHINFO_FILENAME) . '.webp';
         $this->mime = 'image/webp';
         $this->file_path = $newFilePath;
-
-        $im = new Imagick();
-        $im->pingImage($src);
-        $im->readImage($src);
-        $im->resizeImage($width,$height, Imagick::FILTER_CATROM , 1,TRUE );
-        $im->setImageFormat( "webp" );
-        $im->writeImage($dest);
-
-        $this->size = strlen( $im->getImageBlob() );
+        $this->size = filesize($destination);
 
         return true;
     }

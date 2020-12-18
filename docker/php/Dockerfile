@@ -11,7 +11,8 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
-    unzip
+    unzip \
+    wget
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -34,6 +35,12 @@ RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
 WORKDIR /app
+
+# Download webp image optimization tool and make it available using command "cwebp"
+RUN wget https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.1.0-linux-x86-64.tar.gz
+RUN tar -xf libwebp-1.1.0-linux-x86-64.tar.gz
+RUN cp libwebp-1.1.0-linux-x86-64/bin/cwebp /usr/local/bin/
+RUN rm -rf libwebp-1.1.0-linux-x86-6*
 
 USER $user
 EXPOSE 9000

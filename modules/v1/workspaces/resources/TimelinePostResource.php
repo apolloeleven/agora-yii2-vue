@@ -150,9 +150,9 @@ class TimelinePostResource extends TimelinePost
      *
      * @param $insert
      * @param $changedAttributes
-     * @throws ValidationException
-     * @throws Exception
-     * @throws \ImagickException
+     * @throws \WebPConvert\Convert\Exceptions\ConversionFailedException
+     * @throws \app\rest\ValidationException
+     * @throws \yii\base\Exception
      */
     public function afterSave($insert, $changedAttributes)
     {
