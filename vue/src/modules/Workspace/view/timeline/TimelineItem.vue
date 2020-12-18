@@ -47,7 +47,7 @@
     </b-card-body>
     <div v-if="timeline.file_url" class="timeline-preview">
       <div v-if="timeline.file_url.original && isImage(timeline.file_url.original)" class="image-preview">
-        <b-img :src="timeline.file_url.converted" @error="loadOriginalImage" @click="previewModal" class="img-fluid" style="cursor: pointer"/>
+        <b-img :src="timeline.file_url.converted || timeline.file_url.original" @error="loadOriginalImage" @click="previewModal" class="img-fluid" style="cursor: pointer"/>
       </div>
       <video v-else-if="timeline.file_url.original && isVideo(timeline.file_url.original)" controls class="video-preview">
         <source :src="timeline.file_url.original">
