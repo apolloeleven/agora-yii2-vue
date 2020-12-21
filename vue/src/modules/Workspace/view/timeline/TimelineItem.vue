@@ -1,6 +1,6 @@
 <template>
   <b-card no-body class="mb-3" :style="'animation-delay: '+(index / 5)+'s'">
-    <b-card-body class="pr-5 pb-0">
+    <b-card-body class="pr-5">
       <b-media>
         <template v-slot:aside>
           <b-img
@@ -37,7 +37,7 @@
       </b-media>
     </b-card-body>
 
-    <div class="p-3 description" v-html="timeline.description"></div>
+    <div v-if="timeline.description" class="p-3 description" v-html="timeline.description"></div>
     <b-card-body v-if="timeline.action === this.SHARE_ARTICLE && timeline.article">
       <div class="row">
         <div class="col">
@@ -192,7 +192,7 @@ export default {
 
   img {
     max-width: 100%;
-    max-height: 100%;
+    max-height: 380px;
     width: auto;
   }
 }

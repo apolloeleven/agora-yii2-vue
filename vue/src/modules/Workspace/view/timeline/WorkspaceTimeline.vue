@@ -3,14 +3,27 @@
     <content-spinner show/>
   </div>
   <div v-else ref="postsContent" class="workspace-timeline shrinked-width" @scroll="onScroll">
-    <div class="card mb-3">
-      <div class="card-header border-bottom-0 text-right">
-        <b-button @click="showTimelineForm" size="sm" variant="primary">
-          <i class="fas fa-plus-circle"/>
-          {{ $t('Write on timeline') }}
+    <b-card class="card mb-3">
+      <b-media class="align-items-center">
+        <template #aside>
+          <b-img class="user-avatar mr-2" width="48" :src="currentUser.data.image_url || '/assets/img/avatar.svg'"
+                 rounded="circle"
+                 :alt="currentUser.display_name"/>
+        </template>
+
+        <b-button @click="showTimelineForm" size="lg" variant="light" class="write-on-timeline w-100 text-left">
+          {{ $t('Write something on timeline') }}
         </b-button>
-      </div>
-    </div>
+      </b-media>
+      <hr>
+      <b-button block @click="showTimelineForm">
+        <i class="fas fa-photo-video"></i>
+        {{ $t('Photo/Video') }}
+      </b-button>
+      <!--      <div class="card-header border-bottom-0 text-right">-->
+      <!--        -->
+      <!--      </div>-->
+    </b-card>
     <div class="timeline-records">
       <no-data :model="timelineData" :loading="loading" :text="$t('Nothing is shared on timeline')"></no-data>
       <TimelineItem v-for="(timeline, index) in timelineData"
@@ -36,6 +49,7 @@ import {AppSettings} from "@/shared/AppSettings";
 import authService from "@/core/services/authService";
 
 const {mapActions: mapTimelineActions, mapState: mapTimelineState} = createNamespacedHelpers('workspace');
+const {mapState} = createNamespacedHelpers('user');
 
 export default {
   name: "WorkspaceTimeline",
@@ -48,6 +62,7 @@ export default {
     workspace: Object
   },
   computed: {
+    ...mapState(['currentUser']),
     ...mapTimelineState({
       timelineData: state => state.view.timeline.data,
       loading: state => state.view.timeline.loading,
@@ -118,5 +133,9 @@ export default {
 .workspace-timeline {
   overflow: auto;
   height: 100%;
+}
+
+.write-on-timeline {
+  flex: 1;
 }
 </style>
