@@ -1,6 +1,5 @@
 <?php
 /**
- * Created By Nika Gelashvili
  * Date: 30.09.20
  * Time: 13:26
  */
@@ -14,10 +13,18 @@ use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\TimelinePost;
 use app\rest\ValidationException;
 use Yii;
-use yii\base\Exception;
 use yii\db\ActiveQuery;
+use yii\helpers\Json;
 use yii\web\UploadedFile;
 
+/**
+ * Class TimelinePostResource
+ *
+ * @author  Zura Sekhniashvili <zurasekhniashvili@gmail.com>
+ * @package app\modules\v1\workspaces\resources
+ *
+ * @property \app\modules\v1\workspaces\resources\FolderResource[] $folders
+ */
 class TimelinePostResource extends TimelinePost
 {
     const IS_FILE = 1;
@@ -33,8 +40,8 @@ class TimelinePostResource extends TimelinePost
             'action',
             'workspace_id',
             'description',
-            'file_url' => function () {
-                return $this->getFileUrl();
+            'files' => function () {
+                return $this->getFiles();
             },
             'created_at' => function () {
                 return $this->created_at * 1000;
@@ -59,6 +66,7 @@ class TimelinePostResource extends TimelinePost
             'userLikes',
             'myLikes',
             'workspace',
+            'folders'
         ];
     }
 
@@ -124,54 +132,106 @@ class TimelinePostResource extends TimelinePost
     }
 
     /**
+     * @return ActiveQuery|\app\modules\v1\workspaces\models\query\FolderQuery
+     */
+    public function getFolders()
+    {
+        return $this->hasMany(FolderResource::class, ['timeline_post_id' => 'id']);
+    }
+
+    /**
      * Get timeline post file path
      *
-     * @return bool|string
+     * @return array
      */
-    public function getFileUrl()
+    public function getFiles(): array
     {
-        $folder = FolderResource::findOne(['timeline_post_id' => $this->id]);
-        return $folder ? Yii::getAlias('@storageUrl' . $folder->file_path) : '';
+        $folders = $this->getFolders()->all();
+        $urls = [];
+        foreach ($folders as $folder) {
+            $url = [
+                'original' => [
+                    'key' => 'original',
+                    'url' => $folder->getFileUrl(),
+                    'mime' => $folder->mime,
+                    'name' => $folder->name,
+                    'size' => $folder->size
+                ]
+            ];
+            if ($folder->isImage()) {
+                $files = Json::decode($folder->data);
+                if ($files) {
+                    foreach ($files as $key => $file) {
+                        $url[$key] = [
+                            'key' => $key,
+                            'url' => Yii::getAlias('@storageUrl') . $file['path'],
+                            'mime' => $file['mime'],
+                            'name' => $file['name'],
+                            'size' => $file['size']
+                        ];
+                    }
+                }
+            }
+            $urls[] = $url;
+        }
+
+        return $urls;
     }
 
     public function load($data, $formName = null)
     {
         $this->file = UploadedFile::getInstanceByName('file');
+
         return parent::load($data, $formName);
     }
 
     /**
      * Save timeline file into default folder after upload
      *
-     * @param $insert
-     * @param $changedAttributes
-     * @throws ValidationException
-     * @throws Exception
+     * @param bool $runValidation
+     * @param null $attributeNames
+     * @return bool
+     * @throws \WebPConvert\Convert\Exceptions\ConversionFailedException
+     * @throws \app\rest\ValidationException
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
      */
-    public function afterSave($insert, $changedAttributes)
+    public function save($runValidation = true, $attributeNames = null): bool
     {
-        parent::afterSave($insert, $changedAttributes);
+        $transaction = Yii::$app->db->beginTransaction();
+        $insert = $this->isNewRecord;
+        $check = parent::save($runValidation, $attributeNames);
+        if (!$check) {
+            return false;
+        }
         if ($insert && $this->file) {
-            $folder = new FolderResource();
-            $folder->workspace_id = $this->workspace_id;
-            $folder->timeline_post_id = $this->id;
-            $folder->is_file = 1;
-
-            $parentFolder = FolderResource::find()->byWorkspaceId($folder->workspace_id)->isTimelineFolder()->one();
+            $parentFolder = FolderResource::find()->byWorkspaceId($this->workspace_id)->isTimelineFolder()->one();
 
             if (!$parentFolder) {
-                throw new ValidationException(Yii::t('app', 'Unable to find parent folder'));
+                throw new ValidationException(Yii::t('app', 'Unable to find parent original'));
             }
-            $folder->parent_id = $parentFolder->id;
 
-            if (!$folder->uploadFile($this->file, $folder->workspace_id)) {
+
+            $original = new FolderResource();
+            $original->workspace_id = $this->workspace_id;
+            $original->timeline_post_id = $this->id;
+            $original->is_file = 1;
+            $original->parent_id = $parentFolder->id;
+
+            if (!$original->uploadFile($this->file, $original->workspace_id)) {
                 throw new ValidationException(Yii::t('app', 'Unable to upload attachment'));
             }
 
-            if (!$folder->appendTo($parentFolder)) {
+            if (!$original->appendTo($parentFolder)) {
                 throw new ValidationException(Yii::t('app', 'Unable to upload file'));
             }
+            $transaction->commit();
+
+            Yii::$app->async->execute("async/process-image", $original->id);
+            return true;
         }
+        $transaction->commit();
+        return true;
     }
 
     /**
@@ -182,15 +242,19 @@ class TimelinePostResource extends TimelinePost
      */
     public function beforeDelete()
     {
-        $folder = FolderResource::find()->byTimelineId($this->id)->one();
+        $folders = FolderResource::find()->byTimelineId($this->id)->all();
 
-        if (!$folder) {
+        if (!$folders) {
             return parent::beforeDelete();
         }
 
-        if (!ModelHelper::deleteFile($folder->file_path)) {
-            throw new ValidationException(Yii::t('app', 'Unable to delete timeline file'));
+        foreach ($folders as $folder) {
+            if (file_exists(Yii::getAlias("@storage/" . $folder->file_path)) && !ModelHelper::deleteFile($folder->file_path)) {
+                throw new ValidationException(Yii::t('app', 'Unable to delete timeline file'));
+            }
         }
+
+        FolderResource::deleteAll(['timeline_post_id' => $this->id]);
 
         return parent::beforeDelete();
     }

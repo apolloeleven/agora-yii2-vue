@@ -7,6 +7,7 @@ use app\modules\v1\workspaces\behaviors\ActivityBehavior;
 use app\modules\v1\workspaces\models\query\FolderQuery;
 use app\rest\ValidationException;
 use creocoder\nestedsets\NestedSetsBehavior;
+use WebPConvert\WebPConvert;
 use Yii;
 use yii\base\Exception;
 use yii\behaviors\BlameableBehavior;
@@ -19,6 +20,8 @@ use yii\web\UploadedFile;
 /**
  * This is the model class for table "{{%folders}}".
  *
+ * @method appendTo(Folder $f)
+ *
  * @property int           $id
  * @property int|null      $parent_id
  * @property int           $workspace_id
@@ -27,7 +30,7 @@ use yii\web\UploadedFile;
  * @property int|null      $is_file
  * @property string|null   $name
  * @property string|null   $label
- * @property string|null   $body
+ * @property string|null   $data
  * @property string|null   $file_path
  * @property string|null   $mime
  * @property string|null   $content
@@ -79,16 +82,18 @@ class Folder extends ActiveRecord
             },
             'events' => ['create', 'update', 'delete'],
             'eventMap' => [
-                'create' => function(){
+                'create' => function () {
                     if ($this->is_file) {
                         return 'upload';
                     }
+
                     return 'create';
                 },
-                'delete' => function(){
+                'delete' => function () {
                     if ($this->is_file) {
                         return 'delete_file';
                     }
+
                     return 'delete';
                 }
             ]
@@ -105,7 +110,7 @@ class Folder extends ActiveRecord
         return [
             [['parent_id', 'workspace_id', 'timeline_post_id', 'is_timeline_folder', 'is_file', 'size', 'lft', 'rgt', 'depth', 'tree', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['workspace_id'], 'required'],
-            [['body', 'content'], 'string'],
+            [['data', 'content'], 'string'],
             [['name', 'label', 'file_path'], 'string', 'max' => 1024],
             [['mime'], 'string', 'max' => 255],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
@@ -129,7 +134,7 @@ class Folder extends ActiveRecord
             'is_file' => Yii::t('app', 'Is File'),
             'name' => Yii::t('app', 'Name'),
             'label' => Yii::t('app', 'Label'),
-            'body' => Yii::t('app', 'Body'),
+            'data' => Yii::t('app', 'Data'),
             'file_path' => Yii::t('app', 'File Path'),
             'mime' => Yii::t('app', 'Mime'),
             'content' => Yii::t('app', 'Content'),
@@ -224,6 +229,24 @@ class Folder extends ActiveRecord
     }
 
     /**
+     * Get file url
+     *
+     * @return bool|string
+     */
+    public function getFileUrl()
+    {
+        return $this->file_path ? Yii::getAlias('@storageUrl' . $this->file_path) : '';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isImage(): bool
+    {
+        return strpos($this->mime, 'image/') === 0;
+    }
+
+    /**
      * Upload file
      *
      * @param UploadedFile $file
@@ -234,7 +257,7 @@ class Folder extends ActiveRecord
      */
     public function uploadFile(UploadedFile $file, $workspaceId)
     {
-        $path = "/file-manager/$workspaceId/" . date('dmY', time());
+        $path = "/file-manager/$workspaceId/" . date('Ymd', time());
         $fullPath = Yii::getAlias('@storage' . $path);
 
         if (!file_exists($fullPath) && !FileHelper::createDirectory($fullPath)) {
@@ -249,6 +272,29 @@ class Folder extends ActiveRecord
         if (!$file->saveAs(Yii::getAlias('@storage/' . $this->file_path))) {
             throw new ValidationException(Yii::t('app', 'Unable to save file'));
         }
+
+        return true;
+    }
+
+    /**
+     * Convert uploaded file, then resize and save
+     *
+     * @param $filePath
+     * @param $fileName
+     * @return bool
+     * @throws \WebPConvert\Convert\Exceptions\ConversionFailedException
+     */
+    public function convertUploadedFile($filePath, $fileName): bool
+    {
+        $src = Yii::getAlias("@storage{$filePath}");
+        $newFilePath = pathinfo($filePath, PATHINFO_DIRNAME) . '/' . pathinfo($filePath, PATHINFO_FILENAME) . '.webp';
+        $destination = Yii::getAlias("@storage{$newFilePath}");
+        WebPConvert::convert($src, $destination);
+
+        $this->name = pathinfo($fileName, PATHINFO_FILENAME) . '.webp';
+        $this->mime = 'image/webp';
+        $this->file_path = $newFilePath;
+        $this->size = filesize($destination);
 
         return true;
     }

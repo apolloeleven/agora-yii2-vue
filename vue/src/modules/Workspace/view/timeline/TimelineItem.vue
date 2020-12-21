@@ -1,6 +1,6 @@
 <template>
   <b-card no-body class="mb-3" :style="'animation-delay: '+(index / 5)+'s'">
-    <b-card-body class="pr-5 pb-0">
+    <b-card-body class="pr-5">
       <b-media>
         <template v-slot:aside>
           <b-img
@@ -11,7 +11,10 @@
           {{ timeline.createdBy.displayName }}
           <span v-if="!workspace">
             &nbsp; <i class="fas fa-caret-right"></i>&nbsp;
-            <router-link :to="{name: 'workspace.view', params: {id: timeline.workspace.id}}">{{timeline.workspace.name}}</router-link>
+            <router-link
+              :to="{name: 'workspace.view', params: {id: timeline.workspace.id}}">{{
+                timeline.workspace.name
+              }}</router-link>
           </span>
 
           <span v-if="timeline.action === SHARE_ARTICLE && timeline.article">
@@ -34,7 +37,7 @@
       </b-media>
     </b-card-body>
 
-    <div class="p-3 description" v-html="timeline.description"></div>
+    <div v-if="timeline.description" class="p-3 description" v-html="timeline.description"></div>
     <b-card-body v-if="timeline.action === this.SHARE_ARTICLE && timeline.article">
       <div class="row">
         <div class="col">
@@ -45,13 +48,17 @@
         </div>
       </div>
     </b-card-body>
-    <div v-if="timeline.file_url" class="timeline-preview">
-      <div v-if="isImage(timeline.file_url)" class="image-preview">
-        <b-img :src="timeline.file_url" class="img-fluid" style="cursor: pointer"/>
-      </div>
-      <video v-else-if="isVideo(timeline.file_url)" controls class="video-preview">
-        <source :src="timeline.file_url">
-      </video>
+    <div v-if="timeline.files.length" class="timeline-preview">
+
+      <template v-for="(file, ind) in timeline.files">
+        <div v-if="isImage(file.original.url)" class="image-preview" :key="file.key">
+          <b-img :src="(file.timeline || file.original).url" @error="loadOriginalImage" @click="previewModal(ind)"
+                 class="img-fluid" style="cursor: pointer"/>
+        </div>
+        <video v-else-if="isVideo(file.original.url)" controls class="video-preview" :key="file.key">
+          <source :src="file.original.url">
+        </video>
+      </template>
     </div>
     <b-card-footer>
       <LikeUnlikeButton class="mr-2" :item="timeline.userLikes" :liked="liked" @onLikeClicked="onLikeClicked"/>
@@ -112,7 +119,7 @@ export default {
     }
   },
   methods: {
-    ...mapWorkspaceActions(['showTimelineModal', 'deleteTimelinePost', 'like', 'unlike']),
+    ...mapWorkspaceActions(['showTimelineModal', 'deleteTimelinePost', 'like', 'unlike', 'showPreviewModal']),
     isImage(url) {
       return fileService.isImage(url)
     },
@@ -145,6 +152,15 @@ export default {
         await this.like(params);
       }
     },
+    previewModal(index) {
+      this.showPreviewModal({
+        activeFile: index,
+        files: this.timeline.files.map(f => f.original)
+      });
+    },
+    loadOriginalImage() {
+      this.timeline.file_url.converted = this.timeline.file_url.original
+    }
   },
 }
 </script>
@@ -176,7 +192,7 @@ export default {
 
   img {
     max-width: 100%;
-    max-height: 100%;
+    max-height: 380px;
     width: auto;
   }
 }

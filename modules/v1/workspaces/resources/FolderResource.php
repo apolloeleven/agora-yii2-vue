@@ -4,9 +4,9 @@
 namespace app\modules\v1\workspaces\resources;
 
 
+use app\modules\v1\users\models\query\UserQuery;
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\Folder;
-use Yii;
 use yii\db\ActiveQuery;
 
 /**
@@ -31,11 +31,11 @@ class FolderResource extends Folder
             'size',
             'is_file',
             'is_timeline_folder',
-            'file_path' => function () {
+            'url' => function () {
                 return $this->getFileUrl();
             },
             'mime' => function () {
-                return $this->getMime();
+                return $this->mime;
             },
             'created_at' => function () {
                 return $this->created_at * 1000;
@@ -49,7 +49,7 @@ class FolderResource extends Folder
     /**
      * @return array|string[]
      */
-    public function extraFields()
+    public function extraFields(): array
     {
         return [
             'children',
@@ -72,29 +72,11 @@ class FolderResource extends Folder
     /**
      * Gets query for [[UpdatedBy]].
      *
-     * @return ActiveQuery
+     * @return ActiveQuery|UserQuery
      */
-    public function getUpdatedBy()
+    public function getUpdatedBy(): UserQuery
     {
         return $this->hasOne(UserResource::class, ['id' => 'updated_by']);
     }
 
-    /**
-     * @return mixed|string|null
-     */
-    public function getMime()
-    {
-        $mime = explode('/', $this->mime)[0];
-        return $mime == self::VIDEO ? $mime : $this->mime;
-    }
-
-    /**
-     * Get file url
-     *
-     * @return bool|string
-     */
-    public function getFileUrl()
-    {
-        return $this->file_path ? Yii::getAlias('@storageUrl' . $this->file_path) : '';
-    }
 }

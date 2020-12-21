@@ -36,7 +36,8 @@ use yii\web\UploadedFile;
  * @property UserLike[] $userLikes
  * @property User $createdBy
  * @property User $updatedBy
- * @property Workspace[] $workspaces
+ * @property Workspace[] $workspace
+ * @property Folder[] $folders
  */
 class TimelinePost extends ActiveRecord
 {
@@ -163,9 +164,17 @@ class TimelinePost extends ActiveRecord
     /**
      * @return ActiveQuery|WorkspaceQuery
      */
-    public function getWorkspaces()
+    public function getWorkspace()
     {
-        return $this->hasMany(Workspace::class, ['workspace_id' => 'id']);
+        return $this->hasOne(Workspace::class, ['workspace_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery|\app\modules\v1\workspaces\models\query\FolderQuery
+     */
+    public function getFolders()
+    {
+        return $this->hasMany(Folder::class, ['timeline_post_id' => 'id']);
     }
 
     /**
