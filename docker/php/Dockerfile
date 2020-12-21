@@ -4,15 +4,23 @@ ARG user
 ARG uid
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends \
     git \
     curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
     zip \
     unzip \
     wget
+
+RUN apt-get install -y --no-install-recommends \
+    # needed for gd
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    && docker-php-ext-configure \
+        gd --with-jpeg
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

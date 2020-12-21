@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba678013c57a7c6b0be9b51f31a9206f",
+    "content-hash": "b7ac07d58e5637c7f8bc62fccdc718e9",
     "packages": [
         {
             "name": "2amigos/yii2-date-picker-widget",
@@ -5827,9 +5827,11 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
+        "php": ">=7.4",
         "ext-pdo": "*",
         "ext-json": "*",
-        "php": ">=7.4"
+        "ext-gd": "*",
+        "ext-exif": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"

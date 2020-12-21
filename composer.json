@@ -21,9 +21,11 @@
     "source": "https://github.com/yiisoft/yii2"
   },
   "require": {
+    "php": ">=7.4",
     "ext-pdo": "*",
     "ext-json": "*",
-    "php": ">=7.4",
+    "ext-gd": "*",
+    "ext-exif": "*",
     "yiisoft/yii2": "~2.0.14",
     "yiisoft/yii2-swiftmailer": "~2.1.0",
     "vlucas/phpdotenv": "^5.1",
