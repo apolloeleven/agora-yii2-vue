@@ -195,6 +195,7 @@ export default {
    * @param state
    */
   [HIDE_TIMELINE_MODAL](state) {
+    state.view.timeline.modal.loading = false;
     state.view.timeline.modal.show = false;
     state.view.timeline.modal.object = null;
   },

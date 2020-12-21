@@ -12,7 +12,6 @@ use app\modules\v1\users\models\query\UserQuery;
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\TimelinePost;
 use app\rest\ValidationException;
-use WebPConvert\WebPConvert;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\Json;
@@ -223,67 +222,16 @@ class TimelinePostResource extends TimelinePost
                 throw new ValidationException(Yii::t('app', 'Unable to upload attachment'));
             }
 
-            // Convert image into webp
-            $filePath = $original->file_path;
-            $fileName = $original->name;
-            $src = Yii::getAlias("@storage{$filePath}");
-            $newFilePath = pathinfo($filePath, PATHINFO_DIRNAME) . '/' . pathinfo($filePath, PATHINFO_FILENAME) . '.webp';
-            $destination = Yii::getAlias("@storage{$newFilePath}");
-
-            $this->imageFixOrientation($image, $src);
-
-            WebPConvert::convert($src, $destination);
-
-            $newName = pathinfo($fileName, PATHINFO_FILENAME) . '.webp';
-
-            $original->data = Json::encode([
-                'timeline' => [
-                    'name' => $newName,
-                    'path' => $newFilePath,
-                    'mime' => 'image/webp',
-                    'size' => filesize($destination)
-                ]
-            ]);
-
             if (!$original->appendTo($parentFolder)) {
                 throw new ValidationException(Yii::t('app', 'Unable to upload file'));
             }
+            $transaction->commit();
+
+            Yii::$app->async->execute("async/process-image", $original->id);
+            return true;
         }
         $transaction->commit();
         return true;
-    }
-
-    /**
-     *
-     *
-     * https://stackoverflow.com/questions/7489742/php-read-exif-data-and-adjust-orientation/21797668
-     *
-     * @param $image
-     * @param $filename
-     * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
-     */
-    public function imageFixOrientation(&$image, $filename)
-    {
-        $image = imagecreatefromstring(file_get_contents($filename));
-        $exif = exif_read_data($filename);
-
-        if (!empty($exif['Orientation'])) {
-            switch ($exif['Orientation']) {
-                case 3:
-                    $image = imagerotate($image, 180, 0);
-                    break;
-
-                case 6:
-                    $image = imagerotate($image, -90, 0);
-                    break;
-
-                case 8:
-                    $image = imagerotate($image, 90, 0);
-                    break;
-            }
-
-            imagejpeg($image, $filename);
-        }
     }
 
     /**

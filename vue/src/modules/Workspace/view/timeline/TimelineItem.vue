@@ -52,7 +52,7 @@
 
       <template v-for="(file, ind) in timeline.files">
         <div v-if="isImage(file.original.url)" class="image-preview" :key="file.key">
-          <b-img :src="file.timeline.url || file.original.url" @error="loadOriginalImage" @click="previewModal(ind)"
+          <b-img :src="(file.timeline || file.original).url" @error="loadOriginalImage" @click="previewModal(ind)"
                  class="img-fluid" style="cursor: pointer"/>
         </div>
         <video v-else-if="isVideo(file.original.url)" controls class="video-preview" :key="file.key">
