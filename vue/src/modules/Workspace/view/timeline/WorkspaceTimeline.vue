@@ -16,10 +16,7 @@
         </b-button>
       </b-media>
       <hr>
-      <b-button block @click="showTimelineForm">
-        <i class="fas fa-photo-video"></i>
-        {{ $t('Photo/Video') }}
-      </b-button>
+      <photo-video-input @change="onFileChoose"/>
       <!--      <div class="card-header border-bottom-0 text-right">-->
       <!--        -->
       <!--      </div>-->
@@ -47,13 +44,14 @@ import {createNamespacedHelpers} from "vuex";
 import {eventBus} from "@/core/services/event-bus";
 import {AppSettings} from "@/shared/AppSettings";
 import authService from "@/core/services/authService";
+import PhotoVideoInput from "../../../../core/components/PhotoVideoInput";
 
 const {mapActions: mapTimelineActions, mapState: mapTimelineState} = createNamespacedHelpers('workspace');
 const {mapState} = createNamespacedHelpers('user');
 
 export default {
   name: "WorkspaceTimeline",
-  components: {TimelineItem, NoData, ContentSpinner, FilePreviewModal},
+  components: {PhotoVideoInput, TimelineItem, NoData, ContentSpinner, FilePreviewModal},
   props: {
     workspaceId: {
       type: Number,
@@ -114,6 +112,12 @@ export default {
     onDownloadClick(e) {
       window.location.href = `${AppSettings.url()}/v1/workspaces/folder/download-file/${e.id}?access-token=${authService.getToken()}`;
     },
+    onFileChoose(ev) {
+      this.showTimelineModal({
+        files: ev.target.files,
+        showWorkspaceField: !this.workspace
+      });
+    }
   },
   destroyed() {
     eventBus.$off('onScrollToBottom')
