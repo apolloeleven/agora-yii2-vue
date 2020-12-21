@@ -8,12 +8,12 @@
         img-height="1" @sliding-start="onCarouselChange">
         <b-carousel-slide v-for="file in previewModal.files" v-bind:key="`file-preview-${file.id}`">
           <template>
-            <template v-if="fileService.isImage(file.file_path)">
-              <img class="attachment-img" :src="file.file_path" alt="image slot">
+            <template v-if="fileService.isImage(file.url)">
+              <img class="attachment-img" :src="file.url" alt="image slot">
             </template>
 
             <template v-if="fileService.isPdf(file)">
-              <iframe class="d-block w-100 h-100" :src="file.file_path"/>
+              <iframe class="d-block w-100 h-100" :src="file.url"/>
             </template>
 
             <template v-if="fileService.isAudio(file)">
@@ -22,10 +22,10 @@
               </audio>
             </template>
 
-            <template v-if="fileService.isVideo(file.file_path)">
+            <template v-if="fileService.isVideo(file.url)">
               <video controls class="attachment-video">
-                <source :src="file.file_path" type="video/mp4">
-                <source :src="file.file_path" type="video/ogg">
+                <source :src="file.url" type="video/mp4">
+                <source :src="file.url" type="video/ogg">
               </video>
             </template>
 

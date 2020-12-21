@@ -11,7 +11,10 @@
           {{ timeline.createdBy.displayName }}
           <span v-if="!workspace">
             &nbsp; <i class="fas fa-caret-right"></i>&nbsp;
-            <router-link :to="{name: 'workspace.view', params: {id: timeline.workspace.id}}">{{timeline.workspace.name}}</router-link>
+            <router-link
+              :to="{name: 'workspace.view', params: {id: timeline.workspace.id}}">{{
+                timeline.workspace.name
+              }}</router-link>
           </span>
 
           <span v-if="timeline.action === SHARE_ARTICLE && timeline.article">
@@ -45,13 +48,17 @@
         </div>
       </div>
     </b-card-body>
-    <div v-if="timeline.file_url" class="timeline-preview">
-      <div v-if="timeline.file_url.original && isImage(timeline.file_url.original)" class="image-preview">
-        <b-img :src="timeline.file_url.converted || timeline.file_url.original" @error="loadOriginalImage" @click="previewModal" class="img-fluid" style="cursor: pointer"/>
-      </div>
-      <video v-else-if="timeline.file_url.original && isVideo(timeline.file_url.original)" controls class="video-preview">
-        <source :src="timeline.file_url.original">
-      </video>
+    <div v-if="timeline.files.length" class="timeline-preview">
+
+      <template v-for="(file, ind) in timeline.files">
+        <div v-if="isImage(file.original.url)" class="image-preview" :key="file.key">
+          <b-img :src="file.timeline.url || file.original.url" @error="loadOriginalImage" @click="previewModal(ind)"
+                 class="img-fluid" style="cursor: pointer"/>
+        </div>
+        <video v-else-if="isVideo(file.original.url)" controls class="video-preview" :key="file.key">
+          <source :src="file.original.url">
+        </video>
+      </template>
     </div>
     <b-card-footer>
       <LikeUnlikeButton class="mr-2" :item="timeline.userLikes" :liked="liked" @onLikeClicked="onLikeClicked"/>
@@ -145,10 +152,10 @@ export default {
         await this.like(params);
       }
     },
-    previewModal() {
+    previewModal(index) {
       this.showPreviewModal({
-        activeFile: 0,
-        files: [{file_path: this.timeline.file_url.original, mime: 'image/png', name: this.$t('Uploaded image')}]
+        activeFile: index,
+        files: this.timeline.files.map(f => f.original)
       });
     },
     loadOriginalImage() {

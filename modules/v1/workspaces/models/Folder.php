@@ -28,7 +28,7 @@ use yii\web\UploadedFile;
  * @property int|null      $is_file
  * @property string|null   $name
  * @property string|null   $label
- * @property string|null   $body
+ * @property string|null   $data
  * @property string|null   $file_path
  * @property string|null   $mime
  * @property string|null   $content
@@ -108,7 +108,7 @@ class Folder extends ActiveRecord
         return [
             [['parent_id', 'workspace_id', 'timeline_post_id', 'is_timeline_folder', 'is_file', 'size', 'lft', 'rgt', 'depth', 'tree', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['workspace_id'], 'required'],
-            [['body', 'content'], 'string'],
+            [['data', 'content'], 'string'],
             [['name', 'label', 'file_path'], 'string', 'max' => 1024],
             [['mime'], 'string', 'max' => 255],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
@@ -132,7 +132,7 @@ class Folder extends ActiveRecord
             'is_file' => Yii::t('app', 'Is File'),
             'name' => Yii::t('app', 'Name'),
             'label' => Yii::t('app', 'Label'),
-            'body' => Yii::t('app', 'Body'),
+            'data' => Yii::t('app', 'Data'),
             'file_path' => Yii::t('app', 'File Path'),
             'mime' => Yii::t('app', 'Mime'),
             'content' => Yii::t('app', 'Content'),
@@ -224,6 +224,24 @@ class Folder extends ActiveRecord
     public function getFullPath()
     {
         return Yii::getAlias('@storage' . $this->file_path);
+    }
+
+    /**
+     * Get file url
+     *
+     * @return bool|string
+     */
+    public function getFileUrl()
+    {
+        return $this->file_path ? Yii::getAlias('@storageUrl' . $this->file_path) : '';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isImage(): bool
+    {
+        return strpos($this->mime, 'image/') === 0;
     }
 
     /**

@@ -13,12 +13,22 @@ use app\modules\v1\users\models\query\UserQuery;
 use app\modules\v1\users\resources\UserResource;
 use app\modules\v1\workspaces\models\TimelinePost;
 use app\rest\ValidationException;
+use WebPConvert\WebPConvert;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveQuery;
 use yii\helpers\FileHelper;
+use yii\helpers\Json;
 use yii\web\UploadedFile;
 
+/**
+ * Class TimelinePostResource
+ *
+ * @author  Zura Sekhniashvili <zurasekhniashvili@gmail.com>
+ * @package app\modules\v1\workspaces\resources
+ *
+ * @property \app\modules\v1\workspaces\resources\FolderResource[] $folders
+ */
 class TimelinePostResource extends TimelinePost
 {
     const IS_FILE = 1;
@@ -34,8 +44,8 @@ class TimelinePostResource extends TimelinePost
             'action',
             'workspace_id',
             'description',
-            'file_url' => function () {
-                return $this->getFileUrl();
+            'files' => function () {
+                return $this->getFiles();
             },
             'created_at' => function () {
                 return $this->created_at * 1000;
@@ -60,6 +70,7 @@ class TimelinePostResource extends TimelinePost
             'userLikes',
             'myLikes',
             'workspace',
+            'folders'
         ];
     }
 
@@ -125,23 +136,56 @@ class TimelinePostResource extends TimelinePost
     }
 
     /**
+     * @return ActiveQuery|\app\modules\v1\workspaces\models\query\FolderQuery
+     */
+    public function getFolders()
+    {
+        return $this->hasMany(FolderResource::class, ['timeline_post_id' => 'id']);
+    }
+
+    /**
      * Get timeline post file path
      *
-     * @return bool|string
+     * @return array
      */
-    public function getFileUrl()
+    public function getFiles(): array
     {
-        $folders = FolderResource::findAll(['timeline_post_id' => $this->id]);
-        $files = ['original' => null, 'converted' => null];
+        $folders = $this->folders;
+        $urls = [];
         foreach ($folders as $folder) {
-            $files[$folder->mime === 'image/webp' ? 'converted' : 'original'] = Yii::getAlias('@storageUrl' . $folder->file_path);
+            $url = [
+                'original' => [
+                    'key' => 'original',
+                    'url' => $folder->getFileUrl(),
+                    'mime' => $folder->mime,
+                    'name' => $folder->name,
+                    'size' => $folder->size
+                ]
+            ];
+            if ($folder->isImage()) {
+                $files = Json::decode($folder->data);
+                if ($files) {
+                    foreach ($files as $key => $file) {
+                        $url[$key] = [
+                            'key' => $key,
+                            'url' => Yii::getAlias('@storageUrl') . $file['path'],
+                            'mime' => $file['mime'],
+                            'name' => $file['name'],
+                            'size' => $file['size']
+                        ];
+                    }
+                }
+            }
+            $urls[] = $url;
         }
-        return $folders ? $files : '';
+
+        return $urls;
     }
 
     public function load($data, $formName = null)
     {
         $this->file = UploadedFile::getInstanceByName('file');
+
         return parent::load($data, $formName);
     }
 
@@ -161,35 +205,41 @@ class TimelinePostResource extends TimelinePost
             $parentFolder = FolderResource::find()->byWorkspaceId($this->workspace_id)->isTimelineFolder()->one();
 
             if (!$parentFolder) {
-                throw new ValidationException(Yii::t('app', 'Unable to find parent folder'));
+                throw new ValidationException(Yii::t('app', 'Unable to find parent original'));
             }
 
-            $imagePath = null;
-            $imageName = null;
-            foreach (['original', 'converted'] as $type) {
-                if ($imagePath && !$this->isImage($imagePath)) break;
 
-                $folder = new FolderResource();
-                $folder->workspace_id = $this->workspace_id;
-                $folder->timeline_post_id = $this->id;
-                $folder->is_file = 1;
-                $folder->parent_id = $parentFolder->id;
+            $original = new FolderResource();
+            $original->workspace_id = $this->workspace_id;
+            $original->timeline_post_id = $this->id;
+            $original->is_file = 1;
+            $original->parent_id = $parentFolder->id;
 
-                if ($type === 'original') {
-                    if (!$folder->uploadFile($this->file, $folder->workspace_id)) {
-                        throw new ValidationException(Yii::t('app', 'Unable to upload attachment'));
-                    }
-                    $imagePath = $folder->file_path;
-                    $imageName = $folder->name;
-                } else {
-                    if (!$folder->convertUploadedFile($imagePath, $imageName)) {
-                        throw new ValidationException(Yii::t('app', 'Unable to convert uploaded file'));
-                    }
-                }
+            if (!$original->uploadFile($this->file, $original->workspace_id)) {
+                throw new ValidationException(Yii::t('app', 'Unable to upload attachment'));
+            }
 
-                if (!$folder->appendTo($parentFolder)) {
-                    throw new ValidationException(Yii::t('app', 'Unable to upload file'));
-                }
+            // Convert image into webp
+            $filePath = $original->file_path;
+            $fileName = $original->name;
+            $src = Yii::getAlias("@storage{$filePath}");
+            $newFilePath = pathinfo($filePath, PATHINFO_DIRNAME) . '/' . pathinfo($filePath, PATHINFO_FILENAME) . '.webp';
+            $destination = Yii::getAlias("@storage{$newFilePath}");
+            WebPConvert::convert($src, $destination);
+
+            $newName = pathinfo($fileName, PATHINFO_FILENAME) . '.webp';
+
+            $original->data = Json::encode([
+                'timeline' => [
+                    'name' => $newName,
+                    'path' => $newFilePath,
+                    'mime' => 'image/webp',
+                    'size' => filesize($destination)
+                ]
+            ]);
+
+            if (!$original->appendTo($parentFolder)) {
+                throw new ValidationException(Yii::t('app', 'Unable to upload file'));
             }
         }
     }
@@ -217,15 +267,5 @@ class TimelinePostResource extends TimelinePost
         FolderResource::deleteAll(['timeline_post_id' => $this->id]);
 
         return parent::beforeDelete();
-    }
-
-    /**
-     * @param String $path
-     * @return bool
-     */
-    public function isImage(string $path)
-    {
-        $extension = strtolower(substr($path, strrpos($path, '.') + 1));
-        return in_array($extension, ['png', 'jpeg', 'svg', 'gif', 'jpg']);
     }
 }
