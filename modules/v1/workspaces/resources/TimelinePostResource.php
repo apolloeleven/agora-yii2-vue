@@ -1,6 +1,5 @@
 <?php
 /**
- * Created By Nika Gelashvili
  * Date: 30.09.20
  * Time: 13:26
  */
@@ -15,9 +14,7 @@ use app\modules\v1\workspaces\models\TimelinePost;
 use app\rest\ValidationException;
 use WebPConvert\WebPConvert;
 use Yii;
-use yii\base\Exception;
 use yii\db\ActiveQuery;
-use yii\helpers\FileHelper;
 use yii\helpers\Json;
 use yii\web\UploadedFile;
 
@@ -150,7 +147,7 @@ class TimelinePostResource extends TimelinePost
      */
     public function getFiles(): array
     {
-        $folders = $this->folders;
+        $folders = $this->getFolders()->all();
         $urls = [];
         foreach ($folders as $folder) {
             $url = [
@@ -192,15 +189,22 @@ class TimelinePostResource extends TimelinePost
     /**
      * Save timeline file into default folder after upload
      *
-     * @param $insert
-     * @param $changedAttributes
+     * @param bool $runValidation
+     * @param null $attributeNames
+     * @return bool
      * @throws \WebPConvert\Convert\Exceptions\ConversionFailedException
      * @throws \app\rest\ValidationException
      * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
      */
-    public function afterSave($insert, $changedAttributes)
+    public function save($runValidation = true, $attributeNames = null): bool
     {
-        parent::afterSave($insert, $changedAttributes);
+        $transaction = Yii::$app->db->beginTransaction();
+        $insert = $this->isNewRecord;
+        $check = parent::save($runValidation, $attributeNames);
+        if (!$check) {
+            return false;
+        }
         if ($insert && $this->file) {
             $parentFolder = FolderResource::find()->byWorkspaceId($this->workspace_id)->isTimelineFolder()->one();
 
@@ -225,6 +229,9 @@ class TimelinePostResource extends TimelinePost
             $src = Yii::getAlias("@storage{$filePath}");
             $newFilePath = pathinfo($filePath, PATHINFO_DIRNAME) . '/' . pathinfo($filePath, PATHINFO_FILENAME) . '.webp';
             $destination = Yii::getAlias("@storage{$newFilePath}");
+
+            $this->imageFixOrientation($image, $src);
+
             WebPConvert::convert($src, $destination);
 
             $newName = pathinfo($fileName, PATHINFO_FILENAME) . '.webp';
@@ -241,6 +248,41 @@ class TimelinePostResource extends TimelinePost
             if (!$original->appendTo($parentFolder)) {
                 throw new ValidationException(Yii::t('app', 'Unable to upload file'));
             }
+        }
+        $transaction->commit();
+        return true;
+    }
+
+    /**
+     *
+     *
+     * https://stackoverflow.com/questions/7489742/php-read-exif-data-and-adjust-orientation/21797668
+     *
+     * @param $image
+     * @param $filename
+     * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
+     */
+    public function imageFixOrientation(&$image, $filename)
+    {
+        $image = imagecreatefromstring(file_get_contents($filename));
+        $exif = exif_read_data($filename);
+
+        if (!empty($exif['Orientation'])) {
+            switch ($exif['Orientation']) {
+                case 3:
+                    $image = imagerotate($image, 180, 0);
+                    break;
+
+                case 6:
+                    $image = imagerotate($image, -90, 0);
+                    break;
+
+                case 8:
+                    $image = imagerotate($image, 90, 0);
+                    break;
+            }
+
+            imagejpeg($image, $filename);
         }
     }
 

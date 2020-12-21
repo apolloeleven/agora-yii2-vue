@@ -20,6 +20,8 @@ use yii\web\UploadedFile;
 /**
  * This is the model class for table "{{%folders}}".
  *
+ * @method appendTo(Folder $f)
+ *
  * @property int           $id
  * @property int|null      $parent_id
  * @property int           $workspace_id
