@@ -18,6 +18,7 @@ return [
         ],
         'mailer' => [
             'class' => \intermundia\mailer\SwiftMailer::class,
+            'useFileTransport' => env('MAILER_FILE_TRANSPORT'),
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => env('SMTP_HOST'),
