@@ -7,8 +7,10 @@
 
 ### Additional info
 
-| Q                | A
-| ---------------- | ---
-| Yii vesion       |
-| PHP version      |
-| Operating system |
+| Q                                            | A
+| -------------------------------------------- | --------------------------------
+| Browser version (If this is frontend issue)  |
+| Node.js version (If this is Vue.js issue     |
+| Yii version                                  |
+| PHP version                                  |
+| Operating system                             |
