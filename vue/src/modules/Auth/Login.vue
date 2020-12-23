@@ -9,9 +9,17 @@
     </div>
     <div class="col-md-8 col-right">
       <div class="auth-right clearfix">
-        <h3 class="auth-heading">{{ $t('Login to your account') }}</h3>
+        <h3 class="auth-heading text-left">{{ $t('Login to your account') }}</h3>
         <br>
         <form v-on:submit.prevent="onLoginClick">
+          <h4 class="text-left">Sample users</h4>
+          <hr>
+          <pre class="text-left rounded">Email: user1@agoraintra.net
+Password: 123456 <br>
+Email: user2@agoraintra.net
+Password: 123456 <br>
+Email: user3@agoraintra.net
+Password: 123456</pre>
           <ValidationObserver ref="loginForm">
             <div class="auth-form">
               <input-widget ref="emailInputWidget" :model="model" attribute="email"/>
