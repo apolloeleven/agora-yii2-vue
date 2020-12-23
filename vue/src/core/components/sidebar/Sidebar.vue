@@ -50,12 +50,12 @@ export default {
     ...mapStateUser(['currentUser']),
   },
   created() {
-    MenuService.addItem(new MenuItem('favourites', {
-      text: this.$t('Short Cuts'),
-      isGroup: true,
-      weight: 1000,
-      icon: 'far fa-star'
-    }));
+    // MenuService.addItem(new MenuItem('favourites', {
+    //   text: this.$t('Short Cuts'),
+    //   isGroup: true,
+    //   weight: 1000,
+    //   icon: 'far fa-star'
+    // }));
   },
   methods: {
     ...mapActions(['toggleMenuCollapse']),
