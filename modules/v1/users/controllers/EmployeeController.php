@@ -8,7 +8,7 @@
 namespace app\modules\v1\users\controllers;
 
 
-use app\modules\v1\users\resources\UserDepartmentResource;
+use app\modules\v1\setup\resources\UserDepartmentResource;
 use app\modules\v1\setup\resources\UserResource;
 use app\rest\ActiveController;
 use yii\filters\AccessControl;

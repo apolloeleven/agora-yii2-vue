@@ -1,9 +1,8 @@
 <?php
 
-namespace app\modules\v1\users\resources;
+namespace app\modules\v1\setup\resources;
 
 
-use app\modules\v1\setup\resources\DepartmentResource;
 use app\modules\v1\users\models\UserDepartment;
 use Yii;
 

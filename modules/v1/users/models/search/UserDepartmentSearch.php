@@ -7,7 +7,7 @@
 
 namespace app\modules\v1\users\models\search;
 
-use app\modules\v1\users\resources\UserDepartmentResource;
+use app\modules\v1\setup\resources\UserDepartmentResource;
 use app\modules\v1\setup\resources\UserResource;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
