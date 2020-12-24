@@ -114,7 +114,7 @@ export default {
     },
     onFileChoose(ev) {
       this.showTimelineModal({
-        files: ev.target.files,
+        filesToUpload: ev.target.files,
         showWorkspaceField: !this.workspace
       });
     }

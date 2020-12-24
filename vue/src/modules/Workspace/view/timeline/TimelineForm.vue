@@ -78,8 +78,18 @@ export default {
     modalTimeline() {
       if (this.modalTimeline) {
         let file = null;
-        if (this.modalTimeline.files) {
-          file = this.modalTimeline.files[0];
+        if (this.modalTimeline.filesToUpload) {
+          file = this.modalTimeline.filesToUpload[0];
+
+          this.filesLoading = true;
+          const promises = [];
+          Array.from(this.modalTimeline.filesToUpload).forEach(f => {
+            promises.push(this.readImage(f));
+          });
+          Promise.all(promises).then((urls) => {
+            this.filesLoading = false;
+            this.files = urls;
+          })
         }
         this.model = new TimelineFormModel({
           ...this.modalTimeline,
@@ -90,15 +100,7 @@ export default {
         }
 
         if (this.modalTimeline.files) {
-          this.filesLoading = true;
-          const promises = [];
-          Array.from(this.modalTimeline.files).forEach(f => {
-            promises.push(this.readImage(f));
-          });
-          Promise.all(promises).then((urls) => {
-            this.filesLoading = false;
-            this.files = urls;
-          })
+          this.files = this.modalTimeline.files.map(f => (f.timeline || f.original).url);
         }
 
       }
