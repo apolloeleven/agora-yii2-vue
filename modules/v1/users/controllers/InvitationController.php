@@ -5,7 +5,7 @@ namespace app\modules\v1\users\controllers;
 
 
 use app\helpers\MailHelper;
-use app\modules\v1\users\resources\InvitationResource;
+use app\modules\v1\setup\resources\InvitationResource;
 use Yii;
 use app\rest\ActiveController;
 use yii\filters\AccessControl;

@@ -6,7 +6,7 @@ use app\helpers\MailHelper;
 use app\modules\v1\users\models\LoginForm;
 use app\modules\v1\users\models\SignupForm;
 use app\modules\v1\users\models\User;
-use app\modules\v1\users\resources\InvitationResource;
+use app\modules\v1\setup\resources\InvitationResource;
 use app\rest\Controller;
 use Yii;
 use yii\base\Exception;
