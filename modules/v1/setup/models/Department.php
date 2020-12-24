@@ -3,7 +3,7 @@
 namespace app\modules\v1\setup\models;
 
 use app\modules\v1\users\models\User;
-use app\modules\v1\users\models\UserDepartment;
+use app\modules\v1\setup\models\UserDepartment;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;

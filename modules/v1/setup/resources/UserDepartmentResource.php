@@ -3,7 +3,7 @@
 namespace app\modules\v1\setup\resources;
 
 
-use app\modules\v1\users\models\UserDepartment;
+use app\modules\v1\setup\models\UserDepartment;
 use Yii;
 
 class UserDepartmentResource extends UserDepartment

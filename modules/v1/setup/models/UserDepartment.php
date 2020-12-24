@@ -1,8 +1,9 @@
 <?php
 
-namespace app\modules\v1\users\models;
+namespace app\modules\v1\setup\models;
 
 use app\modules\v1\setup\models\Department;
+use app\modules\v1\users\models\User;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -117,10 +118,10 @@ class UserDepartment extends \yii\db\ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return \app\modules\v1\users\models\query\UserDepartmentQuery the active query used by this AR class.
+     * @return \app\modules\v1\setup\models\query\UserDepartmentQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \app\modules\v1\users\models\query\UserDepartmentQuery(get_called_class());
+        return new \app\modules\v1\setup\models\query\UserDepartmentQuery(get_called_class());
     }
 }

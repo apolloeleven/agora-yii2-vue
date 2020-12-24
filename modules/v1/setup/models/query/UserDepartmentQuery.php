@@ -1,11 +1,11 @@
 <?php
 
-namespace app\modules\v1\users\models\query;
+namespace app\modules\v1\setup\models\query;
 
 /**
- * This is the ActiveQuery class for [[\app\modules\v1\users\models\UserDepartment]].
+ * This is the ActiveQuery class for [[\app\modules\v1\setup\models\UserDepartment]].
  *
- * @see \app\modules\v1\users\models\UserDepartment
+ * @see \app\modules\v1\setup\models\UserDepartment
  */
 class UserDepartmentQuery extends \yii\db\ActiveQuery
 {
@@ -16,7 +16,7 @@ class UserDepartmentQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\modules\v1\users\models\UserDepartment[]|array
+     * @return \app\modules\v1\setup\models\UserDepartment[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class UserDepartmentQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\modules\v1\users\models\UserDepartment|array|null
+     * @return \app\modules\v1\setup\models\UserDepartment|array|null
      */
     public function one($db = null)
     {
