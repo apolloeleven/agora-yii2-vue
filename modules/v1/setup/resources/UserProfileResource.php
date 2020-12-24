@@ -16,7 +16,7 @@ use app\modules\v1\users\models\User;
  * @author  Zura Sekhniashvili <zurasekhniashvili@gmail.com>
  * @package app\modules\v1\setup\resources
  */
-class UserResource extends User
+class UserProfileResource extends User
 {
     public function fields()
     {

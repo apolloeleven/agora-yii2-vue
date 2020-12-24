@@ -18,7 +18,7 @@ $config = \yii\helpers\ArrayHelper::merge(
             ],
             'user' => [
                 'class' => yii\web\User::class,
-                'identityClass' => \app\modules\v1\setup\resources\UserResource::class,
+                'identityClass' => \app\modules\v1\setup\resources\UserProfileResource::class,
                 'enableSession' => false,
                 'loginUrl' => null,
             ],

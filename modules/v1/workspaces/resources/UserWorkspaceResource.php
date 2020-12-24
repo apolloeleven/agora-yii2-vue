@@ -3,7 +3,7 @@
 
 namespace app\modules\v1\workspaces\resources;
 
-use app\modules\v1\setup\resources\UserResource;
+use app\modules\v1\setup\resources\UserProfileResource;
 use app\modules\v1\workspaces\models\UserWorkspace;
 
 /**
@@ -30,6 +30,6 @@ class UserWorkspaceResource extends UserWorkspace
 
     public function getUser()
     {
-        return $this->hasOne(UserResource::class, ['id' => 'user_id']);
+        return $this->hasOne(UserProfileResource::class, ['id' => 'user_id']);
     }
 }

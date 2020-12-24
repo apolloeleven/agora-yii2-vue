@@ -3,8 +3,8 @@
 namespace app\modules\v1\users\controllers;
 
 use app\modules\v1\users\models\ChangePassword;
-use app\modules\v1\setup\resources\UserResource;
-use app\modules\v1\users\resources\UserResource as UserResources;
+use app\modules\v1\setup\resources\UserProfileResource;
+use app\modules\v1\users\resources\UserResource;
 use app\rest\ActiveController;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -12,7 +12,7 @@ use yii\web\UploadedFile;
 
 class UserController extends ActiveController
 {
-    public $modelClass = UserResource::class;
+    public $modelClass = UserProfileResource::class;
 
 
     protected function verbs()
@@ -32,7 +32,7 @@ class UserController extends ActiveController
      */
     public function actionUpdateProfile()
     {
-        /** @var $user UserResource */
+        /** @var $user UserProfileResource */
         $user = Yii::$app->user->identity;
         $user->image = UploadedFile::getInstanceByName('image');
         if ($user->load(Yii::$app->request->post(), '') && $user->save()) {
@@ -65,7 +65,7 @@ class UserController extends ActiveController
      */
     public function actionActiveUsers()
     {
-        $query = UserResources::find()->active();
+        $query = UserResource::find()->active();
 
         return new ActiveDataProvider([
             'query' => $query,
