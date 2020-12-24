@@ -381,7 +381,7 @@ export default {
 }
 
 .option__image {
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
 }
 </style>

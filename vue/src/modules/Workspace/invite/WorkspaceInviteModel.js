@@ -3,7 +3,7 @@ import i18n from "@/shared/i18n";
 
 export default class WorkspaceInviteModel extends BaseModel {
   selectedUsers = [];
-  allUser = [];
+  allUser = false;
 
   rules = {};
 
