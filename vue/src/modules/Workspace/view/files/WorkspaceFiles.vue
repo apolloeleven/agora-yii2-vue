@@ -118,7 +118,7 @@ export default {
         {key: 'name', class: 'name', sortable: true},
         {key: 'size', class: 'size', sortable: true},
         {key: 'updated_at', sortable: true,},
-        {key: 'updatedBy.displayName', label: this.$i18n.t('Updated By'), sortable: true},
+        {key: 'updatedBy.display_name', label: this.$i18n.t('Updated By'), sortable: true},
         {key: 'actions', class: 'text-center'},
       ]
     },

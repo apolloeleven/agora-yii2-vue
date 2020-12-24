@@ -22,7 +22,7 @@ export default {
       let limit = 10;
       let currentlimit = (this.item.length < limit) ? this.item.length : limit;
       for (let i = 0; i < currentlimit; i++) {
-        this.likes += this.item[i].createdBy.displayName + "<br>"
+        this.likes += this.item[i].createdBy.display_name + "<br>"
       }
       if(this.item.length > limit) {
         this.likes += `And ${this.item.length - limit} other(s)`;

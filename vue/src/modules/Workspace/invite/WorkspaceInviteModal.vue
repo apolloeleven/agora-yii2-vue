@@ -49,7 +49,7 @@ export default {
   methods: {
     ...mapWorkspaceActions(['hideInviteModal', 'inviteUsers']),
     convertToUserOption: (u) => ({
-      text: u.displayName,
+      text: u.display_name,
       value: u.id,
       img: u.image_url ? u.image_url : '/assets/img/avatar.svg'
     }),

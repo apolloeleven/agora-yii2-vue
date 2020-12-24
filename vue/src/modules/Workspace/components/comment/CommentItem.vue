@@ -4,7 +4,7 @@
       <b-img rounded="circle" :src="comment.createdBy.image_url  || '/assets/img/avatar.svg'" width="32" height="32"/>
     </template>
     <h6 class="mt-0 mb-0">
-      <span style="color: #008BCA">{{ comment.createdBy.displayName }}</span>
+      <span style="color: #008BCA">{{ comment.createdBy.display_name }}</span>
       &nbsp;<span class="comment-wrapper" v-html="comment.comment"/>&nbsp;
       <b-button size="sm" pill variant="light" :pressed.sync="showComments">
         <i class="fas fa-reply fa-lg"/>

@@ -24,7 +24,7 @@
             {{
               $t("Created {time} by {owner}", {
                 time: $options.filters.relativeDate(article.created_at),
-                owner: article.createdBy.displayName
+                owner: article.createdBy.display_name
               })
             }}
           </small>

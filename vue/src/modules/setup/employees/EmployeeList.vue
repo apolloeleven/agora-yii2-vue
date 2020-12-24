@@ -17,7 +17,7 @@
             </template>
             <template v-slot:cell(fullName)="data">
               <div style="width: 100%">
-                {{ data.item.displayName }}
+                {{ data.item.display_name }}
               </div>
             </template>
             <template v-slot:cell(verified)="data">

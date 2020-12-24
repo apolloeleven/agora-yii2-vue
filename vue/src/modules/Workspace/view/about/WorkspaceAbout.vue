@@ -15,7 +15,7 @@
       <h4>{{ workspace.name }}</h4>
       <div class="mt-3" v-html="workspace.description"></div>
       <div class="mt-3" v-if="workspace.createdBy">
-        <span class="mb-0 mr-2 text-muted">{{ $t('Owner:') }}</span> <b>{{ workspace.createdBy.displayName }}</b>
+        <span class="mb-0 mr-2 text-muted">{{ $t('Owner:') }}</span> <b>{{ workspace.createdBy.display_name }}</b>
       </div>
     </b-card-body>
   </b-card>

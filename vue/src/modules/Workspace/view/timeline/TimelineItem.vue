@@ -8,7 +8,7 @@
           </b-img>
         </template>
         <h5 class="mt-0">
-          {{ timeline.createdBy.displayName }}
+          {{ timeline.createdBy.display_name }}
           <span v-if="!workspace">
             &nbsp; <i class="fas fa-caret-right"></i>&nbsp;
             <router-link

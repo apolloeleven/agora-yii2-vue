@@ -336,7 +336,7 @@ export default {
         let sortBy = column.sortBy;
         let order = column.sortDesc ? 'desc' : 'asc';
 
-        if (sortBy !== 'updatedBy.displayName') {
+        if (sortBy !== 'updatedBy.display_name') {
           if (!nextFile.hasOwnProperty(sortBy) || !prevFile.hasOwnProperty(sortBy)) {
             return comparison;
           }
@@ -350,7 +350,7 @@ export default {
           prev = typeof prevFile[prevSortKey] === 'string' ? prevFile[prevSortKey].toUpperCase() : prevFile[prevSortKey];
         } else {
           let firstKey = 'updatedBy';
-          let secondKey = 'displayName';
+          let secondKey = 'display_name';
           if (!nextFile[firstKey].hasOwnProperty(secondKey) || !prevFile[firstKey].hasOwnProperty(secondKey)) {
             return comparison;
           }

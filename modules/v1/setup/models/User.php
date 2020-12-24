@@ -17,35 +17,40 @@ use yii\web\IdentityInterface;
 /**
  * This is the model class for table "{{%users}}".
  *
- * @property int $id
- * @property string $username
- * @property string $email
- * @property string $password_hash
- * @property string $first_name
- * @property string $last_name
- * @property string $mobile
- * @property string $phone
- * @property string $birthday
- * @property string $about_me
- * @property string $hobbies
- * @property string $image_path
- * @property string|null $password_reset_token
- * @property int|null $expire_date
- * @property string|null $access_token
- * @property int|null $access_token_expire_date
- * @property int|null $status
- * @property string $favourites
- * @property int|null $created_at
- * @property int|null $updated_at
+ * @property int              $id
+ * @property string           $username
+ * @property string           $email
+ * @property string           $password_hash
+ * @property string           $first_name
+ * @property string           $last_name
+ * @property string           $mobile
+ * @property string           $phone
+ * @property string           $birthday
+ * @property string           $about_me
+ * @property string           $hobbies
+ * @property string           $image_path
+ * @property string|null      $password_reset_token
+ * @property int|null         $expire_date
+ * @property string|null      $access_token
+ * @property int|null         $access_token_expire_date
+ * @property int|null         $status
+ * @property string           $favourites
+ * @property int|null         $created_at
+ * @property int|null         $updated_at
  *
  * @property UserDepartment[] $userDepartments
- * @property UserWorkspace[] $userWorkspaces
- * @property Invitation $invitation
+ * @property UserWorkspace[]  $userWorkspaces
+ * @property Invitation       $invitation
  */
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 2;
+
+    const ROLE_USER = 'user';
+    const ROLE_ADMIN = 'admin';
+    const ROLE_WORKSPACE_ADMIN = 'workspaceAdmin';
+
 
     const ACCESS_TOKEN_LIFETIME = 60 * 60 * 24; // 1 day
 
@@ -107,6 +112,37 @@ class User extends ActiveRecord implements IdentityInterface
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    public function fields()
+    {
+        return [
+            'id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'display_name' => function () {
+                return $this->getDisplayName();
+            },
+            'image_url' => function () {
+                return $this->getImageUrl();
+            },
+            'status' => function () {
+                return $this->status === 1;
+            },
+            'created_at' => function () {
+                return Yii::$app->formatter->asDatetime($this->created_at);
+            },
+            'updated_at' => function () {
+                return Yii::$app->formatter->asDatetime($this->updated_at);
+            },
+        ];
+    }
+
+    public function extraFields()
+    {
+        return ['userDepartments', 'userWorkspaces'];
     }
 
     public static function find()
@@ -317,7 +353,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @param bool $insert
+     * @param bool  $insert
      * @param array $changedAttributes
      * @author Saiat Kalbiev <kalbievich11@gmail.com>
      */
@@ -351,5 +387,26 @@ class User extends ActiveRecord implements IdentityInterface
     public function getInvitation()
     {
         return $this->hasOne(Invitation::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return string[][]
+     */
+    public static function getUserRoles()
+    {
+        return [
+            [
+                'value' => self::ROLE_USER,
+                'text' => Yii::t('app', 'User')
+            ],
+            [
+                'value' => self::ROLE_ADMIN,
+                'text' => Yii::t('app', 'Admin')
+            ],
+            [
+                'value' => self::ROLE_WORKSPACE_ADMIN,
+                'text' => Yii::t('app', 'Workspace Admin')
+            ]
+        ];
     }
 }

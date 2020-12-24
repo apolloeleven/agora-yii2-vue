@@ -25,42 +25,8 @@ use yii\helpers\ArrayHelper;
  */
 class UserResource extends User
 {
-    const ROLE_USER = 'user';
-    const ROLE_ADMIN = 'admin';
-    const ROLE_WORKSPACE_ADMIN = 'workspaceAdmin';
-
-    public $userDepartmentsData, $userWorkspacesData;
-
-    public function fields()
-    {
-        return [
-            'id',
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'displayName' => function () {
-                return $this->getDisplayName();
-            },
-            'image_url' => function () {
-                return $this->getImageUrl();
-            },
-            'status' => function () {
-                return $this->status === 1;
-            },
-            'created_at' => function () {
-                return Yii::$app->formatter->asDatetime($this->created_at);
-            },
-            'updated_at' => function () {
-                return Yii::$app->formatter->asDatetime($this->updated_at);
-            },
-        ];
-    }
-
-    public function extraFields()
-    {
-        return ['userDepartments', 'userWorkspaces'];
-    }
+    public array $userDepartmentsData;
+    public array $userWorkspacesData;
 
     public function rules()
     {
@@ -74,6 +40,7 @@ class UserResource extends User
             $parentSave = parent::save($runValidation, $attributeNames);
             if (!$parentSave) {
                 $transaction->rollBack();
+                return false;
             }
             if (isset($this->userWorkspacesData)) {
                 $this->updateRoles($this->userWorkspacesData);
@@ -96,27 +63,6 @@ class UserResource extends User
     public function getUserDepartments()
     {
         return $this->hasMany(UserDepartmentResource::class, ['user_id' => 'id']);
-    }
-
-    /**
-     * @return string[][]
-     */
-    public static function getUserRoles()
-    {
-        return [
-            [
-                'value' => self::ROLE_USER,
-                'text' => Yii::t('app', 'User')
-            ],
-            [
-                'value' => self::ROLE_ADMIN,
-                'text' => Yii::t('app', 'Admin')
-            ],
-            [
-                'value' => self::ROLE_WORKSPACE_ADMIN,
-                'text' => Yii::t('app', 'Workspace Admin')
-            ]
-        ];
     }
 
     /**

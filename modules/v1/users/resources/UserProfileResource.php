@@ -20,14 +20,8 @@ class UserProfileResource extends User
 {
     public function fields()
     {
-        return [
-            'id', 'email', 'username', 'first_name', 'last_name', 'mobile', 'phone', 'birthday', 'about_me', 'hobbies',
-            'image_url' => function () {
-                return $this->getImageUrl();
-            },
-            'display_name' => function () {
-                return $this->first_name . ' ' . $this->last_name;
-            }
-        ];
+        return array_merge(parent::fields(), [
+            'mobile', 'phone', 'birthday', 'about_me', 'hobbies',
+        ]);
     }
 }
