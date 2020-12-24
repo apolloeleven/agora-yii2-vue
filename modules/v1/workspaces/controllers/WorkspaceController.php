@@ -114,20 +114,20 @@ class WorkspaceController extends ActiveController
         }
 
         $users = [];
-        $userWorkspaces = UserWorkspaceResource::find()
-            ->byWorkspaceId($workspaceId)
-            ->with(['user'])
+        /** @var \app\modules\v1\setup\resources\UserResource[] $dbUsers */
+        $dbUsers = UserResource::find()
+            ->alias('u')
+            ->innerJoinWith(['userWorkspace' => function($query) use($workspaceId) {
+                /** @var \app\modules\v1\workspaces\models\query\UserWorkspaceQuery $query */
+//                $query->andWhere(['workspace_id' => $workspaceId]);
+            }])
+            ->andWhere(['workspace_id' => $workspaceId])
             ->all();
 
-        foreach ($userWorkspaces as $userWorkspace) {
-            $id = $userWorkspace->user->id;
-
-            if (!isset($users[$id])) {
-                $users[$id] = $userWorkspace->user->toArray();
-                $users[$id]['roles'] = [$userWorkspace->role];
-            } else {
-                $users[$id]['roles'][] = $userWorkspace->role;
-            }
+        foreach ($dbUsers as $dbUser) {
+            $user = $dbUser->toArray();
+            $user['role'] = $dbUser->userWorkspace->role;
+            $users[] = $user;
         }
 
         return $users;

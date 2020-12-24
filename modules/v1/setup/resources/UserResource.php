@@ -12,6 +12,7 @@ use app\modules\v1\setup\models\Invitation;
 use app\modules\v1\setup\models\User;
 use app\modules\v1\setup\models\UserDepartment;
 use app\modules\v1\workspaces\models\UserWorkspace;
+use app\modules\v1\workspaces\resources\UserWorkspaceResource;
 use app\rest\ValidationException;
 use Yii;
 use yii\db\ActiveQuery;
@@ -22,6 +23,9 @@ use yii\helpers\ArrayHelper;
  *
  * @author  Zura Sekhniashvili <zurasekhniashvili@gmail.com>
  * @package app\modules\v1\users\resources
+ *
+ * @property UserWorkspaceResource[] $userWorkspaces
+ * @property UserWorkspaceResource $userWorkspace
  */
 class UserResource extends User
 {
@@ -63,6 +67,22 @@ class UserResource extends User
     public function getUserDepartments()
     {
         return $this->hasMany(UserDepartmentResource::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUserWorkspaces()
+    {
+        return $this->hasMany(UserWorkspaceResource::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUserWorkspace()
+    {
+        return $this->hasOne(UserWorkspaceResource::class, ['user_id' => 'id']);
     }
 
     /**

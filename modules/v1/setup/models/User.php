@@ -399,13 +399,13 @@ class User extends ActiveRecord implements IdentityInterface
                 'value' => self::ROLE_USER,
                 'text' => Yii::t('app', 'User')
             ],
-            [
-                'value' => self::ROLE_ADMIN,
-                'text' => Yii::t('app', 'Admin')
-            ],
+//            [
+//                'value' => self::ROLE_ADMIN,
+//                'text' => Yii::t('app', 'Admin')
+//            ],
             [
                 'value' => self::ROLE_WORKSPACE_ADMIN,
-                'text' => Yii::t('app', 'Workspace Admin')
+                'text' => Yii::t('app', 'Admin')
             ]
         ];
     }

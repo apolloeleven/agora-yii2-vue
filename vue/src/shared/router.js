@@ -15,7 +15,6 @@ import Profile from "@/modules/User/Profile";
 import Workspace from "@/modules/Workspace/Workspace";
 import WorkspaceView from "@/modules/Workspace/WorkspaceView";
 import EmployeeList from "@/modules/setup/employees/EmployeeList";
-import Orgchart from "../modules/Orgchart/Orgchart";
 import WorkspaceTimeline from "@/modules/Workspace/view/timeline/WorkspaceTimeline";
 import WorkspaceFiles from "@/modules/Workspace/view/files/WorkspaceFiles";
 import WorkspaceArticles from "@/modules/Workspace/view/articles/WorkspaceArticles";

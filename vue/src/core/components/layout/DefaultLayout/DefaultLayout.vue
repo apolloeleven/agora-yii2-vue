@@ -27,6 +27,7 @@ import TimelineForm from "@/modules/Workspace/view/timeline/TimelineForm";
 import TimelineShare from "@/modules/Workspace/view/timeline/TimelineShare";
 import i18n from "@/shared/i18n";
 
+const {mapActions: mapActionsEmployee} = createNamespacedHelpers('employee');
 const {mapState: mapUserState, mapActions: userMapActions} = createNamespacedHelpers('user');
 const {mapState: mapStateWorkspace, mapActions: mapActionsWorkspace} = createNamespacedHelpers('workspace');
 
@@ -78,6 +79,7 @@ export default {
     ...userMapActions(['getProfile']),
     ...mapActionsWorkspace(['getWorkspaces', 'showWorkspaceModal']),
     ...mapActions(['initGlobals']),
+    ...mapActionsEmployee(['getModalDropdownData']),
     showModal() {
       this.showWorkspaceModal(null)
     },
@@ -89,6 +91,7 @@ export default {
     this.getProfile();
   },
   beforeMount() {
+    this.getModalDropdownData();
     this.initGlobals();
   }
 }
