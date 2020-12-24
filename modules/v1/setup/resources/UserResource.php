@@ -36,24 +36,23 @@ class UserResource extends User
         return [
             'id',
             'username',
+            'email',
             'first_name',
             'last_name',
-            'created_at' => function () {
-                return Yii::$app->formatter->asDatetime($this->created_at);
-            },
-            'updated_at' => function () {
-                return Yii::$app->formatter->asDatetime($this->updated_at);
-            },
             'displayName' => function () {
                 return $this->getDisplayName();
             },
             'image_url' => function () {
                 return $this->getImageUrl();
             },
-            'access_token',
-            'email',
             'status' => function () {
                 return $this->status === 1;
+            },
+            'created_at' => function () {
+                return Yii::$app->formatter->asDatetime($this->created_at);
+            },
+            'updated_at' => function () {
+                return Yii::$app->formatter->asDatetime($this->updated_at);
             },
         ];
     }

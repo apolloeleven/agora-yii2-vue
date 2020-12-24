@@ -703,7 +703,7 @@ export function hideInviteModal({commit}) {
  * @returns {Promise<unknown>}
  */
 export async function getActiveUsers({commit}) {
-  const {success, body} = await httpService.get(`${userUrl}/active-users`)
+  const {success, body} = await httpService.get(`/v1/setup/employee/active-users`)
   if (success) {
     commit(GET_ACTIVE_USERS, body)
   }

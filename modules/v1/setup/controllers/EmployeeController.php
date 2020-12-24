@@ -11,6 +11,7 @@ namespace app\modules\v1\setup\controllers;
 use app\modules\v1\setup\resources\UserDepartmentResource;
 use app\modules\v1\setup\resources\UserResource;
 use app\rest\ActiveController;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 
@@ -41,6 +42,7 @@ class EmployeeController extends ActiveController
     {
         $actions = parent::actions();
         unset($actions['view']);
+
         return $actions;
     }
 
@@ -48,6 +50,8 @@ class EmployeeController extends ActiveController
     {
         $verbs = parent::verbs();
         $verbs['get-dropdown'] = ['GET', 'HEAD', 'OPTIONS'];
+        $verbs['active-users'] = ['GET', 'HEAD', 'OPTIONS'];
+
         return $verbs;
     }
 
@@ -69,5 +73,19 @@ class EmployeeController extends ActiveController
         $data['userPositions'] = ArrayHelper::getColumn($positionOptions, 'position');
 
         return $data;
+    }
+
+    /**
+     * Get all users for workspace invitation
+     *
+     * @return ActiveDataProvider
+     */
+    public function actionActiveUsers()
+    {
+        $query = UserResource::find()->active();
+
+        return new ActiveDataProvider([
+            'query' => $query,
+        ]);
     }
 }

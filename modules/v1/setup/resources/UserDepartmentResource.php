@@ -41,6 +41,6 @@ class UserDepartmentResource extends UserDepartment
      */
     public function getUser()
     {
-        return $this->hasOne(\app\modules\v1\users\resources\UserProfileResource::class, ['id' => 'user_id']);
+        return $this->hasOne(UserResource::class, ['id' => 'user_id']);
     }
 }
