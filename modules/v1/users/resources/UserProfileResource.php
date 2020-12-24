@@ -5,7 +5,7 @@
  * Time: 20:05
  */
 
-namespace app\modules\v1\setup\resources;
+namespace app\modules\v1\users\resources;
 
 
 use app\modules\v1\users\models\User;
