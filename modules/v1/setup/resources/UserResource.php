@@ -8,7 +8,7 @@
 namespace app\modules\v1\setup\resources;
 
 
-use app\modules\v1\users\models\Invitation;
+use app\modules\v1\setup\models\Invitation;
 use app\modules\v1\users\models\User;
 use app\modules\v1\users\models\UserDepartment;
 use app\modules\v1\workspaces\models\UserWorkspace;

@@ -6,7 +6,7 @@ namespace app\modules\v1\setup\resources;
 
 use app\helpers\MailHelper;
 use app\modules\v1\setup\resources\UserResource;
-use app\modules\v1\users\models\Invitation;
+use app\modules\v1\setup\models\Invitation;
 use app\modules\v1\users\models\User;
 use app\rest\ValidationException;
 use Yii;

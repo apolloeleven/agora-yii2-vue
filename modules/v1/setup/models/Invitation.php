@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\modules\v1\users\models;
+namespace app\modules\v1\setup\models;
 
 
 use app\modules\v1\users\models\query\InvitationQuery;
