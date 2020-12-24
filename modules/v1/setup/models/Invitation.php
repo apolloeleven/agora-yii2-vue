@@ -4,7 +4,7 @@
 namespace app\modules\v1\setup\models;
 
 
-use app\modules\v1\users\models\query\InvitationQuery;
+use app\modules\v1\setup\models\query\InvitationQuery;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;

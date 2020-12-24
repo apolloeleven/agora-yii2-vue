@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\v1\users\models\query;
+namespace app\modules\v1\setup\models\query;
 
 use app\modules\v1\setup\models\Invitation;
 use yii\db\ActiveQuery;
