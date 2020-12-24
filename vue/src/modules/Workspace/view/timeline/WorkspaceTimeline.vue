@@ -75,6 +75,7 @@ export default {
   },
   watch: {
     '$route.params.id': function (id) {
+      console.log("Param Changed ", id);
       this.allLoaded = false;
       this.lastPostId = 0;
       this.timelinePosts(id);
@@ -91,7 +92,7 @@ export default {
       this.showTimelineModal({showWorkspaceField: !this.workspace});
     },
     async timelinePosts(workspaceId) {
-      if (this.allLoaded || this.loading) return;
+      if (this.allLoaded) return;
       let res = await this.getTimelinePosts({
         workspace_id: workspaceId,
         posts_limit: this.postsLimit,
