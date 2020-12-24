@@ -9,7 +9,7 @@ namespace app\modules\v1\setup\resources;
 
 
 use app\modules\v1\setup\models\Country;
-use app\modules\v1\users\resources\UserResource;
+use app\modules\v1\setup\resources\UserResource;
 use app\rest\ValidationException;
 
 /**

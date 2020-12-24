@@ -4,7 +4,7 @@
 namespace app\modules\v1\workspaces\controllers;
 
 
-use app\modules\v1\users\resources\UserResource;
+use app\modules\v1\setup\resources\UserResource;
 use app\modules\v1\workspaces\resources\UserWorkspaceResource;
 use app\modules\v1\workspaces\resources\WorkspaceResource;
 use app\rest\ActiveController;

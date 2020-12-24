@@ -5,12 +5,13 @@
  * Time: 20:05
  */
 
-namespace app\modules\v1\users\resources;
+namespace app\modules\v1\setup\resources;
 
 
 use app\modules\v1\users\models\Invitation;
 use app\modules\v1\users\models\User;
 use app\modules\v1\users\models\UserDepartment;
+use app\modules\v1\users\resources\UserDepartmentResource;
 use app\modules\v1\workspaces\models\UserWorkspace;
 use app\rest\ValidationException;
 use Yii;

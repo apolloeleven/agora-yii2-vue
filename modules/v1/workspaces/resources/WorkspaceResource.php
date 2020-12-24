@@ -5,7 +5,7 @@ namespace app\modules\v1\workspaces\resources;
 
 
 use app\helpers\ModelHelper;
-use app\modules\v1\users\resources\UserResource;
+use app\modules\v1\setup\resources\UserResource;
 use app\modules\v1\workspaces\models\Article;
 use app\modules\v1\workspaces\models\Folder;
 use app\modules\v1\workspaces\models\TimelinePost;

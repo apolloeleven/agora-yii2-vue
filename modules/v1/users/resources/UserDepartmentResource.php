@@ -1,9 +1,4 @@
 <?php
-/**
- * Created By Nika Gelashvili
- * Date: 23.09.20
- * Time: 18:04
- */
 
 namespace app\modules\v1\users\resources;
 

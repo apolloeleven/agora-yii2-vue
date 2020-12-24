@@ -5,6 +5,7 @@ namespace app\modules\v1\users\resources;
 
 
 use app\helpers\MailHelper;
+use app\modules\v1\setup\resources\UserResource;
 use app\modules\v1\users\models\Invitation;
 use app\modules\v1\users\models\User;
 use app\rest\ValidationException;

@@ -4,7 +4,7 @@ namespace app\modules\v1\users\controllers;
 
 use app\modules\v1\users\models\ChangePassword;
 use app\modules\v1\setup\resources\UserProfileResource;
-use app\modules\v1\users\resources\UserResource;
+use app\modules\v1\setup\resources\UserResource;
 use app\rest\ActiveController;
 use Yii;
 use yii\data\ActiveDataProvider;

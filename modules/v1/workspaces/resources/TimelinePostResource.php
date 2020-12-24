@@ -9,7 +9,7 @@ namespace app\modules\v1\workspaces\resources;
 
 use app\helpers\ModelHelper;
 use app\modules\v1\users\models\query\UserQuery;
-use app\modules\v1\users\resources\UserResource;
+use app\modules\v1\setup\resources\UserResource;
 use app\modules\v1\workspaces\models\TimelinePost;
 use app\rest\ValidationException;
 use Yii;
