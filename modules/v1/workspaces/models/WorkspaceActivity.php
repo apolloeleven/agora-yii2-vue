@@ -2,8 +2,8 @@
 
 namespace app\modules\v1\workspaces\models;
 
-use app\modules\v1\users\models\query\UserQuery;
-use app\modules\v1\users\models\User;
+use app\modules\v1\setup\models\query\UserQuery;
+use app\modules\v1\setup\models\User;
 use app\modules\v1\workspaces\models\query\WorkspaceActivityQuery;
 use app\modules\v1\workspaces\models\query\WorkspaceQuery;
 use Yii;

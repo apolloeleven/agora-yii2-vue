@@ -1,6 +1,6 @@
 <?php
 
-use app\modules\v1\users\models\User;
+use app\modules\v1\setup\models\User;
 use yii\helpers\Html;
 use yii\helpers\Url;
 

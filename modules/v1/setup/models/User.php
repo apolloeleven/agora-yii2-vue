@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\v1\users\models;
+namespace app\modules\v1\setup\models;
 
 use app\modules\v1\setup\models\Invitation;
 use app\modules\v1\setup\models\UserDepartment;
-use app\modules\v1\users\models\query\UserQuery;
+use app\modules\v1\setup\models\query\UserQuery;
 use app\modules\v1\workspaces\models\UserWorkspace;
 use Yii;
 use yii\base\Exception;

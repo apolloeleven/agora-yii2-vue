@@ -9,7 +9,7 @@ namespace app\modules\v1\setup\resources;
 
 
 use app\modules\v1\setup\models\Invitation;
-use app\modules\v1\users\models\User;
+use app\modules\v1\setup\models\User;
 use app\modules\v1\setup\models\UserDepartment;
 use app\modules\v1\workspaces\models\UserWorkspace;
 use app\rest\ValidationException;

@@ -36,7 +36,7 @@ class UserDepartmentResource extends UserDepartment
     }
 
     /**
-     * @return \app\modules\v1\users\models\query\UserQuery|\yii\db\ActiveQuery
+     * @return \app\modules\v1\setup\models\query\UserQuery|\yii\db\ActiveQuery
      * @author Saiat Kalbiev <kalbievich11@gmail.com>
      */
     public function getUser()

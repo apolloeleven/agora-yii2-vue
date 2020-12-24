@@ -4,6 +4,8 @@ namespace app\modules\v1\users\models;
 
 
 use app\helpers\MailHelper;
+use app\modules\v1\setup\models\Invitation;
+use app\modules\v1\setup\models\User;
 use app\rest\ValidationException;
 use Yii;
 use yii\base\Exception;

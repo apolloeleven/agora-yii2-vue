@@ -8,6 +8,7 @@
 namespace app\modules\v1\users\models;
 
 
+use app\modules\v1\setup\models\User;
 use yii\base\Model;
 
 /**
