@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\modules\v1\users\controllers;
+namespace app\modules\v1\setup\controllers;
 
 
 use app\helpers\MailHelper;

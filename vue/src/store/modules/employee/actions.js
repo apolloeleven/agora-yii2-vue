@@ -38,7 +38,7 @@ export function hideModal({commit}) {
 }
 
 export async function deleteEmployee({commit}, data) {
-  const res = await httpService.delete(`/v1/users/employee/${data.id}`);
+  const res = await httpService.delete(`/v1/setup/employee/${data.id}`);
   if (res.success) {
     commit(DELETED_USER, data.id)
   }
@@ -46,5 +46,5 @@ export async function deleteEmployee({commit}, data) {
 }
 
 export async function updateUserStatus({commit}, data) {
-  return httpService.put(`/v1/users/employee/${data.id}`, {status: data.status ? INACTIVE_USER : ACTIVE_USER});
+  return httpService.put(`/v1/setup/employee/${data.id}`, {status: data.status ? INACTIVE_USER : ACTIVE_USER});
 }

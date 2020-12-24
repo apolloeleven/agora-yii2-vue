@@ -1,7 +1,7 @@
 import httpService from "../../../core/services/httpService";
 
 const employeeService = {
-  url: 'v1/users/employee',
+  url: 'v1/setup/employee',
 
   get(params = {
     sort: '-created_at',

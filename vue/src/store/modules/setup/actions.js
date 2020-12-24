@@ -113,7 +113,7 @@ export async function deleteDepartment({dispatch}, id) {
 
 export async function getInvitations({commit}) {
   commit(SET_INVITATIONS_LOADING);
-  const res = await httpService.get(`/v1/users/invitation?expand=createdBy,user.userDepartments.department.country&sort=-created_at`);
+  const res = await httpService.get(`/v1/setup/invitation?expand=createdBy,user.userDepartments.department.country&sort=-created_at`);
   commit(SET_INVITATIONS_LOADING);
   commit(SET_INVITATIONS, res.body);
 }
@@ -127,7 +127,7 @@ export function hideInvitationModal({commit}) {
 }
 
 export async function inviteUser({dispatch}, email) {
-  const res = await httpService.post(`/v1/users/invitation`, {email});
+  const res = await httpService.post(`/v1/setup/invitation`, {email});
   if (res.success) {
     dispatch('getInvitations');
   }
@@ -135,7 +135,7 @@ export async function inviteUser({dispatch}, email) {
 }
 
 export async function deleteInvitation({dispatch}, data) {
-  const res = await httpService.delete(`/v1/users/invitation/${data.id}`);
+  const res = await httpService.delete(`/v1/setup/invitation/${data.id}`);
   if (res.success) {
     dispatch('getInvitations');
   }

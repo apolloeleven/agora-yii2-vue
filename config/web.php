@@ -41,9 +41,9 @@ $config = \yii\helpers\ArrayHelper::merge(
                         'class' => UrlRule::class,
                         'pluralize' => false,
                         'controller' => [
-                            'v1/users/invitation',
-                            'v1/users/employee',
                             'v1/users/auth',
+                            'v1/setup/invitation',
+                            'v1/setup/employee',
                             'v1/workspaces/workspace',
                             'v1/workspaces/article',
                             'v1/workspaces/timeline',

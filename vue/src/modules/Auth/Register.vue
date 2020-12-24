@@ -60,7 +60,7 @@ export default {
       }
     },
     async getEmail() {
-      const res = await httpService.get(`/v1/users/invitation/get-email?token=${this.$route.params.token}`);
+      const res = await httpService.get(`/v1/setup/invitation/get-email?token=${this.$route.params.token}`);
       if (res.success) {
         this.model.email = res.body;
       }

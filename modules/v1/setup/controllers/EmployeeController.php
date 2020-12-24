@@ -5,7 +5,7 @@
  * Time: 17:25
  */
 
-namespace app\modules\v1\users\controllers;
+namespace app\modules\v1\setup\controllers;
 
 
 use app\modules\v1\setup\resources\UserDepartmentResource;
