@@ -1,5 +1,5 @@
 <template>
-  <div id="user-table" class="content-wrapper p-3">
+  <div id="user-table" class="content-wrapper">
     <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
     <div v-if="!loading">
       <b-card no-body>
@@ -19,7 +19,8 @@
             </div>
           </template>
           <template v-slot:cell(role)="data">
-            <b-form-select style="width: auto;" v-model="data.item.role" @change="onRoleChange(data.item)" :options="dropdownData.userRoles"></b-form-select>
+            <b-form-select  style="width: auto;" v-model="data.item.role" @change="onRoleChange(data.item)"
+                           :options="dropdownData.userRoles"></b-form-select>
           </template>
           <template v-slot:cell(verified)="data">
             <b-form-checkbox v-model="data.item.status" name="check-button" switch size="lg"
@@ -47,7 +48,7 @@
 import ContentSpinner from "../../../core/components/ContentSpinner";
 import {createNamespacedHelpers} from "vuex";
 
-const {mapState} = createNamespacedHelpers('employee');
+const {mapState, mapActions} = createNamespacedHelpers('employee');
 export default {
   name: "UserTable",
   components: {ContentSpinner},
@@ -64,6 +65,9 @@ export default {
       type: Array,
       default: () => []
     },
+    workspaceId: {
+      type: Number
+    }
   },
   data() {
     return {
@@ -87,17 +91,21 @@ export default {
     }
   },
   methods: {
-    onRoleChange(item){
-      debugger;
+    ...mapActions(['changeRole']),
+    async onRoleChange(item) {
+      const success = await this.changeRole({userId: item.id, workspaceId: this.workspaceId, role: item.role});
+      if (success) {
+        this.$successToast(this.$t(`{user} role has been changed into "{role}"`, {user: item.display_name, role: item.role}));
+      }
     }
   }
 }
 </script>
 
 <style lang="scss">
-  #user-table {
-    td {
-      vertical-align: middle;
-    }
+#user-table {
+  td {
+    vertical-align: middle;
   }
+}
 </style>

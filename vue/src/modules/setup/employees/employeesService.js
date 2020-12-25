@@ -9,6 +9,9 @@ const employeeService = {
   }) {
     return httpService.get(this.url, {params});
   },
+  getByWorkspace(workspaceId) {
+    return httpService.get(this.url+'/by-workspace', {params: {workspaceId}});
+  },
   getModalDropdownData(params = {expand: 'departments'}) {
     return httpService.get(this.url + '/get-dropdown', {params})
   },

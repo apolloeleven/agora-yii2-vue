@@ -1,4 +1,4 @@
-import employeesService from "@/modules/setup/employees/employeesService";
+import employeesService from "../../../modules/setup/employees/employeesService";
 import httpService from "@/core/services/httpService";
 import {
   SET_DATA,
@@ -7,16 +7,22 @@ import {
   CHANGE_LOADING,
   HIDE_MODAL,
   DELETED_USER,
-} from "@/store/modules/employee/mutation-types";
+  CHANGE_USER_ROLE
+} from "./mutation-types";
 import {ACTIVE_USER, INACTIVE_USER} from "../../../constants";
 
 export function showEmployeeModal({commit}, payload) {
   commit(SHOW_EMPLOYEE_MODAL, payload);
 }
 
-export async function getData({commit}, payload) {
+export async function getData({commit}, {workspaceId} = {}) {
   commit(CHANGE_LOADING);
-  const res = await employeesService.get(payload);
+  let res;
+  if (workspaceId) {
+    res = await employeesService.getByWorkspace(workspaceId);
+  } else {
+    res = await employeesService.get();
+  }
   commit(CHANGE_LOADING);
   commit(SET_DATA, {rows: res.body});
 }
@@ -47,4 +53,12 @@ export async function deleteEmployee({commit}, data) {
 
 export async function updateUserStatus({commit}, data) {
   return httpService.put(`/v1/setup/employee/${data.id}`, {status: data.status ? INACTIVE_USER : ACTIVE_USER});
+}
+
+export async function changeRole({commit}, {userId, workspaceId, role}) {
+  const {success} = await httpService.post(`/v1/setup/employee/change-role`, {userId, workspaceId, role});
+  if (success) {
+    commit(CHANGE_USER_ROLE, {userId, role})
+  }
+  return success;
 }

@@ -390,6 +390,16 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @param $workspaceId
+     * @return bool
+     * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
+     */
+    public function isInWorkspace($workspaceId): bool
+    {
+        return UserWorkspace::find()->byUserId($this->id)->byWorkspaceId($workspaceId)->exists();
+    }
+
+    /**
      * @return string[][]
      */
     public static function getUserRoles()

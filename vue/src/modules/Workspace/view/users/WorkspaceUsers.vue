@@ -3,7 +3,7 @@
     <content-spinner show/>
   </div>
   <div v-else class="workspace-users">
-    <user-table :data="users" :loading="loading" :visible-fields="visibleFields"/>
+    <user-table :data="users" :loading="loading" :visible-fields="visibleFields" :workspace-id="workspaceId"/>
   </div>
 </template>
 
@@ -12,7 +12,7 @@ import ContentSpinner from "@/core/components/ContentSpinner";
 import {createNamespacedHelpers} from "vuex";
 import UserTable from "../../../setup/employees/UserTable";
 
-const {mapState, mapActions} = createNamespacedHelpers('workspace');
+const {mapState, mapActions} = createNamespacedHelpers('employee');
 
 export default {
   name: "WorkspaceUsers",
@@ -25,31 +25,30 @@ export default {
         'user': '#58a05e',
         'default': '#8d8f92'
       },
+      workspaceId: null,
       visibleFields: ['id', 'avatar', 'fullName', 'email', 'verified', 'role']
     }
   },
   computed: {
     ...mapState({
-      loading: state => state.view.users.loading,
-      users: state => state.view.users.data,
+      loading: state => state.loading,
+      users: state => state.data.rows,
     })
   },
   methods: {
-    ...mapActions(['getWorkspaceUsers']),
+    ...mapActions(['getData']),
   },
   async beforeMount() {
-    let workspaceId = parseInt(this.$route.params.id);
-    await this.getWorkspaceUsers(workspaceId);
+    this.workspaceId = this.$route.params.id ? parseInt(this.$route.params.id) : this.workspaceId;
+    await this.getData({workspaceId: this.workspaceId});
+
   },
 }
 </script>
 
 <style scoped>
-
-.workspace-users {
-  width: 680px;
-  margin: 0 auto;
-}
-
-
+  .workspace-users {
+    width: 680px;
+    margin: 0 auto;
+  }
 </style>

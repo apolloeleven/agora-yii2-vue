@@ -5,7 +5,8 @@ import {
   CHANGE_LOADING,
   HIDE_MODAL,
   DELETED_USER,
-} from "@/store/modules/employee/mutation-types";
+  CHANGE_USER_ROLE
+} from "./mutation-types";
 
 export default {
   [SET_DATA]: (state, {rows}) => {
@@ -42,4 +43,9 @@ export default {
   [DELETED_USER](state, id) {
     state.data.rows = state.data.rows.filter(a => a.id !== id)
   },
+
+  [CHANGE_USER_ROLE](state, {userId, role}) {
+    const user = state.data.rows.find(u => u.id === userId);
+    if (user)  user.role = role;
+  }
 }

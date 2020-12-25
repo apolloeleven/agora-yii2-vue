@@ -99,37 +99,4 @@ class WorkspaceController extends ActiveController
         $dbTransaction->commit();
         return $this->response(null, 201);
     }
-
-    /**
-     * Get users by workspace
-     *
-     * @return array|mixed
-     * @throws \Exception
-     */
-    public function actionGetUsers()
-    {
-        $workspaceId = Yii::$app->request->get('id');
-        if (!$workspaceId) {
-            return new ValidationException(Yii::t('app', 'Please, provide the workspace id'));
-        }
-
-        $users = [];
-        /** @var \app\modules\v1\setup\resources\UserResource[] $dbUsers */
-        $dbUsers = UserResource::find()
-            ->alias('u')
-            ->innerJoinWith(['userWorkspace' => function($query) use($workspaceId) {
-                /** @var \app\modules\v1\workspaces\models\query\UserWorkspaceQuery $query */
-//                $query->andWhere(['workspace_id' => $workspaceId]);
-            }])
-            ->andWhere(['workspace_id' => $workspaceId])
-            ->all();
-
-        foreach ($dbUsers as $dbUser) {
-            $user = $dbUser->toArray();
-            $user['role'] = $dbUser->userWorkspace->role;
-            $users[] = $user;
-        }
-
-        return $users;
-    }
 }

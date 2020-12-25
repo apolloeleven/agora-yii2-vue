@@ -32,9 +32,8 @@ class UserQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * Return active users
-     *
-     * @return mixed
+     * @return \app\modules\v1\setup\models\query\UserQuery
+     * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
      */
     public function active()
     {
@@ -44,7 +43,7 @@ class UserQuery extends \yii\db\ActiveQuery
     /**
      * Return non active users
      *
-     * @return mixed
+     * @return self
      */
     public function notActive()
     {
@@ -62,11 +61,11 @@ class UserQuery extends \yii\db\ActiveQuery
         return $this->andWhere([User::tableName() . '.email' => $email]);
     }
 
+
     /**
-     * Find user by id
-     *
      * @param $id
-     * @return mixed
+     * @return \app\modules\v1\setup\models\query\UserQuery
+     * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
      */
     public function byId($id)
     {
