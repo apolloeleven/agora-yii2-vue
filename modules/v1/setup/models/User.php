@@ -419,4 +419,16 @@ class User extends ActiveRecord implements IdentityInterface
             ]
         ];
     }
+
+    /**
+     * Check if given role is valid or not
+     *
+     * @param $role
+     * @return bool
+     * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
+     */
+    public static function isValidRole($role): bool
+    {
+        return in_array($role, [self::ROLE_ADMIN, self::ROLE_USER, self::ROLE_WORKSPACE_ADMIN]);
+    }
 }

@@ -44,14 +44,16 @@ class WorkspaceController extends ActiveController
     public function actionInviteUsers()
     {
         $request = Yii::$app->request;
-        $selectedUsers = $request->post('selectedUsers');
-        $allUser = $request->post('allUser');
+        $userIds = $request->post('selectedUsers');
         $workspaceId = $request->post('workspace_id');
-
-        $userIds = $selectedUsers ? $selectedUsers : $allUser;
+        $role = $request->post('role');
 
         if (!$userIds) {
             return $this->validationError(Yii::t('app', 'Please select users'));
+        }
+
+        if (!UserResource::isValidRole($role)) {
+            return $this->validationError(Yii::t('app', 'Invalid role'));
         }
 
         // Get all users which already exist this workspace
@@ -69,7 +71,7 @@ class WorkspaceController extends ActiveController
                 $userData [] = [
                     'user_id' => $userId,
                     'workspace_id' => $workspaceId,
-                    'role' => UserResource::ROLE_USER,
+                    'role' => $role,
                     'created_at' => time(),
                     'updated_at' => time(),
                     'created_by' => Yii::$app->user->id,
