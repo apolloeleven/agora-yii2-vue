@@ -31,11 +31,10 @@
                                @change="$emit('status-change', data.item)"/>
             </template>
             <template v-slot:cell(actions)="data">
-              <span v-b-tooltip.hover data-placement="top" :title="$t('Remove from workspace')">
-                <i id="delete-tooltip"
-                   class="far fa-trash-alt mr-3 text-danger hover-pointer"
-                   @click="onDeleteClick(data.item)"/>
-                </span>
+              <b-button size="sm" variant="outline-danger" @click="onDeleteClick(data.item)" data-container="body">
+                <i class="far fa-trash-alt"></i>
+                {{$t('Remove')}}
+              </b-button>
             </template>
           </b-table>
         </b-card>
@@ -48,9 +47,9 @@
 <script>
 import ContentSpinner from "@/core/components/ContentSpinner";
 import {createNamespacedHelpers} from "vuex";
-import UserTable from "../../../setup/employees/UserTable";
 
 const {mapState, mapActions} = createNamespacedHelpers('employee');
+const {mapState: mapStateUser} = createNamespacedHelpers('user');
 
 export default {
   name: "WorkspaceUsers",
@@ -80,14 +79,24 @@ export default {
       loading: state => state.loading,
       users: state => state.data.rows,
       dropdownData: state => state.modalDropdownData
-    })
+    }),
+    ...mapStateUser(['currentUser'])
   },
   methods: {
     ...mapActions(['getData', 'removeFromWorkspace']),
     async onDeleteClick(user) {
-      const result = await this.$confirm(this.$t('Are you sure you want to remove the user "{user}" from the workspace?', {user: user.display_name}))
-      if (result) {
-        this.removeFromWorkspace({userId: user.id, workspaceId: this.workspaceId});
+      if(user.id == this.currentUser.data.id) {
+        this.$alert(this.$t(`You can't delete yourself from the workspace`));
+        return;
+      }
+      const confirm = await this.$confirm(this.$t('Are you sure you want to remove the user "{user}" from the workspace?', {user: user.display_name}))
+      if (confirm) {
+        const response = await this.removeFromWorkspace({userId: user.id, workspaceId: this.workspaceId});
+        if (response.success) {
+          this.$successToast(this.$t(`User "{user}" has been removed from the workspace`))
+        } else {
+          this.$alert(response.body);
+        }
       }
     }
   },

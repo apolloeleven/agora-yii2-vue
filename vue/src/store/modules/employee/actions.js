@@ -65,9 +65,10 @@ export async function changeRole({commit}, {userId, workspaceId, role}) {
 }
 
 export async function removeFromWorkspace({commit}, {workspaceId, userId}) {
-  const {success} = await httpService.post(`/v1/setup/employee/remove-from-workspace`, {userId, workspaceId});
+  const response = await httpService.post(`/v1/setup/employee/remove-from-workspace`, {userId, workspaceId});
+  const {success} = response;
   if (success) {
     commit(REMOVE_USER_FROM_WORKSPACE, {userId})
   }
-  return success;
+  return response;
 }

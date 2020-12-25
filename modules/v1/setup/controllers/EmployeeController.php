@@ -159,6 +159,10 @@ class EmployeeController extends ActiveController
         $userId = \Yii::$app->request->post('userId');
         $workspaceId = \Yii::$app->request->post('workspaceId');
 
+        if ($userId == Yii::$app->user->id) {
+            return $this->validationError(Yii::t('app', 'You can\'t delete yourself from the workspace'));
+        }
+
         /** @var UserResource $user */
         $user = UserResource::find()->active()->byId($userId)->one();
         if (!$user) {
