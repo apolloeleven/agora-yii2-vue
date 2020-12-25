@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!model.length && !loading" class="no-data">
+  <div v-if="!model.length && !loading" class="no-data" :style="`min-height: ${height}px`">
     {{ text }}
   </div>
 </template>
@@ -11,6 +11,10 @@ export default {
     model: [Object, Array],
     text: String,
     loading: Boolean,
+    height: {
+      type: Number,
+      default: 200
+    }
   }
 }
 </script>
@@ -26,6 +30,5 @@ export default {
   font-weight: bold;
   text-shadow: 1px 1px 0 #FFFFFF;
   font-size: 1.275rem;
-  min-height: 200px;
 }
 </style>

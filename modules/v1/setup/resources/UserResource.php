@@ -35,7 +35,26 @@ class UserResource extends User
 
     public function rules()
     {
-        return ArrayHelper::merge(parent::rules(), [[['userDepartmentsData', 'userWorkspacesData'], 'safe']]);
+        return [
+            [['email', 'first_name', 'last_name'], 'required'],
+            [['status',], 'integer'],
+            [['email'], 'string', 'max' => 512],
+            [['email'], 'unique'],
+            [['first_name', 'last_name', 'mobile', 'phone'], 'string', 'max' => 255],
+            [['hobbies',], 'string', 'max' => 1024],
+            ['birthday', 'safe'],
+            [['userDepartmentsData', 'userWorkspacesData'], 'safe']
+        ];
+    }
+
+    public function fields()
+    {
+        return array_merge(parent::fields(), [
+            'mobile',
+            'phone',
+            'birthday',
+            'hobbies'
+        ]);
     }
 
     public function save($runValidation = true, $attributeNames = null)

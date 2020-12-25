@@ -7,6 +7,10 @@ export default class EmployeeModel extends BaseModel {
   id = null;
   first_name = null;
   last_name = null;
+  mobile = null;
+  phone = null;
+  birthday = null;
+  hobbies = null;
   email = null;
   userWorkspaces = [];
   status = false;
@@ -25,6 +29,10 @@ export default class EmployeeModel extends BaseModel {
     email: i18n.t('Email'),
     first_name: i18n.t('First Name'),
     last_name: i18n.t('Last Name'),
+    mobile: i18n.t('Mobile'),
+    phone: i18n.t('Phone'),
+    birthday: i18n.t('Birthday'),
+    hobbies: i18n.t('Hobbies'),
     status: i18n.t('Activate User'),
   };
 

@@ -23,14 +23,8 @@ export default {
   [SHOW_EMPLOYEE_MODAL]: (state, payload) => {
     state.modal.show = true;
     state.modal.object = {
-      id: payload.id,
-      email: payload.email,
-      first_name: payload.first_name,
-      last_name: payload.last_name,
-      userWorkspaces: payload.userWorkspaces,
-      userDepartments: payload.userDepartments,
-      status: payload.status,
-    }
+      ...payload
+    };
   },
 
   [CHANGE_LOADING]: (state) => state.loading = !state.loading,
