@@ -19,7 +19,7 @@
             </div>
           </template>
           <template v-slot:cell(role)="data">
-            <b-form-select  style="width: auto;" v-model="data.item.role" @change="onRoleChange(data.item)"
+            <b-form-select style="width: auto;" v-model="data.item.role" @change="onRoleChange(data.item)"
                            :options="dropdownData.userRoles"></b-form-select>
           </template>
           <template v-slot:cell(verified)="data">
@@ -27,16 +27,14 @@
                              @change="$emit('status-change', data.item)"/>
           </template>
           <template v-slot:cell(actions)="data">
-              <span v-b-tooltip.hover data-placement="top" :title="$t('Edit')">
-                <i id="edit-tooltip"
-                   class="fas fa-pencil-alt mr-3 text-primary hover-pointer"
-                   @click="$emit('edit-click', data.item)"/>
-              </span>
-            <span v-b-tooltip.hover data-placement="top" :title="$t('Delete')">
-                <i id="delete-tooltip"
-                   class="far fa-trash-alt mr-3 text-danger hover-pointer"
-                   @click="$emit('delete-click', data.item)"/>
-                </span>
+            <b-button size="sm" variant="outline-info" @click="$emit('edit-click', data.item)" data-container="body" class="mr-2">
+              <i class="fas fa-user-edit"></i>
+              {{ $t('Edit') }}
+            </b-button>
+            <b-button size="sm" variant="outline-danger" @click="$emit('delete-click', data.item)" data-container="body">
+              <i class="far fa-trash-alt"></i>
+              {{ $t('Remove') }}
+            </b-button>
           </template>
         </b-table>
       </b-card>
@@ -83,9 +81,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-
-    }),
+    ...mapState({}),
     fields() {
       return this.allFields.filter(f => this.visibleFields.length === 0 || this.visibleFields.includes(f.key));
     }
@@ -95,7 +91,10 @@ export default {
     async onRoleChange(item) {
       const success = await this.changeRole({userId: item.id, workspaceId: this.workspaceId, role: item.role});
       if (success) {
-        this.$successToast(this.$t(`{user} role has been changed into "{role}"`, {user: item.display_name, role: item.role}));
+        this.$successToast(this.$t(`{user} role has been changed into "{role}"`, {
+          user: item.display_name,
+          role: item.role
+        }));
       }
     }
   }
