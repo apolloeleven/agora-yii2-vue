@@ -11,6 +11,7 @@ namespace app\modules\v1\setup\resources;
 use app\modules\v1\setup\models\Invitation;
 use app\modules\v1\setup\models\User;
 use app\modules\v1\setup\models\UserDepartment;
+use app\modules\v1\workspaces\models\query\UserWorkspaceQuery;
 use app\modules\v1\workspaces\models\UserWorkspace;
 use app\modules\v1\workspaces\resources\UserWorkspaceResource;
 use app\rest\ValidationException;
@@ -78,9 +79,9 @@ class UserResource extends User
     }
 
     /**
-     * @return ActiveQuery
+     * @return \app\modules\v1\workspaces\models\query\UserWorkspaceQuery
      */
-    public function getUserWorkspace()
+    public function getUserWorkspace(): UserWorkspaceQuery
     {
         return $this->hasOne(UserWorkspaceResource::class, ['user_id' => 'id']);
     }

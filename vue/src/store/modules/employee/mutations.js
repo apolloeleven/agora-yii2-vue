@@ -5,7 +5,7 @@ import {
   CHANGE_LOADING,
   HIDE_MODAL,
   DELETED_USER,
-  CHANGE_USER_ROLE
+  CHANGE_USER_ROLE, REMOVE_USER_FROM_WORKSPACE
 } from "./mutation-types";
 
 export default {
@@ -47,5 +47,8 @@ export default {
   [CHANGE_USER_ROLE](state, {userId, role}) {
     const user = state.data.rows.find(u => u.id === userId);
     if (user)  user.role = role;
+  },
+  [REMOVE_USER_FROM_WORKSPACE](state, {userId}) {
+    state.data.rows = state.data.rows.filter(u => u.id !== userId);
   }
 }

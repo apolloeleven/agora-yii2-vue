@@ -7,7 +7,8 @@ import {
   CHANGE_LOADING,
   HIDE_MODAL,
   DELETED_USER,
-  CHANGE_USER_ROLE
+  CHANGE_USER_ROLE,
+  REMOVE_USER_FROM_WORKSPACE
 } from "./mutation-types";
 import {ACTIVE_USER, INACTIVE_USER} from "../../../constants";
 
@@ -59,6 +60,14 @@ export async function changeRole({commit}, {userId, workspaceId, role}) {
   const {success} = await httpService.post(`/v1/setup/employee/change-role`, {userId, workspaceId, role});
   if (success) {
     commit(CHANGE_USER_ROLE, {userId, role})
+  }
+  return success;
+}
+
+export async function removeFromWorkspace({commit}, {workspaceId, userId}) {
+  const {success} = await httpService.post(`/v1/setup/employee/remove-from-workspace`, {userId, workspaceId});
+  if (success) {
+    commit(REMOVE_USER_FROM_WORKSPACE, {userId})
   }
   return success;
 }

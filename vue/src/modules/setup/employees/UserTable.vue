@@ -1,9 +1,9 @@
 <template>
-  <div id="user-table" class="content-wrapper">
+  <div id="user-table" class="content-wrapper p-3">
     <content-spinner :show="loading" :text="$t('Loading...')" class="h-100"/>
     <div v-if="!loading">
       <b-card no-body>
-        <b-table class="mb-0" responsive small striped hover id="users-table" :items="data" :fields="fields">
+        <b-table class="mb-0" responsive small hover id="users-table" :items="data" :fields="fields">
           <template v-slot:table-busy>
             <div class="text-center text-danger my-2">
               <b-spinner class="align-middle"></b-spinner>
@@ -84,7 +84,7 @@ export default {
   },
   computed: {
     ...mapState({
-      dropdownData: state => state.modalDropdownData
+
     }),
     fields() {
       return this.allFields.filter(f => this.visibleFields.length === 0 || this.visibleFields.includes(f.key));

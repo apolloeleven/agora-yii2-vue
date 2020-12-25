@@ -136,15 +136,44 @@ class EmployeeController extends ActiveController
 
         /** @var UserResource $user */
         $user = UserResource::find()->active()->byId($userId)->one();
+        if (!$user) {
+            Yii::error("User does not exist with ID=$userId", self::class);
+            throw new InvalidArgumentException();
+        }
         $userWorkspace = $user->getUserWorkspace()->byWorkspaceId($workspaceId)->one();
         if (!$userWorkspace) {
-            throw new InvalidArgumentException("User is not in workspace ID=$workspaceId");
+            Yii::error("User is not added in workspace ID=$workspaceId", self::class);
+            throw new InvalidArgumentException();
         }
 
         $userWorkspace->role = $role;
         if ($userWorkspace->save()) {
             return $this->response(null);
         }
+        return $this->validationError($userWorkspace->errors);
+
+    }
+
+    public function actionRemoveFromWorkspace()
+    {
+        $userId = \Yii::$app->request->post('userId');
+        $workspaceId = \Yii::$app->request->post('workspaceId');
+
+        /** @var UserResource $user */
+        $user = UserResource::find()->active()->byId($userId)->one();
+        if (!$user) {
+            Yii::error("User does not exist with ID=$userId", self::class);
+            throw new InvalidArgumentException();
+        }
+        $userWorkspace = $user->getUserWorkspace()->byWorkspaceId($workspaceId)->one();
+        if (!$userWorkspace) {
+            throw new InvalidArgumentException("User is not in workspace ID=$workspaceId");
+        }
+
+        if ($userWorkspace->delete()) {
+            return $this->response(null);
+        }
+
         return $this->validationError($userWorkspace->errors);
 
     }
