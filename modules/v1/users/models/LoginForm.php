@@ -3,6 +3,7 @@
 namespace app\modules\v1\users\models;
 
 use app\modules\v1\setup\models\User;
+use app\modules\v1\users\resources\UserProfileResource;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecord;
@@ -102,7 +103,7 @@ class LoginForm extends Model
     public function getActiveUser()
     {
         if ($this->_user === false) {
-            $this->_user = User::find()
+            $this->_user = UserProfileResource::find()
                 ->byEmail($this->email)
                 ->active()
                 ->one();

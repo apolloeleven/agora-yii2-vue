@@ -21,7 +21,7 @@ class UserProfileResource extends User
     public function fields()
     {
         return array_merge(parent::fields(), [
-            'mobile', 'phone', 'birthday', 'about_me', 'hobbies',
+            'access_token', 'mobile', 'phone', 'birthday', 'about_me', 'hobbies',
         ]);
     }
 }
