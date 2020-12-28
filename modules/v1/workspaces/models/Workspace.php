@@ -65,7 +65,6 @@ class Workspace extends ActiveRecord
             [['description'], 'string'],
             [['folder_in_folder', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            [['abbreviation'], 'string', 'max' => 55],
             [['image_path'], 'string', 'max' => 1024],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
@@ -81,7 +80,6 @@ class Workspace extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
-            'abbreviation' => Yii::t('app', 'Abbreviation'),
             'description' => Yii::t('app', 'Description'),
             'image_path' => Yii::t('app', 'Image Path'),
             'folder_in_folder' => Yii::t('app', 'Folder in Folder'),

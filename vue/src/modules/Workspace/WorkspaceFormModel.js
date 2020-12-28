@@ -3,7 +3,6 @@ import i18n from "../../shared/i18n";
 
 export default class WorkspaceFormModel extends BaseModel {
   name = '';
-  abbreviation = '';
   description = '';
   image = null;
 
@@ -13,7 +12,6 @@ export default class WorkspaceFormModel extends BaseModel {
 
   attributeLabels = {
     name: i18n.t('Name'),
-    abbreviation: i18n.t('Abbreviation'),
     description: i18n.t('Description'),
     image: i18n.t('Upload Image'),
   };

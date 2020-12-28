@@ -58,7 +58,7 @@ class ArticleController extends ActiveController
         ];
 
         $breadCrumb[] = [
-            'text' => $workspace->abbreviation ?: $workspace->name,
+            'text' => $workspace->name,
             'to' => [
                 'name' => 'workspace.view',
                 'params' => [
