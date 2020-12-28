@@ -133,7 +133,7 @@ export default {
   async beforeMount() {
     await this.getCurrentWorkspace(this.$route.params.id);
     this.initBreadcrumbs();
-    this.getActiveUsers();
+    this.getActiveUsers(this.$route.params.id);
   },
   destroyed() {
     this.destroyCurrentWorkspace({});

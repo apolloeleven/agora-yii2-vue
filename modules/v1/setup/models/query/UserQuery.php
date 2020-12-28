@@ -32,12 +32,15 @@ class UserQuery extends \yii\db\ActiveQuery
     }
 
     /**
+     * @param null $alias
      * @return \app\modules\v1\setup\models\query\UserQuery
      * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
      */
-    public function active()
+    public function active($alias = null)
     {
-        return $this->andWhere([User::tableName() . '.status' => User::STATUS_ACTIVE]);
+        $a = $alias ?: User::tableName();
+
+        return $this->andWhere([$a . '.status' => User::STATUS_ACTIVE]);
     }
 
     /**

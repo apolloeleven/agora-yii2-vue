@@ -84,15 +84,21 @@ class EmployeeController extends ActiveController
     /**
      * Get all users for workspace invitation
      *
-     * @return ActiveDataProvider
+     * @return array|\yii\data\ActiveDataProvider|\yii\db\ActiveRecord[]
      */
     public function actionActiveUsers()
     {
-        $query = UserResource::find()->active();
+        $workspaceId = Yii::$app->request->get('workspaceId');
+        $users = UserResource::findBySql("
+            SELECT u2.* FROM users u2
+            LEFT JOIN (SELECT u.* FROM users u
+            INNER JOIN user_workspaces uw on uw.user_id = u.id
+            WHERE uw.workspace_id = :workspaceId) tmp ON tmp.id = u2.id
+            WHERE tmp.id IS NULL
+        ", ['workspaceId' => $workspaceId])
+        ->all();
 
-        return new ActiveDataProvider([
-            'query' => $query,
-        ]);
+        return $users;
     }
 
     /**
