@@ -10,7 +10,6 @@
           :model="model" attribute="image" type="file" :placeholder="$t('Choose a image or drop it here...')">
         </input-widget>
         <input-widget :model="model" attribute="name"/>
-        <input-widget :model="model" attribute="abbreviation"/>
         <input-widget :model="model" attribute="description" type="richtext"/>
 <!--        This button is necessary in order submitting form to work on enter-->
         <button style="display: none"></button>

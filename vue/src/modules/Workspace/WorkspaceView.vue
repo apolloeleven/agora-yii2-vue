@@ -96,7 +96,7 @@ export default {
     initBreadcrumbs() {
       this.breadcrumbs = [
         {text: this.$i18n.t('My Workspaces'), to: {name: 'workspace'}},
-        {text: this.workspace.abbreviation || this.workspace.name, active: true}
+        {text: this.workspace.name, active: true}
       ];
     },
     isActive(item) {

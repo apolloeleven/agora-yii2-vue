@@ -30,7 +30,6 @@ class WorkspaceResource extends Workspace
         return [
             'id',
             'name',
-            'abbreviation',
             'description',
             'created_at' => function () {
                 return $this->created_at * 1000;

@@ -15,7 +15,6 @@ class m200924_144221_create_workspaces_table extends Migration
         $this->createTable('{{%workspaces}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string(255)->notNull(),
-            'abbreviation' => $this->string(55),
             'description' => $this->text(),
             'image_path' => $this->string(1024),
             'folder_in_folder' => $this->tinyInteger(1)->defaultValue(0),
