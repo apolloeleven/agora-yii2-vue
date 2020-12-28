@@ -53,7 +53,7 @@ export async function deleteEmployee({commit}, data) {
 }
 
 export async function updateUserStatus({commit}, data) {
-  return httpService.put(`/v1/setup/employee/${data.id}`, {status: data.status ? INACTIVE_USER : ACTIVE_USER});
+  return httpService.put(`/v1/setup/employee/${data.id}`, {status: data.status ? ACTIVE_USER : INACTIVE_USER});
 }
 
 export async function changeRole({commit}, {userId, workspaceId, role}) {
