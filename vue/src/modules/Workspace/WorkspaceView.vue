@@ -88,6 +88,7 @@ export default {
   watch: {
     '$route.params.id': function (id) {
       this.getCurrentWorkspace(id);
+      this.getActiveUsers(id);
     },
   },
   methods: {
@@ -132,7 +133,7 @@ export default {
   },
   async beforeMount() {
     await this.getCurrentWorkspace(this.$route.params.id);
-    this.initBreadcrumbs();
+    // this.initBreadcrumbs();
     this.getActiveUsers(this.$route.params.id);
   },
   destroyed() {
