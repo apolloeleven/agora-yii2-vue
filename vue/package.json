@@ -65,7 +65,9 @@
       "eslint:recommended"
     ],
     "rules": {
-      "no-unused-vars": "off"
+      "no-unused-vars": "off",
+      "no-empty": "off",
+      "no-console": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"
