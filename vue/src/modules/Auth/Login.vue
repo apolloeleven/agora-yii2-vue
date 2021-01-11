@@ -35,7 +35,6 @@
 import auth from '../../core/services/authService';
 import LoginModel from "./LoginModel";
 import InputWidget from "../../core/components/input-widget/InputWidget";
-import ContentSpinner from "@/core/components/ContentSpinner";
 
 export default {
   name: "Login",
