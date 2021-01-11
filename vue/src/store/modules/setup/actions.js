@@ -94,7 +94,7 @@ export function hideDepartmentModal({commit}) {
   commit(HIDE_DEPARTMENT_MODAL)
 }
 
-export async function saveDepartment({}, department) {
+export async function saveDepartment({commit}, department) {
   let response;
   if (!department.id) {
     response = await httpService.post(`/v1/setup/departments`, department)

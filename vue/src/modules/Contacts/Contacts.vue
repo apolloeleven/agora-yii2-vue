@@ -14,7 +14,7 @@
     </div>
 
     <b-list-group style="max-width: 300px;">
-      <b-list-group-item v-for="contact in contacts" class="d-flex align-items-start pb-0 pt-3">
+      <b-list-group-item v-for="contact in contacts" :key="contact.id" class="d-flex align-items-start pb-0 pt-3">
         <b-img class="contact-image" :src="contact.avatar"></b-img>
         <div class="contact-content pb-3 border-bottom d-flex flex-column w-100">
           <div class="d-flex justify-content-between">
